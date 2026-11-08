@@ -213,15 +213,16 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .ttc{position:relative;height:calc(var(--pph) * var(--rows));border-radius:10px;background-color:var(--row);
   background-image:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px var(--pph))}
 .ttc.on{background-color:var(--accent-soft)}
-.tte{position:absolute;border:0;border-radius:9px;padding:4px 5px;overflow:hidden;color:#fff;text-align:start;display:flex;flex-direction:column;gap:1px;
+.tte{position:absolute;border:0;border-radius:9px;padding:4px 3px;overflow:hidden;color:#fff;text-align:start;display:flex;flex-direction:column;gap:1px;
   background:var(--c);font-size:11.5px;line-height:1.25;box-shadow:0 1px 0 #0001}
-.tte b{font-size:12px;line-height:1.2;overflow-wrap:break-word}
+.tte b{font-size:11.5px;line-height:1.2;overflow-wrap:break-word}
 .tte span{opacity:.92;overflow-wrap:break-word}
 .tte .tk,.tte .tm{display:none}
 .tte.now{box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--c)}
 .ttnow{position:absolute;inset-inline:-3px;height:2px;background:var(--err);z-index:2;pointer-events:none}
 .ttnow::before{content:"";position:absolute;inset-inline-start:-3px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--err)}
 .ttempty{padding:18px 6px;color:var(--muted);text-align:center;line-height:1.6}
+.ttempty .eb2{display:flex;flex-direction:column;gap:8px;max-width:340px;margin:12px auto 0}
 @media (min-width:760px){ .tt{--pph:54px} .tte{font-size:12px;padding:5px 7px} .tte b{font-size:13.5px} .tte .tk,.tte .tm{display:block} .tte .pl{order:2} .tte .tk{order:1} .tte .tm{order:3} }
 
 /* exams */
@@ -426,9 +427,10 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 
   <section id="ttv">
     <div id="ttCard" class="dcard tt">
-      <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtScan" data-i18n="ttScan"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
+      <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtFile" data-i18n="ttImport"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
       <div id="tt"></div>
-      <div class="ttfoot" id="ttFoot"><button class="link" id="bTtShare" data-i18n="ttShare"></button><button class="link" id="bTtClear" style="color:var(--err)" data-i18n="ttClear"></button></div>
+      <div class="ttfoot" id="ttFoot"><span><button class="link" id="bTtShare" data-i18n="ttShare"></button><button class="link" id="bTtScan" data-i18n="ttScan"></button></span><button class="link" id="bTtClear" style="color:var(--err)" data-i18n="ttClear"></button></div>
+      <input type="file" id="ttFile" accept=".xls,.xlsx,.csv,.htm,.html,text/csv,application/vnd.ms-excel" hidden>
     </div>
   </section>
 
@@ -498,6 +500,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <label><span data-i18n="ttTo"></span><input type="time" id="fE" step="300"></label>
     </div>
     <label><span data-i18n="ttPlace"></span><input type="text" id="fPlace" maxlength="60" autocomplete="off"></label>
+    <label><span data-i18n="ttWho"></span><input type="text" id="fWho" maxlength="60" autocomplete="off"></label>
     <label class="chk"><input type="checkbox" id="fPriv"><span data-i18n="ttPriv"></span></label>
     <div class="err" id="fErr"></div>
     <div class="frow"><button class="primary" id="fSave" data-i18n="save"></button><button id="fDel" style="color:var(--err)" data-i18n="del"></button></div>
@@ -573,7 +576,7 @@ const I18N = {
     toCal: "📅 ליומן", markDone: "✓ סמן כבוצע", unmarkDone: "↩ בטל סימון", related: n => "📚 חומרים מאותו נושא (" + n + ")",
     focusDay: x => "מסונן: " + x, focusCourse: x => "מסונן: " + x, focusGroup: x => "מסונן: " + x, clearFocus: "✕ נקה", dayEmpty: "אין משימות ביום הזה", calDue: "מועד הגשה",
     viewTT: "מערכת", ttTitle: "מערכת שעות שבועית", ttAdd: "+ הוסף", ttShare: "🔗 שתף", ttOpen: "למערכת ←", edit: "עריכה",
-    ttEmpty: "עדיין אין מערכת שעות. אפשר לחפש אותה ביומן של Moodle (״⤓ מ-Moodle״) או להוסיף שיעורים ידנית (״+ הוסף״).",
+    ttEmpty: "עדיין אין מערכת שעות. הכי פשוט: הורד מהלבנט את קובץ המערכת האישית שלך וייבא אותו כאן. אפשר גם להוסיף שיעורים ידנית (״+ הוסף״).",
     ttNewTitle: "שיעור חדש", ttEditTitle: "עריכת שיעור", ttCourse: "קורס", ttOtherCourse: "אחר (לא מ-Moodle)", ttName: "שם להצגה", ttKind: "סוג", ttDay: "יום",
     ttFrom: "משעה", ttTo: "עד שעה", ttPlace: "מקום / חדר", save: "שמור", del: "מחק", delConfirm: "למחוק את השיעור הזה מהמערכת?",
     kLec: "שיעור", kEx: "תרגול", kLab: "מעבדה", kOther: "אחר", ttBadTime: "שעת הסיום צריכה להיות אחרי שעת ההתחלה.", ttNeedName: "בחר קורס או כתוב שם.",
@@ -599,6 +602,10 @@ const I18N = {
     ttScanNone: "ביומן של Moodle לא נמצאו שיעורים קבועים, כנראה שהמוסד לא מפרסם שם את המערכת. אפשר להוסיף שיעורים ידנית (״+ הוסף״).", ttScanAdd: n => "הוסף " + n + " שיעורים",
     ttPriv: "🔒 פרטי (לא נכלל כשמשתפים את המערכת)", ttClear: "מחק את כל המערכת", ttClearConfirm: n => "למחוק את כל " + n + " השיעורים מהמכשיר הזה?",
     importAsk: parts => "הקישור הזה רוצה להוסיף למכשיר שלך:\n" + parts.join("\n") + "\n\nלהוסיף?", importTT: (n, ex) => "• מערכת שעות: " + n + " שיעורים (" + ex + ")" , importTTRep: n => "  (תחליף את המערכת הנוכחית, " + n + " שיעורים)", importCC: n => "• צבעים ל-" + n + " קורסים", importDone: "נוסף ✓",
+    ttImport: "📄 מהלבנט", ttImportLong: "📄 ייבוא המערכת מקובץ הלבנט", ttScanLong: "⤓ חיפוש ביומן של Moodle", ttWho: "מרצה",
+    ttFileBad: "לא הצלחתי לקרוא את הקובץ. צריך את קובץ המערכת האישית שמורידים מהלבנט (כמו שהוא, בלי לפתוח ולשמור מחדש באקסל).",
+    ttFileAsk: (n, c, old) => "נמצאו בקובץ " + n + " שיעורים ב-" + c + " קורסים." + (old ? "\nהם יחליפו את " + old + " השיעורים שיש עכשיו במערכת (שיעורים שסימנת כפרטיים יישארו)." : "") + "\n\nלייבא?",
+    ttFileDone: n => "המערכת יובאה: " + n + " שיעורים ✓",
   },
   en: {
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "Moodle Tasks", appTitle: "Tasks", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
@@ -636,7 +643,7 @@ const I18N = {
     toCal: "📅 Calendar", markDone: "✓ Mark done", unmarkDone: "↩ Unmark", related: n => "📚 Materials from the same topic (" + n + ")",
     focusDay: x => "Filtered: " + x, focusCourse: x => "Filtered: " + x, focusGroup: x => "Filtered: " + x, clearFocus: "✕ Clear", dayEmpty: "No tasks on this day", calDue: "Due",
     viewTT: "Timetable", ttTitle: "Weekly timetable", ttAdd: "+ Add", ttShare: "🔗 Share", ttOpen: "Timetable →", edit: "Edit",
-    ttEmpty: "No timetable yet. Look for it in the Moodle calendar (“⤓ From Moodle”) or add classes manually (“+ Add”).",
+    ttEmpty: "No timetable yet. Easiest: download your personal timetable file from Levnet and import it here. You can also add classes manually (“+ Add”).",
     ttNewTitle: "New class", ttEditTitle: "Edit class", ttCourse: "Course", ttOtherCourse: "Other (not on Moodle)", ttName: "Display name", ttKind: "Type", ttDay: "Day",
     ttFrom: "From", ttTo: "To", ttPlace: "Place / room", save: "Save", del: "Delete", delConfirm: "Delete this class from the timetable?",
     kLec: "Lecture", kEx: "Tutorial", kLab: "Lab", kOther: "Other", ttBadTime: "The end time must be after the start time.", ttNeedName: "Pick a course or type a name.",
@@ -662,6 +669,10 @@ const I18N = {
     ttScanNone: "No weekly classes were found in the Moodle calendar; your institution probably doesn’t publish the timetable there. You can add classes manually (“+ Add”).", ttScanAdd: n => "Add " + n + " classes",
     ttPriv: "🔒 Private (left out when sharing the timetable)", ttClear: "Delete the whole timetable", ttClearConfirm: n => "Delete all " + n + " classes from this device?",
     importAsk: parts => "This link wants to add to your device:\n" + parts.join("\n") + "\n\nAdd it?", importTT: (n, ex) => "• Timetable: " + n + " classes (" + ex + ")", importTTRep: n => "  (replaces your current timetable, " + n + " classes)", importCC: n => "• Colours for " + n + " courses", importDone: "Added ✓",
+    ttImport: "📄 Levnet file", ttImportLong: "📄 Import from the Levnet file", ttScanLong: "⤓ Search the Moodle calendar", ttWho: "Lecturer",
+    ttFileBad: "Couldn’t read that file. Use the personal timetable file downloaded from Levnet (as is, without re-saving it in Excel).",
+    ttFileAsk: (n, c, old) => "Found " + n + " classes in " + c + " courses." + (old ? "\nThey replace the " + old + " classes you have now (classes marked private stay)." : "") + "\n\nImport?",
+    ttFileDone: n => "Timetable imported: " + n + " classes ✓",
   },
   fr: {
     locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
@@ -699,7 +710,7 @@ const I18N = {
     toCal: "📅 Calendrier", markDone: "✓ Marquer fait", unmarkDone: "↩ Annuler", related: n => "📚 Supports du même thème (" + n + ")",
     focusDay: x => "Filtré : " + x, focusCourse: x => "Filtré : " + x, focusGroup: x => "Filtré : " + x, clearFocus: "✕ Effacer", dayEmpty: "Aucun devoir ce jour-là", calDue: "Échéance",
     viewTT: "Emploi du temps", ttTitle: "Emploi du temps hebdomadaire", ttAdd: "+ Ajouter", ttShare: "🔗 Partager", ttOpen: "Emploi du temps →", edit: "Modifier",
-    ttEmpty: "Pas encore d’emploi du temps. Cherchez-le dans le calendrier Moodle (« ⤓ Depuis Moodle ») ou ajoutez des cours à la main (« + Ajouter »).",
+    ttEmpty: "Pas encore d’emploi du temps. Le plus simple : téléchargez votre fichier d’emploi du temps depuis Levnet et importez-le ici. Vous pouvez aussi ajouter des cours à la main (« + Ajouter »).",
     ttNewTitle: "Nouveau cours", ttEditTitle: "Modifier le cours", ttCourse: "Matière", ttOtherCourse: "Autre (hors Moodle)", ttName: "Nom affiché", ttKind: "Type", ttDay: "Jour",
     ttFrom: "De", ttTo: "À", ttPlace: "Lieu / salle", save: "Enregistrer", del: "Supprimer", delConfirm: "Supprimer ce cours de l’emploi du temps ?",
     kLec: "Cours", kEx: "TD", kLab: "TP", kOther: "Autre", ttBadTime: "L’heure de fin doit être après l’heure de début.", ttNeedName: "Choisissez une matière ou saisissez un nom.",
@@ -725,6 +736,10 @@ const I18N = {
     ttScanNone: "Aucun cours hebdomadaire trouvé dans le calendrier Moodle ; votre établissement n’y publie sans doute pas l’emploi du temps. Ajoutez les cours à la main (« + Ajouter »).", ttScanAdd: n => "Ajouter " + n + " cours",
     ttPriv: "🔒 Privé (exclu du partage de l’emploi du temps)", ttClear: "Supprimer tout l’emploi du temps", ttClearConfirm: n => "Supprimer les " + n + " cours de cet appareil ?",
     importAsk: parts => "Ce lien veut ajouter à votre appareil :\n" + parts.join("\n") + "\n\nAjouter ?", importTT: (n, ex) => "• Emploi du temps : " + n + " cours (" + ex + ")", importTTRep: n => "  (remplace votre emploi du temps actuel, " + n + " cours)", importCC: n => "• Couleurs pour " + n + " cours", importDone: "Ajouté ✓",
+    ttImport: "📄 Fichier Levnet", ttImportLong: "📄 Importer le fichier Levnet", ttScanLong: "⤓ Chercher dans le calendrier Moodle", ttWho: "Enseignant",
+    ttFileBad: "Impossible de lire ce fichier. Utilisez le fichier d’emploi du temps téléchargé depuis Levnet (tel quel, sans le réenregistrer dans Excel).",
+    ttFileAsk: (n, c, old) => n + " cours trouvés dans " + c + " matières." + (old ? "\nIls remplacent les " + old + " cours actuels (les cours privés restent)." : "") + "\n\nImporter ?",
+    ttFileDone: n => "Emploi du temps importé : " + n + " cours ✓",
   },
 };
 function pickLang() {
@@ -1247,7 +1262,9 @@ function ttName(x) {
   const cid = ttCid(x), c = cid && V.data.courses.find(y => y.id === cid);
   return c ? shortName(c.name) : t("other");
 }
-const ttKind = x => t((KINDS.find(k => k[0] === x.kind) || KINDS[3])[1]);
+/* blocks are narrow on a phone: drop a trailing "for engineering / for computer engineering" from the name there */
+const blockName = n => n.replace(/\s+ל(?:הנדסה|הנדסת\s+\S+)(?=\s+\d+$|$)/, "").trim() || n;
+const ttKind = x => x.kname || t((KINDS.find(k => k[0] === x.kind) || KINDS[3])[1]);
 /* entries that come from a link (or old storage) are checked field by field: they end up in style attributes and the page */
 function cleanTT(list) {
   if (!Array.isArray(list)) return null;
@@ -1259,7 +1276,7 @@ function cleanTT(list) {
     const str = v => String(v == null ? "" : v).slice(0, 60);
     out.push({ id: typeof x.id === "string" && /^[a-z0-9]{1,16}$/.test(x.id) && !out.some(y => y.id === x.id) ? x.id : Math.random().toString(36).slice(2, 10), cid: Number.isInteger(x.cid) ? x.cid : 0,
       code: /^\d{5,7}$/.test(x.code) ? x.code : "", title: str(x.title), kind: KINDS.some(k => k[0] === x.kind) ? x.kind : "other",
-      day, s: fmtHM(s), e: fmtHM(e), place: str(x.place), color: /^#[0-9a-f]{6}$/i.test(x.color) ? x.color : "", priv: x.priv === true });
+      day, s: fmtHM(s), e: fmtHM(e), place: str(x.place), color: /^#[0-9a-f]{6}$/i.test(x.color) ? x.color : "", priv: x.priv === true, who: str(x.who), kname: str(x.kname) });
   }
   return out;
 }
@@ -1267,7 +1284,7 @@ P.tt = cleanTT(P.tt) || [];
 function renderTT(now) {
   const L = P.tt, el = $("#tt");
   $("#ttFoot").hidden = !L.length;
-  if (!L.length) { el.innerHTML = '<div class="ttempty">' + esc(t("ttEmpty")) + "</div>"; return; }
+  if (!L.length) { el.innerHTML = '<div class="ttempty">' + esc(t("ttEmpty")) + '<div class="eb2"><button class="primary" data-ttfile>' + esc(t("ttImportLong")) + '</button><button data-ttscan>' + esc(t("ttScanLong")) + "</button></div></div>"; return; }
   const days = [0, 1, 2, 3, 4, 5, 6].filter(d => d <= 4 || L.some(x => x.day === d));
   const h0 = Math.floor(Math.min(...L.map(x => hm(x.s))) / 60) * 60, h1 = Math.ceil(Math.max(...L.map(x => hm(x.e))) / 60) * 60;
   const nd = new Date(now * 1000), td = nd.getDay(), nowM = nd.getHours() * 60 + nd.getMinutes();
@@ -1285,7 +1302,7 @@ function renderTT(now) {
     h += '<div class="ttc' + (d === td ? " on" : "") + '">' + items.map(it => {
       const x = it.x, live = d === td && nowM >= it.s && nowM < it.e;
       return '<button class="tte' + (live ? " now" : "") + '" data-tte="' + esc(x.id) + '" style="--c:' + ttColor(x) + ";top:" + pos(it.s) + ";height:calc(" + pos(it.e) + " - " + pos(it.s) + " - 2px);inset-inline-start:" +
-        (100 * it.lane / it.n).toFixed(2) + "%;width:calc(" + (100 / it.n).toFixed(2) + '% - 2px)"><b><bdi>' + esc(ttName(x)) + "</bdi>" + (x.priv ? '<span class="lk">🔒</span>' : "") + "</b>" + (x.place ? '<span class="pl"><bdi>' + esc(x.place) + "</bdi></span>" : "") + '<span class="tk">' + esc(ttKind(x)) +
+        (100 * it.lane / it.n).toFixed(2) + "%;width:calc(" + (100 / it.n).toFixed(2) + '% - 2px)" title="' + esc(ttName(x)) + '"><b><bdi>' + esc(blockName(ttName(x))) + "</bdi>" + (x.priv ? '<span class="lk">🔒</span>' : "") + "</b>" + (x.place ? '<span class="pl"><bdi>' + esc(x.place) + "</bdi></span>" : "") + '<span class="tk">' + esc(ttKind(x)) +
         '</span><span class="tm"><bdi dir="ltr">' + esc(x.s + "–" + x.e) + "</bdi></span></button>";
     }).join("") + (d === td && nowM >= h0 && nowM <= h1 ? '<i class="ttnow" style="top:' + pos(nowM) + '"></i>' : "") + "</div>";
   }
@@ -1303,7 +1320,7 @@ function renderToday(now) {
     if (st === "next") nextShown = true;
     const txt = st === "now" ? t("nowLbl") + "<br>" + esc(t("endsIn", dur(e - nowM))) : st === "next" ? esc(t("startsIn", dur(s - nowM))) : st === "past" ? "✓" : "";
     h += '<button class="tr ' + st + '" data-ttgo style="--c:' + ttColor(x) + '"><span class="tm">' + esc(x.s) + "<br>" + esc(x.e) + '</span><span class="tb"><b><bdi>' + esc(ttName(x)) +
-      "</bdi></b><small>" + esc(ttKind(x)) + (x.place ? " · <bdi>" + esc(x.place) + "</bdi>" : "") + '</small></span><span class="ts">' + txt + "</span></button>";
+      "</bdi></b><small>" + esc(ttKind(x)) + (x.place ? " · <bdi>" + esc(x.place) + "</bdi>" : "") + (x.who ? " · <bdi>" + esc(x.who) + "</bdi>" : "") + '</small></span><span class="ts">' + txt + "</span></button>";
   }
   if (!items.length || items.every(x => hm(x.e) <= nowM)) {
     let nx = null;
@@ -1320,7 +1337,7 @@ function openTT(id) {
   const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id) || c.id === ttCid(x));
   $("#fCourse").innerHTML = cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + '<option value="0">' + esc(t("ttOtherCourse")) + "</option>";
   $("#fCourse").value = String(id ? ttCid(x) : (cs[0] ? cs[0].id : 0));
-  $("#fTitle").value = x.title || ""; $("#fPlace").value = x.place || ""; $("#fS").value = x.s; $("#fE").value = x.e; $("#fPriv").checked = !!x.priv;
+  $("#fTitle").value = x.title || ""; $("#fPlace").value = x.place || ""; $("#fS").value = x.s; $("#fE").value = x.e; $("#fPriv").checked = !!x.priv; $("#fWho").value = x.who || "";
   $("#fKind").innerHTML = KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join(""); $("#fKind").value = x.kind;
   $("#fDay").innerHTML = [0, 1, 2, 3, 4, 5, 6].map(i => '<option value="' + i + '">' + esc(dayName(i)) + "</option>").join(""); $("#fDay").value = String(x.day);
   ttTitlePh();
@@ -1334,7 +1351,7 @@ function saveTT() {
   if (!c && !title) return $("#fErr").textContent = t("ttNeedName");
   if (!(s < e)) return $("#fErr").textContent = t("ttBadTime");
   const old = P.tt.find(y => y.id === ttEditId) || {};
-  const x = cleanTT([{ id: ttEditId || undefined, cid, code: c ? codeOf(c.name) : (cid ? old.code : ""), title, kind: $("#fKind").value, day: Number($("#fDay").value), s: fmtHM(s), e: fmtHM(e), place: $("#fPlace").value.trim(), color: c ? "" : old.color, priv: $("#fPriv").checked }])[0];
+  const x = cleanTT([{ id: ttEditId || undefined, cid, code: c ? codeOf(c.name) : (cid ? old.code : ""), title, kind: $("#fKind").value, day: Number($("#fDay").value), s: fmtHM(s), e: fmtHM(e), place: $("#fPlace").value.trim(), color: c ? "" : old.color, priv: $("#fPriv").checked, who: $("#fWho").value.trim(), kname: old.kind === $("#fKind").value ? old.kname : "" }])[0];
   P.tt = ttEditId ? P.tt.map(y => y.id === ttEditId ? x : y) : [...P.tt, x];
   savePrefs(); $("#ttSheet").hidden = true; render();
 }
@@ -1346,6 +1363,59 @@ async function shareTT() {
   try { if (navigator.share && !wide()) { await navigator.share({ title: t("ttTitle"), url: link }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
   try { await navigator.clipboard.writeText(link); toast(t("ttCopied"), 5000); } catch (e) { prompt(t("ttTitle"), link); }
 }
+/* the personal timetable file from Levnet (a CSV saved as .xls): the user picks the file, sees what was found, then confirms */
+function parseCSV(text, sep) {
+  const rows = []; let row = [], f = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { f += '"'; i++; } else q = false; } else f += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === sep) { row.push(f); f = ""; }
+    else if (ch === "\n" || ch === "\r") { if (ch === "\r" && text[i + 1] === "\n") i++; row.push(f); rows.push(row); row = []; f = ""; }
+    else f += ch;
+  }
+  if (f || row.length) { row.push(f); rows.push(row); }
+  return rows.filter(r => r.some(c => c.trim()));
+}
+const HEB_DAYS = "אבגדהוש";
+function levnetTT(rows) {
+  const h = rows[0].map(x => x.trim()), col = re => h.findIndex(x => re.test(x));
+  const cN = col(/שם\s*(ה)?קורס/), cK = col(/^סוג/), cW = col(/מרצ/), cD = col(/תאריך/), cM = col(/מפגש/), cG = col(/קבוצה/);
+  if (cM < 0 || cN < 0) return null;
+  const out = [], seen = new Set();
+  for (const r of rows.slice(1)) {
+    const re = /יום\s*([א-ש])['׳]?\s*:?\s*(\d{1,2}:\d{2})\s*[-–]\s*(\d{1,2}:\d{2})\s*,?\s*([^;\n]*)/g; let m;
+    while ((m = re.exec(r[cM] || ""))) {
+      const day = HEB_DAYS.indexOf(m[1]); if (day < 0) continue;
+      let place = m[4].trim().replace(/[,;]\s*$/, ""); if (/זום|zoom/i.test(place)) place = "זום";
+      const typ = (r[cK] || "").trim(), dates = (r[cD] || "").trim();
+      const kind = /^שי?עור|הרצא/.test(typ) ? "lec" : /תרגי?ל|תרגול/.test(typ) ? "ex" : /מעבד/.test(typ) ? "lab" : "other";
+      const x = { code: ((r[cG] || "").match(/^\s*(\d{5,7})/) || [])[1] || "", title: (r[cN] || "").trim(), kind, kname: kind === "other" ? typ.replace(/''/g, "״") : "",
+        day, s: m[2].padStart(5, "0"), e: m[3].padStart(5, "0"), place: place + (dates && !/כל השבועות/.test(dates) ? " (" + dates + ")" : ""), who: (r[cW] || "").trim() };
+      const k = [x.code || x.title, x.day, x.s, x.e, x.kind].join("|"); if (seen.has(k)) continue; seen.add(k); out.push(x);
+    }
+  }
+  return cleanTT(out);
+}
+function readTimetableFile(buf) {
+  const b = new Uint8Array(buf);
+  if ((b[0] === 0xD0 && b[1] === 0xCF) || (b[0] === 0x50 && b[1] === 0x4B)) return null;   // a real Excel file, not the Levnet export
+  let text = new TextDecoder("utf-8").decode(buf);
+  if (text.includes("\uFFFD")) { try { text = new TextDecoder("windows-1255").decode(buf); } catch (e) {} }
+  text = text.replace(/^\uFEFF/, "");
+  let rows;
+  if (/^\s*</.test(text)) rows = [...new DOMParser().parseFromString(text, "text/html").querySelectorAll("tr")].map(tr => [...tr.cells].map(c => c.textContent));
+  else { const first = text.split(/\r?\n/)[0]; rows = parseCSV(text, (first.match(/\t/g) || []).length > (first.match(/,/g) || []).length ? "\t" : ","); }
+  return rows.length > 1 ? levnetTT(rows) : null;
+}
+function importLevnet(buf) {
+  const L = readTimetableFile(buf);
+  if (!L || !L.length) return toast(t("ttFileBad"), 7000);
+  const old = P.tt.filter(x => !x.priv).length, courses = new Set(L.map(x => x.code || x.title)).size;
+  if (!confirm(t("ttFileAsk", L.length, courses, old))) return;
+  P.tt = P.tt.filter(x => x.priv).concat(L); savePrefs(); render(); toast(t("ttFileDone", L.length));
+}
+
 /* a shared link only ever adds after the user approves what it contains */
 function importShared(q) {
   const parts = [], tt = q.get("tt"), cc = q.get("cc"); let list = null, cols = null;
@@ -1715,6 +1785,9 @@ $("#bSemEdit").onclick = openSemSettings;
 $("#bTtAdd").onclick = () => openTT();
 $("#bTtShare").onclick = shareTT;
 $("#bTtScan").onclick = scanTT;
+$("#bTtFile").onclick = () => $("#ttFile").click();
+$("#ttFile").onchange = async e => { const f = e.target.files[0]; e.target.value = ""; if (f) importLevnet(await f.arrayBuffer()); };
+$("#tt").addEventListener("click", e => { if (e.target.closest("[data-ttfile]")) $("#ttFile").click(); else if (e.target.closest("[data-ttscan]")) scanTT(); });
 $("#bTtClear").onclick = () => { if (P.tt.length && confirm(t("ttClearConfirm", P.tt.length))) { P.tt = []; savePrefs(); render(); } };
 $("#scClose").onclick = () => $("#scSheet").hidden = true;
 $("#scSheet").addEventListener("click", e => { if (e.target.id === "scSheet") $("#scSheet").hidden = true; });
