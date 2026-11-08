@@ -56,6 +56,9 @@ main{max-width:720px;margin:0 auto;padding:12px max(12px,env(safe-area-inset-rig
 #setup li{margin:4px 0}
 #setup label{display:block;font-weight:600;margin:14px 0 6px}
 #setup input{direction:ltr;text-align:left}
+#setup .step{margin:14px 0}
+.btn{display:block;text-align:center;text-decoration:none;border-radius:10px;padding:11px 14px;margin-top:8px;font-weight:600}
+.btn.primary{background:var(--accent);color:#fff}
 details{margin:10px 0}
 summary{cursor:pointer;padding:4px 0;font-weight:600}
 
@@ -130,21 +133,22 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 <section id="setup" hidden>
   <div class="card">
     <h2>חיבור ל-Moodle</h2>
-    <div class="hint">צריך לעשות את זה פעם אחת. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.</div>
-    <p><b>הדרך הקלה:</b></p>
-    <ol>
-      <li>במחשב, בתוכנה, לחץ <b>📱 העבר לטלפון</b>.</li>
-      <li>סרוק את הקוד שמופיע עם המצלמה של הטלפון.</li>
-    </ol>
-    <details>
-      <summary>או: הדבק טוקן ידנית</summary>
-      <label for="tok">טוקן</label>
-      <input type="password" id="tok" autocomplete="off" placeholder="טוקן, או קישור moodlemobile://…">
-      <label for="site">כתובת האתר</label>
-      <input type="text" id="site" autocomplete="off">
-      <button class="primary" id="bConnect" style="width:100%;margin-top:14px">התחבר</button>
-    </details>
+    <div class="hint">פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.</div>
+    <div class="step"><b>1.</b> לחץ כאן והתחבר ל-Moodle אם יבקשו:
+      <a class="btn primary" id="bGet" target="_blank" rel="noopener noreferrer">פתח את Moodle לקבלת טוקן ↗</a></div>
+    <div class="step"><b>2.</b> בעמוד שנפתח יש קישור אחד (״לחץ כאן לפתיחת היישומון״ / Click here to launch the app). <b>לחיצה ארוכה</b> עליו ← <b>העתק כתובת קישור</b>.
+      <div class="hint">אם נפתחה אפליקציית Moodle או הודעת שגיאה, זה בסדר: חזור לדפדפן ועשה את הלחיצה הארוכה.</div></div>
+    <div class="step"><b>3.</b> חזור לכאן:
+      <button class="primary" id="bPaste" style="width:100%">📋 הדבק וחבר</button></div>
+    <label for="tok">או הדבק ידנית</label>
+    <input type="password" id="tok" autocomplete="off" placeholder="moodlemobile://token=… או טוקן">
+    <button id="bConnect" style="width:100%;margin-top:10px">התחבר</button>
     <div class="err" id="setupErr"></div>
+    <details>
+      <summary>אתר אחר</summary>
+      <input type="text" id="site" autocomplete="off">
+    </details>
+    <div class="hint">יש לך את התוכנה במחשב? אפשר גם ללחוץ שם <b>📱 העבר לטלפון</b> ולסרוק את הקוד.</div>
   </div>
 </section>
 
@@ -234,7 +238,7 @@ async function call(fn, params) {
   let j;
   try { j = await r.json(); } catch (e) { throw new MErr("האתר החזיר תשובה לא צפויה (" + r.status + ")", "bad"); }
   if (j && j.exception) {
-    if (j.errorcode === "invalidtoken") throw new MErr("הטוקן לא תקף יותר. העבר טוקן חדש מהמחשב.", "invalidtoken");
+    if (j.errorcode === "invalidtoken") throw new MErr("הטוקן לא תקף. קבל טוקן חדש (כפתור 1 במסך החיבור) ונסה שוב.", "invalidtoken");
     throw new MErr(j.message || j.errorcode || "שגיאה", j.errorcode || "error");
   }
   return j;
@@ -447,9 +451,14 @@ async function refresh() {
   }
   V.loading = false; render();
 }
+function launchUrl(site) {
+  // דף הכניסה של אפליקציית Moodle. confirmed=1 גורם לו להציג קישור עם הטוקן (במקום לנסות לפתוח את האפליקציה), גם באנדרואיד
+  return normUrl(site) + "/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=" + Math.floor(Math.random() * 1e9) + "&urlscheme=moodlemobile&confirmed=1";
+}
 function showSetup(err) {
   $("#setup").hidden = false; $("#main").hidden = true; $("#bRefresh").hidden = true; $("#bSet").hidden = true;
   $("#site").value = LS.get("site", DEFAULT_SITE); $("#setupErr").textContent = err || ""; $("#upd").textContent = "";
+  $("#bGet").href = launchUrl($("#site").value);
 }
 function showMain() {
   M.url = LS.get("site", DEFAULT_SITE); M.token = LS.get("token", "");
@@ -468,15 +477,24 @@ function importFromHash() {
   return true;
 }
 
-$("#bConnect").onclick = async () => {
-  let tok; try { tok = extractToken($("#tok").value); } catch (e) { $("#setupErr").textContent = e.message; return; }
-  if (!tok) { $("#setupErr").textContent = "חסר טוקן"; return; }
-  const b = $("#bConnect"); b.disabled = true; b.textContent = "בודק…"; $("#setupErr").textContent = "";
+async function connectWith(raw) {
+  let tok; try { tok = extractToken(raw); } catch (e) { $("#setupErr").textContent = e.message; return; }
+  if (!tok) { $("#setupErr").textContent = "חסר טוקן. העתק את הקישור מעמוד Moodle ונסה שוב."; return; }
+  if (!/^[A-Za-z0-9]{10,}$/.test(tok)) { $("#setupErr").textContent = "זה לא נראה כמו טוקן. צריך להעתיק את כתובת הקישור (לחיצה ארוכה ← העתק כתובת קישור), לא את הטקסט שלו."; return; }
+  $("#setupErr").textContent = "בודק…";
   M.url = normUrl($("#site").value); M.token = tok;
-  try { await call("core_webservice_get_site_info"); LS.set("token", tok); LS.set("site", M.url); LS.del("cache"); V.data = null; $("#tok").value = ""; showMain(); }
+  try { await call("core_webservice_get_site_info"); LS.set("token", tok); LS.set("site", M.url); LS.del("cache"); V.data = null; $("#tok").value = ""; $("#setupErr").textContent = ""; showMain(); toast("מחובר ✓"); }
   catch (e) { $("#setupErr").textContent = e.message; }
-  b.disabled = false; b.textContent = "התחבר";
+}
+$("#bConnect").onclick = () => connectWith($("#tok").value);
+$("#tok").addEventListener("keydown", e => { if (e.key === "Enter") connectWith($("#tok").value); });
+$("#bPaste").onclick = async () => {
+  let txt = "";
+  try { txt = await navigator.clipboard.readText(); } catch (e) {}
+  if (!txt) { $("#tok").focus(); $("#setupErr").textContent = "לא הצלחתי לקרוא מהלוח. הדבק ידנית בשדה (לחיצה ארוכה ← הדבק)."; return; }
+  $("#tok").value = txt; connectWith(txt);
 };
+$("#site").addEventListener("input", () => { $("#bGet").href = launchUrl($("#site").value); });
 $("#bRefresh").onclick = () => refresh();
 $("#bSet").onclick = () => { renderSheet(); $("#sheet").hidden = false; };
 $("#bClose").onclick = () => $("#sheet").hidden = true;
