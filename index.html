@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>משימות Moodle</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#3b5bdb">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="משימות">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{
+  --bg:#f4f6fb; --card:#ffffff; --text:#1d2433; --muted:#667085; --line:#e4e8f1;
+  --accent:#3b5bdb; --accent-d:#2f49b3; --accent-soft:#e8edff; --ok:#2b8a3e; --warn:#e8590c; --err:#c92a2a;
+  --new:#1c7ed6; --newbg:#e7f1fd; --updbg:#fff0e0; --okbg:#e6f6ea; --row:#f7f8fc; --track:#eceff5;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#12151d; --card:#1a1f2b; --text:#e7eaf2; --muted:#98a2b3; --line:#2a3141;
+    --accent:#7c93ff; --accent-d:#9aabff; --accent-soft:#252d4d; --ok:#69db7c; --warn:#ffa94d; --err:#ff8787;
+    --new:#74c0fc; --newbg:#1c2b3d; --updbg:#3a2a1a; --okbg:#1d3326; --row:#202637; --track:#252a36;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{font-family:system-ui,-apple-system,"Segoe UI","Heebo",Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15.5px;line-height:1.45;-webkit-text-size-adjust:100%}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);padding:9px 14px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button.link{border:0;background:none;color:var(--accent);padding:6px 4px}
+button:disabled{opacity:.5}
+input[type=text],input[type=search],input[type=password],select{font:inherit;font-size:16px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+select{width:auto}
+.hint{color:var(--muted);font-size:13px}
+.err{color:var(--err)}
+[hidden]{display:none!important}
+
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:8px;background:var(--card);border-bottom:1px solid var(--line);
+  padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left))}
+.top .ttl{flex:1;min-width:0;display:flex;flex-direction:column}
+.top .ttl b{font-size:18px}
+.top .ttl .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ic{width:42px;height:42px;padding:0;font-size:19px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px}
+.ic.spin{animation:s 1s linear infinite}
+@keyframes s{to{transform:rotate(360deg)}}
+main{max-width:720px;margin:0 auto;padding:12px max(12px,env(safe-area-inset-right)) max(30px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+
+#setup .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:10px}
+#setup h2{margin:0 0 6px;font-size:20px}
+#setup ol{padding-inline-start:20px;margin:8px 0}
+#setup li{margin:4px 0}
+#setup label{display:block;font-weight:600;margin:14px 0 6px}
+#setup input{direction:ltr;text-align:left}
+details{margin:10px 0}
+summary{cursor:pointer;padding:4px 0;font-weight:600}
+
+.banner{border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:14px}
+.banner.err{background:var(--updbg);color:var(--err)}
+.banner.info{background:var(--newbg)}
+#sum{margin:2px 2px 10px;color:var(--muted);font-size:14px}
+#sum b{color:var(--text)}
+#sum .late{color:var(--err)}
+
+.chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 8px;scrollbar-width:none;margin:0 -2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{--c:#888;flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:14px;opacity:.55;user-select:none}
+.chip.on{opacity:1;border-color:var(--c);background:color-mix(in srgb,var(--c) 13%,var(--card))}
+.chip i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.chip .n{font-size:12px;color:var(--muted)}
+.ctl{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;flex:1;background:var(--card)}
+.seg button{flex:1;border:0;border-radius:0;padding:9px 6px;background:none;font-size:14px}
+.seg button.on{background:var(--accent);color:#fff;font-weight:600}
+#q{margin-bottom:6px}
+
+.grp{display:flex;align-items:center;gap:8px;margin:16px 2px 8px;font-weight:700;user-select:none;cursor:pointer}
+.grp .tw{width:14px;color:var(--muted);font-size:13px}
+.grp .cnt{font-weight:400;color:var(--muted);font-size:13px}
+.grp.late{color:var(--err)}
+.grp.old,.grp.nodue,.grp.done{color:var(--muted)}
+.grp.cg{color:var(--c);border-inline-start:5px solid var(--c);padding-inline-start:8px}
+.task{--c:var(--line);position:relative;background:var(--card);border:1px solid var(--line);border-inline-start:5px solid var(--c);border-radius:14px;padding:12px 14px;margin-bottom:9px}
+.task.done{opacity:.85}
+.task.hid{opacity:.45}
+.task .x{position:absolute;inset-block-start:4px;inset-inline-end:4px;width:40px;height:40px;padding:0;border:0;background:none;color:var(--muted);font-size:15px}
+.task .tl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-inline-end:34px}
+.task .tname{font-weight:700;font-size:16px;width:100%}
+.task .tc{font-size:12.5px;padding:1px 9px;border-radius:99px;color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent);font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task .due{margin-top:6px;font-size:14px}
+.task .rel{color:var(--muted)}
+.task .sub{color:var(--muted);font-size:13px}
+.task pre{white-space:pre-wrap;font:inherit;margin:6px 0;font-size:14.5px}
+.task .act{margin-top:8px}
+.task a{color:var(--accent);text-decoration:none;font-weight:600;display:inline-block;padding:6px 0}
+.st{font-size:12px;padding:2px 9px;border-radius:99px;font-weight:600}
+.st.submitted{background:var(--okbg);color:var(--ok)}
+.st.draft{background:var(--updbg);color:var(--warn)}
+.st.none{background:var(--newbg);color:var(--new)}
+.st.late{background:var(--updbg);color:var(--err)}
+.st.na,.st.unknown{background:var(--track);color:var(--muted)}
+.st.grade{background:var(--accent-soft);color:var(--accent)}
+.empty{padding:34px 10px;text-align:center;color:var(--muted)}
+.diag{margin-top:18px;font-size:13px;color:var(--muted)}
+.diag div{direction:ltr;text-align:left;color:var(--err);word-break:break-word}
+
+.sheet{position:fixed;inset:0;background:#0007;z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet .box{background:var(--card);width:100%;max-width:720px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px max(20px,env(safe-area-inset-bottom))}
+.sheet h3{margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
+.srow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.srow:last-child{border-bottom:0}
+.srow input[type=color]{width:38px;height:30px;border:0;padding:0;background:none}
+.srow .cn{display:flex;align-items:center;gap:8px;min-width:0}
+.srow .cn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#toast{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));inset-inline:0;margin:auto;width:fit-content;max-width:90%;background:#222;color:#fff;padding:10px 16px;border-radius:12px;display:none;z-index:40;white-space:pre-line;font-size:14px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="ttl"><b>משימות</b><span class="hint" id="upd"></span></div>
+  <button class="ic" id="bRefresh" aria-label="רענן" hidden>⟳</button>
+  <button class="ic" id="bSet" aria-label="הגדרות" hidden>⚙</button>
+</header>
+
+<main>
+<section id="setup" hidden>
+  <div class="card">
+    <h2>חיבור ל-Moodle</h2>
+    <div class="hint">צריך לעשות את זה פעם אחת. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.</div>
+    <p><b>הדרך הקלה:</b></p>
+    <ol>
+      <li>במחשב, בתוכנה, לחץ <b>📱 העבר לטלפון</b>.</li>
+      <li>סרוק את הקוד שמופיע עם המצלמה של הטלפון.</li>
+    </ol>
+    <details>
+      <summary>או: הדבק טוקן ידנית</summary>
+      <label for="tok">טוקן</label>
+      <input type="password" id="tok" autocomplete="off" placeholder="טוקן, או קישור moodlemobile://…">
+      <label for="site">כתובת האתר</label>
+      <input type="text" id="site" autocomplete="off">
+      <button class="primary" id="bConnect" style="width:100%;margin-top:14px">התחבר</button>
+    </details>
+    <div class="err" id="setupErr"></div>
+  </div>
+</section>
+
+<section id="main" hidden>
+  <div id="banner" class="banner" hidden></div>
+  <div id="sum"></div>
+  <div class="chips" id="chips"></div>
+  <div class="ctl">
+    <div class="seg" id="seg">
+      <button data-f="open" class="on">לא הוגשו</button>
+      <button data-f="all">הכל</button>
+      <button data-f="done">הוגשו</button>
+    </div>
+    <select id="sort" aria-label="מיון">
+      <option value="urgency">דחיפות</option>
+      <option value="course">קורס</option>
+      <option value="date">תאריך</option>
+    </select>
+  </div>
+  <input type="search" id="q" placeholder="חיפוש משימה או קורס…" autocomplete="off">
+  <div id="list"></div>
+  <div class="diag" id="diag"></div>
+</section>
+</main>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="box">
+    <h3>הגדרות <button class="link" id="bClose">סגור</button></h3>
+    <div class="srow"><span>משימה עוברת ל״ישנות״ אחרי איחור של</span>
+      <select id="old"><option value="7">7 ימים</option><option value="14">14 ימים</option><option value="30">30 ימים</option><option value="60">60 ימים</option><option value="90">90 ימים</option><option value="0">אף פעם</option></select></div>
+    <div class="srow"><span>הצג משימות שהסתרתי (<span id="hidn">0</span>)</span><input type="checkbox" id="showHid"></div>
+    <div style="margin-top:14px;font-weight:700">קורסים וצבעים</div>
+    <div class="hint">לחיצה על שם הקורס מציגה או מסתירה אותו. לחיצה על הצבע משנה אותו.</div>
+    <div id="clist"></div>
+    <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
+    <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)">נתק את הטלפון הזה (מוחק את הטוקן ממנו)</button>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+"use strict";
+const DEFAULT_SITE = "https://moodle.jct.ac.il";
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem("mt_" + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("mt_" + k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem("mt_" + k); } catch (e) {} },
+};
+function toast(m, ms) { const t = $("#toast"); t.textContent = m; t.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = "none", ms || 3500); }
+
+/* ---------- connection ---------- */
+function normUrl(u) {
+  u = String(u || "").trim().replace(/\/+$/, "");
+  if (!u) return DEFAULT_SITE;
+  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+  if (/^http:\/\//i.test(u) && !/^http:\/\/(localhost|127\.)/i.test(u)) u = "https://" + u.slice(7);
+  return u.replace(/\/(login|my)(\/index\.php)?$/i, "");
+}
+function b64dec(s) {
+  const bin = atob(String(s).replace(/-/g, "+").replace(/_/g, "/"));
+  return new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)));
+}
+function extractToken(raw) {
+  raw = String(raw || "").trim().replace(/^["']+|["']+$/g, "");
+  const m = /^moodlemobile:\/\/token=([^&\s]+)/i.exec(raw);
+  if (m) {
+    try { const parts = b64dec(decodeURIComponent(m[1])).split(":::"); if (parts.length >= 2 && parts[1].trim()) return parts[1].trim(); } catch (e) {}
+    throw new Error("לא הצלחתי לפענח את הקישור. הדבק רק את הטוקן עצמו.");
+  }
+  const f = /[#&]t=([A-Za-z0-9]+)/.exec(raw);
+  return f ? f[1] : raw;
+}
+class MErr extends Error { constructor(msg, code) { super(msg); this.code = code; } }
+const M = { url: "", token: "" };
+async function call(fn, params) {
+  const body = new URLSearchParams({ wstoken: M.token, wsfunction: fn, moodlewsrestformat: "json" });
+  for (const [k, v] of Object.entries(params || {})) {
+    if (Array.isArray(v)) v.forEach((x, i) => body.append(k + "[" + i + "]", x));
+    else body.append(k, v);
+  }
+  let r;
+  try { r = await fetch(M.url + "/webservice/rest/server.php", { method: "POST", body, cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer" }); }
+  catch (e) { throw new MErr(navigator.onLine === false ? "אין חיבור לאינטרנט" : "לא הצלחתי להגיע לאתר: אין אינטרנט, או שהאתר חוסם גישה מדפדפן.", "network"); }
+  let j;
+  try { j = await r.json(); } catch (e) { throw new MErr("האתר החזיר תשובה לא צפויה (" + r.status + ")", "bad"); }
+  if (j && j.exception) {
+    if (j.errorcode === "invalidtoken") throw new MErr("הטוקן לא תקף יותר. העבר טוקן חדש מהמחשב.", "invalidtoken");
+    throw new MErr(j.message || j.errorcode || "שגיאה", j.errorcode || "error");
+  }
+  return j;
+}
+function stripHtml(s) {
+  s = String(s || "").replace(/<br\s*\/?>|<\/(p|div|li|h\d)>/gi, "\n");
+  const d = new DOMParser().parseFromString(s, "text/html");
+  return (d.body.textContent || "").replace(/\r\n?/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+}
+async function pool(items, n, f) {
+  const out = new Array(items.length); let i = 0;
+  await Promise.all(Array.from({ length: Math.min(n, items.length) }, async () => { while (i < items.length) { const k = i++; out[k] = await f(items[k]); } }));
+  return out;
+}
+
+async function fetchAll() {
+  const diag = new Set();
+  const safe = async (fn, p) => {
+    try { return await call(fn, p); }
+    catch (e) { if (e.code === "invalidtoken" || e.code === "network") throw e; diag.add(fn + ": " + String(e.message).slice(0, 160)); return null; }
+  };
+  const info = await call("core_webservice_get_site_info");
+  const raw = await call("core_enrol_get_users_courses", { userid: info.userid });
+  const courses = raw.map(c => ({ id: Number(c.id), name: stripHtml(c.fullname || c.shortname || String(c.id)), end: Number(c.enddate) || 0 }));
+  const ids = courses.map(c => c.id), names = Object.fromEntries(courses.map(c => [c.id, c.name]));
+  const now = Math.floor(Date.now() / 1000), tasks = [];
+  const site = p => M.url + "/mod/" + p;
+
+  const ar = (await safe("mod_assign_get_assignments", { courseids: ids })) || {};
+  const assigns = [];
+  for (const c of ar.courses || []) for (const a of c.assignments || []) assigns.push(Object.assign({}, a, { _cid: Number(c.id) }));
+  const subs = await pool(assigns, 4, a => safe("mod_assign_get_submission_status", { assignid: a.id }));
+  assigns.forEach((a, k) => {
+    const r = subs[k], last = (r && r.lastattempt) || {}, rawSt = (last.submission || {}).status;
+    const status = a.nosubmissions ? "na" : !r ? "unknown" : rawSt === "submitted" ? "submitted" : rawSt === "draft" ? "draft" : "none";
+    const due = a.duedate || 0, ext = last.extensionduedate || 0, fb = (r && r.feedback) || {};
+    tasks.push({ key: "assign:" + a.id, type: "assign", cid: a._cid, course: names[a._cid] || "", name: stripHtml(a.name),
+      due: ext ? Math.max(due, ext) : due, extended: !!(ext && ext > due), from: a.allowsubmissionsfromdate || 0, cutoff: a.cutoffdate || 0,
+      status, grade: (last.graded || fb.gradefordisplay) ? stripHtml(fb.gradefordisplay || "") : "",
+      intro: stripHtml(a.intro), files: (a.introattachments || []).map(f => f.filename || ""), url: site("assign/view.php?id=" + a.cmid) });
+  });
+
+  const qr = (await safe("mod_quiz_get_quizzes_by_courses", { courseids: ids })) || {};
+  const quizzes = qr.quizzes || [];
+  const atts = await pool(quizzes, 4, q => safe("mod_quiz_get_user_attempts", { quizid: q.id, status: "all" }));
+  quizzes.forEach((q, k) => {
+    const r = atts[k], states = ((r && r.attempts) || []).map(x => x.state);
+    const status = r == null ? "unknown" : states.includes("finished") ? "submitted" : states.includes("inprogress") ? "draft" : "none";
+    tasks.push({ key: "quiz:" + q.id, type: "quiz", cid: Number(q.course), course: names[q.course] || "", name: stripHtml(q.name),
+      due: q.timeclose || 0, extended: false, from: q.timeopen || 0, cutoff: 0, status, grade: "",
+      intro: stripHtml(q.intro), files: [], url: site("quiz/view.php?id=" + q.coursemodule) });
+  });
+
+  const cal = (await safe("core_calendar_get_action_events_by_timesort", { timesortfrom: now - 7 * 86400, limitnum: 50 })) || {};
+  for (const e of cal.events || []) {
+    if (e.modulename === "assign" || e.modulename === "quiz") continue;
+    const c = e.course || {}, act = e.action || {};
+    tasks.push({ key: "event:" + e.id, type: "event", cid: Number(c.id) || 0, course: names[c.id] || stripHtml(c.fullname || ""), name: stripHtml(e.name),
+      due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "",
+      intro: stripHtml(e.description), files: [], url: e.url || act.url || "" });
+  }
+  return { tasks, diag: [...diag], courses, user: info.fullname || "", at: now };
+}
+
+/* ---------- state ---------- */
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open" }, LS.get("prefs", {}));
+const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loading: false, err: null };
+const savePrefs = () => LS.set("prefs", P);
+const isOff = cid => P.off.includes(cid);
+const PALETTE = ["#3b5bdb", "#e8590c", "#2b8a3e", "#c2255c", "#0c8599", "#862e9c", "#d9480f", "#5f3dc4", "#087f5b", "#1971c2", "#a61e4d", "#5c940d"];
+function hslHex(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); }
+function colorOf(cid) {
+  if (P.colors[cid]) return P.colors[cid];
+  const cs = (V.data && V.data.courses) || [], i = Math.max(0, cs.findIndex(c => c.id === cid));
+  return i < PALETTE.length ? PALETTE[i] : hslHex((i * 47) % 360, 60, 42);
+}
+const shortName = n => String(n || "אחר").replace(/^\s*\d{4,7}(\.\d+)*\s*-\s*/, "");
+
+/* courses that already ended are switched off the first time they are seen (new semester = only current courses) */
+function applySeen(courses) {
+  const now = Date.now() / 1000; let seen = LS.get("seen", null);
+  if (seen === "imported") seen = courses.map(c => c.id);              // settings came from the PC: keep them as they are
+  else {
+    seen = Array.isArray(seen) ? seen : [];
+    for (const c of courses) if (!seen.includes(c.id)) { seen.push(c.id); if (c.end && c.end < now && !P.off.includes(c.id)) P.off.push(c.id); }
+  }
+  LS.set("seen", seen); savePrefs();
+}
+
+/* ---------- logic ---------- */
+const isDone = t => t.status === "submitted" || t.status === "na";
+function when(ts) {
+  const d = new Date(ts * 1000), o = { weekday: "long", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" };
+  if (d.getFullYear() !== new Date().getFullYear()) { o.year = "numeric"; delete o.weekday; }
+  try { return d.toLocaleString("he-IL", o); } catch (e) { return d.toLocaleString(); }
+}
+function rel(ts, now) {
+  const d = ts - now, a = Math.abs(d), days = Math.floor(a / 86400), hrs = Math.floor(a / 3600);
+  let t;
+  if (a < 3600) t = "פחות משעה";
+  else if (hrs < 24) t = hrs === 1 ? "שעה" : hrs + " שעות";
+  else if (days < 45) t = days === 1 ? "יום" : days + " ימים";
+  else if (days < 365) { const m = Math.round(days / 30); t = m === 1 ? "חודש" : m + " חודשים"; }
+  else { const y = Math.floor(days / 365); t = y === 1 ? "שנה" : y + " שנים"; }
+  return d >= 0 ? "בעוד " + t : "לפני " + t;
+}
+function ago(ts) { const m = Math.floor((Date.now() / 1000 - ts) / 60); return m < 1 ? "עכשיו" : m < 60 ? "לפני " + m + " דק׳" : m < 1440 ? "לפני " + Math.floor(m / 60) + " שע׳" : "לפני " + Math.floor(m / 1440) + " ימים"; }
+function groupOf(t, now) {
+  if (isDone(t)) return "done";
+  if (!t.due) return "nodue";
+  if (t.due < now) return P.old_days && now - t.due > P.old_days * 86400 ? "old" : "late";
+  const nextDay = new Date(now * 1000); nextDay.setHours(24, 0, 0, 0);
+  if (t.due < nextDay.getTime() / 1000) return "today";
+  return t.due < now + 7 * 86400 ? "week" : "later";
+}
+const GROUPS = [["late", "באיחור"], ["today", "היום"], ["week", "בשבוע הקרוב"], ["later", "בהמשך"], ["nodue", "ללא מועד הגשה"], ["old", "ישנות (באיחור)"], ["done", "הוגשו"]];
+const G_OPEN = { late: true, today: true, week: true, later: true, nodue: false, old: false, done: false };
+const TYPE = { assign: "מטלה", quiz: "בוחן", event: "אירוע" };
+const dueKey = t => t.due || 9e12;
+function visible(t) {
+  if (isOff(t.cid)) return false;
+  if (P.hidden.includes(t.key) && !V.showHid) return false;
+  if (P.filter === "open" && isDone(t)) return false;
+  if (P.filter === "done" && !isDone(t)) return false;
+  const q = V.q.toLowerCase();
+  return !q || (t.name + " " + t.course).toLowerCase().includes(q);
+}
+
+/* ---------- render ---------- */
+function card(t, now, g) {
+  const st = t.status, hid = P.hidden.includes(t.key);
+  let chip = st === "submitted" ? '<span class="st submitted">הוגש ✓</span>' : st === "draft" ? '<span class="st draft">טיוטה, לא הוגש</span>'
+    : st === "na" ? '<span class="st na">ללא הגשה אונליין</span>' : st === "unknown" ? '<span class="st unknown">סטטוס לא ידוע</span>'
+    : (g === "late" || g === "old") ? '<span class="st late">באיחור</span>' : '<span class="st none">לא הוגש</span>';
+  if (t.grade) chip += '<span class="st grade">ציון: ' + esc(t.grade) + "</span>";
+  const due = t.due ? "<b>" + esc(when(t.due)) + '</b> <span class="rel">(' + rel(t.due, now) + ")</span>" + (t.extended ? " · הארכה אישית" : "") : '<span class="rel">אין מועד הגשה</span>';
+  const extra = (t.from && t.from > now ? '<div class="sub">נפתח להגשה: ' + esc(when(t.from)) + "</div>" : "") + (t.cutoff ? '<div class="sub">נעילה סופית: ' + esc(when(t.cutoff)) + "</div>" : "");
+  const body = (t.intro || t.files.length) ? "<details><summary>תוכן המטלה</summary><pre>" + esc(t.intro || "") + "</pre>" + (t.files.length ? '<div class="sub">📎 ' + t.files.map(esc).join(", ") + "</div>" : "") + "</details>" : "";
+  const link = /^https?:\/\//.test(t.url) ? '<a href="' + esc(t.url) + '" target="_blank" rel="noopener noreferrer">פתח באתר ↗</a>' : "";
+  return '<div class="task' + (g === "done" ? " done" : "") + (hid ? " hid" : "") + '" style="--c:' + colorOf(t.cid) + '">' +
+    '<button class="x" data-hide="' + esc(t.key) + '" aria-label="' + (hid ? "החזר" : "הסתר") + '">' + (hid ? "↩" : "✕") + "</button>" +
+    '<div class="tl"><span class="tname">' + esc(t.name) + "</span>" + chip + '<span class="tc">' + esc(TYPE[t.type] || "") + " · " + esc(shortName(t.course)) + "</span></div>" +
+    '<div class="due">' + due + "</div>" + extra + body + (link ? '<div class="act">' + link + "</div>" : "") + "</div>";
+}
+function render() {
+  const d = V.data;
+  $("#bRefresh").classList.toggle("spin", V.loading);
+  $("#upd").textContent = V.loading && !d ? "טוען…" : d ? (V.loading ? "מרענן… · " : "") + "עודכן " + ago(d.at) : "";
+  const bn = $("#banner");
+  if (V.err) { bn.hidden = false; bn.className = "banner err"; bn.textContent = V.err + (d ? " (מוצגים הנתונים האחרונים)" : ""); }
+  else bn.hidden = true;
+  if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">טוען משימות…</div>' : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
+  const now = Math.floor(Date.now() / 1000);
+  // course chips: courses that have tasks, in enrolment order
+  const withTasks = new Set(d.tasks.map(t => t.cid));
+  const cs = d.courses.filter(c => withTasks.has(c.id));
+  $("#chips").innerHTML = cs.map(c => {
+    const n = d.tasks.filter(t => t.cid === c.id && !isDone(t) && t.due && groupOf(t, now) !== "old" && !P.hidden.includes(t.key)).length;
+    return '<span class="chip' + (isOff(c.id) ? "" : " on") + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i>' + esc(shortName(c.name)) + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
+  }).join("");
+  $$("#seg button").forEach(b => b.classList.toggle("on", b.dataset.f === P.filter));
+  $("#sort").value = P.sort;
+
+  const shown = d.tasks.filter(visible), buckets = [];
+  const isOpen = (k, def) => V.openG[k] === undefined ? def : V.openG[k];
+  if (P.sort === "urgency") {
+    const by = {}; GROUPS.forEach(([k]) => by[k] = []);
+    shown.forEach(t => by[groupOf(t, now)].push(t));
+    for (const [k, label] of GROUPS) if (by[k].length) buckets.push({ key: "u:" + k, label, cls: k, items: by[k].sort((a, b) => k === "done" ? b.due - a.due : dueKey(a) - dueKey(b)), open: isOpen("u:" + k, G_OPEN[k]) });
+  } else if (P.sort === "course") {
+    const tier = t => { const g = groupOf(t, now); return g === "done" ? 3 : g === "old" ? 2 : g === "nodue" ? 1 : 0; };
+    const ids = d.courses.map(c => c.id).filter(id => shown.some(t => t.cid === id));
+    shown.forEach(t => { if (!ids.includes(t.cid)) ids.push(t.cid); });
+    for (const id of ids) {
+      const items = shown.filter(t => t.cid === id).sort((a, b) => tier(a) - tier(b) || dueKey(a) - dueKey(b));
+      buckets.push({ key: "c:" + id, label: shortName(items[0].course), cls: "cg", color: colorOf(id), items, open: isOpen("c:" + id, true) });
+    }
+  } else buckets.push({ key: "d", label: "", cls: "plain", items: shown.slice().sort((a, b) => dueKey(a) - dueKey(b)), open: true });
+  let h = "";
+  for (const b of buckets) {
+    if (b.cls !== "plain") h += '<div class="grp ' + b.cls + '" data-g="' + esc(b.key) + '"' + (b.color ? ' style="--c:' + b.color + '"' : "") + '><span class="tw">' + (b.open ? "▾" : "◂") + "</span>" + esc(b.label) + ' <span class="cnt">' + b.items.length + "</span></div>";
+    if (b.open) h += b.items.map(t => card(t, now, groupOf(t, now))).join("");
+  }
+  $("#list").innerHTML = h || '<div class="empty">' + (d.tasks.length ? "אין משימות בסינון הזה" : "לא נמצאו משימות") + "</div>";
+
+  const relv = d.tasks.filter(t => !isOff(t.cid) && !P.hidden.includes(t.key) && !isDone(t) && groupOf(t, now) !== "old");
+  const dated = relv.filter(t => t.due), late = dated.filter(t => t.due < now), next = dated.filter(t => t.due >= now).sort((a, b) => a.due - b.due)[0];
+  $("#sum").innerHTML = "<b>" + dated.length + "</b> לא הוגשו" + (late.length ? ' · <b class="late">' + late.length + " באיחור</b>" : "") +
+    (next ? " · הקרובה: <b>" + esc(next.name) + "</b> " + rel(next.due, now) : "");
+  const urgent = dated.filter(t => ["late", "today", "week"].includes(groupOf(t, now))).length;
+  try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
+  $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>אבחון: " + d.diag.length + " פונקציות לא עבדו</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
+}
+function renderSheet() {
+  const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
+  $("#who").textContent = d ? (d.user ? d.user + " · " : "") + M.url.replace(/^https?:\/\//, "") : M.url;
+  $("#clist").innerHTML = d ? d.courses.map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span>" + esc(shortName(c.name)) + "</span></label>" +
+    '<input type="color" data-cc="' + c.id + '" value="' + colorOf(c.id) + '"></div>').join("") : "";
+}
+
+/* ---------- actions ---------- */
+async function refresh() {
+  if (V.loading || !M.token) return;
+  V.loading = true; V.err = null; render();
+  try {
+    const d = await fetchAll(); applySeen(d.courses); V.data = d; LS.set("cache", d);
+  } catch (e) {
+    V.err = e.message;
+    if (e.code === "invalidtoken") { V.loading = false; render(); return showSetup(e.message); }
+  }
+  V.loading = false; render();
+}
+function showSetup(err) {
+  $("#setup").hidden = false; $("#main").hidden = true; $("#bRefresh").hidden = true; $("#bSet").hidden = true;
+  $("#site").value = LS.get("site", DEFAULT_SITE); $("#setupErr").textContent = err || ""; $("#upd").textContent = "";
+}
+function showMain() {
+  M.url = LS.get("site", DEFAULT_SITE); M.token = LS.get("token", "");
+  $("#setup").hidden = true; $("#main").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
+  render(); refresh();
+}
+function importFromHash() {
+  const h = location.hash.slice(1); if (!h) return false;
+  const q = new URLSearchParams(h), t = q.get("t");
+  history.replaceState(null, "", location.pathname + location.search);   // הטוקן לא נשאר בכתובת או בהיסטוריה
+  if (!t || !/^[A-Za-z0-9]+$/.test(t)) return false;
+  LS.set("token", t); LS.set("site", normUrl(q.get("u") || DEFAULT_SITE)); LS.del("cache"); V.data = null;
+  const p = q.get("p");
+  if (p) { try { const x = JSON.parse(b64dec(p)); for (const k of ["off", "hidden", "old_days", "sort", "colors"]) if (x[k] !== undefined) P[k] = x[k]; savePrefs(); LS.set("seen", "imported"); } catch (e) {} }
+  toast("הטלפון חובר ✓");
+  return true;
+}
+
+$("#bConnect").onclick = async () => {
+  let tok; try { tok = extractToken($("#tok").value); } catch (e) { $("#setupErr").textContent = e.message; return; }
+  if (!tok) { $("#setupErr").textContent = "חסר טוקן"; return; }
+  const b = $("#bConnect"); b.disabled = true; b.textContent = "בודק…"; $("#setupErr").textContent = "";
+  M.url = normUrl($("#site").value); M.token = tok;
+  try { await call("core_webservice_get_site_info"); LS.set("token", tok); LS.set("site", M.url); LS.del("cache"); V.data = null; $("#tok").value = ""; showMain(); }
+  catch (e) { $("#setupErr").textContent = e.message; }
+  b.disabled = false; b.textContent = "התחבר";
+};
+$("#bRefresh").onclick = () => refresh();
+$("#bSet").onclick = () => { renderSheet(); $("#sheet").hidden = false; };
+$("#bClose").onclick = () => $("#sheet").hidden = true;
+$("#sheet").addEventListener("click", e => { if (e.target.id === "sheet") $("#sheet").hidden = true; });
+$("#old").onchange = e => { P.old_days = Number(e.target.value); savePrefs(); render(); };
+$("#showHid").onchange = e => { V.showHid = e.target.checked; render(); };
+$("#clist").addEventListener("change", e => {
+  const tc = e.target.closest("[data-tc]");
+  if (tc) { const id = Number(tc.dataset.tc); P.off = e.target.checked ? P.off.filter(x => x !== id) : [...new Set([...P.off, id])]; savePrefs(); render(); }
+});
+$("#clist").addEventListener("input", e => { if (e.target.dataset.cc) { P.colors[e.target.dataset.cc] = e.target.value; savePrefs(); render(); } });
+$("#bLogout").onclick = () => {
+  if (!confirm("למחוק את הטוקן מהטלפון הזה? כדי לחזור תצטרך לסרוק שוב מהמחשב.")) return;
+  ["token", "cache", "seen"].forEach(k => LS.del(k)); V.data = null; M.token = ""; $("#sheet").hidden = true;
+  try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
+  showSetup();
+};
+$("#chips").addEventListener("click", e => {
+  const c = e.target.closest("[data-c]"); if (!c) return;
+  const id = Number(c.dataset.c); P.off = isOff(id) ? P.off.filter(x => x !== id) : [...P.off, id]; savePrefs(); render();
+});
+$("#seg").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { P.filter = b.dataset.f; savePrefs(); render(); } });
+$("#sort").onchange = e => { P.sort = e.target.value; savePrefs(); render(); };
+let qt; $("#q").addEventListener("input", e => { clearTimeout(qt); qt = setTimeout(() => { V.q = e.target.value.trim(); render(); }, 120); });
+$("#list").addEventListener("click", e => {
+  const x = e.target.closest("[data-hide]");
+  if (x) { const k = x.dataset.hide; P.hidden = P.hidden.includes(k) ? P.hidden.filter(y => y !== k) : [...P.hidden, k]; savePrefs(); render(); return; }
+  const g = e.target.closest("[data-g]");
+  if (g) { const k = g.dataset.g, def = k.startsWith("u:") ? G_OPEN[k.slice(2)] : true; V.openG[k] = !(V.openG[k] === undefined ? def : V.openG[k]); render(); }
+});
+document.addEventListener("visibilitychange", () => { if (!document.hidden && M.token && (!V.data || Date.now() / 1000 - V.data.at > 300)) refresh(); });
+setInterval(() => { if (!document.hidden && V.data) render(); }, 60000);
+window.addEventListener("online", () => { if (M.token) refresh(); });
+
+if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
+importFromHash();
+if (LS.get("token", "")) showMain(); else showSetup();
+</script>
+</body>
+</html>
