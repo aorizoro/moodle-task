@@ -73,21 +73,20 @@ body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
   body.app #dash,body.app #ttv{display:contents!important}
   body.app #tasks{display:block!important}
   #app{display:grid;gap:14px;align-items:start;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
-    grid-template-areas:"hero stats" "today sem" "tt tt" "tasks week" "tasks month" "tasks news" "tasks load" "tasks ics" "tasks .";
-    grid-template-rows:auto auto auto auto auto auto auto auto 1fr}
+    grid-template-areas:"hero stats" "exams today" "sem sem" "tt tt" "tasks week" "tasks month" "tasks news" "tasks load" "tasks ics" "tasks .";
+    grid-template-rows:auto auto auto auto auto auto auto auto auto 1fr}
   #app .dcard,#app .stats{margin:0}
-  #hero{grid-area:hero} #stats{grid-area:stats} #todayCard{grid-area:today} #semCard{grid-area:sem} #ttCard{grid-area:tt}
+  #hero{grid-area:hero} #stats{grid-area:stats} #todayCard{grid-area:today} #examCard{grid-area:exams} #semCard{grid-area:sem} #ttCard{grid-area:tt}
   #weekCard{grid-area:week} #monthCard{grid-area:month} #newsCard{grid-area:news} #loadCard{grid-area:load} #icsCard{grid-area:ics} #tasks{grid-area:tasks}
-  #hero,#stats,#todayCard,#semCard{align-self:stretch}
+  #hero,#stats,#todayCard,#examCard{align-self:stretch}
   .sech{display:flex;align-items:baseline;gap:10px;font-size:19px;font-weight:800;margin:2px 2px 10px}
   .sech .hint{font-weight:400;font-size:13px}
 }
 @media (min-width:1100px){
   #app{gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));
-    grid-template-areas:"hero stats today" "sem sem sem" "tt tt month" "tasks tasks week" "tasks tasks news" "tasks tasks load" "tasks tasks ics" "tasks tasks .";
-    grid-template-rows:auto auto auto auto auto auto auto 1fr}
-  #monthCard{align-self:stretch}
-  .md{min-height:62px}
+    grid-template-areas:"hero stats exams" "sem sem sem" "today tt tt" "week tt tt" "month tasks tasks" "news tasks tasks" "load tasks tasks" "ics tasks tasks" ". tasks tasks";
+    grid-template-rows:auto auto auto auto auto auto auto auto 1fr}
+  #todayCard{align-self:start}
 }
 
 /* ---------- setup ---------- */
@@ -107,7 +106,7 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .dcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
 .dcard .ch{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:700;margin-bottom:10px}
 .dcard .ch .hint{font-weight:400}
-.hero{--c:var(--accent);position:relative;overflow:hidden;border:0;color:#fff;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 92%,#000),color-mix(in srgb,var(--c) 70%,#4c1d95))}
+.hero{--c:var(--accent);position:relative;overflow:hidden;border:0;color:#fff;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 72%,#000),color-mix(in srgb,var(--c) 55%,#3b1470))}
 .hero .gr{opacity:.9;font-size:14px}
 .hero .lbl{margin-top:10px;font-size:12.5px;opacity:.85;letter-spacing:.03em}
 .hero .nm{font-size:19px;font-weight:800;margin:2px 0 4px;line-height:1.3}
@@ -224,6 +223,39 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .ttnow::before{content:"";position:absolute;inset-inline-start:-3px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--err)}
 .ttempty{padding:18px 6px;color:var(--muted);text-align:center;line-height:1.6}
 @media (min-width:760px){ .tt{--pph:54px} .tte{font-size:12px;padding:5px 7px} .tte b{font-size:13.5px} .tte .tk,.tte .tm{display:block} .tte .pl{order:2} .tte .tk{order:1} .tte .tm{order:3} }
+
+/* exams */
+.er{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:8px 10px;border-radius:12px;background:var(--row);border:0;border-inline-start:5px solid var(--c);margin-bottom:6px}
+.er .eb{flex:1;min-width:0;display:flex;flex-direction:column}
+.er .eb b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.er .eb small{color:var(--muted);font-size:12.5px}
+.er .ec{text-align:center;min-width:54px;line-height:1.1}
+.er .ec .en{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.er .ec .eu{font-size:11.5px;color:var(--muted)}
+.er .ec .cd{font-size:12px;display:block;max-width:120px}
+.er.b{opacity:.75}
+.er.soon .ec .en{color:var(--warn)}
+.exempty{color:var(--muted);font-size:14px}
+.exempty button{margin-top:8px;width:100%}
+.xrow{border-bottom:1px solid var(--line);padding:10px 0}
+.xrow:last-child{border-bottom:0}
+.xrow .xn{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:6px}
+.xrow .xn i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.xrow .xm{display:grid;grid-template-columns:62px minmax(0,1fr);gap:6px 8px;align-items:center;font-size:14px}
+.xrow input[type=datetime-local]{width:100%;min-width:0}
+.xsug{grid-column:1/-1;font-size:13px;color:var(--accent);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.xsug button{padding:3px 10px;font-size:13px}
+.md .dot.xm{border-radius:2px;width:9px;height:9px;box-shadow:0 0 0 1.5px var(--card),0 0 0 3px var(--c)}
+.wd .bar.xm{background:repeating-linear-gradient(135deg,var(--c),var(--c) 4px,color-mix(in srgb,var(--c) 45%,var(--card)) 4px,color-mix(in srgb,var(--c) 45%,var(--card)) 8px);height:16px}
+.scl label{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-weight:400}
+.scl label i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.scl label span{flex:1;min-width:0}
+.scl small{color:var(--muted)}
+.ttfoot{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
+.ttfoot button{font-size:13px}
+.tte .lk{font-size:10px;margin-inline-start:3px}
+input[type=datetime-local]{font:inherit;font-size:15px;padding:7px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.chk{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;font-weight:400!important}
 
 /* announcements */
 .nb{font-style:normal;font-size:12px;font-weight:700;color:#fff;background:var(--err);border-radius:99px;padding:1px 8px;margin-inline-start:6px}
@@ -361,6 +393,10 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <div class="ch"><span id="todayTitle"></span><button class="link" id="bTtGo" data-i18n="ttOpen"></button></div>
       <div id="today"></div>
     </div>
+    <div id="examCard" class="dcard exams">
+      <div class="ch"><span data-i18n="examsTitle"></span><button class="link" id="bExEdit" data-i18n="edit"></button></div>
+      <div id="exams"></div>
+    </div>
     <div id="stats" class="stats"></div>
     <div id="semCard" class="dcard sem">
       <div class="ch"><span data-i18n="semTitle"></span><button class="link" id="bSemEdit" data-i18n="edit"></button></div>
@@ -390,8 +426,9 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 
   <section id="ttv">
     <div id="ttCard" class="dcard tt">
-      <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtShare" data-i18n="ttShare"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
+      <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtScan" data-i18n="ttScan"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
       <div id="tt"></div>
+      <div class="ttfoot" id="ttFoot"><button class="link" id="bTtShare" data-i18n="ttShare"></button><button class="link" id="bTtClear" style="color:var(--err)" data-i18n="ttClear"></button></div>
     </div>
   </section>
 
@@ -441,6 +478,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div class="srow"><span data-i18n="semEnd"></span><input type="date" data-sem="e"></div>
     <div class="srow"><span data-i18n="exStart"></span><input type="date" data-sem="xs"></div>
     <div class="srow"><span data-i18n="exEnd"></span><input type="date" data-sem="xe"></div>
+    <div class="hint" id="semSrc"></div>
     <button class="link" id="bSemAuto" data-i18n="semAuto"></button>
     <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
     <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)" data-i18n="logout"></button>
@@ -460,8 +498,26 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <label><span data-i18n="ttTo"></span><input type="time" id="fE" step="300"></label>
     </div>
     <label><span data-i18n="ttPlace"></span><input type="text" id="fPlace" maxlength="60" autocomplete="off"></label>
+    <label class="chk"><input type="checkbox" id="fPriv"><span data-i18n="ttPriv"></span></label>
     <div class="err" id="fErr"></div>
     <div class="frow"><button class="primary" id="fSave" data-i18n="save"></button><button id="fDel" style="color:var(--err)" data-i18n="del"></button></div>
+  </div>
+</div>
+<div class="sheet" id="exSheet" hidden>
+  <div class="box">
+    <h3><span data-i18n="exSheetTitle"></span> <button class="link" id="exClose" data-i18n="close"></button></h3>
+    <div class="hint" data-i18n="exHint"></div>
+    <button id="bExScan" style="width:100%;margin:10px 0 4px" data-i18n="exScan"></button>
+    <div class="hint" id="exScanMsg"></div>
+    <div id="exList"></div>
+  </div>
+</div>
+<div class="sheet" id="scSheet" hidden>
+  <div class="box">
+    <h3><span data-i18n="ttScanTitle"></span> <button class="link" id="scClose" data-i18n="close"></button></h3>
+    <div class="hint" id="scMsg"></div>
+    <div id="scList" class="scl"></div>
+    <button class="primary" id="scAdd" style="width:100%;margin-top:12px" hidden></button>
   </div>
 </div>
 <div id="toast"></div>
@@ -517,22 +573,32 @@ const I18N = {
     toCal: "📅 ליומן", markDone: "✓ סמן כבוצע", unmarkDone: "↩ בטל סימון", related: n => "📚 חומרים מאותו נושא (" + n + ")",
     focusDay: x => "מסונן: " + x, focusCourse: x => "מסונן: " + x, focusGroup: x => "מסונן: " + x, clearFocus: "✕ נקה", dayEmpty: "אין משימות ביום הזה", calDue: "מועד הגשה",
     viewTT: "מערכת", ttTitle: "מערכת שעות שבועית", ttAdd: "+ הוסף", ttShare: "🔗 שתף", ttOpen: "למערכת ←", edit: "עריכה",
-    ttEmpty: "עדיין אין מערכת שעות. לחץ ״+ הוסף״ והכנס שיעור (קורס, יום, שעות, חדר), או פתח קישור מערכת שקיבלת מחבר מאותו מסלול.",
+    ttEmpty: "עדיין אין מערכת שעות. אפשר לחפש אותה ביומן של Moodle (״⤓ מ-Moodle״) או להוסיף שיעורים ידנית (״+ הוסף״).",
     ttNewTitle: "שיעור חדש", ttEditTitle: "עריכת שיעור", ttCourse: "קורס", ttOtherCourse: "אחר (לא מ-Moodle)", ttName: "שם להצגה", ttKind: "סוג", ttDay: "יום",
     ttFrom: "משעה", ttTo: "עד שעה", ttPlace: "מקום / חדר", save: "שמור", del: "מחק", delConfirm: "למחוק את השיעור הזה מהמערכת?",
     kLec: "שיעור", kEx: "תרגול", kLab: "מעבדה", kOther: "אחר", ttBadTime: "שעת הסיום צריכה להיות אחרי שעת ההתחלה.", ttNeedName: "בחר קורס או כתוב שם.",
     ttImported: n => "המערכת נטענה: " + n + " שיעורים", ttReplace: n => "להחליף את המערכת הנוכחית (" + n + " שיעורים) במערכת מהקישור?", ttBadLink: "קישור המערכת לא תקין",
-    ttCopied: "הקישור הועתק. מי שיפתח אותו יקבל את המערכת שלך (בלי הטוקן ובלי המשימות).", ttNothing: "אין עדיין מה לשתף",
+    ttCopied: "הקישור הועתק. מי שיפתח אותו יתבקש לאשר, ויקבל רק את השיעורים שלא סימנת כפרטיים (בלי הטוקן ובלי המשימות).", ttNothing: "אין עדיין מה לשתף",
     todayClasses: "השיעורים היום", ttSetup: "🗓 הוסף את המערכת השבועית שלך", noClassesToday: "אין שיעורים היום", dayOver: "סיימת להיום 🙌",
     nextClass: (d, s, n) => "הבא: <b>" + d + " " + s + "</b> · " + n, nowLbl: "עכשיו", endsIn: x => "נגמר בעוד " + x, startsIn: x => "בעוד " + x, durHM: (h, m) => (h ? h + " שע׳ " : "") + m + " דק׳",
     semTitle: "התקדמות הסמסטר", weekOf: (a, b) => "שבוע " + a + " <small>מתוך " + b + "</small>",
     weeksLeft: n => n === 0 ? "<b>השבוע האחרון!</b>" : n === 1 ? "נשאר <b>שבוע אחד</b>" : "נותרו <b>" + n + " שבועות</b>", toExams: n => n === 1 ? "<b>יום אחד</b> למבחנים" : "<b>" + n + " ימים</b> למבחנים",
     examsNow: "תקופת המבחנים", examsLeft: n => "נותרו <b>" + n + " ימים</b> עד סוף המבחנים", semBefore: n => "הסמסטר מתחיל בעוד " + n + " ימים", semOver: "הסמסטר נגמר 🎉", semEnded: "הסמסטר נגמר",
-    pctSem: n => n + "% מהסמסטר", examsLbl: "📝 מבחנים", semGuess: "התאריכים חושבו אוטומטית מ-Moodle. כדאי לבדוק מול לוח השנה של המוסד:",
-    semDates: "תאריכי הסמסטר", semHint: "ברירת המחדל מחושבת מתאריכי הקורסים ב-Moodle. אפשר לתקן לפי לוח השנה של המוסד.", semStart: "תחילת הסמסטר", semEnd: "יום הלימודים האחרון",
-    exStart: "תחילת המבחנים", exEnd: "סוף המבחנים", semAuto: "↺ חזור לחישוב האוטומטי",
+    pctSem: n => n + "% מהסמסטר", examsLbl: "📝 מבחנים",
+    semDates: "תאריכי הסמסטר", semHint: "לפי לוח השנה האקדמי של המוסד. מה שתזין כאן גובר על ברירת המחדל.", semStart: "תחילת הסמסטר", semEnd: "יום הלימודים האחרון",
+    exStart: "תחילת המבחנים", exEnd: "סוף המבחנים", semAuto: "↺ מחק את מה שהזנתי",
     newsTitle: "הודעות מהקורסים", newsNone: "אין הודעות ב-45 הימים האחרונים", newsOff: "לא הצלחתי לטעון הודעות", markAllRead: "סמן הכל כנקרא", newsOpen: "פתח בפורום ↗",
     newsMore: n => "עוד " + n + " הודעות", newsLess: "הצג פחות", newsLoading: "טוען הודעות…",
+    examsTitle: "מבחנים", exNone: "עוד לא הוזנו מועדי מבחנים. Moodle לא מפרסם אותם, אז מזינים פעם אחת לכל קורס.", exAddBtn: "📝 הזן מועדי מבחנים",
+    moedA: "מועד א׳", moedB: "מועד ב׳", daysU: n => n === 1 ? "יום" : "ימים", exMore: n => "+ עוד " + n + " מבחנים", exToday: "היום!",
+    exSheetTitle: "מועדי מבחנים", exHint: "Moodle לא מפרסם מועדי מבחנים. הזן לכל קורס את התאריך והשעה של מועד א׳ ומועד ב׳ (מהפורטל או מהמייל של המוסד). נשמר רק במכשיר הזה.",
+    exScan: "🔎 חפש מועדים ביומן של Moodle", exScanNone: "ביומן של Moodle לא נמצאו מועדי מבחנים. צריך להזין ידנית.", exFound: n => "נמצאו ב-Moodle " + n + " אירועים שנראים כמו מבחנים. אשר כל אחד שמתאים.",
+    exUse: "אשר", exFromMoodle: "ב-Moodle:", scanning: "מחפש ביומן של Moodle…", noCourses: "אין עדיין קורסים (צריך להתחבר ולרענן)",
+    semNeed: "כדי לראות כמה שבועות נשארו, הזן את תאריכי הסמסטר.", semSetBtn: "הזן תאריכי סמסטר", semSrcKnown: "מקור: לוח השנה של מכון לב, סמסטר א׳ תשפ״ז", semSrcUser: "מקור: תאריכים שהזנת", examsLblA: "📝 מועדי א׳",
+    ttScan: "⤓ מ-Moodle", ttScanTitle: "שיעורים מהיומן של Moodle", ttScanHint: "אלה אירועים שחוזרים כל שבוע ביומן של הקורסים שלך ב-Moodle. סמן מה להוסיף למערכת.",
+    ttScanNone: "ביומן של Moodle לא נמצאו שיעורים קבועים, כנראה שהמוסד לא מפרסם שם את המערכת. אפשר להוסיף שיעורים ידנית (״+ הוסף״).", ttScanAdd: n => "הוסף " + n + " שיעורים",
+    ttPriv: "🔒 פרטי (לא נכלל כשמשתפים את המערכת)", ttClear: "מחק את כל המערכת", ttClearConfirm: n => "למחוק את כל " + n + " השיעורים מהמכשיר הזה?",
+    importAsk: parts => "הקישור הזה רוצה להוסיף למכשיר שלך:\n" + parts.join("\n") + "\n\nלהוסיף?", importTT: (n, ex) => "• מערכת שעות: " + n + " שיעורים (" + ex + ")" , importTTRep: n => "  (תחליף את המערכת הנוכחית, " + n + " שיעורים)", importCC: n => "• צבעים ל-" + n + " קורסים", importDone: "נוסף ✓",
   },
   en: {
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "Moodle Tasks", appTitle: "Tasks", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
@@ -570,25 +636,35 @@ const I18N = {
     toCal: "📅 Calendar", markDone: "✓ Mark done", unmarkDone: "↩ Unmark", related: n => "📚 Materials from the same topic (" + n + ")",
     focusDay: x => "Filtered: " + x, focusCourse: x => "Filtered: " + x, focusGroup: x => "Filtered: " + x, clearFocus: "✕ Clear", dayEmpty: "No tasks on this day", calDue: "Due",
     viewTT: "Timetable", ttTitle: "Weekly timetable", ttAdd: "+ Add", ttShare: "🔗 Share", ttOpen: "Timetable →", edit: "Edit",
-    ttEmpty: "No timetable yet. Tap “+ Add” and enter a class (course, day, hours, room), or open a timetable link from a classmate.",
+    ttEmpty: "No timetable yet. Look for it in the Moodle calendar (“⤓ From Moodle”) or add classes manually (“+ Add”).",
     ttNewTitle: "New class", ttEditTitle: "Edit class", ttCourse: "Course", ttOtherCourse: "Other (not on Moodle)", ttName: "Display name", ttKind: "Type", ttDay: "Day",
     ttFrom: "From", ttTo: "To", ttPlace: "Place / room", save: "Save", del: "Delete", delConfirm: "Delete this class from the timetable?",
     kLec: "Lecture", kEx: "Tutorial", kLab: "Lab", kOther: "Other", ttBadTime: "The end time must be after the start time.", ttNeedName: "Pick a course or type a name.",
     ttImported: n => "Timetable loaded: " + n + " classes", ttReplace: n => "Replace your current timetable (" + n + " classes) with the one from the link?", ttBadLink: "The timetable link is not valid",
-    ttCopied: "Link copied. Whoever opens it gets your timetable (not your token or tasks).", ttNothing: "Nothing to share yet",
+    ttCopied: "Link copied. Whoever opens it is asked to confirm and gets only the classes you didn’t mark private (not your token or tasks).", ttNothing: "Nothing to share yet",
     todayClasses: "Today’s classes", ttSetup: "🗓 Add your weekly timetable", noClassesToday: "No classes today", dayOver: "Done for today 🙌",
     nextClass: (d, s, n) => "Next: <b>" + d + " " + s + "</b> · " + n, nowLbl: "Now", endsIn: x => "ends in " + x, startsIn: x => "in " + x, durHM: (h, m) => (h ? h + " h " : "") + m + " min",
     semTitle: "Semester progress", weekOf: (a, b) => "Week " + a + " <small>of " + b + "</small>",
     weeksLeft: n => n === 0 ? "<b>Last week!</b>" : n === 1 ? "<b>1 week</b> left" : "<b>" + n + " weeks</b> left", toExams: n => n === 1 ? "<b>1 day</b> to exams" : "<b>" + n + " days</b> to exams",
     examsNow: "Exam period", examsLeft: n => "<b>" + n + " days</b> until the end of exams", semBefore: n => "The semester starts in " + n + " days", semOver: "Semester over 🎉", semEnded: "Semester over",
-    pctSem: n => n + "% of the semester", examsLbl: "📝 Exams", semGuess: "Dates were estimated from Moodle. Check them against your institution’s calendar:",
-    semDates: "Semester dates", semHint: "Defaults come from the Moodle course dates. You can correct them from your institution’s calendar.", semStart: "Semester start", semEnd: "Last day of classes",
-    exStart: "Exams start", exEnd: "Exams end", semAuto: "↺ Back to automatic dates",
+    pctSem: n => n + "% of the semester", examsLbl: "📝 Exams",
+    semDates: "Semester dates", semHint: "From your institution’s academic calendar. What you enter here overrides the default.", semStart: "Semester start", semEnd: "Last day of classes",
+    exStart: "Exams start", exEnd: "Exams end", semAuto: "↺ Clear what I entered",
     newsTitle: "Course announcements", newsNone: "No announcements in the last 45 days", newsOff: "Couldn’t load announcements", markAllRead: "Mark all read", newsOpen: "Open in forum ↗",
     newsMore: n => n + " more", newsLess: "Show less", newsLoading: "Loading announcements…",
+    examsTitle: "Exams", exNone: "No exam dates yet. Moodle doesn’t publish them, so you enter them once per course.", exAddBtn: "📝 Enter exam dates",
+    moedA: "1st sitting", moedB: "2nd sitting", daysU: n => n === 1 ? "day" : "days", exMore: n => "+ " + n + " more exams", exToday: "Today!",
+    exSheetTitle: "Exam dates", exHint: "Moodle doesn’t publish exam dates. Enter the date and time of each course’s 1st and 2nd sitting (from your institution’s portal or email). Stored only on this device.",
+    exScan: "🔎 Look for dates in the Moodle calendar", exScanNone: "No exam dates found in the Moodle calendar. Enter them manually.", exFound: n => n + " events that look like exams were found on Moodle. Confirm each one that fits.",
+    exUse: "Use", exFromMoodle: "On Moodle:", scanning: "Searching the Moodle calendar…", noCourses: "No courses yet (connect and refresh first)",
+    semNeed: "Enter the semester dates to see how many weeks are left.", semSetBtn: "Enter semester dates", semSrcKnown: "Source: Machon Lev academic calendar, semester A 5787", semSrcUser: "Source: dates you entered", examsLblA: "📝 1st sittings",
+    ttScan: "⤓ From Moodle", ttScanTitle: "Classes from the Moodle calendar", ttScanHint: "These events repeat every week in your Moodle course calendars. Tick what to add.",
+    ttScanNone: "No weekly classes were found in the Moodle calendar; your institution probably doesn’t publish the timetable there. You can add classes manually (“+ Add”).", ttScanAdd: n => "Add " + n + " classes",
+    ttPriv: "🔒 Private (left out when sharing the timetable)", ttClear: "Delete the whole timetable", ttClearConfirm: n => "Delete all " + n + " classes from this device?",
+    importAsk: parts => "This link wants to add to your device:\n" + parts.join("\n") + "\n\nAdd it?", importTT: (n, ex) => "• Timetable: " + n + " classes (" + ex + ")", importTTRep: n => "  (replaces your current timetable, " + n + " classes)", importCC: n => "• Colours for " + n + " courses", importDone: "Added ✓",
   },
   fr: {
-    locale: "fr-FR", dir: "ltr", weekStart: 1, docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
+    locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     step1: "Appuyez ici et connectez-vous à Moodle si demandé :", getToken: "Ouvrir Moodle pour obtenir un jeton ↗",
     step2: "La page qui s’ouvre contient un seul lien (« Click here to launch the app » ou son équivalent). <b>Appui long</b> dessus → <b>Copier l’adresse du lien</b>.",
@@ -623,22 +699,32 @@ const I18N = {
     toCal: "📅 Calendrier", markDone: "✓ Marquer fait", unmarkDone: "↩ Annuler", related: n => "📚 Supports du même thème (" + n + ")",
     focusDay: x => "Filtré : " + x, focusCourse: x => "Filtré : " + x, focusGroup: x => "Filtré : " + x, clearFocus: "✕ Effacer", dayEmpty: "Aucun devoir ce jour-là", calDue: "Échéance",
     viewTT: "Emploi du temps", ttTitle: "Emploi du temps hebdomadaire", ttAdd: "+ Ajouter", ttShare: "🔗 Partager", ttOpen: "Emploi du temps →", edit: "Modifier",
-    ttEmpty: "Pas encore d’emploi du temps. Appuyez sur « + Ajouter » et saisissez un cours (matière, jour, horaires, salle), ou ouvrez un lien d’emploi du temps reçu d’un camarade.",
+    ttEmpty: "Pas encore d’emploi du temps. Cherchez-le dans le calendrier Moodle (« ⤓ Depuis Moodle ») ou ajoutez des cours à la main (« + Ajouter »).",
     ttNewTitle: "Nouveau cours", ttEditTitle: "Modifier le cours", ttCourse: "Matière", ttOtherCourse: "Autre (hors Moodle)", ttName: "Nom affiché", ttKind: "Type", ttDay: "Jour",
     ttFrom: "De", ttTo: "À", ttPlace: "Lieu / salle", save: "Enregistrer", del: "Supprimer", delConfirm: "Supprimer ce cours de l’emploi du temps ?",
     kLec: "Cours", kEx: "TD", kLab: "TP", kOther: "Autre", ttBadTime: "L’heure de fin doit être après l’heure de début.", ttNeedName: "Choisissez une matière ou saisissez un nom.",
     ttImported: n => "Emploi du temps chargé : " + n + " cours", ttReplace: n => "Remplacer votre emploi du temps actuel (" + n + " cours) par celui du lien ?", ttBadLink: "Lien d’emploi du temps invalide",
-    ttCopied: "Lien copié. Celui qui l’ouvre reçoit votre emploi du temps (ni votre jeton ni vos devoirs).", ttNothing: "Rien à partager pour l’instant",
+    ttCopied: "Lien copié. Celui qui l’ouvre doit confirmer et ne reçoit que les cours non privés (ni votre jeton ni vos devoirs).", ttNothing: "Rien à partager pour l’instant",
     todayClasses: "Cours d’aujourd’hui", ttSetup: "🗓 Ajoutez votre emploi du temps", noClassesToday: "Pas de cours aujourd’hui", dayOver: "Fini pour aujourd’hui 🙌",
     nextClass: (d, s, n) => "Prochain : <b>" + d + " " + s + "</b> · " + n, nowLbl: "En cours", endsIn: x => "fin dans " + x, startsIn: x => "dans " + x, durHM: (h, m) => (h ? h + " h " : "") + m + " min",
     semTitle: "Avancement du semestre", weekOf: (a, b) => "Semaine " + a + " <small>sur " + b + "</small>",
     weeksLeft: n => n === 0 ? "<b>Dernière semaine !</b>" : n === 1 ? "plus qu’<b>1 semaine</b>" : "encore <b>" + n + " semaines</b>", toExams: n => n === 1 ? "<b>1 jour</b> avant les examens" : "<b>" + n + " jours</b> avant les examens",
     examsNow: "Période d’examens", examsLeft: n => "encore <b>" + n + " jours</b> d’examens", semBefore: n => "Le semestre commence dans " + n + " jours", semOver: "Semestre terminé 🎉", semEnded: "Semestre terminé",
-    pctSem: n => n + " % du semestre", examsLbl: "📝 Examens", semGuess: "Dates estimées à partir de Moodle. Vérifiez-les avec le calendrier de votre établissement :",
-    semDates: "Dates du semestre", semHint: "Par défaut, calculées à partir des dates des cours Moodle. Vous pouvez les corriger selon le calendrier de votre établissement.", semStart: "Début du semestre", semEnd: "Dernier jour de cours",
-    exStart: "Début des examens", exEnd: "Fin des examens", semAuto: "↺ Revenir aux dates automatiques",
+    pctSem: n => n + " % du semestre", examsLbl: "📝 Examens",
+    semDates: "Dates du semestre", semHint: "Selon le calendrier académique de l’établissement. Ce que vous saisissez ici remplace la valeur par défaut.", semStart: "Début du semestre", semEnd: "Dernier jour de cours",
+    exStart: "Début des examens", exEnd: "Fin des examens", semAuto: "↺ Effacer mes dates",
     newsTitle: "Annonces des cours", newsNone: "Aucune annonce depuis 45 jours", newsOff: "Impossible de charger les annonces", markAllRead: "Tout marquer comme lu", newsOpen: "Ouvrir dans le forum ↗",
     newsMore: n => n + " de plus", newsLess: "Afficher moins", newsLoading: "Chargement des annonces…",
+    examsTitle: "Examens", exNone: "Aucune date d’examen. Moodle ne les publie pas : saisissez-les une fois par cours.", exAddBtn: "📝 Saisir les dates d’examen",
+    moedA: "1re session", moedB: "2e session", daysU: n => n === 1 ? "jour" : "jours", exMore: n => "+ " + n + " autres examens", exToday: "Aujourd’hui !",
+    exSheetTitle: "Dates d’examen", exHint: "Moodle ne publie pas les dates d’examen. Saisissez la date et l’heure de la 1re et de la 2e session de chaque cours (portail ou e-mail de l’établissement). Stocké uniquement sur cet appareil.",
+    exScan: "🔎 Chercher les dates dans le calendrier Moodle", exScanNone: "Aucune date d’examen trouvée dans le calendrier Moodle. Saisissez-les à la main.", exFound: n => n + " événements ressemblant à des examens trouvés sur Moodle. Validez ceux qui conviennent.",
+    exUse: "Valider", exFromMoodle: "Sur Moodle :", scanning: "Recherche dans le calendrier Moodle…", noCourses: "Pas encore de cours (connectez-vous et actualisez)",
+    semNeed: "Saisissez les dates du semestre pour voir combien de semaines il reste.", semSetBtn: "Saisir les dates du semestre", semSrcKnown: "Source : calendrier de Machon Lev, semestre A 5787", semSrcUser: "Source : dates que vous avez saisies", examsLblA: "📝 1res sessions",
+    ttScan: "⤓ Depuis Moodle", ttScanTitle: "Cours du calendrier Moodle", ttScanHint: "Ces événements se répètent chaque semaine dans les calendriers de vos cours Moodle. Cochez ce qu’il faut ajouter.",
+    ttScanNone: "Aucun cours hebdomadaire trouvé dans le calendrier Moodle ; votre établissement n’y publie sans doute pas l’emploi du temps. Ajoutez les cours à la main (« + Ajouter »).", ttScanAdd: n => "Ajouter " + n + " cours",
+    ttPriv: "🔒 Privé (exclu du partage de l’emploi du temps)", ttClear: "Supprimer tout l’emploi du temps", ttClearConfirm: n => "Supprimer les " + n + " cours de cet appareil ?",
+    importAsk: parts => "Ce lien veut ajouter à votre appareil :\n" + parts.join("\n") + "\n\nAjouter ?", importTT: (n, ex) => "• Emploi du temps : " + n + " cours (" + ex + ")", importTTRep: n => "  (remplace votre emploi du temps actuel, " + n + " cours)", importCC: n => "• Couleurs pour " + n + " cours", importDone: "Ajouté ✓",
   },
 };
 function pickLang() {
@@ -841,38 +927,29 @@ async function fetchContents(d) {
 
 /* ---------- state ---------- */
 const DAY = 86400;
-const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {} }, LS.get("prefs", {}));
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {} }, LS.get("prefs", {}));
 if (!Array.isArray(P.manual)) P.manual = [];
 if (!Array.isArray(P.tt)) P.tt = [];
-if (!P.sem || typeof P.sem !== "object") P.sem = {};
-const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set() };
+for (const k of ["sem", "exams", "ccode", "colors"]) if (!P[k] || typeof P[k] !== "object" || Array.isArray(P[k])) P[k] = {};
+P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^\d+$/);
+function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
+const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 const savePrefs = () => LS.set("prefs", P);
 const isOff = cid => P.off.includes(cid);
 function hslHex(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); }
-/* course colours taken from Meir's calendar; matched by course code so similar names never mix */
-const FIXED_COLORS = { "120131": "#fa7a17", "120302": "#ffb701", "141001": "#13c57b", "150005": "#9260f7", "150301": "#5264d2", "157210": "#5892f3" };
-const FIXED_WORDS = [["אינפי", "120131"], ["בדידה", "120302"], ["פיזיקה להנדסת", "141001"], ["מבוא למדעי המחשב", "150005"], ["מערכות ספרתיות", "150301"], ["אוריינות", "157210"]];
-/* other courses: hues kept away from the six above (red, pink, brown, grey, raspberry, olive, magenta, slate) */
-const OTHER_COLORS = ["#e03131", "#d6336c", "#8a5a36", "#6c757d", "#a61e4d", "#6b7a1f", "#b5348f", "#495a6b"];
-function fixedColor(name) {
-  const m = /^\s*(\d{5,7})\./.exec(name || "");
-  if (m && FIXED_COLORS[m[1]]) return FIXED_COLORS[m[1]];
-  for (const [w, code] of FIXED_WORDS) if ((name || "").includes(w)) return FIXED_COLORS[code];
-  return null;
-}
-function otherColor(k) { return k < OTHER_COLORS.length ? OTHER_COLORS[k] : hslHex([350, 330, 20, 300, 0, 65][k % 6], 45 + (k % 3) * 10, 30 + (k % 2) * 10); }
+/* course colours: a neutral palette given out by course order. Personal colours come only from the user:
+   picked in settings (by course) or brought by a link the user approved (by course code). Nothing about one user is built in. */
+const PALETTE = ["#fa7a17", "#ffb701", "#13c57b", "#9260f7", "#5264d2", "#5892f3", "#e03131", "#d6336c", "#8a5a36", "#6c757d", "#a61e4d", "#6b7a1f", "#b5348f", "#495a6b"];
+const palColor = k => k < PALETTE.length ? PALETTE[k] : hslHex([350, 330, 20, 300, 0, 65][k % 6], 45 + (k % 3) * 10, 30 + (k % 2) * 10);
+const codeOf = name => { const m = /^\s*(\d{5,7})[.\s-]/.exec(name || ""); return m ? m[1] : ""; };
 function colorOf(cid) {
   if (P.colors[cid]) return P.colors[cid];
   const cs = (V.data && V.data.courses) || [], c = cs.find(x => x.id === cid);
-  const f = c && fixedColor(c.name); if (f) return f;
-  const others = cs.filter(x => !fixedColor(x.name)), k = others.findIndex(x => x.id === cid);
-  return otherColor(Math.max(0, k));
-}
-/* one-time: drop older custom colours of the six calendar courses so the calendar palette shows */
-function migrateColors(courses) {
-  if (LS.get("pal2", false)) return;
-  for (const c of courses) if (fixedColor(c.name)) delete P.colors[c.id];
-  LS.set("pal2", true); savePrefs();
+  const cc = c && P.ccode[codeOf(c.name)]; if (cc) return cc;
+  // current courses first, so they get the clearest colours; the order does not change when a course is switched off
+  const now = Date.now() / 1000, cur = cs.filter(x => !x.end || x.end > now - 30 * 86400), rest = cs.filter(x => !cur.includes(x));
+  const k = cur.concat(rest).findIndex(x => x.id === cid);
+  return palColor(Math.max(0, k));
 }
 const shortName = n => String(n || t("other")).replace(/^\s*\d{4,7}(\.\d+)*\s*-\s*/, "");
 
@@ -1040,6 +1117,8 @@ function renderDash(d, now) {
     '<div class="tile ring">' + ring(wDone, thisWeek.length) + '<span class="rt"><b>' + esc(thisWeek.length ? t("progressOf", wDone, thisWeek.length) : t("noWeekTasks")) + '</b><span class="l">' + esc(t("tProgress")) + "</span></span></div>";
   // next 7 days
   const base = new Date(now * 1000); base.setHours(0, 0, 0, 0); let wk = "";
+  const exByDay = {}; for (const x of examList()) (exByDay[dayKey(new Date(x.ts * 1000))] = exByDay[dayKey(new Date(x.ts * 1000))] || []).push(x);
+  const exTitle = x => courseName(x.cid) + " · " + t(x.m === "a" ? "moedA" : "moedB");
   for (let i = 0; i < 7; i++) {
     const day = new Date(base); day.setDate(base.getDate() + i); const k = dayKey(day);
     const items = rl.filter(x => x.due && dueDay(x) === k).sort((a, b) => isDone(a) - isDone(b) || a.due - b.due);
@@ -1047,6 +1126,7 @@ function renderDash(d, now) {
     let wdn = ""; try { wdn = day.toLocaleDateString(t("locale"), { weekday: "short" }); } catch (e) {}
     wk += '<button class="wd' + (i === 0 ? " today" : "") + (V.focus && V.focus.kind === "day" && V.focus.d === k ? " sel" : "") + '" data-day="' + k + '" aria-label="' + esc(dayLabel(day) + ": " + items.length) + '">' +
       '<span class="dn">' + esc(wdn) + '</span><span class="dd">' + day.getDate() + '</span><span class="bars">' +
+      (exByDay[k] || []).map(x => '<i class="bar xm" style="--c:' + colorOf(x.cid) + '" title="📝 ' + esc(exTitle(x)) + '"></i>').join("") +
       shown.map(x => '<i class="bar' + (isDone(x) ? " dn2" : "") + '" style="--c:' + colorOf(x.cid) + '" title="' + esc(x.name) + '"></i>').join("") + "</span>" +
       (more > 0 ? '<span class="more">+' + more + "</span>" : "") + '<span class="cnt">' + (items.length || "") + "</span></button>";
   }
@@ -1066,6 +1146,7 @@ function renderDash(d, now) {
     const hasLate = items.some(x => !isDone(x) && x.due < now);
     mh += '<button class="md' + (out ? " out" : "") + (k === dayKey(base) ? " today" : "") + (day < base ? " past" : "") + (hasLate ? " hasLate" : "") +
       (V.focus && V.focus.kind === "day" && V.focus.d === k ? " sel" : "") + '" data-day="' + k + '" aria-label="' + esc(dayLabel(day) + ": " + items.length) + '"><span class="d">' + day.getDate() + '</span><span class="dots">' +
+      (exByDay[k] || []).map(x => '<i class="dot xm" style="--c:' + colorOf(x.cid) + '" title="📝 ' + esc(exTitle(x)) + '"></i>').join("") +
       items.slice(0, 4).map(x => '<i class="dot' + (isDone(x) ? " dn2" : "") + '" style="--c:' + colorOf(x.cid) + '"></i>').join("") + "</span>" + (items.length > 4 ? '<span class="pl">+' + (items.length - 4) + "</span>" : "") + "</button>";
   }
   $("#month").innerHTML = mh;
@@ -1090,47 +1171,58 @@ const ymd = ts => dayKey(new Date(ts * 1000));
 const median = a => { a = a.slice().sort((x, y) => x - y); return a.length ? a[Math.floor((a.length - 1) / 2)] : 0; };
 const daysBetween = (a, b) => Math.round((dayStart(b) - dayStart(a)) / DAY);
 function shortDate(ts) { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric" }); } catch (e) { return ymd(ts); } }
-/* defaults from the Moodle dates of the current courses; Moodle often leaves a one-year end date, so a too-long one is replaced by 13 weeks */
-function semAuto(d, now) {
-  const cs = ((d && d.courses) || []).filter(c => !isOff(c.id) && c.start && c.start < now + 60 * DAY && c.start > now - 250 * DAY && (!c.end || c.end > now - 30 * DAY));
-  let s = median(cs.map(c => c.start));
-  if (!s) { const n = new Date(now * 1000), y = n.getFullYear(), mo = n.getMonth(); s = new Date(mo >= 8 ? y : mo < 2 ? y - 1 : y, mo >= 8 || mo < 2 ? 9 : mo < 6 ? 2 : 6, mo >= 8 || mo < 2 ? 20 : 1).getTime() / 1000; }
-  const ends = cs.map(c => c.end).filter(e => e && e - s > 50 * DAY && e - s < 200 * DAY);
-  return { s: dayStart(s), e: ends.length ? addD(median(ends), 1) : addD(s, 13 * 7) };
+/* academic calendars that a user confirmed (no guessing): semester start, last day of classes, exam period. Used only for that Moodle site. */
+const KNOWN_SEMS = {
+  "moodle.jct.ac.il": [{ s: "2026-10-11", e: "2027-01-14", xs: "2027-01-17", xe: "2027-02-13", src: "semSrcKnown", xl: "examsLblA" }],
+};
+function knownSem(now) {
+  let host = ""; try { host = new URL(M.url || DEFAULT_SITE).hostname; } catch (e) {}
+  const list = KNOWN_SEMS[host] || [];
+  // the semester we are in (until the end of its exams), or the next one starting within 60 days
+  return list.find(k => now >= parseYmd(k.s) && now < addD(parseYmd(k.xe || k.e), 1)) || list.find(k => parseYmd(k.s) > now && parseYmd(k.s) - now < 60 * DAY) || null;
 }
-/* all ends are exclusive (midnight after the last day) */
-function semDates(d, now) {
-  const a = semAuto(d, now), S = P.sem;
-  const s = parseYmd(S.s) || a.s;
-  let e = S.e ? addD(parseYmd(S.e), 1) : a.e; if (e <= s) e = addD(s, 7);
-  let xs = parseYmd(S.xs) || e; if (xs < e) xs = e;
-  let xe = S.xe ? addD(parseYmd(S.xe), 1) : addD(xs, 5 * 7); if (xe <= xs) xe = addD(xs, 7);
-  return { s, e, xs, xe, guess: !S.ok };
+/* ends are exclusive (midnight after the last day). Missing exam dates simply leave the exam part out. */
+function semDates(now) {
+  const S = P.sem, K = knownSem(now) || {}, pick = k => S[k] || K[k] || "";
+  const s = parseYmd(pick("s")), e0 = parseYmd(pick("e")); if (!s || !e0 || e0 < s) return null;
+  const e = addD(e0, 1), xs0 = parseYmd(pick("xs")), xe0 = parseYmd(pick("xe"));
+  const xs = xs0 && xs0 >= e ? xs0 : 0, xe = xs && xe0 && xe0 >= xs ? addD(xe0, 1) : 0;
+  const user = ["s", "e", "xs", "xe"].some(k => S[k] && S[k] !== K[k]);
+  return { s, e, xs, xe: xs ? xe : 0, src: user || !K.s ? "semSrcUser" : K.src, xl: user || !K.xl ? "examsLbl" : K.xl };
+}
+/* weeks run Sunday to Saturday; the first week starts on the Sunday on or before the first day */
+const sunday = ts => addD(ts, -new Date(ts * 1000).getDay());
+function weekSegs(a, b, k) {
+  const out = []; let i = 1;
+  for (let w = sunday(a); w < b; w = addD(w, 7), i++) out.push({ a: Math.max(w, a), b: Math.min(addD(w, 7), b), k, n: i });
+  return out;
 }
 function renderSem(d, now) {
-  const D = semDates(d, now), segs = [];
-  for (let a = D.s, i = 1; a < D.e; a = addD(a, 7), i++) segs.push({ a, b: Math.min(addD(a, 7), D.e), k: "w", n: i });
-  if (D.xs > D.e) segs.push({ a: D.e, b: D.xs, k: "gap" });
-  for (let a = D.xs; a < D.xe; a = addD(a, 7)) segs.push({ a, b: Math.min(addD(a, 7), D.xe), k: "x" });
+  const D = semDates(now);
+  if (!D) { $("#sem").innerHTML = '<div class="sub">' + esc(t("semNeed")) + '</div><button data-semedit style="width:100%">' + esc(t("semSetBtn")) + "</button>"; return; }
+  const segs = weekSegs(D.s, D.e, "w");
+  if (D.xs) { if (D.xs > D.e) segs.push({ a: D.e, b: D.xs, k: "gap" }); segs.push(...weekSegs(D.xs, D.xe, "x")); }
   const weeks = segs.filter(x => x.k === "w").length, cur = segs.find(x => x.k !== "gap" && now >= x.a && now < x.b);
+  const fl = x => Math.max(1, daysBetween(x.a, x.b));
   const bar = segs.map(x => {
     const f = Math.max(0, Math.min(1, (now - x.a) / (x.b - x.a)));
-    return '<i class="sg ' + x.k + (x === cur ? " cur" : "") + '" style="flex:' + Math.round((x.b - x.a) / 3600) + '">' + (x.k !== "gap" && f > 0 ? '<b style="width:' + (f * 100).toFixed(1) + '%"></b>' : "") + "</i>";
+    return '<i class="sg ' + x.k + (x === cur ? " cur" : "") + '" style="flex:' + fl(x) + '">' + (x.k !== "gap" && f > 0 ? '<b style="width:' + (f * 100).toFixed(1) + '%"></b>' : "") + "</i>";
   }).join("");
-  const nums = segs.map(x => '<span style="flex:' + Math.round((x.b - x.a) / 3600) + '"' + (x === cur && x.k === "w" ? ' class="cur"' : "") + ">" + (x.k === "w" ? x.n : "") + "</span>").join("");
+  const nums = segs.map(x => '<span style="flex:' + fl(x) + '"' + (x === cur && x.k === "w" ? ' class="cur"' : "") + ">" + (x.k === "w" ? x.n : "") + "</span>").join("");
   let big = "", sub = "";
   if (now < D.s) big = esc(t("semBefore", daysBetween(now, D.s)));
   else if (now < D.e) {
-    const wk = Math.min(weeks, Math.floor((now - D.s) / (7 * DAY)) + 1);
+    const wk = cur && cur.k === "w" ? cur.n : weeks;
     big = "<span>" + t("weekOf", wk, weeks) + '</span><small class="pc">' + esc(t("pctSem", Math.round(100 * (now - D.s) / (D.e - D.s)))) + "</small>";
-    sub = t("weeksLeft", weeks - wk) + " · " + t("toExams", daysBetween(now, D.xs));
-  } else if (now < D.xs) { big = esc(t("semEnded")); sub = t("toExams", daysBetween(now, D.xs)); }
-  else if (now < D.xe) { big = esc(t("examsNow")); sub = t("examsLeft", daysBetween(now, D.xe)); }
+    sub = t("weeksLeft", weeks - wk) + (D.xs ? " · " + t("toExams", daysBetween(now, D.xs)) : "");
+  } else if (D.xs && now < D.xs) { big = esc(t("semEnded")); sub = t("toExams", daysBetween(now, D.xs)); }
+  else if (D.xs && now < D.xe) { big = esc(t("examsNow")); sub = t("examsLeft", daysBetween(now, D.xe)); }
   else big = esc(t("semOver"));
   $("#sem").innerHTML = '<div class="big">' + big + '</div><div class="sub">' + sub + "</div>" +
     '<div class="sbar" role="img" aria-label="' + esc(stripTags(big + " " + sub)) + '">' + bar + '</div><div class="snum" aria-hidden="true">' + nums + "</div>" +
-    '<div class="slbl"><span>' + esc(shortDate(D.s)) + '</span><span class="xl">' + esc(t("examsLbl")) + ' <bdi dir="ltr">' + esc(shortDate(D.xs) + "–" + shortDate(addD(D.xe, -1))) + "</bdi></span>" + "</div>" +
-    (D.guess ? '<div class="guess">' + esc(t("semGuess")) + ' <button class="link" data-semedit>' + esc(t("edit")) + "</button></div>" : "");
+    '<div class="slbl"><span><bdi dir="ltr">' + esc(shortDate(D.s) + "–" + shortDate(addD(D.e, -1))) + "</bdi></span>" +
+    (D.xs ? '<span class="xl">' + esc(t(D.xl)) + ' <bdi dir="ltr">' + esc(shortDate(D.xs) + "–" + shortDate(addD(D.xe, -1))) + "</bdi></span>" : "") + "</div>" +
+    '<div class="guess">' + esc(t(D.src)) + "</div>";
 }
 const stripTags = s => String(s).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 
@@ -1139,14 +1231,13 @@ const KINDS = [["lec", "kLec"], ["ex", "kEx"], ["lab", "kLab"], ["other", "kOthe
 const hm = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(s || ""); return m && +m[1] < 24 && +m[2] < 60 ? +m[1] * 60 + +m[2] : NaN; };
 const fmtHM = m => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
 function dayName(i, style) { try { return new Date(2024, 0, 7 + i).toLocaleDateString(t("locale"), { weekday: style || "long" }); } catch (e) { return String(i); } }
-const codeOf = name => { const m = /^\s*(\d{5,7})[.\s-]/.exec(name || ""); return m ? m[1] : ""; };
 function ttCid(x) {
   const cs = (V.data && V.data.courses) || [];
   if (x.cid && cs.some(c => c.id === x.cid)) return x.cid;
   if (x.code) { const c = cs.find(c => codeOf(c.name) === x.code && !isOff(c.id)) || cs.find(c => codeOf(c.name) === x.code); if (c) return c.id; }
   return 0;
 }
-function ttColor(x) { const cid = ttCid(x); return cid ? colorOf(cid) : (x.color || FIXED_COLORS[x.code] || "#868e96"); }
+function ttColor(x) { const cid = ttCid(x); return cid ? colorOf(cid) : (x.color || P.ccode[x.code] || "#868e96"); }
 function ttName(x) {
   if (x.title) return x.title;
   const cid = ttCid(x), c = cid && V.data.courses.find(y => y.id === cid);
@@ -1164,13 +1255,14 @@ function cleanTT(list) {
     const str = v => String(v == null ? "" : v).slice(0, 60);
     out.push({ id: typeof x.id === "string" && /^[a-z0-9]{1,16}$/.test(x.id) && !out.some(y => y.id === x.id) ? x.id : Math.random().toString(36).slice(2, 10), cid: Number.isInteger(x.cid) ? x.cid : 0,
       code: /^\d{5,7}$/.test(x.code) ? x.code : "", title: str(x.title), kind: KINDS.some(k => k[0] === x.kind) ? x.kind : "other",
-      day, s: fmtHM(s), e: fmtHM(e), place: str(x.place), color: /^#[0-9a-f]{6}$/i.test(x.color) ? x.color : "" });
+      day, s: fmtHM(s), e: fmtHM(e), place: str(x.place), color: /^#[0-9a-f]{6}$/i.test(x.color) ? x.color : "", priv: x.priv === true });
   }
   return out;
 }
 P.tt = cleanTT(P.tt) || [];
 function renderTT(now) {
   const L = P.tt, el = $("#tt");
+  $("#ttFoot").hidden = !L.length;
   if (!L.length) { el.innerHTML = '<div class="ttempty">' + esc(t("ttEmpty")) + "</div>"; return; }
   const days = [0, 1, 2, 3, 4, 5, 6].filter(d => d <= 4 || L.some(x => x.day === d));
   const h0 = Math.floor(Math.min(...L.map(x => hm(x.s))) / 60) * 60, h1 = Math.ceil(Math.max(...L.map(x => hm(x.e))) / 60) * 60;
@@ -1189,7 +1281,7 @@ function renderTT(now) {
     h += '<div class="ttc' + (d === td ? " on" : "") + '">' + items.map(it => {
       const x = it.x, live = d === td && nowM >= it.s && nowM < it.e;
       return '<button class="tte' + (live ? " now" : "") + '" data-tte="' + esc(x.id) + '" style="--c:' + ttColor(x) + ";top:" + pos(it.s) + ";height:calc(" + pos(it.e) + " - " + pos(it.s) + " - 2px);inset-inline-start:" +
-        (100 * it.lane / it.n).toFixed(2) + "%;width:calc(" + (100 / it.n).toFixed(2) + '% - 2px)"><b><bdi>' + esc(ttName(x)) + "</bdi></b>" + (x.place ? '<span class="pl"><bdi>' + esc(x.place) + "</bdi></span>" : "") + '<span class="tk">' + esc(ttKind(x)) +
+        (100 * it.lane / it.n).toFixed(2) + "%;width:calc(" + (100 / it.n).toFixed(2) + '% - 2px)"><b><bdi>' + esc(ttName(x)) + "</bdi>" + (x.priv ? '<span class="lk">🔒</span>' : "") + "</b>" + (x.place ? '<span class="pl"><bdi>' + esc(x.place) + "</bdi></span>" : "") + '<span class="tk">' + esc(ttKind(x)) +
         '</span><span class="tm"><bdi dir="ltr">' + esc(x.s + "–" + x.e) + "</bdi></span></button>";
     }).join("") + (d === td && nowM >= h0 && nowM <= h1 ? '<i class="ttnow" style="top:' + pos(nowM) + '"></i>' : "") + "</div>";
   }
@@ -1224,7 +1316,7 @@ function openTT(id) {
   const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id) || c.id === ttCid(x));
   $("#fCourse").innerHTML = cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + '<option value="0">' + esc(t("ttOtherCourse")) + "</option>";
   $("#fCourse").value = String(id ? ttCid(x) : (cs[0] ? cs[0].id : 0));
-  $("#fTitle").value = x.title || ""; $("#fPlace").value = x.place || ""; $("#fS").value = x.s; $("#fE").value = x.e;
+  $("#fTitle").value = x.title || ""; $("#fPlace").value = x.place || ""; $("#fS").value = x.s; $("#fE").value = x.e; $("#fPriv").checked = !!x.priv;
   $("#fKind").innerHTML = KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join(""); $("#fKind").value = x.kind;
   $("#fDay").innerHTML = [0, 1, 2, 3, 4, 5, 6].map(i => '<option value="' + i + '">' + esc(dayName(i)) + "</option>").join(""); $("#fDay").value = String(x.day);
   ttTitlePh();
@@ -1238,23 +1330,119 @@ function saveTT() {
   if (!c && !title) return $("#fErr").textContent = t("ttNeedName");
   if (!(s < e)) return $("#fErr").textContent = t("ttBadTime");
   const old = P.tt.find(y => y.id === ttEditId) || {};
-  const x = cleanTT([{ id: ttEditId || undefined, cid, code: c ? codeOf(c.name) : (cid ? old.code : ""), title, kind: $("#fKind").value, day: Number($("#fDay").value), s: fmtHM(s), e: fmtHM(e), place: $("#fPlace").value.trim(), color: c ? "" : old.color }])[0];
+  const x = cleanTT([{ id: ttEditId || undefined, cid, code: c ? codeOf(c.name) : (cid ? old.code : ""), title, kind: $("#fKind").value, day: Number($("#fDay").value), s: fmtHM(s), e: fmtHM(e), place: $("#fPlace").value.trim(), color: c ? "" : old.color, priv: $("#fPriv").checked }])[0];
   P.tt = ttEditId ? P.tt.map(y => y.id === ttEditId ? x : y) : [...P.tt, x];
   savePrefs(); $("#ttSheet").hidden = true; render();
 }
 const b64enc = s => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
 async function shareTT() {
-  if (!P.tt.length) return toast(t("ttNothing"));
-  const link = location.origin + location.pathname + "#tt=" + b64enc(JSON.stringify(P.tt.map(({ id, cid, ...r }) => r)));
+  const pub = P.tt.filter(x => !x.priv);
+  if (!pub.length) return toast(t("ttNothing"));
+  const link = location.origin + location.pathname + "#tt=" + b64enc(JSON.stringify(pub.map(({ id, cid, priv, ...r }) => r)));
   try { if (navigator.share && !wide()) { await navigator.share({ title: t("ttTitle"), url: link }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
   try { await navigator.clipboard.writeText(link); toast(t("ttCopied"), 5000); } catch (e) { prompt(t("ttTitle"), link); }
 }
-function importTT(raw) {
-  let list = null;
-  try { list = cleanTT(JSON.parse(b64dec(raw))); } catch (e) {}
-  if (!list || !list.length) return toast(t("ttBadLink"));
-  if (P.tt.length && !confirm(t("ttReplace", P.tt.length))) return;
-  P.tt = list; savePrefs(); toast(t("ttImported", list.length));
+/* a shared link only ever adds after the user approves what it contains */
+function importShared(q) {
+  const parts = [], tt = q.get("tt"), cc = q.get("cc"); let list = null, cols = null;
+  if (tt) { try { list = cleanTT(JSON.parse(b64dec(tt))); } catch (e) {} }
+  if (cc) { try { cols = cleanColors(JSON.parse(b64dec(cc)), /^\d{5,7}$/); } catch (e) {} }
+  if (list && list.length) {
+    const names = [...new Set(list.map(x => x.title).filter(Boolean))].slice(0, 6).join(", ");
+    parts.push(t("importTT", list.length, names)); if (P.tt.length) parts.push(t("importTTRep", P.tt.length));
+  } else list = null;
+  if (cols && Object.keys(cols).length) parts.push(t("importCC", Object.keys(cols).length)); else cols = null;
+  if (!parts.length) return toast(t("ttBadLink"));
+  if (!confirm(t("importAsk", parts))) return;
+  if (list) P.tt = list;
+  if (cols) Object.assign(P.ccode, cols);
+  savePrefs(); toast(t("importDone"));
+}
+
+/* ---------- exams: entered per course by the user (Moodle has no exam dates); Moodle calendar events are only offered for approval ---------- */
+const parseDT = v => { const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(v || ""); return m ? new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]).getTime() / 1000 : 0; };
+const fmtDT = ts => { const d = new Date(ts * 1000), z = n => String(n).padStart(2, "0"); return d.getFullYear() + "-" + z(d.getMonth() + 1) + "-" + z(d.getDate()) + "T" + z(d.getHours()) + ":" + z(d.getMinutes()); };
+function courseName(cid) { const c = ((V.data && V.data.courses) || []).find(y => y.id === cid); return c ? shortName(c.name) : ((P.exams[cid] || {}).n || t("other")); }
+function examList() {
+  const out = [];
+  for (const [cid, e] of Object.entries(P.exams)) for (const m of ["a", "b"]) { const ts = parseDT(e && e[m]); if (ts) out.push({ cid: Number(cid), m, ts }); }
+  return out.filter(x => !isOff(x.cid)).sort((a, b) => a.ts - b.ts);
+}
+function renderExams(now) {
+  const el = $("#exams"), L = examList().filter(x => x.ts > now - 3 * 3600);
+  if (!L.length) { el.innerHTML = '<div class="exempty">' + esc(t("exNone")) + '<button data-exedit>' + esc(t("exAddBtn")) + "</button></div>"; return; }
+  const N = 5, shown = V.exAll ? L : L.slice(0, N);
+  el.innerHTML = shown.map(x => {
+    const days = daysBetween(now, x.ts);
+    const right = x.ts <= now || days === 0 ? '<span class="en" style="font-size:15px">' + esc(t("exToday")) + "</span>" + (x.ts > now ? cdSpan(x.ts, now) : "")
+      : days >= 2 ? '<span class="en">' + days + '</span><span class="eu">' + esc(t("daysU", days)) + "</span>" : cdSpan(x.ts, now);
+    return '<button class="er ' + x.m + (x.ts - now < 3 * DAY ? " soon" : "") + '" data-exedit style="--c:' + colorOf(x.cid) + '"><span class="eb"><b><bdi>' + esc(courseName(x.cid)) +
+      "</bdi></b><small>" + esc(t(x.m === "a" ? "moedA" : "moedB") + " · " + when(x.ts)) + '</small></span><span class="ec">' + right + "</span></button>";
+  }).join("") + (L.length > N ? '<button class="link" data-exall>' + esc(V.exAll ? t("newsLess") : t("exMore", L.length - N)) + "</button>" : "");
+}
+function renderExSheet() {
+  const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id));
+  $("#exList").innerHTML = cs.length ? cs.map(c => {
+    const e = P.exams[c.id] || {}, sug = (V.exSug || []).filter(x => x.cid === c.id);
+    const row = m => "<span>" + esc(t(m === "a" ? "moedA" : "moedB")) + '</span><input type="datetime-local" data-ex="' + c.id + '" data-m="' + m + '" value="' + esc(e[m] || "") + '">';
+    return '<div class="xrow" style="--c:' + colorOf(c.id) + '"><div class="xn"><i></i><bdi>' + esc(shortName(c.name)) + '</bdi></div><div class="xm">' + row("a") + row("b") +
+      sug.map(x => '<div class="xsug">' + esc(t("exFromMoodle")) + " <bdi>" + esc(x.name) + "</bdi> · " + esc(when(x.ts)) + ' <button data-exuse="' + c.id + "|" + x.m + "|" + fmtDT(x.ts) + '">' +
+        esc(t("exUse") + " (" + t(x.m === "a" ? "moedA" : "moedB") + ")") + "</button></div>").join("") + "</div></div>";
+  }).join("") : '<div class="hint">' + esc(t("noCourses")) + "</div>";
+}
+function setExam(cid, m, v) {
+  const c = ((V.data && V.data.courses) || []).find(y => y.id === cid), e = Object.assign({}, P.exams[cid]);
+  if (parseDT(v)) e[m] = v; else delete e[m];
+  if (c) e.n = shortName(c.name);
+  if (e.a || e.b) P.exams[cid] = e; else delete P.exams[cid];
+  savePrefs(); render();
+}
+
+/* ---------- Moodle calendar: weekly course events -> suggested classes, exam-like events -> suggested exam dates ---------- */
+const EXAM_RE = /מבחן|בחינה|מועד\s*[אב]|\bexam|examen|\bfinal\b/i;
+async function moodleCal() {
+  const now = nowS(), D = semDates(now);
+  const cids = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id)).map(c => c.id);
+  if (!cids.length) return [];
+  const from = D ? D.s : now - 30 * DAY, to = Math.max(D ? (D.xe || D.e) + 60 * DAY : 0, now + 150 * DAY);
+  const r = await call("core_calendar_get_calendar_events", { "events[courseids]": cids, "options[userevents]": 0, "options[siteevents]": 1, "options[timestart]": from, "options[timeend]": to });
+  return ((r && r.events) || []).filter(e => !e.modulename && cids.includes(Number(e.courseid)));
+}
+function weeklyClasses(events) {
+  const g = {};
+  for (const e of events) {
+    const dur = Number(e.timeduration) || 0, nm = stripHtml(e.name || "");
+    if (EXAM_RE.test(nm) || dur < 30 * 60 || dur > 6 * 3600) continue;
+    const dt = new Date(e.timestart * 1000), key = e.courseid + "|" + dt.getDay() + "|" + dt.getHours() + ":" + dt.getMinutes() + "|" + dur;
+    (g[key] = g[key] || []).push(e);
+  }
+  return Object.values(g).filter(l => new Set(l.map(e => sunday(e.timestart))).size >= 2 || l.some(e => Number(e.repeatid) > 0)).map(l => {
+    const e = l[0], dt = new Date(e.timestart * 1000), s = dt.getHours() * 60 + dt.getMinutes(), nm = stripHtml(e.name || ""), cid = Number(e.courseid);
+    const c = V.data.courses.find(y => y.id === cid);
+    return { cid, code: c ? codeOf(c.name) : "", title: "", kind: /תרגול|תרגיל|tutorial|\bTD\b/i.test(nm) ? "ex" : /מעבדה|\blab|\bTP\b/i.test(nm) ? "lab" : "lec",
+      day: dt.getDay(), s: fmtHM(s), e: fmtHM(Math.min(s + Math.round(Number(e.timeduration) / 60), 1439)), place: stripHtml(e.location || ""), _n: nm };
+  }).filter(x => !P.tt.some(y => ttCid(y) === x.cid && y.day === x.day && y.s === x.s)).sort((a, b) => a.day - b.day || hm(a.s) - hm(b.s));
+}
+async function scanTT() {
+  $("#scMsg").textContent = t("scanning"); $("#scList").innerHTML = ""; $("#scAdd").hidden = true; $("#scSheet").hidden = false;
+  let ev; try { ev = await moodleCal(); } catch (e) { $("#scMsg").textContent = e.message; return; }
+  const L = V.scan = weeklyClasses(ev);
+  if (!L.length) { $("#scMsg").textContent = t("ttScanNone"); return; }
+  $("#scMsg").textContent = t("ttScanHint");
+  $("#scList").innerHTML = L.map((x, i) => '<label style="--c:' + colorOf(x.cid) + '"><input type="checkbox" data-sc="' + i + '" checked><i></i><span><b><bdi>' + esc(courseName(x.cid)) + "</bdi></b> · " +
+    esc(dayName(x.day) + " " + x.s + "–" + x.e) + (x.place ? " · <bdi>" + esc(x.place) + "</bdi>" : "") + "<br><small><bdi>" + esc(x._n) + "</bdi></small></span></label>").join("");
+  scCount();
+}
+function scCount() { const n = $$("#scList [data-sc]:checked").length; $("#scAdd").hidden = false; $("#scAdd").disabled = !n; $("#scAdd").textContent = t("ttScanAdd", n); }
+async function scanExams() {
+  $("#exScanMsg").textContent = t("scanning");
+  let ev; try { ev = await moodleCal(); } catch (e) { $("#exScanMsg").textContent = e.message; return; }
+  V.exSug = ev.filter(e => EXAM_RE.test(stripHtml(e.name || ""))).map(e => {
+    const nm = stripHtml(e.name || "");
+    return { cid: Number(e.courseid), name: nm, ts: Number(e.timestart), m: /מועד\s*ב|moed\s*b|2nd|second|session\s*2/i.test(nm) ? "b" : "a" };
+  });
+  $("#exScanMsg").textContent = V.exSug.length ? t("exFound", V.exSug.length) : t("exScanNone");
+  renderExSheet();
 }
 
 /* ---------- announcements ---------- */
@@ -1290,7 +1478,7 @@ function render() {
   const bn = $("#banner");
   if (V.err) { bn.hidden = false; bn.className = "banner err"; bn.textContent = V.err + (d ? t("lastData") : ""); }
   else bn.hidden = true;
-  { const now = nowS(); renderTT(now); renderToday(now); renderSem(d, now); }
+  { const now = nowS(); renderTT(now); renderToday(now); renderSem(d, now); renderExams(now); }
   if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">' + esc(t("loadingTasks")) + "</div>" : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
   const now = nowS();
   renderDash(d, now); renderNews(d);
@@ -1347,9 +1535,10 @@ function render() {
 function renderSheet() {
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
   $("#who").innerHTML = d ? (d.user ? "<bdi>" + esc(d.user) + "</bdi> · " : "") + "<bdi>" + esc(M.url.replace(/^https?:\/\//, "")) + "</bdi>" : esc(M.url);
-  const D = semDates(d, nowS()), sv = { s: D.s, e: addD(D.e, -1), xs: D.xs, xe: addD(D.xe, -1) };
-  $$("[data-sem]").forEach(i => i.value = ymd(sv[i.dataset.sem]));
-  $("#bSemAuto").hidden = !Object.keys(P.sem).length;
+  const D = semDates(nowS()), sv = D ? { s: D.s, e: addD(D.e, -1), xs: D.xs, xe: D.xe && addD(D.xe, -1) } : {};
+  $$("[data-sem]").forEach(i => i.value = sv[i.dataset.sem] ? ymd(sv[i.dataset.sem]) : "");
+  $("#semSrc").textContent = D ? t(D.src) : "";
+  $("#bSemAuto").hidden = !["s", "e", "xs", "xe"].some(k => P.sem[k]);
   $("#clist").innerHTML = d ? d.courses.map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span><bdi>" + esc(shortName(c.name)) + "</bdi></span></label>" +
     '<input type="color" data-cc="' + c.id + '" value="' + colorOf(c.id) + '"></div>').join("") : "";
 }
@@ -1398,7 +1587,7 @@ async function refresh() {
   V.loading = true; V.err = null; render();
   let d = null;
   try {
-    d = await fetchAll(); applySeen(d.courses); migrateColors(d.courses); V.data = d; LS.set("cache", d);
+    d = await fetchAll(); applySeen(d.courses); V.data = d; LS.set("cache", d);
   } catch (e) {
     V.err = e.message;
     if (e.code === "invalidtoken") { V.loading = false; render(); return showSetup(e.message); }
@@ -1430,13 +1619,14 @@ function showMain() {
 }
 function importFromHash() {
   const h = location.hash.slice(1); if (!h) return false;
-  const q = new URLSearchParams(h), tk = q.get("t"), tt = q.get("tt");
+  const q = new URLSearchParams(h), tk = q.get("t");
   history.replaceState(null, "", location.pathname + location.search);   // the token does not stay in the address bar or history
-  if (tt) importTT(tt);
+  if (q.get("tt") || q.get("cc")) importShared(q);
   if (!tk || !/^[A-Za-z0-9]+$/.test(tk)) return false;
   LS.set("token", tk); LS.set("site", normUrl(q.get("u") || DEFAULT_SITE)); LS.del("cache"); V.data = null;
   const p = q.get("p");
-  if (p) { try { const x = JSON.parse(b64dec(p)); for (const k of ["off", "hidden", "old_days", "sort", "colors"]) if (x[k] !== undefined) P[k] = x[k]; savePrefs(); LS.set("seen", "imported"); LS.del("pal2"); } catch (e) {} }
+  if (p) { try { const x = JSON.parse(b64dec(p)); for (const k of ["off", "hidden", "old_days", "sort", "colors"]) if (x[k] !== undefined) P[k] = x[k];
+      P.colors = cleanColors(P.colors, /^\d+$/); if (x.ccode) Object.assign(P.ccode, cleanColors(x.ccode, /^\d{5,7}$/)); savePrefs(); LS.set("seen", "imported"); } catch (e) {} }
   toast(t("phoneConnected"));
   return true;
 }
@@ -1504,6 +1694,8 @@ $("#dash").addEventListener("click", e => {
   if (e.target.closest("[data-semedit]")) return openSemSettings();
   if (e.target.closest("[data-ttadd]")) return openTT();
   if (e.target.closest("[data-ttgo]")) return goTT();
+  if (e.target.closest("[data-exall]")) { V.exAll = !V.exAll; return render(); }
+  if (e.target.closest("[data-exedit]")) return openExams();
   if (e.target.closest("#bNewsMore")) { V.newsAll = !V.newsAll; return render(); }
   const s = e.target.closest(".ni summary");
   if (s) {
@@ -1518,6 +1710,25 @@ $("#bTtGo").onclick = goTT;
 $("#bSemEdit").onclick = openSemSettings;
 $("#bTtAdd").onclick = () => openTT();
 $("#bTtShare").onclick = shareTT;
+$("#bTtScan").onclick = scanTT;
+$("#bTtClear").onclick = () => { if (P.tt.length && confirm(t("ttClearConfirm", P.tt.length))) { P.tt = []; savePrefs(); render(); } };
+$("#scClose").onclick = () => $("#scSheet").hidden = true;
+$("#scSheet").addEventListener("click", e => { if (e.target.id === "scSheet") $("#scSheet").hidden = true; });
+$("#scList").addEventListener("change", scCount);
+$("#scAdd").onclick = () => {
+  const pick = $$("#scList [data-sc]:checked").map(i => V.scan[Number(i.dataset.sc)]).filter(Boolean);
+  P.tt = P.tt.concat(cleanTT(pick)); savePrefs(); $("#scSheet").hidden = true; render(); toast(t("importDone"));
+};
+function openExams() { V.exSug = []; $("#exScanMsg").textContent = ""; renderExSheet(); $("#exSheet").hidden = false; }
+$("#bExEdit").onclick = openExams;
+$("#bExScan").onclick = scanExams;
+$("#exClose").onclick = () => $("#exSheet").hidden = true;
+$("#exSheet").addEventListener("click", e => { if (e.target.id === "exSheet") $("#exSheet").hidden = true; });
+$("#exList").addEventListener("change", e => { const i = e.target.closest("[data-ex]"); if (i) setExam(Number(i.dataset.ex), i.dataset.m, i.value); });
+$("#exList").addEventListener("click", e => {
+  const b = e.target.closest("[data-exuse]"); if (!b) return;
+  const [cid, m, v] = b.dataset.exuse.split("|"); setExam(Number(cid), m, v); renderExSheet();
+});
 $("#tt").addEventListener("click", e => { const b = e.target.closest("[data-tte]"); if (b) openTT(b.dataset.tte); });
 $("#ttClose").onclick = () => $("#ttSheet").hidden = true;
 $("#ttSheet").addEventListener("click", e => { if (e.target.id === "ttSheet") $("#ttSheet").hidden = true; });
@@ -1526,7 +1737,7 @@ $("#fSave").onclick = saveTT;
 $("#fDel").onclick = () => { if (!confirm(t("delConfirm"))) return; P.tt = P.tt.filter(y => y.id !== ttEditId); savePrefs(); $("#ttSheet").hidden = true; render(); };
 $$("[data-sem]").forEach(i => i.addEventListener("change", () => {
   if (/^\d{4}-\d{2}-\d{2}$/.test(i.value)) P.sem[i.dataset.sem] = i.value; else delete P.sem[i.dataset.sem];
-  P.sem.ok = true; savePrefs(); render(); renderSheet();
+  savePrefs(); render(); renderSheet();
 }));
 $("#bSemAuto").onclick = () => { P.sem = {}; savePrefs(); render(); renderSheet(); };
 window.addEventListener("hashchange", () => { if (!location.hash) return; if (importFromHash()) showMain(); else render(); });
