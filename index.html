@@ -96,6 +96,10 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .task .tc{font-size:12.5px;padding:1px 9px;border-radius:99px;color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent);font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .task .due{margin-top:6px;font-size:14px}
 .task .rel{color:var(--muted)}
+.cd{color:var(--muted);font-variant-numeric:tabular-nums}
+.cd.soon{color:var(--warn);font-weight:700}
+.cd.late{color:var(--err);font-weight:600}
+#sum .next{margin-top:3px}
 .task .sub{color:var(--muted);font-size:13px}
 .task pre{white-space:pre-wrap;font:inherit;margin:6px 0;font-size:14.5px}
 .task .act{margin-top:8px}
@@ -345,6 +349,29 @@ function rel(ts, now) {
   else { const y = Math.floor(days / 365); t = y === 1 ? "שנה" : y + " שנים"; }
   return d >= 0 ? "בעוד " + t : "לפני " + t;
 }
+/* ספירה לאחור עם דקות ושניות. מעל 30 יום נשאר ניסוח כללי ("לפני 4 חודשים") */
+function cdHTML(ts, now) {
+  const d = ts - now, a = Math.abs(d);
+  if (a >= 30 * 86400) return rel(ts, now);
+  const days = Math.floor(a / 86400), h = Math.floor(a % 86400 / 3600), m = Math.floor(a % 3600 / 60), sec = Math.floor(a % 60);
+  const parts = [];
+  if (days) parts.push(days === 1 ? "יום" : days + " ימים");
+  if (days || h) parts.push(h + " שע׳");
+  parts.push(m + " דק׳", sec + " שנ׳");
+  return (d >= 0 ? "נותרו " : "באיחור של ") + parts.join(", ");
+}
+const cdClass = (ts, now) => ts < now ? "cd late" : ts - now < 86400 ? "cd soon" : "cd";
+const cdSpan = (ts, now) => '<span class="' + cdClass(ts, now) + '" data-due="' + ts + '">' + cdHTML(ts, now) + "</span>";
+function tick() {
+  if (document.hidden) return;
+  const now = Math.floor(Date.now() / 1000); let flipped = false;
+  for (const el of document.querySelectorAll(".cd[data-due]")) {
+    const ts = Number(el.dataset.due);
+    if ((ts < now) !== el.classList.contains("late")) flipped = true;
+    el.className = cdClass(ts, now); el.innerHTML = cdHTML(ts, now);
+  }
+  if (flipped) render();     // מועד עבר עכשיו: המשימה עוברת לקבוצת "באיחור"
+}
 function ago(ts) { const m = Math.floor((Date.now() / 1000 - ts) / 60); return m < 1 ? "עכשיו" : m < 60 ? "לפני " + m + " דק׳" : m < 1440 ? "לפני " + Math.floor(m / 60) + " שע׳" : "לפני " + Math.floor(m / 1440) + " ימים"; }
 function groupOf(t, now) {
   if (isDone(t)) return "done";
@@ -374,7 +401,7 @@ function card(t, now, g) {
     : st === "na" ? '<span class="st na">ללא הגשה אונליין</span>' : st === "unknown" ? '<span class="st unknown">סטטוס לא ידוע</span>'
     : (g === "late" || g === "old") ? '<span class="st late">באיחור</span>' : '<span class="st none">לא הוגש</span>';
   if (t.grade) chip += '<span class="st grade">ציון: ' + esc(t.grade) + "</span>";
-  const due = t.due ? "<b>" + esc(when(t.due)) + '</b> <span class="rel">(' + rel(t.due, now) + ")</span>" + (t.extended ? " · הארכה אישית" : "") : '<span class="rel">אין מועד הגשה</span>';
+  const due = t.due ? "<b>" + esc(when(t.due)) + "</b><br>" + cdSpan(t.due, now) + (t.extended ? ' <span class="rel">· הארכה אישית</span>' : "") : '<span class="rel">אין מועד הגשה</span>';
   const extra = (t.from && t.from > now ? '<div class="sub">נפתח להגשה: ' + esc(when(t.from)) + "</div>" : "") + (t.cutoff ? '<div class="sub">נעילה סופית: ' + esc(when(t.cutoff)) + "</div>" : "");
   const body = (t.intro || t.files.length) ? "<details><summary>תוכן המטלה</summary><pre>" + esc(t.intro || "") + "</pre>" + (t.files.length ? '<div class="sub">📎 ' + t.files.map(esc).join(", ") + "</div>" : "") + "</details>" : "";
   const link = /^https?:\/\//.test(t.url) ? '<a href="' + esc(t.url) + '" target="_blank" rel="noopener noreferrer">פתח באתר ↗</a>' : "";
@@ -427,7 +454,7 @@ function render() {
   const relv = d.tasks.filter(t => !isOff(t.cid) && !P.hidden.includes(t.key) && !isDone(t) && groupOf(t, now) !== "old");
   const dated = relv.filter(t => t.due), late = dated.filter(t => t.due < now), next = dated.filter(t => t.due >= now).sort((a, b) => a.due - b.due)[0];
   $("#sum").innerHTML = "<b>" + dated.length + "</b> לא הוגשו" + (late.length ? ' · <b class="late">' + late.length + " באיחור</b>" : "") +
-    (next ? " · הקרובה: <b>" + esc(next.name) + "</b> " + rel(next.due, now) : "");
+    (next ? '<div class="next">הקרובה: <b>' + esc(next.name) + "</b> · " + cdSpan(next.due, now) + "</div>" : "");
   const urgent = dated.filter(t => ["late", "today", "week"].includes(groupOf(t, now))).length;
   try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
   $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>אבחון: " + d.diag.length + " פונקציות לא עבדו</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
@@ -527,6 +554,7 @@ $("#list").addEventListener("click", e => {
 });
 document.addEventListener("visibilitychange", () => { if (!document.hidden && M.token && (!V.data || Date.now() / 1000 - V.data.at > 300)) refresh(); });
 setInterval(() => { if (!document.hidden && V.data) render(); }, 60000);
+setInterval(tick, 1000);
 window.addEventListener("online", () => { if (M.token) refresh(); });
 
 if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
