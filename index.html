@@ -16,12 +16,14 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <style>
 :root{
+  --mixk:#000; --mixp:68%;
   --bg:#f4f6fb; --card:#ffffff; --text:#1d2433; --muted:#667085; --line:#e4e8f1;
   --accent:#3b5bdb; --accent-d:#2f49b3; --accent-soft:#e8edff; --ok:#2b8a3e; --warn:#e8590c; --err:#c92a2a;
   --new:#1c7ed6; --newbg:#e7f1fd; --updbg:#fff0e0; --okbg:#e6f6ea; --row:#f7f8fc; --track:#eceff5;
 }
 @media (prefers-color-scheme: dark){
   :root{
+    --mixk:#fff; --mixp:88%;
     --bg:#12151d; --card:#1a1f2b; --text:#e7eaf2; --muted:#98a2b3; --line:#2a3141;
     --accent:#7c93ff; --accent-d:#9aabff; --accent-soft:#252d4d; --ok:#69db7c; --warn:#ffa94d; --err:#ff8787;
     --new:#74c0fc; --newbg:#1c2b3d; --updbg:#3a2a1a; --okbg:#1d3326; --row:#202637; --track:#252a36;
@@ -86,14 +88,15 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .grp .cnt{font-weight:400;color:var(--muted);font-size:13px}
 .grp.late{color:var(--err)}
 .grp.old,.grp.nodue,.grp.done{color:var(--muted)}
-.grp.cg{color:var(--c);border-inline-start:5px solid var(--c);padding-inline-start:8px}
+.grp.cg{color:var(--ct);border-inline-start:5px solid var(--c);padding-inline-start:8px}
+.task,.grp,.chip{--ct:color-mix(in srgb,var(--c) var(--mixp),var(--mixk))}
 .task{--c:var(--line);position:relative;background:var(--card);border:1px solid var(--line);border-inline-start:5px solid var(--c);border-radius:14px;padding:12px 14px;margin-bottom:9px}
 .task.done{opacity:.85}
 .task.hid{opacity:.45}
 .task .x{position:absolute;inset-block-start:4px;inset-inline-end:4px;width:40px;height:40px;padding:0;border:0;background:none;color:var(--muted);font-size:15px}
 .task .tl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-inline-end:34px}
 .task .tname{font-weight:700;font-size:16px;width:100%}
-.task .tc{font-size:12.5px;padding:1px 9px;border-radius:99px;color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent);font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task .tc{font-size:12.5px;padding:1px 9px;border-radius:99px;color:var(--ct);background:color-mix(in srgb,var(--c) 13%,transparent);font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .task .due{margin-top:6px;font-size:14px}
 .task .rel{color:var(--muted)}
 .cd{color:var(--muted);font-variant-numeric:tabular-nums}
@@ -124,35 +127,38 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .srow .cn{display:flex;align-items:center;gap:8px;min-width:0}
 .srow .cn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #toast{position:fixed;bottom:max(18px,env(safe-area-inset-bottom));inset-inline:0;margin:auto;width:fit-content;max-width:90%;background:#222;color:#fff;padding:10px 16px;border-radius:12px;display:none;z-index:40;white-space:pre-line;font-size:14px}
+.langrow{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 0 4px}
+.langrow select{font-size:14px;padding:5px 8px}
 </style>
 </head>
 <body>
 <header class="top">
-  <div class="ttl"><b>משימות</b><span class="hint" id="upd"></span></div>
-  <button class="ic" id="bRefresh" aria-label="רענן" hidden>⟳</button>
-  <button class="ic" id="bSet" aria-label="הגדרות" hidden>⚙</button>
+  <div class="ttl"><b data-i18n="appTitle">משימות</b><span class="hint" id="upd"></span></div>
+  <button class="ic" id="bRefresh" data-i18n-aria="refresh" aria-label="רענן" hidden>⟳</button>
+  <button class="ic" id="bSet" data-i18n-aria="settings" aria-label="הגדרות" hidden>⚙</button>
 </header>
 
 <main>
 <section id="setup" hidden>
   <div class="card">
-    <h2>חיבור ל-Moodle</h2>
-    <div class="hint">פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.</div>
-    <div class="step"><b>1.</b> לחץ כאן והתחבר ל-Moodle אם יבקשו:
-      <a class="btn primary" id="bGet" target="_blank" rel="noopener noreferrer">פתח את Moodle לקבלת טוקן ↗</a></div>
-    <div class="step"><b>2.</b> בעמוד שנפתח יש קישור אחד (״לחץ כאן לפתיחת היישומון״ / Click here to launch the app). <b>לחיצה ארוכה</b> עליו ← <b>העתק כתובת קישור</b>.
-      <div class="hint">אם נפתחה אפליקציית Moodle או הודעת שגיאה, זה בסדר: חזור לדפדפן ועשה את הלחיצה הארוכה.</div></div>
-    <div class="step"><b>3.</b> חזור לכאן:
-      <button class="primary" id="bPaste" style="width:100%">📋 הדבק וחבר</button></div>
-    <label for="tok">או הדבק ידנית</label>
-    <input type="password" id="tok" autocomplete="off" placeholder="moodlemobile://token=… או טוקן">
-    <button id="bConnect" style="width:100%;margin-top:10px">התחבר</button>
+    <div class="langrow"><span aria-hidden="true">🌐</span><select class="langSel" aria-label="Language"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
+    <h2 data-i18n="setupTitle"></h2>
+    <div class="hint" data-i18n="setupHint"></div>
+    <div class="step"><b>1.</b> <span data-i18n="step1"></span>
+      <a class="btn primary" id="bGet" target="_blank" rel="noopener noreferrer" data-i18n="getToken"></a></div>
+    <div class="step"><b>2.</b> <span data-i18n-html="step2"></span>
+      <div class="hint" data-i18n="step2hint"></div></div>
+    <div class="step"><b>3.</b> <span data-i18n="step3"></span>
+      <button class="primary" id="bPaste" style="width:100%" data-i18n="pasteConnect"></button></div>
+    <label for="tok" data-i18n="manual"></label>
+    <input type="password" id="tok" autocomplete="off" data-i18n-ph="tokPh">
+    <button id="bConnect" style="width:100%;margin-top:10px" data-i18n="connect"></button>
     <div class="err" id="setupErr"></div>
     <details>
-      <summary>אתר אחר</summary>
+      <summary data-i18n="otherSite"></summary>
       <input type="text" id="site" autocomplete="off">
     </details>
-    <div class="hint">יש לך את התוכנה במחשב? אפשר גם ללחוץ שם <b>📱 העבר לטלפון</b> ולסרוק את הקוד.</div>
+    <div class="hint" data-i18n-html="pcHint"></div>
   </div>
 </section>
 
@@ -162,17 +168,17 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
   <div class="chips" id="chips"></div>
   <div class="ctl">
     <div class="seg" id="seg">
-      <button data-f="open" class="on">לא הוגשו</button>
-      <button data-f="all">הכל</button>
-      <button data-f="done">הוגשו</button>
+      <button data-f="open" class="on" data-i18n="fOpen"></button>
+      <button data-f="all" data-i18n="fAll"></button>
+      <button data-f="done" data-i18n="fDone"></button>
     </div>
-    <select id="sort" aria-label="מיון">
-      <option value="urgency">דחיפות</option>
-      <option value="course">קורס</option>
-      <option value="date">תאריך</option>
+    <select id="sort" data-i18n-aria="sort">
+      <option value="urgency" data-i18n="sUrgency"></option>
+      <option value="course" data-i18n="sCourse"></option>
+      <option value="date" data-i18n="sDate"></option>
     </select>
   </div>
-  <input type="search" id="q" placeholder="חיפוש משימה או קורס…" autocomplete="off">
+  <input type="search" id="q" autocomplete="off" data-i18n-ph="searchPh">
   <div id="list"></div>
   <div class="diag" id="diag"></div>
 </section>
@@ -180,15 +186,15 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 
 <div class="sheet" id="sheet" hidden>
   <div class="box">
-    <h3>הגדרות <button class="link" id="bClose">סגור</button></h3>
-    <div class="srow"><span>משימה עוברת ל״ישנות״ אחרי איחור של</span>
-      <select id="old"><option value="7">7 ימים</option><option value="14">14 ימים</option><option value="30">30 ימים</option><option value="60">60 ימים</option><option value="90">90 ימים</option><option value="0">אף פעם</option></select></div>
-    <div class="srow"><span>הצג משימות שהסתרתי (<span id="hidn">0</span>)</span><input type="checkbox" id="showHid"></div>
-    <div style="margin-top:14px;font-weight:700">קורסים וצבעים</div>
-    <div class="hint">לחיצה על שם הקורס מציגה או מסתירה אותו. לחיצה על הצבע משנה אותו.</div>
+    <h3><span data-i18n="settings"></span> <button class="link" id="bClose" data-i18n="close"></button></h3>
+    <div class="srow"><span data-i18n="language"></span><select class="langSel"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
+    <div class="srow"><span data-i18n="oldLabel"></span><select id="old"></select></div>
+    <div class="srow"><span><span data-i18n="showHidden"></span> (<span id="hidn">0</span>)</span><input type="checkbox" id="showHid"></div>
+    <div style="margin-top:14px;font-weight:700" data-i18n="coursesColors"></div>
+    <div class="hint" data-i18n="coursesHint"></div>
     <div id="clist"></div>
     <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
-    <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)">נתק את הטלפון הזה (מוחק את הטוקן ממנו)</button>
+    <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)" data-i18n="logout"></button>
   </div>
 </div>
 <div id="toast"></div>
@@ -206,6 +212,117 @@ const LS = {
 };
 function toast(m, ms) { const t = $("#toast"); t.textContent = m; t.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = "none", ms || 3500); }
 
+/* ---------- languages ---------- */
+const I18N = {
+  he: {
+    locale: "he-IL", dir: "rtl", docTitle: "משימות Moodle", appTitle: "משימות", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
+    setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
+    step1: "לחץ כאן והתחבר ל-Moodle אם יבקשו:", getToken: "פתח את Moodle לקבלת טוקן ↗",
+    step2: "בעמוד שנפתח יש קישור אחד (״לחץ כאן לפתיחת היישומון״ / Click here to launch the app). <b>לחיצה ארוכה</b> עליו ← <b>העתק כתובת קישור</b>.",
+    step2hint: "אם נפתחה אפליקציית Moodle או הודעה כמו “URL not valid”, זה בסדר: חזור לדפדפן ועשה את הלחיצה הארוכה.",
+    step3: "חזור לכאן:", pasteConnect: "📋 הדבק וחבר", manual: "או הדבק ידנית", tokPh: "moodlemobile://token=… או טוקן", connect: "התחבר",
+    otherSite: "אתר אחר", pcHint: "יש לך את התוכנה במחשב? אפשר גם ללחוץ שם <b>📱 העבר לטלפון</b> ולסרוק את הקוד.",
+    fOpen: "לא הוגשו", fAll: "הכל", fDone: "הוגשו", sort: "מיון", sUrgency: "דחיפות", sCourse: "קורס", sDate: "תאריך", searchPh: "חיפוש משימה או קורס…",
+    oldLabel: "משימה עוברת ל״ישנות״ אחרי איחור של", never: "אף פעם", showHidden: "הצג משימות שהסתרתי", coursesColors: "קורסים וצבעים",
+    coursesHint: "לחיצה על שם הקורס מציגה או מסתירה אותו. לחיצה על הצבע משנה אותו.", logout: "נתק את הטלפון הזה (מוחק את הטוקן ממנו)",
+    logoutConfirm: "למחוק את הטוקן מהטלפון הזה? כדי לחזור תצטרך להתחבר שוב.",
+    gLate: "באיחור", gToday: "היום", gWeek: "בשבוע הקרוב", gLater: "בהמשך", gNodue: "ללא מועד הגשה", gOld: "ישנות (באיחור)", gDone: "הוגשו",
+    tAssign: "מטלה", tQuiz: "בוחן", tEvent: "אירוע",
+    stSubmitted: "הוגש ✓", stDraft: "טיוטה, לא הוגש", stNa: "ללא הגשה אונליין", stUnknown: "סטטוס לא ידוע", stLate: "באיחור", stNone: "לא הוגש", grade: x => "ציון: " + x,
+    extended: "הארכה אישית", noDue: "אין מועד הגשה", opens: x => "נפתח להגשה: " + x, cutoff: x => "נעילה סופית: " + x, details: "תוכן המטלה", openSite: "פתח באתר ↗", hide: "הסתר", restore: "החזר",
+    loading: "טוען…", refreshing: "מרענן…", updated: x => "עודכן " + x, lastData: " (מוצגים הנתונים האחרונים)", loadingTasks: "טוען משימות…",
+    noMatch: "אין משימות בסינון הזה", noTasks: "לא נמצאו משימות", sumOpen: n => "<b>" + n + "</b> לא הוגשו", sumLate: n => n + " באיחור", next: "הקרובה:",
+    diag: n => "אבחון: " + n + " פונקציות לא עבדו",
+    badLink: "לא הצלחתי לפענח את הקישור. הדבק רק את הטוקן עצמו.", offline: "אין חיבור לאינטרנט", unreachable: "לא הצלחתי להגיע לאתר: אין אינטרנט, או שהאתר חוסם גישה מדפדפן.",
+    badResp: n => "האתר החזיר תשובה לא צפויה (" + n + ")", invalidToken: "הטוקן לא תקף. קבל טוקן חדש (כפתור 1 במסך החיבור) ונסה שוב.", error: "שגיאה", other: "אחר",
+    missingToken: "חסר טוקן. העתק את הקישור מעמוד Moodle ונסה שוב.",
+    notToken: "זה לא נראה כמו טוקן. צריך להעתיק את כתובת הקישור (לחיצה ארוכה ← העתק כתובת קישור), לא את הטקסט שלו.",
+    checking: "בודק…", connected: "מחובר ✓", clipFail: "לא הצלחתי לקרוא מהלוח. הדבק ידנית בשדה (לחיצה ארוכה ← הדבק).", phoneConnected: "הטלפון חובר ✓",
+    lessHour: "פחות משעה", hours: n => n === 1 ? "שעה" : n + " שעות", days: n => n === 1 ? "יום" : n + " ימים", months: n => n === 1 ? "חודש" : n + " חודשים", years: n => n === 1 ? "שנה" : n + " שנים",
+    fut: x => "בעוד " + x, past: x => "לפני " + x, cdH: n => n + " שע׳", cdM: n => n + " דק׳", cdS: n => n + " שנ׳", left: x => "נותרו " + x, overdueBy: x => "באיחור של " + x,
+    now: "עכשיו", agoM: n => "לפני " + n + " דק׳", agoH: n => "לפני " + n + " שע׳", agoD: n => "לפני " + n + " ימים", closedArrow: "◂",
+  },
+  en: {
+    locale: "en-GB", dir: "ltr", docTitle: "Moodle Tasks", appTitle: "Tasks", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
+    setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
+    step1: "Tap here and sign in to Moodle if asked:", getToken: "Open Moodle to get a token ↗",
+    step2: "The page that opens has one link (“Click here to launch the app”). <b>Long-press</b> it → <b>Copy link address</b>.",
+    step2hint: "If the Moodle app opens or a message like “URL not valid” appears, that’s fine: go back to the browser and do the long-press.",
+    step3: "Come back here:", pasteConnect: "📋 Paste & connect", manual: "Or paste manually", tokPh: "moodlemobile://token=… or token", connect: "Connect",
+    otherSite: "Other site", pcHint: "Have the program on your PC? You can also press <b>📱</b> there and scan the code.",
+    fOpen: "To do", fAll: "All", fDone: "Done", sort: "Sort", sUrgency: "Urgency", sCourse: "Course", sDate: "Date", searchPh: "Search task or course…",
+    oldLabel: "Move overdue tasks to “Old” after", never: "Never", showHidden: "Show tasks I hid", coursesColors: "Courses & colours",
+    coursesHint: "Tap a course name to show or hide it. Tap the colour to change it.", logout: "Disconnect this phone (deletes the token from it)",
+    logoutConfirm: "Delete the token from this phone? You will need to connect again.",
+    gLate: "Overdue", gToday: "Today", gWeek: "This week", gLater: "Later", gNodue: "No due date", gOld: "Old (overdue)", gDone: "Submitted",
+    tAssign: "Assignment", tQuiz: "Quiz", tEvent: "Event",
+    stSubmitted: "Submitted ✓", stDraft: "Draft, not submitted", stNa: "No online submission", stUnknown: "Status unknown", stLate: "Overdue", stNone: "Not submitted", grade: x => "Grade: " + x,
+    extended: "personal extension", noDue: "No due date", opens: x => "Opens: " + x, cutoff: x => "Final cutoff: " + x, details: "Assignment details", openSite: "Open on site ↗", hide: "Hide", restore: "Restore",
+    loading: "Loading…", refreshing: "Refreshing…", updated: x => "Updated " + x, lastData: " (showing last data)", loadingTasks: "Loading tasks…",
+    noMatch: "No tasks match this filter", noTasks: "No tasks found", sumOpen: n => "<b>" + n + "</b> not submitted", sumLate: n => n + " overdue", next: "Next:",
+    diag: n => "Diagnostics: " + n + " functions failed",
+    badLink: "Couldn’t decode the link. Paste just the token.", offline: "No internet connection", unreachable: "Couldn’t reach the site: no internet, or the site blocks browser access.",
+    badResp: n => "Unexpected response from the site (" + n + ")", invalidToken: "The token is no longer valid. Get a new one (button 1 on the connect screen) and try again.", error: "Error", other: "Other",
+    missingToken: "No token. Copy the link from the Moodle page and try again.",
+    notToken: "That doesn’t look like a token. Copy the link address (long-press → Copy link address), not its text.",
+    checking: "Checking…", connected: "Connected ✓", clipFail: "Couldn’t read the clipboard. Paste into the field manually (long-press → Paste).", phoneConnected: "Phone connected ✓",
+    lessHour: "less than an hour", hours: n => n === 1 ? "1 hour" : n + " hours", days: n => n === 1 ? "1 day" : n + " days", months: n => n === 1 ? "1 month" : n + " months", years: n => n === 1 ? "1 year" : n + " years",
+    fut: x => "in " + x, past: x => x + " ago", cdH: n => n + " h", cdM: n => n + " min", cdS: n => n + " s", left: x => x + " left", overdueBy: x => "overdue by " + x,
+    now: "just now", agoM: n => n + " min ago", agoH: n => n + " h ago", agoD: n => n + " d ago", closedArrow: "▸",
+  },
+  fr: {
+    locale: "fr-FR", dir: "ltr", docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
+    setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
+    step1: "Appuyez ici et connectez-vous à Moodle si demandé :", getToken: "Ouvrir Moodle pour obtenir un jeton ↗",
+    step2: "La page qui s’ouvre contient un seul lien (« Click here to launch the app » ou son équivalent). <b>Appui long</b> dessus → <b>Copier l’adresse du lien</b>.",
+    step2hint: "Si l’application Moodle s’ouvre ou qu’un message comme « URL not valid » apparaît, c’est normal : revenez au navigateur et faites l’appui long.",
+    step3: "Revenez ici :", pasteConnect: "📋 Coller et connecter", manual: "Ou collez manuellement", tokPh: "moodlemobile://token=… ou jeton", connect: "Se connecter",
+    otherSite: "Autre site", pcHint: "Vous avez le programme sur votre PC ? Vous pouvez aussi y appuyer sur <b>📱</b> et scanner le code.",
+    fOpen: "À rendre", fAll: "Tout", fDone: "Rendus", sort: "Tri", sUrgency: "Urgence", sCourse: "Cours", sDate: "Date", searchPh: "Rechercher un devoir ou un cours…",
+    oldLabel: "Classer en « Anciens » après un retard de", never: "Jamais", showHidden: "Afficher les devoirs masqués", coursesColors: "Cours et couleurs",
+    coursesHint: "Appuyez sur un cours pour l’afficher ou le masquer, et sur la couleur pour la changer.", logout: "Déconnecter ce téléphone (supprime le jeton)",
+    logoutConfirm: "Supprimer le jeton de ce téléphone ? Il faudra vous reconnecter.",
+    gLate: "En retard", gToday: "Aujourd’hui", gWeek: "Cette semaine", gLater: "Plus tard", gNodue: "Sans date limite", gOld: "Anciens (en retard)", gDone: "Rendus",
+    tAssign: "Devoir", tQuiz: "Test", tEvent: "Événement",
+    stSubmitted: "Rendu ✓", stDraft: "Brouillon, non rendu", stNa: "Pas de remise en ligne", stUnknown: "Statut inconnu", stLate: "En retard", stNone: "Non rendu", grade: x => "Note : " + x,
+    extended: "prolongation personnelle", noDue: "Pas de date limite", opens: x => "Ouverture : " + x, cutoff: x => "Clôture définitive : " + x, details: "Contenu du devoir", openSite: "Ouvrir sur le site ↗", hide: "Masquer", restore: "Rétablir",
+    loading: "Chargement…", refreshing: "Actualisation…", updated: x => "Mis à jour " + x, lastData: " (dernières données affichées)", loadingTasks: "Chargement des devoirs…",
+    noMatch: "Aucun devoir pour ce filtre", noTasks: "Aucun devoir trouvé", sumOpen: n => "<b>" + n + "</b> non rendus", sumLate: n => n + " en retard", next: "Prochain :",
+    diag: n => "Diagnostic : " + n + " fonctions ont échoué",
+    badLink: "Impossible de décoder le lien. Collez seulement le jeton.", offline: "Pas de connexion Internet", unreachable: "Site injoignable : pas d’Internet, ou le site bloque l’accès depuis un navigateur.",
+    badResp: n => "Réponse inattendue du site (" + n + ")", invalidToken: "Le jeton n’est plus valide. Obtenez-en un nouveau (bouton 1 de l’écran de connexion) et réessayez.", error: "Erreur", other: "Autre",
+    missingToken: "Aucun jeton. Copiez le lien depuis la page Moodle et réessayez.",
+    notToken: "Ce n’est pas un jeton. Copiez l’adresse du lien (appui long → Copier l’adresse du lien), pas son texte.",
+    checking: "Vérification…", connected: "Connecté ✓", clipFail: "Impossible de lire le presse-papiers. Collez manuellement dans le champ (appui long → Coller).", phoneConnected: "Téléphone connecté ✓",
+    lessHour: "moins d’une heure", hours: n => n === 1 ? "1 heure" : n + " heures", days: n => n === 1 ? "1 jour" : n + " jours", months: n => n + " mois", years: n => n === 1 ? "1 an" : n + " ans",
+    fut: x => "dans " + x, past: x => "il y a " + x, cdH: n => n + " h", cdM: n => n + " min", cdS: n => n + " s", left: x => "il reste " + x, overdueBy: x => "en retard de " + x,
+    now: "à l’instant", agoM: n => "il y a " + n + " min", agoH: n => "il y a " + n + " h", agoD: n => "il y a " + n + " j", closedArrow: "▸",
+  },
+};
+function pickLang() {
+  const saved = LS.get("lang", null); if (I18N[saved]) return saved;
+  const nav = ((navigator.languages && navigator.languages[0]) || navigator.language || "").toLowerCase();
+  return nav.startsWith("fr") ? "fr" : "he";
+}
+let LANG = pickLang();
+function t(key, ...a) {
+  const v = (I18N[LANG] && I18N[LANG][key] !== undefined) ? I18N[LANG][key] : I18N.he[key];
+  return typeof v === "function" ? v(...a) : (v === undefined ? key : v);
+}
+function applyLang(l) {
+  if (l) { LANG = I18N[l] ? l : "he"; LS.set("lang", LANG); }
+  document.documentElement.lang = LANG; document.documentElement.dir = t("dir"); document.title = t("docTitle");
+  $$("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+  $$("[data-i18n-html]").forEach(el => el.innerHTML = t(el.dataset.i18nHtml));      // constant strings from I18N only
+  $$("[data-i18n-ph]").forEach(el => el.placeholder = t(el.dataset.i18nPh));
+  $$("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", t(el.dataset.i18nAria)));
+  $$(".langSel").forEach(s => s.value = LANG);
+  $("#old").innerHTML = [7, 14, 30, 60, 90].map(n => '<option value="' + n + '">' + esc(t("days", n)) + "</option>").join("") + '<option value="0">' + esc(t("never")) + "</option>";
+  $("#old").value = String(P.old_days);
+  if (!$("#main").hidden) render();
+  if (!$("#sheet").hidden) renderSheet();
+}
+
 /* ---------- connection ---------- */
 function normUrl(u) {
   u = String(u || "").trim().replace(/\/+$/, "");
@@ -220,10 +337,10 @@ function b64dec(s) {
 }
 function extractToken(raw) {
   raw = String(raw || "").trim().replace(/^["']+|["']+$/g, "");
-  const m = /^moodlemobile:\/\/token=([^&\s]+)/i.exec(raw);
+  const m = /moodlemobile:\/\/token=([A-Za-z0-9+\/=_%-]+)/i.exec(raw);
   if (m) {
     try { const parts = b64dec(decodeURIComponent(m[1])).split(":::"); if (parts.length >= 2 && parts[1].trim()) return parts[1].trim(); } catch (e) {}
-    throw new Error("לא הצלחתי לפענח את הקישור. הדבק רק את הטוקן עצמו.");
+    throw new Error(t("badLink"));
   }
   const f = /[#&]t=([A-Za-z0-9]+)/.exec(raw);
   return f ? f[1] : raw;
@@ -238,12 +355,12 @@ async function call(fn, params) {
   }
   let r;
   try { r = await fetch(M.url + "/webservice/rest/server.php", { method: "POST", body, cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer" }); }
-  catch (e) { throw new MErr(navigator.onLine === false ? "אין חיבור לאינטרנט" : "לא הצלחתי להגיע לאתר: אין אינטרנט, או שהאתר חוסם גישה מדפדפן.", "network"); }
+  catch (e) { throw new MErr(navigator.onLine === false ? t("offline") : t("unreachable"), "network"); }
   let j;
-  try { j = await r.json(); } catch (e) { throw new MErr("האתר החזיר תשובה לא צפויה (" + r.status + ")", "bad"); }
+  try { j = await r.json(); } catch (e) { throw new MErr(t("badResp", r.status), "bad"); }
   if (j && j.exception) {
-    if (j.errorcode === "invalidtoken") throw new MErr("הטוקן לא תקף. קבל טוקן חדש (כפתור 1 במסך החיבור) ונסה שוב.", "invalidtoken");
-    throw new MErr(j.message || j.errorcode || "שגיאה", j.errorcode || "error");
+    if (j.errorcode === "invalidtoken") throw new MErr(t("invalidToken"), "invalidtoken");
+    throw new MErr(j.message || j.errorcode || t("error"), j.errorcode || "error");
   }
   return j;
 }
@@ -312,14 +429,33 @@ const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", co
 const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loading: false, err: null };
 const savePrefs = () => LS.set("prefs", P);
 const isOff = cid => P.off.includes(cid);
-const PALETTE = ["#3b5bdb", "#e8590c", "#2b8a3e", "#c2255c", "#0c8599", "#862e9c", "#d9480f", "#5f3dc4", "#087f5b", "#1971c2", "#a61e4d", "#5c940d"];
 function hslHex(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); }
+/* course colours taken from Meir's calendar; matched by course code so similar names never mix */
+const FIXED_COLORS = { "120131": "#fa7a17", "120302": "#ffb701", "141001": "#13c57b", "150005": "#9260f7", "150301": "#5264d2", "157210": "#5892f3" };
+const FIXED_WORDS = [["אינפי", "120131"], ["בדידה", "120302"], ["פיזיקה להנדסת", "141001"], ["מבוא למדעי המחשב", "150005"], ["מערכות ספרתיות", "150301"], ["אוריינות", "157210"]];
+/* other courses: hues kept away from the six above (red, pink, brown, grey, raspberry, olive, magenta, slate) */
+const OTHER_COLORS = ["#e03131", "#d6336c", "#8a5a36", "#6c757d", "#a61e4d", "#6b7a1f", "#b5348f", "#495a6b"];
+function fixedColor(name) {
+  const m = /^\s*(\d{5,7})\./.exec(name || "");
+  if (m && FIXED_COLORS[m[1]]) return FIXED_COLORS[m[1]];
+  for (const [w, code] of FIXED_WORDS) if ((name || "").includes(w)) return FIXED_COLORS[code];
+  return null;
+}
+function otherColor(k) { return k < OTHER_COLORS.length ? OTHER_COLORS[k] : hslHex([350, 330, 20, 300, 0, 65][k % 6], 45 + (k % 3) * 10, 30 + (k % 2) * 10); }
 function colorOf(cid) {
   if (P.colors[cid]) return P.colors[cid];
-  const cs = (V.data && V.data.courses) || [], i = Math.max(0, cs.findIndex(c => c.id === cid));
-  return i < PALETTE.length ? PALETTE[i] : hslHex((i * 47) % 360, 60, 42);
+  const cs = (V.data && V.data.courses) || [], c = cs.find(x => x.id === cid);
+  const f = c && fixedColor(c.name); if (f) return f;
+  const others = cs.filter(x => !fixedColor(x.name)), k = others.findIndex(x => x.id === cid);
+  return otherColor(Math.max(0, k));
 }
-const shortName = n => String(n || "אחר").replace(/^\s*\d{4,7}(\.\d+)*\s*-\s*/, "");
+/* one-time: drop older custom colours of the six calendar courses so the calendar palette shows */
+function migrateColors(courses) {
+  if (LS.get("pal2", false)) return;
+  for (const c of courses) if (fixedColor(c.name)) delete P.colors[c.id];
+  LS.set("pal2", true); savePrefs();
+}
+const shortName = n => String(n || t("other")).replace(/^\s*\d{4,7}(\.\d+)*\s*-\s*/, "");
 
 /* courses that already ended are switched off the first time they are seen (new semester = only current courses) */
 function applySeen(courses) {
@@ -337,28 +473,28 @@ const isDone = t => t.status === "submitted" || t.status === "na";
 function when(ts) {
   const d = new Date(ts * 1000), o = { weekday: "long", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" };
   if (d.getFullYear() !== new Date().getFullYear()) { o.year = "numeric"; delete o.weekday; }
-  try { return d.toLocaleString("he-IL", o); } catch (e) { return d.toLocaleString(); }
+  try { return d.toLocaleString(t("locale"), o); } catch (e) { return d.toLocaleString(); }
 }
 function rel(ts, now) {
   const d = ts - now, a = Math.abs(d), days = Math.floor(a / 86400), hrs = Math.floor(a / 3600);
-  let t;
-  if (a < 3600) t = "פחות משעה";
-  else if (hrs < 24) t = hrs === 1 ? "שעה" : hrs + " שעות";
-  else if (days < 45) t = days === 1 ? "יום" : days + " ימים";
-  else if (days < 365) { const m = Math.round(days / 30); t = m === 1 ? "חודש" : m + " חודשים"; }
-  else { const y = Math.floor(days / 365); t = y === 1 ? "שנה" : y + " שנים"; }
-  return d >= 0 ? "בעוד " + t : "לפני " + t;
+  let x;
+  if (a < 3600) x = t("lessHour");
+  else if (hrs < 24) x = t("hours", hrs);
+  else if (days < 45) x = t("days", days);
+  else if (days < 365) x = t("months", Math.round(days / 30));
+  else x = t("years", Math.floor(days / 365));
+  return d >= 0 ? t("fut", x) : t("past", x);
 }
-/* ספירה לאחור עם דקות ושניות. מעל 30 יום נשאר ניסוח כללי ("לפני 4 חודשים") */
+/* countdown with minutes and seconds; beyond 30 days stays coarse ("4 months ago") */
 function cdHTML(ts, now) {
   const d = ts - now, a = Math.abs(d);
-  if (a >= 30 * 86400) return rel(ts, now);
+  if (a >= 30 * 86400) return esc(rel(ts, now));
   const days = Math.floor(a / 86400), h = Math.floor(a % 86400 / 3600), m = Math.floor(a % 3600 / 60), sec = Math.floor(a % 60);
   const parts = [];
-  if (days) parts.push(days === 1 ? "יום" : days + " ימים");
-  if (days || h) parts.push(h + " שע׳");
-  parts.push(m + " דק׳", sec + " שנ׳");
-  return (d >= 0 ? "נותרו " : "באיחור של ") + parts.join(", ");
+  if (days) parts.push(t("days", days));
+  if (days || h) parts.push(t("cdH", h));
+  parts.push(t("cdM", m), t("cdS", sec));
+  return esc(d >= 0 ? t("left", parts.join(", ")) : t("overdueBy", parts.join(", ")));
 }
 const cdClass = (ts, now) => ts < now ? "cd late" : ts - now < 86400 ? "cd soon" : "cd";
 const cdSpan = (ts, now) => '<span class="' + cdClass(ts, now) + '" data-due="' + ts + '">' + cdHTML(ts, now) + "</span>";
@@ -370,9 +506,9 @@ function tick() {
     if ((ts < now) !== el.classList.contains("late")) flipped = true;
     el.className = cdClass(ts, now); el.innerHTML = cdHTML(ts, now);
   }
-  if (flipped) render();     // מועד עבר עכשיו: המשימה עוברת לקבוצת "באיחור"
+  if (flipped) render();     // a deadline just passed: the task moves to "overdue"
 }
-function ago(ts) { const m = Math.floor((Date.now() / 1000 - ts) / 60); return m < 1 ? "עכשיו" : m < 60 ? "לפני " + m + " דק׳" : m < 1440 ? "לפני " + Math.floor(m / 60) + " שע׳" : "לפני " + Math.floor(m / 1440) + " ימים"; }
+function ago(ts) { const m = Math.floor((Date.now() / 1000 - ts) / 60); return m < 1 ? t("now") : m < 60 ? t("agoM", m) : m < 1440 ? t("agoH", Math.floor(m / 60)) : t("agoD", Math.floor(m / 1440)); }
 function groupOf(t, now) {
   if (isDone(t)) return "done";
   if (!t.due) return "nodue";
@@ -381,50 +517,50 @@ function groupOf(t, now) {
   if (t.due < nextDay.getTime() / 1000) return "today";
   return t.due < now + 7 * 86400 ? "week" : "later";
 }
-const GROUPS = [["late", "באיחור"], ["today", "היום"], ["week", "בשבוע הקרוב"], ["later", "בהמשך"], ["nodue", "ללא מועד הגשה"], ["old", "ישנות (באיחור)"], ["done", "הוגשו"]];
+const GROUPS = [["late", "gLate"], ["today", "gToday"], ["week", "gWeek"], ["later", "gLater"], ["nodue", "gNodue"], ["old", "gOld"], ["done", "gDone"]];
 const G_OPEN = { late: true, today: true, week: true, later: true, nodue: false, old: false, done: false };
-const TYPE = { assign: "מטלה", quiz: "בוחן", event: "אירוע" };
-const dueKey = t => t.due || 9e12;
-function visible(t) {
-  if (isOff(t.cid)) return false;
-  if (P.hidden.includes(t.key) && !V.showHid) return false;
-  if (P.filter === "open" && isDone(t)) return false;
-  if (P.filter === "done" && !isDone(t)) return false;
+const TYPE = { assign: "tAssign", quiz: "tQuiz", event: "tEvent" };
+const dueKey = x => x.due || 9e12;
+function visible(x) {
+  if (isOff(x.cid)) return false;
+  if (P.hidden.includes(x.key) && !V.showHid) return false;
+  if (P.filter === "open" && isDone(x)) return false;
+  if (P.filter === "done" && !isDone(x)) return false;
   const q = V.q.toLowerCase();
-  return !q || (t.name + " " + t.course).toLowerCase().includes(q);
+  return !q || (x.name + " " + x.course).toLowerCase().includes(q);
 }
 
 /* ---------- render ---------- */
-function card(t, now, g) {
-  const st = t.status, hid = P.hidden.includes(t.key);
-  let chip = st === "submitted" ? '<span class="st submitted">הוגש ✓</span>' : st === "draft" ? '<span class="st draft">טיוטה, לא הוגש</span>'
-    : st === "na" ? '<span class="st na">ללא הגשה אונליין</span>' : st === "unknown" ? '<span class="st unknown">סטטוס לא ידוע</span>'
-    : (g === "late" || g === "old") ? '<span class="st late">באיחור</span>' : '<span class="st none">לא הוגש</span>';
-  if (t.grade) chip += '<span class="st grade">ציון: ' + esc(t.grade) + "</span>";
-  const due = t.due ? "<b>" + esc(when(t.due)) + "</b><br>" + cdSpan(t.due, now) + (t.extended ? ' <span class="rel">· הארכה אישית</span>' : "") : '<span class="rel">אין מועד הגשה</span>';
-  const extra = (t.from && t.from > now ? '<div class="sub">נפתח להגשה: ' + esc(when(t.from)) + "</div>" : "") + (t.cutoff ? '<div class="sub">נעילה סופית: ' + esc(when(t.cutoff)) + "</div>" : "");
-  const body = (t.intro || t.files.length) ? "<details><summary>תוכן המטלה</summary><pre>" + esc(t.intro || "") + "</pre>" + (t.files.length ? '<div class="sub">📎 ' + t.files.map(esc).join(", ") + "</div>" : "") + "</details>" : "";
-  const link = /^https?:\/\//.test(t.url) ? '<a href="' + esc(t.url) + '" target="_blank" rel="noopener noreferrer">פתח באתר ↗</a>' : "";
-  return '<div class="task' + (g === "done" ? " done" : "") + (hid ? " hid" : "") + '" style="--c:' + colorOf(t.cid) + '">' +
-    '<button class="x" data-hide="' + esc(t.key) + '" aria-label="' + (hid ? "החזר" : "הסתר") + '">' + (hid ? "↩" : "✕") + "</button>" +
-    '<div class="tl"><span class="tname">' + esc(t.name) + "</span>" + chip + '<span class="tc">' + esc(TYPE[t.type] || "") + " · " + esc(shortName(t.course)) + "</span></div>" +
+function card(x, now, g) {
+  const st = x.status, hid = P.hidden.includes(x.key);
+  let chip = st === "submitted" ? '<span class="st submitted">' + esc(t("stSubmitted")) + "</span>" : st === "draft" ? '<span class="st draft">' + esc(t("stDraft")) + "</span>"
+    : st === "na" ? '<span class="st na">' + esc(t("stNa")) + "</span>" : st === "unknown" ? '<span class="st unknown">' + esc(t("stUnknown")) + "</span>"
+    : (g === "late" || g === "old") ? '<span class="st late">' + esc(t("stLate")) + "</span>" : '<span class="st none">' + esc(t("stNone")) + "</span>";
+  if (x.grade) chip += '<span class="st grade">' + esc(t("grade", x.grade)) + "</span>";
+  const due = x.due ? "<b>" + esc(when(x.due)) + "</b><br>" + cdSpan(x.due, now) + (x.extended ? ' <span class="rel">· ' + esc(t("extended")) + "</span>" : "") : '<span class="rel">' + esc(t("noDue")) + "</span>";
+  const extra = (x.from && x.from > now ? '<div class="sub">' + esc(t("opens", when(x.from))) + "</div>" : "") + (x.cutoff ? '<div class="sub">' + esc(t("cutoff", when(x.cutoff))) + "</div>" : "");
+  const body = (x.intro || x.files.length) ? "<details><summary>" + esc(t("details")) + "</summary><pre>" + esc(x.intro || "") + "</pre>" + (x.files.length ? '<div class="sub">📎 ' + x.files.map(esc).join(", ") + "</div>" : "") + "</details>" : "";
+  const link = /^https?:\/\//.test(x.url) ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + esc(t("openSite")) + "</a>" : "";
+  return '<div class="task' + (g === "done" ? " done" : "") + (hid ? " hid" : "") + '" style="--c:' + colorOf(x.cid) + '">' +
+    '<button class="x" data-hide="' + esc(x.key) + '" aria-label="' + esc(hid ? t("restore") : t("hide")) + '">' + (hid ? "↩" : "✕") + "</button>" +
+    '<div class="tl"><span class="tname"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(t(TYPE[x.type]) || "") + " · <bdi>" + esc(shortName(x.course)) + "</bdi></span></div>" +
     '<div class="due">' + due + "</div>" + extra + body + (link ? '<div class="act">' + link + "</div>" : "") + "</div>";
 }
 function render() {
   const d = V.data;
   $("#bRefresh").classList.toggle("spin", V.loading);
-  $("#upd").textContent = V.loading && !d ? "טוען…" : d ? (V.loading ? "מרענן… · " : "") + "עודכן " + ago(d.at) : "";
+  $("#upd").textContent = V.loading && !d ? t("loading") : d ? (V.loading ? t("refreshing") + " · " : "") + t("updated", ago(d.at)) : "";
   const bn = $("#banner");
-  if (V.err) { bn.hidden = false; bn.className = "banner err"; bn.textContent = V.err + (d ? " (מוצגים הנתונים האחרונים)" : ""); }
+  if (V.err) { bn.hidden = false; bn.className = "banner err"; bn.textContent = V.err + (d ? t("lastData") : ""); }
   else bn.hidden = true;
-  if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">טוען משימות…</div>' : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
+  if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">' + esc(t("loadingTasks")) + "</div>" : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
   const now = Math.floor(Date.now() / 1000);
   // course chips: courses that have tasks, in enrolment order
-  const withTasks = new Set(d.tasks.map(t => t.cid));
+  const withTasks = new Set(d.tasks.map(x => x.cid));
   const cs = d.courses.filter(c => withTasks.has(c.id));
   $("#chips").innerHTML = cs.map(c => {
-    const n = d.tasks.filter(t => t.cid === c.id && !isDone(t) && t.due && groupOf(t, now) !== "old" && !P.hidden.includes(t.key)).length;
-    return '<span class="chip' + (isOff(c.id) ? "" : " on") + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i>' + esc(shortName(c.name)) + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
+    const n = d.tasks.filter(x => x.cid === c.id && !isDone(x) && x.due && groupOf(x, now) !== "old" && !P.hidden.includes(x.key)).length;
+    return '<span class="chip' + (isOff(c.id) ? "" : " on") + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
   }).join("");
   $$("#seg button").forEach(b => b.classList.toggle("on", b.dataset.f === P.filter));
   $("#sort").value = P.sort;
@@ -433,36 +569,36 @@ function render() {
   const isOpen = (k, def) => V.openG[k] === undefined ? def : V.openG[k];
   if (P.sort === "urgency") {
     const by = {}; GROUPS.forEach(([k]) => by[k] = []);
-    shown.forEach(t => by[groupOf(t, now)].push(t));
-    for (const [k, label] of GROUPS) if (by[k].length) buckets.push({ key: "u:" + k, label, cls: k, items: by[k].sort((a, b) => k === "done" ? b.due - a.due : dueKey(a) - dueKey(b)), open: isOpen("u:" + k, G_OPEN[k]) });
+    shown.forEach(x => by[groupOf(x, now)].push(x));
+    for (const [k, label] of GROUPS) if (by[k].length) buckets.push({ key: "u:" + k, label: t(label), cls: k, items: by[k].sort((a, b) => k === "done" ? b.due - a.due : dueKey(a) - dueKey(b)), open: isOpen("u:" + k, G_OPEN[k]) });
   } else if (P.sort === "course") {
-    const tier = t => { const g = groupOf(t, now); return g === "done" ? 3 : g === "old" ? 2 : g === "nodue" ? 1 : 0; };
-    const ids = d.courses.map(c => c.id).filter(id => shown.some(t => t.cid === id));
-    shown.forEach(t => { if (!ids.includes(t.cid)) ids.push(t.cid); });
+    const tier = x => { const g = groupOf(x, now); return g === "done" ? 3 : g === "old" ? 2 : g === "nodue" ? 1 : 0; };
+    const ids = d.courses.map(c => c.id).filter(id => shown.some(x => x.cid === id));
+    shown.forEach(x => { if (!ids.includes(x.cid)) ids.push(x.cid); });
     for (const id of ids) {
-      const items = shown.filter(t => t.cid === id).sort((a, b) => tier(a) - tier(b) || dueKey(a) - dueKey(b));
+      const items = shown.filter(x => x.cid === id).sort((a, b) => tier(a) - tier(b) || dueKey(a) - dueKey(b));
       buckets.push({ key: "c:" + id, label: shortName(items[0].course), cls: "cg", color: colorOf(id), items, open: isOpen("c:" + id, true) });
     }
   } else buckets.push({ key: "d", label: "", cls: "plain", items: shown.slice().sort((a, b) => dueKey(a) - dueKey(b)), open: true });
   let h = "";
   for (const b of buckets) {
-    if (b.cls !== "plain") h += '<div class="grp ' + b.cls + '" data-g="' + esc(b.key) + '"' + (b.color ? ' style="--c:' + b.color + '"' : "") + '><span class="tw">' + (b.open ? "▾" : "◂") + "</span>" + esc(b.label) + ' <span class="cnt">' + b.items.length + "</span></div>";
-    if (b.open) h += b.items.map(t => card(t, now, groupOf(t, now))).join("");
+    if (b.cls !== "plain") h += '<div class="grp ' + b.cls + '" data-g="' + esc(b.key) + '"' + (b.color ? ' style="--c:' + b.color + '"' : "") + '><span class="tw">' + (b.open ? "▾" : t("closedArrow")) + "</span><bdi>" + esc(b.label) + '</bdi> <span class="cnt">' + b.items.length + "</span></div>";
+    if (b.open) h += b.items.map(x => card(x, now, groupOf(x, now))).join("");
   }
-  $("#list").innerHTML = h || '<div class="empty">' + (d.tasks.length ? "אין משימות בסינון הזה" : "לא נמצאו משימות") + "</div>";
+  $("#list").innerHTML = h || '<div class="empty">' + esc(d.tasks.length ? t("noMatch") : t("noTasks")) + "</div>";
 
-  const relv = d.tasks.filter(t => !isOff(t.cid) && !P.hidden.includes(t.key) && !isDone(t) && groupOf(t, now) !== "old");
-  const dated = relv.filter(t => t.due), late = dated.filter(t => t.due < now), next = dated.filter(t => t.due >= now).sort((a, b) => a.due - b.due)[0];
-  $("#sum").innerHTML = "<b>" + dated.length + "</b> לא הוגשו" + (late.length ? ' · <b class="late">' + late.length + " באיחור</b>" : "") +
-    (next ? '<div class="next">הקרובה: <b>' + esc(next.name) + "</b> · " + cdSpan(next.due, now) + "</div>" : "");
-  const urgent = dated.filter(t => ["late", "today", "week"].includes(groupOf(t, now))).length;
+  const relv = d.tasks.filter(x => !isOff(x.cid) && !P.hidden.includes(x.key) && !isDone(x) && groupOf(x, now) !== "old");
+  const dated = relv.filter(x => x.due), late = dated.filter(x => x.due < now), next = dated.filter(x => x.due >= now).sort((a, b) => a.due - b.due)[0];
+  $("#sum").innerHTML = t("sumOpen", dated.length) + (late.length ? ' · <b class="late">' + esc(t("sumLate", late.length)) + "</b>" : "") +
+    (next ? '<div class="next">' + esc(t("next")) + " <b><bdi>" + esc(next.name) + "</bdi></b> · " + cdSpan(next.due, now) + "</div>" : "");
+  const urgent = dated.filter(x => ["late", "today", "week"].includes(groupOf(x, now))).length;
   try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
-  $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>אבחון: " + d.diag.length + " פונקציות לא עבדו</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
+  $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>" + esc(t("diag", d.diag.length)) + "</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
 }
 function renderSheet() {
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
-  $("#who").textContent = d ? (d.user ? d.user + " · " : "") + M.url.replace(/^https?:\/\//, "") : M.url;
-  $("#clist").innerHTML = d ? d.courses.map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span>" + esc(shortName(c.name)) + "</span></label>" +
+  $("#who").innerHTML = d ? (d.user ? "<bdi>" + esc(d.user) + "</bdi> · " : "") + "<bdi>" + esc(M.url.replace(/^https?:\/\//, "")) + "</bdi>" : esc(M.url);
+  $("#clist").innerHTML = d ? d.courses.map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span><bdi>" + esc(shortName(c.name)) + "</bdi></span></label>" +
     '<input type="color" data-cc="' + c.id + '" value="' + colorOf(c.id) + '"></div>').join("") : "";
 }
 
@@ -471,7 +607,7 @@ async function refresh() {
   if (V.loading || !M.token) return;
   V.loading = true; V.err = null; render();
   try {
-    const d = await fetchAll(); applySeen(d.courses); V.data = d; LS.set("cache", d);
+    const d = await fetchAll(); applySeen(d.courses); migrateColors(d.courses); V.data = d; LS.set("cache", d);
   } catch (e) {
     V.err = e.message;
     if (e.code === "invalidtoken") { V.loading = false; render(); return showSetup(e.message); }
@@ -479,7 +615,7 @@ async function refresh() {
   V.loading = false; render();
 }
 function launchUrl(site) {
-  // דף הכניסה של אפליקציית Moodle. confirmed=1 גורם לו להציג קישור עם הטוקן (במקום לנסות לפתוח את האפליקציה), גם באנדרואיד
+  // Moodle's mobile-app launch page. confirmed=1 makes it show a link with the token (instead of only trying to open the app), on Android too
   return normUrl(site) + "/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=" + Math.floor(Math.random() * 1e9) + "&urlscheme=moodlemobile&confirmed=1";
 }
 function showSetup(err) {
@@ -494,23 +630,23 @@ function showMain() {
 }
 function importFromHash() {
   const h = location.hash.slice(1); if (!h) return false;
-  const q = new URLSearchParams(h), t = q.get("t");
-  history.replaceState(null, "", location.pathname + location.search);   // הטוקן לא נשאר בכתובת או בהיסטוריה
-  if (!t || !/^[A-Za-z0-9]+$/.test(t)) return false;
-  LS.set("token", t); LS.set("site", normUrl(q.get("u") || DEFAULT_SITE)); LS.del("cache"); V.data = null;
+  const q = new URLSearchParams(h), tk = q.get("t");
+  history.replaceState(null, "", location.pathname + location.search);   // the token does not stay in the address bar or history
+  if (!tk || !/^[A-Za-z0-9]+$/.test(tk)) return false;
+  LS.set("token", tk); LS.set("site", normUrl(q.get("u") || DEFAULT_SITE)); LS.del("cache"); V.data = null;
   const p = q.get("p");
-  if (p) { try { const x = JSON.parse(b64dec(p)); for (const k of ["off", "hidden", "old_days", "sort", "colors"]) if (x[k] !== undefined) P[k] = x[k]; savePrefs(); LS.set("seen", "imported"); } catch (e) {} }
-  toast("הטלפון חובר ✓");
+  if (p) { try { const x = JSON.parse(b64dec(p)); for (const k of ["off", "hidden", "old_days", "sort", "colors"]) if (x[k] !== undefined) P[k] = x[k]; savePrefs(); LS.set("seen", "imported"); LS.del("pal2"); } catch (e) {} }
+  toast(t("phoneConnected"));
   return true;
 }
 
 async function connectWith(raw) {
   let tok; try { tok = extractToken(raw); } catch (e) { $("#setupErr").textContent = e.message; return; }
-  if (!tok) { $("#setupErr").textContent = "חסר טוקן. העתק את הקישור מעמוד Moodle ונסה שוב."; return; }
-  if (!/^[A-Za-z0-9]{10,}$/.test(tok)) { $("#setupErr").textContent = "זה לא נראה כמו טוקן. צריך להעתיק את כתובת הקישור (לחיצה ארוכה ← העתק כתובת קישור), לא את הטקסט שלו."; return; }
-  $("#setupErr").textContent = "בודק…";
+  if (!tok) { $("#setupErr").textContent = t("missingToken"); return; }
+  if (!/^[A-Za-z0-9]{10,}$/.test(tok)) { $("#setupErr").textContent = t("notToken"); return; }
+  $("#setupErr").textContent = t("checking");
   M.url = normUrl($("#site").value); M.token = tok;
-  try { await call("core_webservice_get_site_info"); LS.set("token", tok); LS.set("site", M.url); LS.del("cache"); V.data = null; $("#tok").value = ""; $("#setupErr").textContent = ""; showMain(); toast("מחובר ✓"); }
+  try { await call("core_webservice_get_site_info"); LS.set("token", tok); LS.set("site", M.url); LS.del("cache"); V.data = null; $("#tok").value = ""; $("#setupErr").textContent = ""; showMain(); toast(t("connected")); }
   catch (e) { $("#setupErr").textContent = e.message; }
 }
 $("#bConnect").onclick = () => connectWith($("#tok").value);
@@ -518,10 +654,11 @@ $("#tok").addEventListener("keydown", e => { if (e.key === "Enter") connectWith(
 $("#bPaste").onclick = async () => {
   let txt = "";
   try { txt = await navigator.clipboard.readText(); } catch (e) {}
-  if (!txt) { $("#tok").focus(); $("#setupErr").textContent = "לא הצלחתי לקרוא מהלוח. הדבק ידנית בשדה (לחיצה ארוכה ← הדבק)."; return; }
+  if (!txt) { $("#tok").focus(); $("#setupErr").textContent = t("clipFail"); return; }
   $("#tok").value = txt; connectWith(txt);
 };
 $("#site").addEventListener("input", () => { $("#bGet").href = launchUrl($("#site").value); });
+$$(".langSel").forEach(s => s.addEventListener("change", e => applyLang(e.target.value)));
 $("#bRefresh").onclick = () => refresh();
 $("#bSet").onclick = () => { renderSheet(); $("#sheet").hidden = false; };
 $("#bClose").onclick = () => $("#sheet").hidden = true;
@@ -534,7 +671,7 @@ $("#clist").addEventListener("change", e => {
 });
 $("#clist").addEventListener("input", e => { if (e.target.dataset.cc) { P.colors[e.target.dataset.cc] = e.target.value; savePrefs(); render(); } });
 $("#bLogout").onclick = () => {
-  if (!confirm("למחוק את הטוקן מהטלפון הזה? כדי לחזור תצטרך לסרוק שוב מהמחשב.")) return;
+  if (!confirm(t("logoutConfirm"))) return;
   ["token", "cache", "seen"].forEach(k => LS.del(k)); V.data = null; M.token = ""; $("#sheet").hidden = true;
   try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
   showSetup();
@@ -558,6 +695,7 @@ setInterval(tick, 1000);
 window.addEventListener("online", () => { if (M.token) refresh(); });
 
 if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
+applyLang();
 importFromHash();
 if (LS.get("token", "")) showMain(); else showSetup();
 </script>
