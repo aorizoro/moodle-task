@@ -258,6 +258,14 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .ttfoot{display:flex;justify-content:space-between;gap:8px;margin-top:8px}
 .ttfoot button{font-size:13px}
 .tte .lk{font-size:10px;margin-inline-start:3px}
+/* mandatory attendance: same colour, striped, with a darker rim */
+.tte.att{background:repeating-linear-gradient(135deg,var(--c) 0 7px,color-mix(in srgb,var(--c) 80%,#000) 7px 14px);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c) 55%,#000)}
+.tte.att.now{box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c) 55%,#000),0 0 0 3px var(--card),0 0 0 5px var(--c)}
+.tte.att b,.tte.att span{text-shadow:0 1px 1px #0005}
+.ttleg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:8px}
+.ttleg i{width:20px;height:12px;border-radius:3px;background:repeating-linear-gradient(135deg,#868e96 0 4px,#495057 4px 8px)}
+.tr.att{border-inline-start-style:double;border-inline-start-width:7px}
+.atb{display:inline-block;font-size:11px;font-weight:700;padding:0 7px;border-radius:99px;background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--ct,var(--text));vertical-align:1px}
 input[type=datetime-local]{font:inherit;font-size:15px;padding:7px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
 .chk{display:flex!important;flex-direction:row!important;align-items:center;gap:8px;font-weight:400!important}
 
@@ -485,6 +493,10 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div class="srow"><span data-i18n="exEnd"></span><input type="date" data-sem="xe"></div>
     <div class="hint" id="semSrc"></div>
     <button class="link" id="bSemAuto" data-i18n="semAuto"></button>
+    <div style="margin-top:14px;font-weight:700" id="syncSet" data-i18n="syncTitle"></div>
+    <div class="srow"><span data-i18n="syncOnLbl"></span><input type="checkbox" id="syncOn"></div>
+    <div class="hint" data-i18n="syncHint"></div>
+    <div class="srow"><span class="hint" id="syncStatus"></span><button class="link" id="bSyncNow" data-i18n="syncNowBtn"></button></div>
     <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
     <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)" data-i18n="logout"></button>
   </div>
@@ -504,6 +516,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     </div>
     <label><span data-i18n="ttPlace"></span><input type="text" id="fPlace" maxlength="60" autocomplete="off"></label>
     <label><span data-i18n="ttWho"></span><input type="text" id="fWho" maxlength="60" autocomplete="off"></label>
+    <label class="chk"><input type="checkbox" id="fAtt"><span data-i18n="ttAtt"></span></label>
     <label class="chk"><input type="checkbox" id="fPriv"><span data-i18n="ttPriv"></span></label>
     <div class="err" id="fErr"></div>
     <div class="frow"><button class="primary" id="fSave" data-i18n="save"></button><button id="fDel" style="color:var(--err)" data-i18n="del"></button></div>
@@ -610,7 +623,14 @@ const I18N = {
     ttFileAsk: (n, c, old) => "נמצאו בקובץ " + n + " שיעורים ב-" + c + " קורסים." + (old ? "\nהם יחליפו את " + old + " השיעורים שיש עכשיו במערכת (שיעורים שסימנת כפרטיים יישארו)." : "") + "\n\nלייבא?",
     ttFileDone: n => "המערכת יובאה: " + n + " שיעורים ✓",
     exLev: "לבנט · טרם סופי", exLevFinal: "לבנט", exTomorrow: "מחר", exLevNote: d => "תאריכי מועד א׳ כפי שפורסמו בלבנט (טיוטה מ-" + d + "). הם עדיין לא סופיים ועלולים להשתנות.",
-    exLevRow: "📋 בלבנט (טרם סופי):", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
+    exLevRow: "📋 בלבנט (טרם סופי):",
+    ttAtt: "✋ נוכחות חובה", attShort: "נוכחות חובה", attBadge: "✋ חובה", attLegend: "פסים = נוכחות חובה",
+    syncTitle: "סנכרון בין מכשירים", syncOnLbl: "🔄 סנכרון בין המכשירים שלי",
+    syncHint: "המערכת, מועדי המבחנים, תאריכי הסמסטר, הצבעים והסימונים נשמרים בקובץ קטן (moodle-tasks-sync.json) בתוך ״הקבצים הפרטיים שלי״ ב-Moodle שלך. כל מכשיר שמחובר עם אותו משתמש ומפעיל כאן סנכרון מתעדכן ממנו. שום דבר לא עובר לשרת אחר.",
+    syncNowBtn: "סנכרן עכשיו", syncOk: x => "✓ מסונכרן · " + x, syncBusy: "מסנכרן…", syncErr: m => "הסנכרון נכשל: " + m, syncOffSt: "כבוי במכשיר הזה",
+    syncDone: "מסונכרן ✓", syncPulled: "עודכן מהמכשיר השני ✓", syncNotSaved: "הקובץ לא נשמר ב-Moodle (ייתכן ש״הקבצים הפרטיים״ חסומים באתר)", syncNoUpload: "Moodle לא מאפשר להעלות קבצים מהאפליקציה",
+    syncOtherUser: "המכשיר מחובר עכשיו למשתמש אחר, הסנכרון כובה", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
+    syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
   en: {
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "Moodle Tasks", appTitle: "Tasks", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
@@ -679,7 +699,14 @@ const I18N = {
     ttFileAsk: (n, c, old) => "Found " + n + " classes in " + c + " courses." + (old ? "\nThey replace the " + old + " classes you have now (classes marked private stay)." : "") + "\n\nImport?",
     ttFileDone: n => "Timetable imported: " + n + " classes ✓",
     exLev: "Levnet · not final", exLevFinal: "Levnet", exTomorrow: "Tomorrow", exLevNote: d => "1st-sitting dates as published on Levnet (draft of " + d + "). They are not final yet and may change.",
-    exLevRow: "📋 On Levnet (not final):", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
+    exLevRow: "📋 On Levnet (not final):",
+    ttAtt: "✋ Mandatory attendance", attShort: "Mandatory attendance", attBadge: "✋ Mandatory", attLegend: "Stripes = mandatory attendance",
+    syncTitle: "Sync between devices", syncOnLbl: "🔄 Sync between my devices",
+    syncHint: "Your timetable, exam dates, semester dates, colours and marks are kept in a small file (moodle-tasks-sync.json) in your Moodle “Private files”. Every device signed in with the same user that turns sync on here updates from it. Nothing goes to any other server.",
+    syncNowBtn: "Sync now", syncOk: x => "✓ Synced · " + x, syncBusy: "Syncing…", syncErr: m => "Sync failed: " + m, syncOffSt: "Off on this device",
+    syncDone: "Synced ✓", syncPulled: "Updated from your other device ✓", syncNotSaved: "The file wasn’t saved on Moodle (Private files may be blocked on this site)", syncNoUpload: "Moodle doesn’t allow uploading files from the app",
+    syncOtherUser: "This device is now signed in as another user; sync was turned off", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
+    syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
   fr: {
     locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
@@ -748,7 +775,14 @@ const I18N = {
     ttFileAsk: (n, c, old) => n + " cours trouvés dans " + c + " matières." + (old ? "\nIls remplacent les " + old + " cours actuels (les cours privés restent)." : "") + "\n\nImporter ?",
     ttFileDone: n => "Emploi du temps importé : " + n + " cours ✓",
     exLev: "Levnet · provisoire", exLevFinal: "Levnet", exTomorrow: "Demain", exLevNote: d => "Dates de 1re session publiées sur Levnet (brouillon du " + d + "). Elles ne sont pas encore définitives et peuvent changer.",
-    exLevRow: "📋 Sur Levnet (provisoire) :", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
+    exLevRow: "📋 Sur Levnet (provisoire) :",
+    ttAtt: "✋ Présence obligatoire", attShort: "Présence obligatoire", attBadge: "✋ Obligatoire", attLegend: "Rayures = présence obligatoire",
+    syncTitle: "Synchronisation entre appareils", syncOnLbl: "🔄 Synchroniser mes appareils",
+    syncHint: "Votre emploi du temps, vos dates d’examen et de semestre, vos couleurs et vos marques sont gardés dans un petit fichier (moodle-tasks-sync.json) dans vos « Fichiers personnels » Moodle. Chaque appareil connecté avec le même utilisateur qui active la synchronisation ici se met à jour depuis ce fichier. Rien ne va vers un autre serveur.",
+    syncNowBtn: "Synchroniser", syncOk: x => "✓ Synchronisé · " + x, syncBusy: "Synchronisation…", syncErr: m => "Échec de la synchronisation : " + m, syncOffSt: "Désactivée sur cet appareil",
+    syncDone: "Synchronisé ✓", syncPulled: "Mis à jour depuis votre autre appareil ✓", syncNotSaved: "Le fichier n’a pas été enregistré sur Moodle (les fichiers personnels sont peut-être bloqués)", syncNoUpload: "Moodle n’autorise pas l’envoi de fichiers depuis l’application",
+    syncOtherUser: "Cet appareil est connecté à un autre utilisateur ; synchronisation désactivée", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
+    syncFirst: "Synchronisation activée. Sur le premier appareil, ses données sont enregistrées sur Moodle ; les appareils suivants les chargent depuis là.", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
   },
 };
 function pickLang() {
@@ -897,7 +931,8 @@ async function fetchAll() {
       due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "",
       intro: stripHtml(e.description), links: introLinks(e.description), files: [], url: e.url || act.url || "" });
   }
-  return { tasks, diag: [...diag], courses, user: info.fullname || "", at: now, contents: (V.data && V.data.contents) || {}, news: (V.data && V.data.news) || null };
+  LS.set("uid", info.userid);
+  return { tasks, diag: [...diag], courses, user: info.fullname || "", userid: info.userid, at: now, contents: (V.data && V.data.contents) || {}, news: (V.data && V.data.news) || null };
 }
 /* announcements: the "news" forum of every current course (the one teachers post to) */
 async function fetchNews(d) {
@@ -958,7 +993,18 @@ for (const k of ["sem", "exams", "ccode", "colors"]) if (!P[k] || typeof P[k] !=
 P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^\d+$/);
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
-const savePrefs = () => LS.set("prefs", P);
+/* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort"];
+if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
+let syncSnap = null;
+const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
+function savePrefs() {
+  if (!syncSnap) snapAll();
+  const now = Date.now(); let ch = false;
+  for (const k of SYNC_KEYS) { const j = JSON.stringify(P[k]); if (j !== syncSnap[k]) { syncSnap[k] = j; P._ts[k] = now; ch = true; } }
+  LS.set("prefs", P);
+  if (ch) syncSoon();
+}
 const isOff = cid => P.off.includes(cid);
 function hslHex(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); }
 /* course colours. The six courses of the calendar palette (chosen by the owner from his calendar, by course code) always get their calendar colour.
@@ -1285,7 +1331,7 @@ function cleanTT(list) {
     const str = v => String(v == null ? "" : v).slice(0, 60);
     out.push({ id: typeof x.id === "string" && /^[a-z0-9]{1,16}$/.test(x.id) && !out.some(y => y.id === x.id) ? x.id : Math.random().toString(36).slice(2, 10), cid: Number.isInteger(x.cid) ? x.cid : 0,
       code: /^\d{5,7}$/.test(x.code) ? x.code : "", title: str(x.title), kind: KINDS.some(k => k[0] === x.kind) ? x.kind : "other",
-      day, s: fmtHM(s), e: fmtHM(e), place: str(x.place), color: /^#[0-9a-f]{6}$/i.test(x.color) ? x.color : "", priv: x.priv === true, who: str(x.who), kname: str(x.kname) });
+      day, s: fmtHM(s), e: fmtHM(e), place: str(x.place), color: /^#[0-9a-f]{6}$/i.test(x.color) ? x.color : "", priv: x.priv === true, att: x.att === true, who: str(x.who), kname: str(x.kname) });
   }
   return out;
 }
@@ -1310,12 +1356,12 @@ function renderTT(now) {
     for (const g of groups) { const lanes = []; for (const it of g) { let k = lanes.findIndex(e => e <= it.s); if (k < 0) { k = lanes.length; lanes.push(0); } lanes[k] = it.e; it.lane = k; } g.forEach(it => it.n = lanes.length); }
     h += '<div class="ttc' + (d === td ? " on" : "") + '">' + items.map(it => {
       const x = it.x, live = d === td && nowM >= it.s && nowM < it.e;
-      return '<button class="tte' + (live ? " now" : "") + '" data-tte="' + esc(x.id) + '" style="--c:' + ttColor(x) + ";top:" + pos(it.s) + ";height:calc(" + pos(it.e) + " - " + pos(it.s) + " - 2px);inset-inline-start:" +
-        (100 * it.lane / it.n).toFixed(2) + "%;width:calc(" + (100 / it.n).toFixed(2) + '% - 2px)" title="' + esc(ttName(x)) + '"><b><bdi>' + esc(blockName(ttName(x))) + "</bdi>" + (x.priv ? '<span class="lk">🔒</span>' : "") + "</b>" + (x.place ? '<span class="pl"><bdi>' + esc(x.place) + "</bdi></span>" : "") + '<span class="tk">' + esc(ttKind(x)) +
+      return '<button class="tte' + (live ? " now" : "") + (x.att ? " att" : "") + '" data-tte="' + esc(x.id) + '" style="--c:' + ttColor(x) + ";top:" + pos(it.s) + ";height:calc(" + pos(it.e) + " - " + pos(it.s) + " - 2px);inset-inline-start:" +
+        (100 * it.lane / it.n).toFixed(2) + "%;width:calc(" + (100 / it.n).toFixed(2) + '% - 2px)" title="' + esc(ttName(x)) + '"><b><bdi>' + esc(blockName(ttName(x))) + "</bdi>" + (x.att ? '<span class="lk" title="' + esc(t("attShort")) + '">✋</span>' : "") + (x.priv ? '<span class="lk">🔒</span>' : "") + "</b>" + (x.place ? '<span class="pl"><bdi>' + esc(x.place) + "</bdi></span>" : "") + '<span class="tk">' + esc(ttKind(x)) +
         '</span><span class="tm"><bdi dir="ltr">' + esc(x.s + "–" + x.e) + "</bdi></span></button>";
     }).join("") + (d === td && nowM >= h0 && nowM <= h1 ? '<i class="ttnow" style="top:' + pos(nowM) + '"></i>' : "") + "</div>";
   }
-  el.innerHTML = h + "</div>";
+  el.innerHTML = h + "</div>" + (L.some(x => x.att) ? '<div class="ttleg"><i></i>' + esc(t("attLegend")) + "</div>" : "");
 }
 function renderToday(now) {
   const el = $("#today"), nd = new Date(now * 1000), dow = nd.getDay(), nowM = nd.getHours() * 60 + nd.getMinutes() + nd.getSeconds() / 60;
@@ -1328,8 +1374,8 @@ function renderToday(now) {
     const s = hm(x.s), e = hm(x.e), st = nowM >= e ? "past" : nowM >= s ? "now" : !nextShown ? "next" : "";
     if (st === "next") nextShown = true;
     const txt = st === "now" ? t("nowLbl") + "<br>" + esc(t("endsIn", dur(e - nowM))) : st === "next" ? esc(t("startsIn", dur(s - nowM))) : st === "past" ? "✓" : "";
-    h += '<button class="tr ' + st + '" data-ttgo style="--c:' + ttColor(x) + '"><span class="tm">' + esc(x.s) + "<br>" + esc(x.e) + '</span><span class="tb"><b><bdi>' + esc(ttName(x)) +
-      "</bdi></b><small>" + esc(ttKind(x)) + (x.place ? " · <bdi>" + esc(x.place) + "</bdi>" : "") + (x.who ? " · <bdi>" + esc(x.who) + "</bdi>" : "") + '</small></span><span class="ts">' + txt + "</span></button>";
+    h += '<button class="tr ' + st + (x.att ? " att" : "") + '" data-ttgo style="--c:' + ttColor(x) + '"><span class="tm">' + esc(x.s) + "<br>" + esc(x.e) + '</span><span class="tb"><b><bdi>' + esc(ttName(x)) +
+      "</bdi>" + (x.att ? ' <span class="atb">' + esc(t("attBadge")) + "</span>" : "") + "</b><small>" + esc(ttKind(x)) + (x.place ? " · <bdi>" + esc(x.place) + "</bdi>" : "") + (x.who ? " · <bdi>" + esc(x.who) + "</bdi>" : "") + '</small></span><span class="ts">' + txt + "</span></button>";
   }
   if (!items.length || items.every(x => hm(x.e) <= nowM)) {
     let nx = null;
@@ -1346,7 +1392,7 @@ function openTT(id) {
   const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id) || c.id === ttCid(x));
   $("#fCourse").innerHTML = cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + '<option value="0">' + esc(t("ttOtherCourse")) + "</option>";
   $("#fCourse").value = String(id ? ttCid(x) : (cs[0] ? cs[0].id : 0));
-  $("#fTitle").value = x.title || ""; $("#fPlace").value = x.place || ""; $("#fS").value = x.s; $("#fE").value = x.e; $("#fPriv").checked = !!x.priv; $("#fWho").value = x.who || "";
+  $("#fTitle").value = x.title || ""; $("#fPlace").value = x.place || ""; $("#fS").value = x.s; $("#fE").value = x.e; $("#fPriv").checked = !!x.priv; $("#fAtt").checked = !!x.att; $("#fWho").value = x.who || "";
   $("#fKind").innerHTML = KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join(""); $("#fKind").value = x.kind;
   $("#fDay").innerHTML = [0, 1, 2, 3, 4, 5, 6].map(i => '<option value="' + i + '">' + esc(dayName(i)) + "</option>").join(""); $("#fDay").value = String(x.day);
   ttTitlePh();
@@ -1360,7 +1406,7 @@ function saveTT() {
   if (!c && !title) return $("#fErr").textContent = t("ttNeedName");
   if (!(s < e)) return $("#fErr").textContent = t("ttBadTime");
   const old = P.tt.find(y => y.id === ttEditId) || {};
-  const x = cleanTT([{ id: ttEditId || undefined, cid, code: c ? codeOf(c.name) : (cid ? old.code : ""), title, kind: $("#fKind").value, day: Number($("#fDay").value), s: fmtHM(s), e: fmtHM(e), place: $("#fPlace").value.trim(), color: c ? "" : old.color, priv: $("#fPriv").checked, who: $("#fWho").value.trim(), kname: old.kind === $("#fKind").value ? old.kname : "" }])[0];
+  const x = cleanTT([{ id: ttEditId || undefined, cid, code: c ? codeOf(c.name) : (cid ? old.code : ""), title, kind: $("#fKind").value, day: Number($("#fDay").value), s: fmtHM(s), e: fmtHM(e), place: $("#fPlace").value.trim(), color: c ? "" : old.color, priv: $("#fPriv").checked, att: $("#fAtt").checked, who: $("#fWho").value.trim(), kname: old.kind === $("#fKind").value ? old.kname : "" }])[0];
   P.tt = ttEditId ? P.tt.map(y => y.id === ttEditId ? x : y) : [...P.tt, x];
   savePrefs(); $("#ttSheet").hidden = true; render();
 }
@@ -1551,6 +1597,109 @@ async function scanExams() {
   renderExSheet();
 }
 
+/* ---------- sync between devices: one small JSON file in the user's own Moodle "private files" ---------- */
+const SYNC_FILE = "moodle-tasks-sync.json";
+const SY = { busy: false, t: null, again: false };
+function cleanKey(k, v) {
+  const obj = x => x && typeof x === "object" && !Array.isArray(x);
+  switch (k) {
+    case "tt": return cleanTT(v) || [];
+    case "colors": return cleanColors(v, /^\d+$/);
+    case "ccode": return cleanColors(v, /^\d{5,7}$/);
+    case "exams": { const o = {}; if (obj(v)) for (const [c, e] of Object.entries(v)) { if (!/^\d+$/.test(c) || !obj(e)) continue;
+      const x = {}; for (const m of ["a", "b"]) if (parseDT(e[m])) x[m] = e[m]; if (e.noLev === true) x.noLev = true; if (typeof e.n === "string") x.n = e.n.slice(0, 80);
+      if (x.a || x.b || x.noLev) o[c] = x; } return o; }
+    case "sem": { const o = {}; if (obj(v)) for (const f of ["s", "e", "xs", "xe"]) if (/^\d{4}-\d{2}-\d{2}$/.test(v[f])) o[f] = v[f]; return o; }
+    case "manual": case "hidden": return Array.isArray(v) ? v.filter(x => typeof x === "string" && x.length < 120).slice(0, 3000) : [];
+    case "off": return Array.isArray(v) ? v.filter(Number.isInteger).slice(0, 500) : [];
+    case "old_days": return Number.isFinite(v) ? Math.max(0, Math.min(365, Math.round(v))) : 14;
+    case "sort": return ["urgency", "course", "date"].includes(v) ? v : "urgency";
+  }
+  return v;
+}
+async function myUserId() {
+  const u = (V.data && V.data.userid) || LS.get("uid", 0); if (u) return u;
+  const i = await call("core_webservice_get_site_info"); LS.set("uid", i.userid); return i.userid;
+}
+async function syncDownload() {
+  const uid = await myUserId();
+  const r = await call("core_files_get_files", { contextid: -1, component: "user", filearea: "private", itemid: 0, filepath: "/", filename: "", contextlevel: "user", instanceid: uid });
+  const f = ((r && r.files) || []).find(x => x.filename === SYNC_FILE && !x.isdir);
+  if (!f) return null;
+  const u = new URL(f.url), base = new URL(M.url);
+  if (u.origin !== base.origin) throw new MErr(t("error"), "sync");                   // the token only ever goes to the same Moodle site
+  u.pathname = u.pathname.replace(/\/(webservice\/)?pluginfile\.php\//, "/webservice/pluginfile.php/");
+  u.searchParams.set("token", M.token); u.searchParams.set("v", String(f.timemodified || Date.now()));
+  let res; try { res = await fetch(u.href, { cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer" }); } catch (e) { throw new MErr(t("unreachable"), "network"); }
+  if (!res.ok) throw new MErr(t("badResp", res.status), "sync");
+  try { const j = await res.json(); return j && j.app === "moodle-tasks" ? j : null; } catch (e) { return null; }
+}
+async function syncUpload(obj) {
+  const fd = new FormData(), url = M.url + "/webservice/upload.php";
+  let itemid = 0;
+  try { itemid = Number((await call("core_files_get_unused_draft_itemid")).itemid) || 0; } catch (e) { if (e.code === "invalidtoken" || e.code === "network") throw e; }
+  fd.append("token", M.token); fd.append("filearea", "draft"); fd.append("itemid", String(itemid)); fd.append("filepath", "/");
+  fd.append("file_1", new Blob([JSON.stringify(obj)], { type: "application/json" }), SYNC_FILE);
+  if (itemid) {
+    // Moodle's upload page may not let another site read its answer (CORS). The draft id is already known, so the answer is not needed.
+    try { await fetch(url, { method: "POST", body: fd, mode: "no-cors", credentials: "omit", referrerPolicy: "no-referrer" }); } catch (e) { throw new MErr(t("unreachable"), "network"); }
+  } else {
+    let r; try { r = await (await fetch(url, { method: "POST", body: fd, credentials: "omit", referrerPolicy: "no-referrer" })).json(); } catch (e) { throw new MErr(t("syncNoUpload"), "sync"); }
+    if (!Array.isArray(r) || !r[0] || !r[0].itemid) throw new MErr((r && (r.error || r.message)) || t("syncNoUpload"), "sync");
+    itemid = r[0].itemid;
+  }
+  await call("core_user_add_user_private_files", { draftid: itemid });
+}
+function setSync(s, msg) { LS.set("syncState", { s, at: Date.now(), msg: msg || "" }); renderSyncStatus(); }
+function syncBadge() {
+  if (!LS.get("syncOn", false)) return "";
+  const st = LS.get("syncState", null);
+  return st && st.s === "err" ? " · " + t("updSyncErr") : st && st.s === "ok" ? " · " + t("updSynced") : "";
+}
+function renderSyncStatus() {
+  const el = $("#syncStatus"); if (!el) return;
+  const on = LS.get("syncOn", false), st = LS.get("syncState", null);
+  $("#syncOn").checked = on; $("#bSyncNow").hidden = !on;
+  el.textContent = !on ? t("syncOffSt") : !st ? "" : st.s === "busy" ? t("syncBusy") : st.s === "err" ? t("syncErr", st.msg) : t("syncOk", ago(st.at / 1000));
+  el.style.color = st && st.s === "err" && on ? "var(--err)" : "";
+}
+function syncSoon(ms) { if (!LS.get("syncOn", false)) return; clearTimeout(SY.t); SY.t = setTimeout(() => syncNow(), ms == null ? 2500 : ms); }
+async function syncNow(manual) {
+  if (!LS.get("syncOn", false) || !M.token) return;
+  if (SY.busy) { SY.again = true; return; }
+  if (navigator.onLine === false) { setSync("err", t("offline")); return; }
+  SY.busy = true; setSync("busy");
+  try {
+    const uid = await myUserId();
+    if (LS.get("syncUid", uid) !== uid) { LS.set("syncOn", false); throw new MErr(t("syncOtherUser"), "sync"); }   // another account on this device: never mix
+    if (!syncSnap) snapAll();
+    const remote = await syncDownload(), rts = (remote && remote.ts) || {}, rd = (remote && remote.data) || {};
+    let pulled = false, push = !remote;
+    for (const k of SYNC_KEYS) {
+      const lt = P._ts[k] || 0, rt = Number(rts[k]) || 0, has = Object.prototype.hasOwnProperty.call(rd, k);
+      if (has && rt >= lt) {
+        const v = cleanKey(k, rd[k]), j = JSON.stringify(v);
+        if (j !== syncSnap[k]) { P[k] = v; syncSnap[k] = j; pulled = true; }
+        P._ts[k] = rt;
+      } else push = true;
+    }
+    if (pulled) { LS.set("prefs", P); render(); if (!$("#sheet").hidden) renderSheet(); }
+    if (push) {
+      const out = { app: "moodle-tasks", v: 1, at: Date.now(), ts: {}, data: {} };
+      for (const k of SYNC_KEYS) { out.ts[k] = P._ts[k] || 0; out.data[k] = P[k]; }
+      await syncUpload(out);
+      const chk = await syncDownload();
+      if (!chk || chk.at !== out.at) throw new MErr(t("syncNotSaved"), "sync");
+    }
+    setSync("ok"); if (manual) toast(t(pulled ? "syncPulled" : "syncDone"));
+  } catch (e) {
+    setSync("err", e.message); if (manual) toast(t("syncErr", e.message), 6000);
+  } finally {
+    SY.busy = false; render();
+    if (SY.again) { SY.again = false; syncSoon(300); }
+  }
+}
+
 /* ---------- announcements ---------- */
 const newsBase = () => { let b = LS.get("newsBase", 0); if (!b) { b = nowS() - 3 * DAY; LS.set("newsBase", b); } return b; };
 const newsRead = () => LS.get("newsRead", []);
@@ -1580,7 +1729,7 @@ const wide = () => window.matchMedia("(min-width:760px)").matches;
 function render() {
   const d = V.data;
   $("#bRefresh").classList.toggle("spin", V.loading);
-  $("#upd").textContent = V.loading && !d ? t("loading") : d ? (V.loading ? t("refreshing") + " · " : "") + t("updated", ago(d.at)) : "";
+  $("#upd").textContent = (V.loading && !d ? t("loading") : d ? (V.loading ? t("refreshing") + " · " : "") + t("updated", ago(d.at)) : "") + syncBadge();
   const bn = $("#banner");
   if (V.err) { bn.hidden = false; bn.className = "banner err"; bn.textContent = V.err + (d ? t("lastData") : ""); }
   else bn.hidden = true;
@@ -1641,6 +1790,7 @@ function render() {
 function renderSheet() {
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
   $("#who").innerHTML = d ? (d.user ? "<bdi>" + esc(d.user) + "</bdi> · " : "") + "<bdi>" + esc(M.url.replace(/^https?:\/\//, "")) + "</bdi>" : esc(M.url);
+  renderSyncStatus();
   const D = semDates(nowS()), sv = D ? { s: D.s, e: addD(D.e, -1), xs: D.xs, xe: D.xe && addD(D.xe, -1) } : {};
   $$("[data-sem]").forEach(i => i.value = sv[i.dataset.sem] ? ymd(sv[i.dataset.sem]) : "");
   $("#semSrc").textContent = D ? t(D.src) : "";
@@ -1699,6 +1849,7 @@ async function refresh() {
     if (e.code === "invalidtoken") { V.loading = false; render(); return showSetup(e.message); }
   }
   V.loading = false; if (d) V.newsLoading = true; render();
+  if (d) syncNow();
   if (d) {
     const [c, n] = await Promise.all([fetchContents(d).catch(() => null), fetchNews(d).catch(() => null)]);
     V.newsLoading = false;
@@ -1769,7 +1920,7 @@ $("#clist").addEventListener("change", e => {
 $("#clist").addEventListener("input", e => { if (e.target.dataset.cc) { P.colors[e.target.dataset.cc] = e.target.value; savePrefs(); render(); } });
 $("#bLogout").onclick = () => {
   if (!confirm(t("logoutConfirm"))) return;
-  ["token", "cache", "seen"].forEach(k => LS.del(k)); V.data = null; M.token = ""; $("#sheet").hidden = true;
+  ["token", "cache", "seen", "syncOn", "syncUid", "syncState", "uid"].forEach(k => LS.del(k)); V.data = null; M.token = ""; $("#sheet").hidden = true;
   try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
   showSetup();
 };
@@ -1856,7 +2007,14 @@ $$("[data-sem]").forEach(i => i.addEventListener("change", () => {
   if (/^\d{4}-\d{2}-\d{2}$/.test(i.value)) P.sem[i.dataset.sem] = i.value; else delete P.sem[i.dataset.sem];
   savePrefs(); render(); renderSheet();
 }));
+$("#syncOn").onchange = async e => {
+  if (e.target.checked) { LS.set("syncOn", true); try { LS.set("syncUid", await myUserId()); } catch (er) {} toast(t("syncFirst"), 6000); await syncNow(true); }
+  else { LS.set("syncOn", false); LS.del("syncState"); }
+  renderSyncStatus(); render();
+};
+$("#bSyncNow").onclick = () => syncNow(true);
 $("#bSemAuto").onclick = () => { P.sem = {}; savePrefs(); render(); renderSheet(); };
+snapAll();
 window.addEventListener("hashchange", () => { if (!location.hash) return; if (importFromHash()) showMain(); else render(); });
 $("#mPrev").onclick = () => { V.monthOff--; render(); };
 $("#mNext").onclick = () => { V.monthOff++; render(); };
@@ -1864,7 +2022,10 @@ $("#mToday").onclick = () => { V.monthOff = 0; render(); };
 $("#bIcs").onclick = icsExport;
 $("#bFocusClear").onclick = () => { V.focus = null; render(); };
 $("#tabbar").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
-document.addEventListener("visibilitychange", () => { if (!document.hidden && M.token && (!V.data || Date.now() / 1000 - V.data.at > 300)) refresh(); });
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden || !M.token) return;
+  if (!V.data || Date.now() / 1000 - V.data.at > 300) refresh(); else syncSoon(400);
+});
 setInterval(() => { if (!document.hidden && V.data) render(); }, 60000);
 setInterval(tick, 1000);
 window.addEventListener("online", () => { if (M.token) refresh(); });
