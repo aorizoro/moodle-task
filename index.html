@@ -229,7 +229,7 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .er{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:8px 10px;border-radius:12px;background:var(--row);border:0;border-inline-start:5px solid var(--c);margin-bottom:6px}
 .er .eb{flex:1;min-width:0;display:flex;flex-direction:column}
 .er .eb b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.er .eb small{color:var(--muted);font-size:12.5px}
+.er .eb small{color:var(--muted);font-size:12.5px;line-height:1.5}
 .er .ec{text-align:center;min-width:54px;line-height:1.1}
 .er .ec .en{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
 .er .ec .eu{font-size:11.5px;color:var(--muted)}
@@ -237,6 +237,9 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .er.b{opacity:.75}
 .er.soon .ec .en{color:var(--warn)}
 .exempty{color:var(--muted);font-size:14px}
+.lv{display:inline-block;font-size:11px;font-weight:700;padding:0 7px;border-radius:99px;background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn);white-space:nowrap}
+.exnote{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.45}
+.xsug.lvrow{color:var(--warn);justify-content:space-between}
 .exempty button{margin-top:8px;width:100%}
 .xrow{border-bottom:1px solid var(--line);padding:10px 0}
 .xrow:last-child{border-bottom:0}
@@ -594,7 +597,7 @@ const I18N = {
     newsMore: n => "עוד " + n + " הודעות", newsLess: "הצג פחות", newsLoading: "טוען הודעות…",
     examsTitle: "מבחנים", exNone: "עוד לא הוזנו מועדי מבחנים. Moodle לא מפרסם אותם, אז מזינים פעם אחת לכל קורס.", exAddBtn: "📝 הזן מועדי מבחנים",
     moedA: "מועד א׳", moedB: "מועד ב׳", daysU: n => n === 1 ? "יום" : "ימים", exMore: n => "+ עוד " + n + " מבחנים", exToday: "היום!",
-    exSheetTitle: "מועדי מבחנים", exHint: "Moodle לא מפרסם מועדי מבחנים. הזן לכל קורס את התאריך והשעה של מועד א׳ ומועד ב׳ (מהפורטל או מהמייל של המוסד). נשמר רק במכשיר הזה.",
+    exSheetTitle: "מועדי מבחנים", exHint: "Moodle לא מפרסם מועדי מבחנים. תאריכים שפורסמו בלבנט מופיעים אוטומטית. מה שתזין כאן (למשל תאריך סופי עם שעה, או מועד ב׳) מחליף אותם. נשמר רק במכשיר הזה.",
     exScan: "🔎 חפש מועדים ביומן של Moodle", exScanNone: "ביומן של Moodle לא נמצאו מועדי מבחנים. צריך להזין ידנית.", exFound: n => "נמצאו ב-Moodle " + n + " אירועים שנראים כמו מבחנים. אשר כל אחד שמתאים.",
     exUse: "אשר", exFromMoodle: "ב-Moodle:", scanning: "מחפש ביומן של Moodle…", noCourses: "אין עדיין קורסים (צריך להתחבר ולרענן)",
     semNeed: "כדי לראות כמה שבועות נשארו, הזן את תאריכי הסמסטר.", semSetBtn: "הזן תאריכי סמסטר", semSrcKnown: "מקור: לוח השנה של מכון לב, סמסטר א׳ תשפ״ז", semSrcUser: "מקור: תאריכים שהזנת", examsLblA: "📝 מועדי א׳",
@@ -606,6 +609,8 @@ const I18N = {
     ttFileBad: "לא הצלחתי לקרוא את הקובץ. צריך את קובץ המערכת האישית שמורידים מהלבנט (כמו שהוא, בלי לפתוח ולשמור מחדש באקסל).",
     ttFileAsk: (n, c, old) => "נמצאו בקובץ " + n + " שיעורים ב-" + c + " קורסים." + (old ? "\nהם יחליפו את " + old + " השיעורים שיש עכשיו במערכת (שיעורים שסימנת כפרטיים יישארו)." : "") + "\n\nלייבא?",
     ttFileDone: n => "המערכת יובאה: " + n + " שיעורים ✓",
+    exLev: "לבנט · טרם סופי", exLevFinal: "לבנט", exTomorrow: "מחר", exLevNote: d => "תאריכי מועד א׳ כפי שפורסמו בלבנט (טיוטה מ-" + d + "). הם עדיין לא סופיים ועלולים להשתנות.",
+    exLevRow: "📋 בלבנט (טרם סופי):", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
   en: {
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "Moodle Tasks", appTitle: "Tasks", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
@@ -661,7 +666,7 @@ const I18N = {
     newsMore: n => n + " more", newsLess: "Show less", newsLoading: "Loading announcements…",
     examsTitle: "Exams", exNone: "No exam dates yet. Moodle doesn’t publish them, so you enter them once per course.", exAddBtn: "📝 Enter exam dates",
     moedA: "1st sitting", moedB: "2nd sitting", daysU: n => n === 1 ? "day" : "days", exMore: n => "+ " + n + " more exams", exToday: "Today!",
-    exSheetTitle: "Exam dates", exHint: "Moodle doesn’t publish exam dates. Enter the date and time of each course’s 1st and 2nd sitting (from your institution’s portal or email). Stored only on this device.",
+    exSheetTitle: "Exam dates", exHint: "Moodle doesn’t publish exam dates. Dates published on Levnet appear automatically. What you enter here (e.g. the final date with a time, or the 2nd sitting) replaces them. Stored only on this device.",
     exScan: "🔎 Look for dates in the Moodle calendar", exScanNone: "No exam dates found in the Moodle calendar. Enter them manually.", exFound: n => n + " events that look like exams were found on Moodle. Confirm each one that fits.",
     exUse: "Use", exFromMoodle: "On Moodle:", scanning: "Searching the Moodle calendar…", noCourses: "No courses yet (connect and refresh first)",
     semNeed: "Enter the semester dates to see how many weeks are left.", semSetBtn: "Enter semester dates", semSrcKnown: "Source: Machon Lev academic calendar, semester A 5787", semSrcUser: "Source: dates you entered", examsLblA: "📝 1st sittings",
@@ -673,6 +678,8 @@ const I18N = {
     ttFileBad: "Couldn’t read that file. Use the personal timetable file downloaded from Levnet (as is, without re-saving it in Excel).",
     ttFileAsk: (n, c, old) => "Found " + n + " classes in " + c + " courses." + (old ? "\nThey replace the " + old + " classes you have now (classes marked private stay)." : "") + "\n\nImport?",
     ttFileDone: n => "Timetable imported: " + n + " classes ✓",
+    exLev: "Levnet · not final", exLevFinal: "Levnet", exTomorrow: "Tomorrow", exLevNote: d => "1st-sitting dates as published on Levnet (draft of " + d + "). They are not final yet and may change.",
+    exLevRow: "📋 On Levnet (not final):", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
   fr: {
     locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
@@ -728,7 +735,7 @@ const I18N = {
     newsMore: n => n + " de plus", newsLess: "Afficher moins", newsLoading: "Chargement des annonces…",
     examsTitle: "Examens", exNone: "Aucune date d’examen. Moodle ne les publie pas : saisissez-les une fois par cours.", exAddBtn: "📝 Saisir les dates d’examen",
     moedA: "1re session", moedB: "2e session", daysU: n => n === 1 ? "jour" : "jours", exMore: n => "+ " + n + " autres examens", exToday: "Aujourd’hui !",
-    exSheetTitle: "Dates d’examen", exHint: "Moodle ne publie pas les dates d’examen. Saisissez la date et l’heure de la 1re et de la 2e session de chaque cours (portail ou e-mail de l’établissement). Stocké uniquement sur cet appareil.",
+    exSheetTitle: "Dates d’examen", exHint: "Moodle ne publie pas les dates d’examen. Les dates publiées sur Levnet s’affichent automatiquement. Ce que vous saisissez ici (date définitive avec l’heure, ou 2e session) les remplace. Stocké uniquement sur cet appareil.",
     exScan: "🔎 Chercher les dates dans le calendrier Moodle", exScanNone: "Aucune date d’examen trouvée dans le calendrier Moodle. Saisissez-les à la main.", exFound: n => n + " événements ressemblant à des examens trouvés sur Moodle. Validez ceux qui conviennent.",
     exUse: "Valider", exFromMoodle: "Sur Moodle :", scanning: "Recherche dans le calendrier Moodle…", noCourses: "Pas encore de cours (connectez-vous et actualisez)",
     semNeed: "Saisissez les dates du semestre pour voir combien de semaines il reste.", semSetBtn: "Saisir les dates du semestre", semSrcKnown: "Source : calendrier de Machon Lev, semestre A 5787", semSrcUser: "Source : dates que vous avez saisies", examsLblA: "📝 1res sessions",
@@ -740,6 +747,8 @@ const I18N = {
     ttFileBad: "Impossible de lire ce fichier. Utilisez le fichier d’emploi du temps téléchargé depuis Levnet (tel quel, sans le réenregistrer dans Excel).",
     ttFileAsk: (n, c, old) => n + " cours trouvés dans " + c + " matières." + (old ? "\nIls remplacent les " + old + " cours actuels (les cours privés restent)." : "") + "\n\nImporter ?",
     ttFileDone: n => "Emploi du temps importé : " + n + " cours ✓",
+    exLev: "Levnet · provisoire", exLevFinal: "Levnet", exTomorrow: "Demain", exLevNote: d => "Dates de 1re session publiées sur Levnet (brouillon du " + d + "). Elles ne sont pas encore définitives et peuvent changer.",
+    exLevRow: "📋 Sur Levnet (provisoire) :", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
   },
 };
 function pickLang() {
@@ -1437,29 +1446,52 @@ function importShared(q) {
 const parseDT = v => { const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(v || ""); return m ? new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]).getTime() / 1000 : 0; };
 const fmtDT = ts => { const d = new Date(ts * 1000), z = n => String(n).padStart(2, "0"); return d.getFullYear() + "-" + z(d.getMonth() + 1) + "-" + z(d.getDate()) + "T" + z(d.getHours()) + ":" + z(d.getMinutes()); };
 function courseName(cid) { const c = ((V.data && V.data.courses) || []).find(y => y.id === cid); return c ? shortName(c.name) : ((P.exams[cid] || {}).n || t("other")); }
+/* exam dates the institution published on Levnet, by course number (no names). Built by build_exams.py from the Levnet file.
+   They are drafts: shown with a "not final" badge, and a date the user enters for that sitting replaces them. */
+const LEVNET_EXAMS = /* EXAMS:BEGIN */{"moodle.jct.ac.il":{"year":"5787","moed":"a","published":"2026-09-17","draft":true,"d":{"120131":"2027-01-27","120132":"2027-02-05","120201":"2027-02-04","120221":"2027-01-31","120302":"2027-02-10","120304":"2027-02-08","120501":"2027-02-11","120511":"2027-02-09","120701":"2027-01-29","120706":"2027-02-01","120710":"2027-01-25","120711":"2027-01-22","120731":"2027-01-28","120733":"2027-01-21","130202":"2027-02-03","130206":"2027-02-02","130222":"2027-02-01","130281":"2027-01-18","130302":"2027-02-01","130311":"2027-02-02","130323":"2027-01-21","130342":"2027-02-04","130503":"2027-01-19","130510":"2027-02-10","130521":"2027-01-28","130547":"2027-01-19","130571":"2027-01-24","130576":"2027-01-17","130641":"2027-01-26","130651":"2027-02-08","130681":"2027-01-28","130800":"2027-02-03","130831":"2027-02-11","140012":"2027-02-09","140111":"2027-01-20","140211":"2027-01-24","140400":"2027-01-21","140712":"2027-01-25","141001":"2027-02-04","141010":"2027-02-10","141017":"2027-02-05","141019":"2027-01-25","141021":"2027-01-27","141031":"2027-02-11","141032":"2027-02-08","141037":"2027-01-27","141040":"2027-01-24","141131":"2027-02-07","141411":"2027-02-12","141500":"2027-02-02","150005":"2027-01-21","150015":"2027-01-22","150025":"2027-01-21","150060":"2027-01-28","150090":"2027-02-11","150101":"2027-02-02","150134":"2027-01-27","150221":"2027-02-10","150301":"2027-02-01","151060":"2027-02-07","151070":"2027-01-20","151111":"2027-01-25","151131":"2027-01-18","151285":"2027-02-03","156200":"2027-01-19","156320":"2027-02-12","156336":"2027-01-22","156360":"2027-02-10","156361":"2027-01-17","157103":"2027-01-26","157107":"2027-01-29","157110":"2027-01-20","157117":"2027-01-19","157123":"2027-02-12","157125":"2027-01-19","160010":"2027-01-19","160022":"2027-02-01","160100":"2027-01-31","160101":"2027-01-31","160110":"2027-01-20","160121":"2027-01-28","160200":"2027-01-26","160202":"2027-01-24","160210":"2027-01-27","160215":"2027-02-04","160224":"2027-02-12","160226":"2027-02-10","160241":"2027-01-18","160260":"2027-02-01","160420":"2027-02-08","160503":"2027-01-25","160508":"2027-02-09","160825":"2027-01-20","160870":"2027-01-19","160872":"2027-01-31","162004":"2027-02-04","162016":"2027-02-08","162020":"2027-01-21","179161":"2027-01-17","179162":"2027-01-17","179163":"2027-01-17","179164":"2027-01-17","179165":"2027-01-17","179166":"2027-01-17","200201":"2027-01-26","200311":"2027-02-03","200342":"2027-01-24","200402":"2027-01-21","200411":"2027-02-02","200605":"2027-01-29","200608":"2027-02-05","200622":"2027-02-04","200650":"2027-01-19","200652":"2027-02-11","200656":"2027-02-08","200658":"2027-01-24","200660":"2027-01-28","200662":"2027-02-07","200664":"2027-02-11","200666":"2027-01-17","200668":"2027-02-04","200670":"2027-01-19","200682":"2027-01-27","200688":"2027-02-02","200690":"2027-01-20","200692":"2027-01-26","200694":"2027-02-09","200730":"2027-02-08","200732":"2027-02-01","200733":"2027-02-08","200737":"2027-01-31","200742":"2027-02-09","210001":"2027-01-20","210010":"2027-02-04","210112":"2027-02-11","210206":"2027-01-26","210250":"2027-01-20","210252":"2027-01-19","210256":"2027-01-27","210257":"2027-01-21","210266":"2027-01-19","210272":"2027-01-29","210325":"2027-02-12","210328":"2027-02-03","210330":"2027-01-26","210360":"2027-02-07","210364":"2027-02-09","210401":"2027-02-04","210512":"2027-01-26","210536":"2027-01-20","240100":"2027-01-22","240151":"2027-02-07","240200":"2027-01-31","240211":"2027-02-11","240252":"2027-01-24","240261":"2027-02-07","240263":"2027-02-03","240270":"2027-01-20","240400":"2027-02-10","240508":"2027-02-10","240514":"2027-01-25","240519":"2027-01-27","240530":"2027-01-21","240630":"2027-01-28","240641":"2027-02-02","240646":"2027-01-31","240650":"2027-01-18","240653":"2027-01-26","240657":"2027-01-22","240754":"2027-02-02","240950":"2027-02-05","250200":"2027-01-22","250240":"2027-01-29","250402":"2027-02-05","250501":"2027-01-29","250503":"2027-01-22","250504":"2027-02-05","270001":"2027-02-02","270005":"2027-02-08","270010":"2027-01-26","270013":"2027-02-10","270030":"2027-02-04","270070":"2027-01-25","270083":"2027-01-25","270084":"2027-02-09","270085":"2027-02-03","270115":"2027-01-18","270400":"2027-01-20","270402":"2027-01-31","270406":"2027-01-27","270410":"2027-01-24","270411":"2027-01-20","270414":"2027-02-11","270416":["2026-12-11","חלק א׳"],"270418":"2027-01-29","270420":"2027-02-07","270422":"2027-02-02","270426":"2027-01-26","270427":"2027-02-02","270428":"2027-01-31","270430":"2026-12-18","270441":"2027-01-19","270516":"2027-01-26","270550":"2027-01-28","270552":"2027-01-25","270554":"2027-02-01","270556":"2027-02-11","270560":"2027-01-18","270562":"2027-02-04","271206":"2027-01-27","850302":"2027-01-29","850504":"2027-02-05","850602":"2027-02-05"}}}/* EXAMS:END */;
+function levnetExams() { let host = ""; try { host = new URL(M.url || DEFAULT_SITE).hostname; } catch (e) {} return LEVNET_EXAMS[host] || null; }
+function levnetFor(c) {
+  const L = levnetExams(); if (!L || !c) return null;
+  const m = /^\s*(\d{5,7})\.\d+\.(\d{4})/.exec(c.name || ""), code = m ? m[1] : codeOf(c.name);
+  if (!code || (m && L.year && m[2] !== L.year)) return null;          // same course number from another year: not this list
+  const v = L.d[code]; if (!v) return null;
+  const [date, note] = Array.isArray(v) ? v : [v, ""];
+  return { m: L.moed, ts: parseYmd(date), note, published: L.published, draft: L.draft };
+}
 function examList() {
-  const out = [];
+  const out = [], now = nowS();
   for (const [cid, e] of Object.entries(P.exams)) for (const m of ["a", "b"]) { const ts = parseDT(e && e[m]); if (ts) out.push({ cid: Number(cid), m, ts }); }
+  for (const c of (V.data && V.data.courses) || []) {
+    const lv = levnetFor(c), e = P.exams[c.id] || {};
+    if (!lv || e[lv.m] || e.noLev || (c.end && c.end < now - 30 * DAY)) continue;
+    out.push({ cid: c.id, m: lv.m, ts: lv.ts, allDay: true, lev: lv });
+  }
   return out.filter(x => !isOff(x.cid)).sort((a, b) => a.ts - b.ts);
 }
+const dayDate = ts => { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", year: "numeric" }); } catch (e) { return ymd(ts); } };
 function renderExams(now) {
-  const el = $("#exams"), L = examList().filter(x => x.ts > now - 3 * 3600);
+  const el = $("#exams"), L = examList().filter(x => x.allDay ? addD(x.ts, 1) > now : x.ts > now - 3 * 3600);
   if (!L.length) { el.innerHTML = '<div class="exempty">' + esc(t("exNone")) + '<button data-exedit>' + esc(t("exAddBtn")) + "</button></div>"; return; }
   const N = 5, shown = V.exAll ? L : L.slice(0, N);
   el.innerHTML = shown.map(x => {
     const days = daysBetween(now, x.ts);
-    const right = x.ts <= now || days === 0 ? '<span class="en" style="font-size:15px">' + esc(t("exToday")) + "</span>" + (x.ts > now ? cdSpan(x.ts, now) : "")
+    const right = x.allDay ? (days >= 2 ? '<span class="en">' + days + '</span><span class="eu">' + esc(t("daysU", days)) + "</span>" : '<span class="en" style="font-size:15px">' + esc(t(days === 1 ? "exTomorrow" : "exToday")) + "</span>")
+      : x.ts <= now || days === 0 ? '<span class="en" style="font-size:15px">' + esc(t("exToday")) + "</span>" + (x.ts > now ? cdSpan(x.ts, now) : "")
       : days >= 2 ? '<span class="en">' + days + '</span><span class="eu">' + esc(t("daysU", days)) + "</span>" : cdSpan(x.ts, now);
     return '<button class="er ' + x.m + (x.ts - now < 3 * DAY ? " soon" : "") + '" data-exedit style="--c:' + colorOf(x.cid) + '"><span class="eb"><b><bdi>' + esc(courseName(x.cid)) +
-      "</bdi></b><small>" + esc(t(x.m === "a" ? "moedA" : "moedB") + " · " + when(x.ts)) + '</small></span><span class="ec">' + right + "</span></button>";
-  }).join("") + (L.length > N ? '<button class="link" data-exall>' + esc(V.exAll ? t("newsLess") : t("exMore", L.length - N)) + "</button>" : "");
+      "</bdi></b><small>" + esc(t(x.m === "a" ? "moedA" : "moedB") + " · " + (x.allDay ? dayDate(x.ts) : when(x.ts)) + (x.lev && x.lev.note ? " · " + x.lev.note : "")) +
+      (x.lev ? ' <span class="lv">' + esc(t(x.lev.draft ? "exLev" : "exLevFinal")) + "</span>" : "") + '</small></span><span class="ec">' + right + "</span></button>";
+  }).join("") + (L.length > N ? '<button class="link" data-exall>' + esc(V.exAll ? t("newsLess") : t("exMore", L.length - N)) + "</button>" : "") +
+    (shown.some(x => x.lev && x.lev.draft) ? '<div class="exnote">ⓘ ' + esc(t("exLevNote", new Date(parseYmd(shown.find(x => x.lev).lev.published) * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric", year: "numeric" }))) + "</div>" : "");
 }
 function renderExSheet() {
   const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id));
   $("#exList").innerHTML = cs.length ? cs.map(c => {
-    const e = P.exams[c.id] || {}, sug = (V.exSug || []).filter(x => x.cid === c.id);
+    const e = P.exams[c.id] || {}, sug = (V.exSug || []).filter(x => x.cid === c.id), lv = levnetFor(c);
     const row = m => "<span>" + esc(t(m === "a" ? "moedA" : "moedB")) + '</span><input type="datetime-local" data-ex="' + c.id + '" data-m="' + m + '" value="' + esc(e[m] || "") + '">';
     return '<div class="xrow" style="--c:' + colorOf(c.id) + '"><div class="xn"><i></i><bdi>' + esc(shortName(c.name)) + '</bdi></div><div class="xm">' + row("a") + row("b") +
+      (lv ? '<div class="xsug lvrow"><span>' + esc(t("exLevRow")) + " <b>" + esc(dayDate(lv.ts) + (lv.note ? " · " + lv.note : "")) + "</b> " + '<span class="lvrep" data-cid="' + c.id + '" data-m="' + lv.m + '"' + (e[lv.m] ? "" : " hidden") + ">" + esc(t("exLevReplaced")) + "</span>" +
+        '</span><button class="link" data-nolev="' + c.id + '">' + esc(t(e.noLev ? "exShowLev" : "exHideLev")) + "</button></div>" : "") +
       sug.map(x => '<div class="xsug">' + esc(t("exFromMoodle")) + " <bdi>" + esc(x.name) + "</bdi> · " + esc(when(x.ts)) + ' <button data-exuse="' + c.id + "|" + x.m + "|" + fmtDT(x.ts) + '">' +
         esc(t("exUse") + " (" + t(x.m === "a" ? "moedA" : "moedB") + ")") + "</button></div>").join("") + "</div></div>";
   }).join("") : '<div class="hint">' + esc(t("noCourses")) + "</div>";
@@ -1468,7 +1500,7 @@ function setExam(cid, m, v) {
   const c = ((V.data && V.data.courses) || []).find(y => y.id === cid), e = Object.assign({}, P.exams[cid]);
   if (parseDT(v)) e[m] = v; else delete e[m];
   if (c) e.n = shortName(c.name);
-  if (e.a || e.b) P.exams[cid] = e; else delete P.exams[cid];
+  if (e.a || e.b || e.noLev) P.exams[cid] = e; else delete P.exams[cid];
   savePrefs(); render();
 }
 
@@ -1801,8 +1833,16 @@ $("#bExEdit").onclick = openExams;
 $("#bExScan").onclick = scanExams;
 $("#exClose").onclick = () => $("#exSheet").hidden = true;
 $("#exSheet").addEventListener("click", e => { if (e.target.id === "exSheet") $("#exSheet").hidden = true; });
-$("#exList").addEventListener("change", e => { const i = e.target.closest("[data-ex]"); if (i) setExam(Number(i.dataset.ex), i.dataset.m, i.value); });
+$("#exList").addEventListener("change", e => {
+  const i = e.target.closest("[data-ex]"); if (!i) return;
+  setExam(Number(i.dataset.ex), i.dataset.m, i.value);
+  const sp = $("#exList").querySelector('.lvrep[data-cid="' + i.dataset.ex + '"][data-m="' + i.dataset.m + '"]');
+  if (sp) sp.hidden = !(P.exams[i.dataset.ex] || {})[i.dataset.m];
+});
 $("#exList").addEventListener("click", e => {
+  const nl = e.target.closest("[data-nolev]");
+  if (nl) { const cid = Number(nl.dataset.nolev), x = Object.assign({}, P.exams[cid]); if (x.noLev) delete x.noLev; else x.noLev = true;
+    if (x.a || x.b || x.noLev) P.exams[cid] = x; else delete P.exams[cid]; savePrefs(); render(); return renderExSheet(); }
   const b = e.target.closest("[data-exuse]"); if (!b) return;
   const [cid, m, v] = b.dataset.exuse.split("|"); setExam(Number(cid), m, v); renderExSheet();
 });
