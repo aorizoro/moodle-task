@@ -937,18 +937,22 @@ const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loadi
 const savePrefs = () => LS.set("prefs", P);
 const isOff = cid => P.off.includes(cid);
 function hslHex(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); }
-/* course colours: a neutral palette given out by course order. Personal colours come only from the user:
-   picked in settings (by course) or brought by a link the user approved (by course code). Nothing about one user is built in. */
-const PALETTE = ["#fa7a17", "#ffb701", "#13c57b", "#9260f7", "#5264d2", "#5892f3", "#e03131", "#d6336c", "#8a5a36", "#6c757d", "#a61e4d", "#6b7a1f", "#b5348f", "#495a6b"];
-const palColor = k => k < PALETTE.length ? PALETTE[k] : hslHex([350, 330, 20, 300, 0, 65][k % 6], 45 + (k % 3) * 10, 30 + (k % 2) * 10);
+/* course colours. The six courses of the calendar palette (chosen by the owner from his calendar, by course code) always get their calendar colour.
+   Every other course gets one of OTHER_COLORS: darker reds, pinks, browns and greys, chosen to look nothing like those six.
+   A colour picked in settings, or brought by an approved link, still wins. */
+const CODE_COLORS = { "120131": "#fa7a17", "120302": "#ffb701", "141001": "#13c57b", "150005": "#9260f7", "150301": "#5264d2", "157210": "#5892f3" };
+const OTHER_COLORS = ["#e03131", "#d6336c", "#8a5a36", "#6c757d", "#a61e4d", "#6b7a1f", "#b5348f", "#495a6b"];
+const palColor = k => k < OTHER_COLORS.length ? OTHER_COLORS[k] : hslHex([350, 330, 15, 0, 300, 200][k % 6], 30 + (k % 3) * 10, 30 + (k % 2) * 8);
 const codeOf = name => { const m = /^\s*(\d{5,7})[.\s-]/.exec(name || ""); return m ? m[1] : ""; };
 function colorOf(cid) {
   if (P.colors[cid]) return P.colors[cid];
   const cs = (V.data && V.data.courses) || [], c = cs.find(x => x.id === cid);
-  const cc = c && P.ccode[codeOf(c.name)]; if (cc) return cc;
-  // current courses first, so they get the clearest colours; the order does not change when a course is switched off
-  const now = Date.now() / 1000, cur = cs.filter(x => !x.end || x.end > now - 30 * 86400), rest = cs.filter(x => !cur.includes(x));
-  const k = cur.concat(rest).findIndex(x => x.id === cid);
+  const code = c && codeOf(c.name);
+  if (code && P.ccode[code]) return P.ccode[code];
+  if (code && CODE_COLORS[code]) return CODE_COLORS[code];
+  // the others: current courses first, so they get the clearest colours; the order does not change when a course is switched off
+  const now = Date.now() / 1000, rest = cs.filter(x => !CODE_COLORS[codeOf(x.name)]), cur = rest.filter(x => !x.end || x.end > now - 30 * 86400);
+  const k = cur.concat(rest.filter(x => !cur.includes(x))).findIndex(x => x.id === cid);
   return palColor(Math.max(0, k));
 }
 const shortName = n => String(n || t("other")).replace(/^\s*\d{4,7}(\.\d+)*\s*-\s*/, "");
@@ -1237,7 +1241,7 @@ function ttCid(x) {
   if (x.code) { const c = cs.find(c => codeOf(c.name) === x.code && !isOff(c.id)) || cs.find(c => codeOf(c.name) === x.code); if (c) return c.id; }
   return 0;
 }
-function ttColor(x) { const cid = ttCid(x); return cid ? colorOf(cid) : (x.color || P.ccode[x.code] || "#868e96"); }
+function ttColor(x) { const cid = ttCid(x); return cid ? colorOf(cid) : (x.color || P.ccode[x.code] || CODE_COLORS[x.code] || "#868e96"); }
 function ttName(x) {
   if (x.title) return x.title;
   const cid = ttCid(x), c = cid && V.data.courses.find(y => y.id === cid);
