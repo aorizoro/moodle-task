@@ -626,10 +626,10 @@ const I18N = {
     exLevRow: "📋 בלבנט (טרם סופי):",
     ttAtt: "✋ נוכחות חובה", attShort: "נוכחות חובה", attBadge: "✋ חובה", attLegend: "פסים = נוכחות חובה",
     syncTitle: "סנכרון בין מכשירים", syncOnLbl: "🔄 סנכרון בין המכשירים שלי",
-    syncHint: "המערכת, מועדי המבחנים, תאריכי הסמסטר, הצבעים והסימונים נשמרים בקובץ קטן (moodle-tasks-sync.json) בתוך ״הקבצים הפרטיים שלי״ ב-Moodle שלך. כל מכשיר שמחובר עם אותו משתמש ומפעיל כאן סנכרון מתעדכן ממנו. שום דבר לא עובר לשרת אחר.",
+    syncHint: "המערכת, מועדי המבחנים, תאריכי הסמסטר, הצבעים והסימונים נשמרים ב-Moodle שלך: בקובץ קטן ב״הקבצים הפרטיים שלי״, או, אם האתר לא מאפשר, באירוע פרטי ביומן שלך שרק אתה רואה. כל מכשיר שמחובר עם אותו משתמש ומפעיל כאן סנכרון מתעדכן ממנו. שום דבר לא עובר לשרת אחר.",
     syncNowBtn: "סנכרן עכשיו", syncOk: x => "✓ מסונכרן · " + x, syncBusy: "מסנכרן…", syncErr: m => "הסנכרון נכשל: " + m, syncOffSt: "כבוי במכשיר הזה",
     syncDone: "מסונכרן ✓", syncPulled: "עודכן מהמכשיר השני ✓", syncNotSaved: "הקובץ לא נשמר ב-Moodle (ייתכן ש״הקבצים הפרטיים״ חסומים באתר)", syncNoUpload: "Moodle לא מאפשר להעלות קבצים מהאפליקציה",
-    syncOtherUser: "המכשיר מחובר עכשיו למשתמש אחר, הסנכרון כובה", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
+    syncOtherUser: "המכשיר מחובר עכשיו למשתמש אחר, הסנכרון כובה", syncBlocked: "Moodle באתר הזה לא מאפשר לשמור את נתוני הסנכרון", syncViaCal: "נשמר כאירוע פרטי ביומן שלך ב-Moodle (בתאריך 1.1.2001, כדי שלא יפריע)", syncViaFiles: "נשמר ב״הקבצים הפרטיים שלי״ ב-Moodle", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
     syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
   en: {
@@ -702,10 +702,10 @@ const I18N = {
     exLevRow: "📋 On Levnet (not final):",
     ttAtt: "✋ Mandatory attendance", attShort: "Mandatory attendance", attBadge: "✋ Mandatory", attLegend: "Stripes = mandatory attendance",
     syncTitle: "Sync between devices", syncOnLbl: "🔄 Sync between my devices",
-    syncHint: "Your timetable, exam dates, semester dates, colours and marks are kept in a small file (moodle-tasks-sync.json) in your Moodle “Private files”. Every device signed in with the same user that turns sync on here updates from it. Nothing goes to any other server.",
+    syncHint: "Your timetable, exam dates, semester dates, colours and marks are kept in your own Moodle: a small file in your “Private files”, or, if the site doesn’t allow that, a private event in your calendar that only you can see. Every device signed in with the same user that turns sync on here updates from it. Nothing goes to any other server.",
     syncNowBtn: "Sync now", syncOk: x => "✓ Synced · " + x, syncBusy: "Syncing…", syncErr: m => "Sync failed: " + m, syncOffSt: "Off on this device",
     syncDone: "Synced ✓", syncPulled: "Updated from your other device ✓", syncNotSaved: "The file wasn’t saved on Moodle (Private files may be blocked on this site)", syncNoUpload: "Moodle doesn’t allow uploading files from the app",
-    syncOtherUser: "This device is now signed in as another user; sync was turned off", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
+    syncOtherUser: "This device is now signed in as another user; sync was turned off", syncBlocked: "Moodle on this site doesn’t allow saving the sync data", syncViaCal: "Kept as a private event in your Moodle calendar (dated 1.1.2001, out of the way)", syncViaFiles: "Kept in your Moodle “Private files”", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
     syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
   fr: {
@@ -778,10 +778,10 @@ const I18N = {
     exLevRow: "📋 Sur Levnet (provisoire) :",
     ttAtt: "✋ Présence obligatoire", attShort: "Présence obligatoire", attBadge: "✋ Obligatoire", attLegend: "Rayures = présence obligatoire",
     syncTitle: "Synchronisation entre appareils", syncOnLbl: "🔄 Synchroniser mes appareils",
-    syncHint: "Votre emploi du temps, vos dates d’examen et de semestre, vos couleurs et vos marques sont gardés dans un petit fichier (moodle-tasks-sync.json) dans vos « Fichiers personnels » Moodle. Chaque appareil connecté avec le même utilisateur qui active la synchronisation ici se met à jour depuis ce fichier. Rien ne va vers un autre serveur.",
+    syncHint: "Votre emploi du temps, vos dates d’examen et de semestre, vos couleurs et vos marques sont gardés dans votre propre Moodle : un petit fichier dans vos « Fichiers personnels » ou, si le site ne le permet pas, un événement privé de votre calendrier visible par vous seul. Chaque appareil connecté avec le même utilisateur qui active la synchronisation ici se met à jour depuis ce fichier. Rien ne va vers un autre serveur.",
     syncNowBtn: "Synchroniser", syncOk: x => "✓ Synchronisé · " + x, syncBusy: "Synchronisation…", syncErr: m => "Échec de la synchronisation : " + m, syncOffSt: "Désactivée sur cet appareil",
     syncDone: "Synchronisé ✓", syncPulled: "Mis à jour depuis votre autre appareil ✓", syncNotSaved: "Le fichier n’a pas été enregistré sur Moodle (les fichiers personnels sont peut-être bloqués)", syncNoUpload: "Moodle n’autorise pas l’envoi de fichiers depuis l’application",
-    syncOtherUser: "Cet appareil est connecté à un autre utilisateur ; synchronisation désactivée", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
+    syncOtherUser: "Cet appareil est connecté à un autre utilisateur ; synchronisation désactivée", syncBlocked: "Moodle sur ce site ne permet pas d’enregistrer les données de synchronisation", syncViaCal: "Gardé comme événement privé dans votre calendrier Moodle (daté du 1.1.2001, hors de vue)", syncViaFiles: "Gardé dans vos « Fichiers personnels » Moodle", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
     syncFirst: "Synchronisation activée. Sur le premier appareil, ses données sont enregistrées sur Moodle ; les appareils suivants les chargent depuis là.", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
   },
 };
@@ -846,7 +846,7 @@ async function call(fn, params) {
   try { j = await r.json(); } catch (e) { throw new MErr(t("badResp", r.status), "bad"); }
   if (j && j.exception) {
     if (j.errorcode === "invalidtoken") throw new MErr(t("invalidToken"), "invalidtoken");
-    throw new MErr(j.message || j.errorcode || t("error"), j.errorcode || "error");
+    throw new MErr(stripHtml(j.message || "") || j.errorcode || t("error"), j.errorcode || "error");
   }
   return j;
 }
@@ -1621,7 +1621,7 @@ async function myUserId() {
   const u = (V.data && V.data.userid) || LS.get("uid", 0); if (u) return u;
   const i = await call("core_webservice_get_site_info"); LS.set("uid", i.userid); return i.userid;
 }
-async function syncDownload() {
+async function filesDownload() {
   const uid = await myUserId();
   const r = await call("core_files_get_files", { contextid: -1, component: "user", filearea: "private", itemid: 0, filepath: "/", filename: "", contextlevel: "user", instanceid: uid });
   const f = ((r && r.files) || []).find(x => x.filename === SYNC_FILE && !x.isdir);
@@ -1634,7 +1634,7 @@ async function syncDownload() {
   if (!res.ok) throw new MErr(t("badResp", res.status), "sync");
   try { const j = await res.json(); return j && j.app === "moodle-tasks" ? j : null; } catch (e) { return null; }
 }
-async function syncUpload(obj) {
+async function filesUpload(obj) {
   const fd = new FormData(), url = M.url + "/webservice/upload.php";
   let itemid = 0;
   try { itemid = Number((await call("core_files_get_unused_draft_itemid")).itemid) || 0; } catch (e) { if (e.code === "invalidtoken" || e.code === "network") throw e; }
@@ -1650,6 +1650,29 @@ async function syncUpload(obj) {
   }
   await call("core_user_add_user_private_files", { draftid: itemid });
 }
+/* second store, for sites where students may not use private files: one private event in the user's own Moodle calendar,
+   on a fixed date in 2001 (out of sight). Its description holds the data as base64, which Moodle's text filters leave alone. */
+const SYNC_EV_NAME = "Moodle Tasks · sync (do not delete)", SYNC_EV_TS = 978307200;
+async function calEvents() {
+  const r = await call("core_calendar_get_calendar_events", { "options[userevents]": 1, "options[siteevents]": 0, "options[timestart]": SYNC_EV_TS - DAY, "options[timeend]": SYNC_EV_TS + DAY });
+  return ((r && r.events) || []).filter(e => e.name === SYNC_EV_NAME && (e.eventtype === "user" || !e.eventtype)).sort((a, b) => b.id - a.id);
+}
+function calDecode(e) {
+  const raw = stripHtml(e.description || "").replace(/\s+/g, "");
+  try { const j = JSON.parse(b64dec(raw)); return j && j.app === "moodle-tasks" ? j : null; } catch (er) { return null; }
+}
+async function calDownload() { for (const e of await calEvents()) { const j = calDecode(e); if (j) return j; } return null; }
+async function calUpload(obj) {
+  const old = await calEvents();
+  await call("core_calendar_create_calendar_events", { "events[0][name]": SYNC_EV_NAME, "events[0][description]": b64enc(JSON.stringify(obj)), "events[0][format]": 2,
+    "events[0][courseid]": 0, "events[0][groupid]": 0, "events[0][repeats]": 0, "events[0][eventtype]": "user", "events[0][timestart]": SYNC_EV_TS, "events[0][timeduration]": 0, "events[0][visible]": 1 });
+  if (old.length) { const p = {}; old.forEach((e, i) => { p["events[" + i + "][eventid]"] = e.id; p["events[" + i + "][repeat]"] = 0; }); try { await call("core_calendar_delete_calendar_events", p); } catch (e) {} }
+}
+const STORES = { files: [filesDownload, filesUpload], cal: [calDownload, calUpload] };
+const blockedErr = e => ["nopermissions", "accessexception", "servicenotavailable", "invalidrecord", "requireloginerror", "notsaved"].includes(e.code);
+/* which store this site allows: private files first, then the calendar; remembered once one works */
+async function syncDownload() { const st = LS.get("syncStore", "files"); return STORES[st] ? STORES[st][0]() : filesDownload(); }
+async function syncUpload(obj) { const st = LS.get("syncStore", "files"); return (STORES[st] || STORES.files)[1](obj); }
 function setSync(s, msg) { LS.set("syncState", { s, at: Date.now(), msg: msg || "" }); renderSyncStatus(); }
 function syncBadge() {
   if (!LS.get("syncOn", false)) return "";
@@ -1660,10 +1683,33 @@ function renderSyncStatus() {
   const el = $("#syncStatus"); if (!el) return;
   const on = LS.get("syncOn", false), st = LS.get("syncState", null);
   $("#syncOn").checked = on; $("#bSyncNow").hidden = !on;
-  el.textContent = !on ? t("syncOffSt") : !st ? "" : st.s === "busy" ? t("syncBusy") : st.s === "err" ? t("syncErr", st.msg) : t("syncOk", ago(st.at / 1000));
+  el.textContent = !on ? t("syncOffSt") : !st ? "" : st.s === "busy" ? t("syncBusy") : st.s === "err" ? t("syncErr", st.msg) :
+    t("syncOk", ago(st.at / 1000)) + " · " + t(LS.get("syncStore", "files") === "cal" ? "syncViaCal" : "syncViaFiles");
   el.style.color = st && st.s === "err" && on ? "var(--err)" : "";
 }
 function syncSoon(ms) { if (!LS.get("syncOn", false)) return; clearTimeout(SY.t); SY.t = setTimeout(() => syncNow(), ms == null ? 2500 : ms); }
+async function syncRound() {
+  const remote = await syncDownload(), rts = (remote && remote.ts) || {}, rd = (remote && remote.data) || {};
+  let pulled = false, push = !remote;
+  for (const k of SYNC_KEYS) {
+    const lt = P._ts[k] || 0, rt = Number(rts[k]) || 0, has = Object.prototype.hasOwnProperty.call(rd, k);
+    if (has && rt >= lt) {
+      const v = cleanKey(k, rd[k]), j = JSON.stringify(v);
+      if (j !== syncSnap[k]) { P[k] = v; syncSnap[k] = j; pulled = true; }
+      P._ts[k] = rt;
+    } else push = true;
+  }
+  if (pulled) { LS.set("prefs", P); render(); if (!$("#sheet").hidden) renderSheet(); }
+  if (push) {
+    const out = { app: "moodle-tasks", v: 1, at: Date.now(), ts: {}, data: {} };
+    for (const k of SYNC_KEYS) { out.ts[k] = P._ts[k] || 0; out.data[k] = P[k]; }
+    await syncUpload(out);
+    const chk = await syncDownload();
+    if (!chk) throw new MErr(t("syncNotSaved"), "notsaved");              // nothing there at all: this store does not work here
+    if (chk.at !== out.at) { SY.raced = true; }                            // another device saved at the same moment: merge again
+  }
+  return pulled;
+}
 async function syncNow(manual) {
   if (!LS.get("syncOn", false) || !M.token) return;
   if (SY.busy) { SY.again = true; return; }
@@ -1673,23 +1719,13 @@ async function syncNow(manual) {
     const uid = await myUserId();
     if (LS.get("syncUid", uid) !== uid) { LS.set("syncOn", false); throw new MErr(t("syncOtherUser"), "sync"); }   // another account on this device: never mix
     if (!syncSnap) snapAll();
-    const remote = await syncDownload(), rts = (remote && remote.ts) || {}, rd = (remote && remote.data) || {};
-    let pulled = false, push = !remote;
-    for (const k of SYNC_KEYS) {
-      const lt = P._ts[k] || 0, rt = Number(rts[k]) || 0, has = Object.prototype.hasOwnProperty.call(rd, k);
-      if (has && rt >= lt) {
-        const v = cleanKey(k, rd[k]), j = JSON.stringify(v);
-        if (j !== syncSnap[k]) { P[k] = v; syncSnap[k] = j; pulled = true; }
-        P._ts[k] = rt;
-      } else push = true;
-    }
-    if (pulled) { LS.set("prefs", P); render(); if (!$("#sheet").hidden) renderSheet(); }
-    if (push) {
-      const out = { app: "moodle-tasks", v: 1, at: Date.now(), ts: {}, data: {} };
-      for (const k of SYNC_KEYS) { out.ts[k] = P._ts[k] || 0; out.data[k] = P[k]; }
-      await syncUpload(out);
-      const chk = await syncDownload();
-      if (!chk || chk.at !== out.at) throw new MErr(t("syncNotSaved"), "sync");
+    let pulled;
+    const round = async () => { let p = false; for (let i = 0; i < 3; i++) { SY.raced = false; p = (await syncRound()) || p; if (!SY.raced) return p; } return p; };
+    try { pulled = await round(); }
+    catch (e) {
+      if (!blockedErr(e) || LS.get("syncStore", "files") === "cal") throw e;
+      LS.set("syncStore", "cal");                     // private files are blocked here: keep the data in a private calendar event instead
+      try { pulled = await round(); } catch (e2) { LS.del("syncStore"); throw new MErr(t("syncBlocked") + " (" + e.message + " / " + e2.message + ")", e2.code); }
     }
     setSync("ok"); if (manual) toast(t(pulled ? "syncPulled" : "syncDone"));
   } catch (e) {
@@ -1920,7 +1956,7 @@ $("#clist").addEventListener("change", e => {
 $("#clist").addEventListener("input", e => { if (e.target.dataset.cc) { P.colors[e.target.dataset.cc] = e.target.value; savePrefs(); render(); } });
 $("#bLogout").onclick = () => {
   if (!confirm(t("logoutConfirm"))) return;
-  ["token", "cache", "seen", "syncOn", "syncUid", "syncState", "uid"].forEach(k => LS.del(k)); V.data = null; M.token = ""; $("#sheet").hidden = true;
+  ["token", "cache", "seen", "syncOn", "syncUid", "syncState", "uid", "syncStore"].forEach(k => LS.del(k)); V.data = null; M.token = ""; $("#sheet").hidden = true;
   try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
   showSetup();
 };
