@@ -55,24 +55,40 @@ main{max-width:720px;margin:0 auto;padding:12px max(12px,env(safe-area-inset-rig
 
 /* ---------- layout: phone = one pane + bottom tabs, tablet/desktop = side by side ---------- */
 body.app main{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
-body.app[data-view=dash] #tasks{display:none}
-body.app[data-view=tasks] #dash{display:none}
+body.app[data-view=dash] #tasks,body.app[data-view=dash] #ttv{display:none}
+body.app[data-view=tasks] #dash,body.app[data-view=tasks] #ttv{display:none}
+body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
+.sech{display:none}
 .tabbar{position:fixed;inset-inline:0;bottom:0;z-index:12;display:flex;background:var(--card);border-top:1px solid var(--line);padding:6px 10px max(8px,env(safe-area-inset-bottom))}
 .tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12.5px;color:var(--muted);padding:6px 4px;border-radius:12px}
 .tabbar button span{font-size:20px;line-height:1.1}
 .tabbar button.on{color:var(--accent);background:var(--accent-soft);font-weight:700}
 .tabbar .b{position:relative}
 .tabbar .badge{position:absolute;inset-block-start:2px;inset-inline-end:calc(50% - 26px);min-width:18px;padding:0 5px;border-radius:99px;background:var(--err);color:#fff;font-size:11px;font-weight:700;font-style:normal}
+/* tablet / desktop: every card is placed on one grid (the tab sections dissolve into it) */
 @media (min-width:760px){
-  main{max-width:1320px}
+  main{max-width:1440px;padding-inline:20px}
   body.app main{padding-bottom:30px}
-  #app{display:grid;grid-template-columns:minmax(290px,40%) minmax(0,1fr);gap:16px;align-items:start}
-  body.app #dash,body.app #tasks{display:block!important}
-  #dash{position:sticky;top:76px;max-height:calc(100vh - 90px);overflow:auto;padding-inline-end:2px}
   .tabbar{display:none!important}
+  body.app #dash,body.app #ttv{display:contents!important}
+  body.app #tasks{display:block!important}
+  #app{display:grid;gap:14px;align-items:start;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
+    grid-template-areas:"hero stats" "today sem" "tt tt" "tasks week" "tasks month" "tasks news" "tasks load" "tasks ics" "tasks .";
+    grid-template-rows:auto auto auto auto auto auto auto auto 1fr}
+  #app .dcard,#app .stats{margin:0}
+  #hero{grid-area:hero} #stats{grid-area:stats} #todayCard{grid-area:today} #semCard{grid-area:sem} #ttCard{grid-area:tt}
+  #weekCard{grid-area:week} #monthCard{grid-area:month} #newsCard{grid-area:news} #loadCard{grid-area:load} #icsCard{grid-area:ics} #tasks{grid-area:tasks}
+  #hero,#stats,#todayCard,#semCard{align-self:stretch}
+  .sech{display:flex;align-items:baseline;gap:10px;font-size:19px;font-weight:800;margin:2px 2px 10px}
+  .sech .hint{font-weight:400;font-size:13px}
 }
-@media (min-width:1100px){ #app{grid-template-columns:400px minmax(0,1fr);gap:18px} }
-@media (min-width:1300px){ #app{grid-template-columns:440px minmax(0,1fr)} }
+@media (min-width:1100px){
+  #app{gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-areas:"hero stats today" "sem sem sem" "tt tt month" "tasks tasks week" "tasks tasks news" "tasks tasks load" "tasks tasks ics" "tasks tasks .";
+    grid-template-rows:auto auto auto auto auto auto auto 1fr}
+  #monthCard{align-self:stretch}
+  .md{min-height:62px}
+}
 
 /* ---------- setup ---------- */
 #setup .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:10px;max-width:620px;margin-inline:auto}
@@ -144,6 +160,93 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .load .lr .lc{font-size:12.5px;color:var(--muted);min-width:26px;text-align:end;font-variant-numeric:tabular-nums}
 .dact{display:flex;flex-direction:column;gap:6px}
 .dact button{width:100%}
+.ch .link{padding:2px 4px;font-weight:600;font-size:14px}
+
+/* semester progress: one dashed piece per week, the current week fills day by day */
+.sem .big{font-size:22px;font-weight:800;line-height:1.2;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
+.sem .big small{font-size:14px;font-weight:600;color:var(--muted);margin-inline-start:6px}
+.sem .big small.pc{margin:0;padding:2px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-size:12.5px}
+.sem .sub{color:var(--muted);font-size:14px;margin:2px 0 12px}
+.sem .sub b{color:var(--text)}
+.sbar{display:flex;gap:4px;align-items:center;height:16px}
+.sg{position:relative;height:12px;border-radius:4px;background:var(--track);overflow:visible;min-width:3px}
+.sg>b{position:absolute;inset-block:0;inset-inline-start:0;border-radius:4px;background:var(--accent)}
+.sg.x{background:color-mix(in srgb,var(--warn) 22%,var(--track))}
+.sg.x>b{background:var(--warn)}
+.sg.gap{height:2px;background:none;border-top:2px dotted var(--line)}
+.sg.cur{height:16px;box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
+.sg.x.cur{box-shadow:0 0 0 2px color-mix(in srgb,var(--warn) 40%,transparent)}
+.sg.cur>b::after{content:"";position:absolute;inset-inline-end:-5px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--card);border:3px solid var(--accent)}
+.sg.x.cur>b::after{border-color:var(--warn)}
+.snum{display:flex;gap:4px;margin-top:4px;font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.snum span{text-align:center;min-width:3px;overflow:hidden}
+.snum span.cur{color:var(--accent);font-weight:800}
+.slbl{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-size:12.5px;color:var(--muted)}
+.slbl .xl{color:var(--warn);font-weight:600}
+.sem .guess{margin-top:8px;font-size:12.5px;color:var(--muted)}
+.sem .guess button{font-size:12.5px;padding:0 4px}
+
+/* today's classes */
+.tr{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:var(--row);border-inline-start:5px solid var(--c);margin-bottom:6px;width:100%;border-block:0;border-inline-end:0;text-align:start}
+.tr .tm{font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--muted);min-width:42px;line-height:1.3}
+.tr .tb{flex:1;min-width:0;display:flex;flex-direction:column}
+.tr .tb b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr .tb small{color:var(--muted);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tr .ts{font-size:12.5px;font-weight:700;color:var(--muted);text-align:end}
+.tr.past{opacity:.5}
+.tr.now{background:color-mix(in srgb,var(--c) 16%,var(--card));box-shadow:0 0 0 2px var(--c)}
+.tr.now .ts{color:var(--ct,var(--text))}
+.tr.next .ts{color:var(--accent)}
+.today .nx{color:var(--muted);font-size:14px;margin-top:4px}
+.today .nx b{color:var(--text)}
+
+/* weekly timetable */
+.tt{--pph:58px}
+.ttb{display:flex;gap:6px}
+.ttb button{padding:6px 12px;font-size:14px}
+.ttgrid{display:grid;grid-template-columns:34px repeat(var(--nd),minmax(0,1fr));column-gap:4px}
+.ttgrid .th{text-align:center;font-size:12.5px;font-weight:700;color:var(--muted);padding:4px 0 6px}
+.ttgrid .th.on{color:var(--accent)}
+.ttgrid .th.on span{background:var(--accent);color:#fff;border-radius:99px;padding:1px 8px}
+.tthr{position:relative;height:calc(var(--pph) * var(--rows))}
+.tthr span{position:absolute;inset-inline-end:2px;font-size:11px;color:var(--muted);transform:translateY(-50%);font-variant-numeric:tabular-nums}
+.tthr span:first-child{transform:none}
+.ttc{position:relative;height:calc(var(--pph) * var(--rows));border-radius:10px;background-color:var(--row);
+  background-image:repeating-linear-gradient(to bottom,var(--line) 0 1px,transparent 1px var(--pph))}
+.ttc.on{background-color:var(--accent-soft)}
+.tte{position:absolute;border:0;border-radius:9px;padding:4px 5px;overflow:hidden;color:#fff;text-align:start;display:flex;flex-direction:column;gap:1px;
+  background:var(--c);font-size:11.5px;line-height:1.25;box-shadow:0 1px 0 #0001}
+.tte b{font-size:12px;line-height:1.2;overflow-wrap:break-word}
+.tte span{opacity:.92;overflow-wrap:break-word}
+.tte .tk,.tte .tm{display:none}
+.tte.now{box-shadow:0 0 0 3px var(--card),0 0 0 5px var(--c)}
+.ttnow{position:absolute;inset-inline:-3px;height:2px;background:var(--err);z-index:2;pointer-events:none}
+.ttnow::before{content:"";position:absolute;inset-inline-start:-3px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--err)}
+.ttempty{padding:18px 6px;color:var(--muted);text-align:center;line-height:1.6}
+@media (min-width:760px){ .tt{--pph:54px} .tte{font-size:12px;padding:5px 7px} .tte b{font-size:13.5px} .tte .tk,.tte .tm{display:block} .tte .pl{order:2} .tte .tk{order:1} .tte .tm{order:3} }
+
+/* announcements */
+.nb{font-style:normal;font-size:12px;font-weight:700;color:#fff;background:var(--err);border-radius:99px;padding:1px 8px;margin-inline-start:6px}
+.ni{border-radius:12px;margin:0 0 6px;background:var(--row);border-inline-start:4px solid var(--c)}
+.ni summary{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;list-style:none;font-weight:400}
+.ni summary::-webkit-details-marker{display:none}
+.ni .nt{flex:1;min-width:0;display:flex;flex-direction:column}
+.ni .nt b{font-weight:600}
+.ni.new .nt b{font-weight:800}
+.ni.new summary::before{content:"";flex:none;width:8px;height:8px;margin-top:7px;border-radius:50%;background:var(--accent)}
+.ni .nt small{color:var(--muted);font-size:12.5px}
+.ni .nm{padding:0 12px 10px}
+.ni pre{white-space:pre-wrap;font:inherit;font-size:14px;margin:0 0 6px;max-height:320px;overflow:auto}
+.ni .nm a.op{color:var(--accent);font-weight:600;text-decoration:none;font-size:14px}
+.ni .files{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}
+
+/* forms (timetable editor, semester dates) */
+input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.form label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:14px;margin-bottom:10px}
+.form select{width:100%}
+.form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form .frow{display:flex;gap:8px;margin-top:6px}
+.form .frow button{flex:1}
 
 /* ---------- tasks pane ---------- */
 .banner{border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:14px}
@@ -172,7 +275,7 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .grp .cnt{font-weight:400;color:var(--muted);font-size:13px}
 .grp.late{color:var(--err)}
 .grp.old,.grp.nodue,.grp.done{color:var(--muted)}
-.task,.grp,.chip{--ct:color-mix(in srgb,var(--c) var(--mixp),var(--mixk))}
+.task,.grp,.chip,.tr{--ct:color-mix(in srgb,var(--c) var(--mixp),var(--mixk))}
 .grp.cg{color:var(--ct);border-inline-start:5px solid var(--c);padding-inline-start:8px}
 .task{--c:var(--line);position:relative;background:var(--card);border:1px solid var(--line);border-inline-start:5px solid var(--c);border-radius:14px;padding:12px 14px;margin-bottom:9px}
 .task.done{opacity:.85}
@@ -254,26 +357,46 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 <div id="app" hidden>
   <section id="dash">
     <div id="hero" class="dcard hero"></div>
+    <div id="todayCard" class="dcard today">
+      <div class="ch"><span id="todayTitle"></span><button class="link" id="bTtGo" data-i18n="ttOpen"></button></div>
+      <div id="today"></div>
+    </div>
     <div id="stats" class="stats"></div>
-    <div class="dcard">
+    <div id="semCard" class="dcard sem">
+      <div class="ch"><span data-i18n="semTitle"></span><button class="link" id="bSemEdit" data-i18n="edit"></button></div>
+      <div id="sem"></div>
+    </div>
+    <div id="weekCard" class="dcard">
       <div class="ch"><span data-i18n="weekTitle"></span><span class="hint" data-i18n="tapDay"></span></div>
       <div id="week" class="week"></div>
     </div>
-    <div class="dcard">
+    <div id="monthCard" class="dcard">
       <div class="ch"><span id="mTitle"></span><span class="mnav"><button id="mPrev" data-i18n-aria="prevMonth">‹</button><button id="mToday" data-i18n="todayBtn"></button><button id="mNext" data-i18n-aria="nextMonth">›</button></span></div>
       <div id="month" class="month"></div>
     </div>
-    <div class="dcard load">
+    <div id="newsCard" class="dcard news">
+      <div class="ch"><span><span data-i18n="newsTitle"></span><i class="nb" id="newsBadge" hidden></i></span><button class="link" id="bNewsRead" data-i18n="markAllRead" hidden></button></div>
+      <div id="news"></div>
+    </div>
+    <div id="loadCard" class="dcard load">
       <div class="ch"><span data-i18n="loadTitle"></span></div>
       <div id="load"></div>
     </div>
-    <div class="dcard dact">
+    <div id="icsCard" class="dcard dact">
       <button id="bIcs" data-i18n="icsAll"></button>
       <div class="hint" data-i18n="icsHint"></div>
     </div>
   </section>
 
+  <section id="ttv">
+    <div id="ttCard" class="dcard tt">
+      <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtShare" data-i18n="ttShare"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
+      <div id="tt"></div>
+    </div>
+  </section>
+
   <section id="tasks">
+    <div class="sech"><span data-i18n="viewTasks"></span><span class="hint" id="sechN"></span></div>
     <div id="banner" class="banner" hidden></div>
     <div id="focus" class="focus" hidden><span id="focusTxt"></span><button id="bFocusClear" data-i18n="clearFocus"></button></div>
     <div id="sum"></div>
@@ -299,6 +422,7 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 
 <nav class="tabbar" id="tabbar" hidden>
   <button data-v="dash" class="b"><span>🏠</span><b data-i18n="viewDash"></b></button>
+  <button data-v="tt" class="b"><span>🗓</span><b data-i18n="viewTT"></b></button>
   <button data-v="tasks" class="b"><span>📋</span><b data-i18n="viewTasks"></b><i class="badge" id="tabBadge" hidden></i></button>
 </nav>
 
@@ -311,8 +435,33 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
     <div style="margin-top:14px;font-weight:700" data-i18n="coursesColors"></div>
     <div class="hint" data-i18n="coursesHint"></div>
     <div id="clist"></div>
+    <div style="margin-top:14px;font-weight:700" id="semSet" data-i18n="semDates"></div>
+    <div class="hint" data-i18n="semHint"></div>
+    <div class="srow"><span data-i18n="semStart"></span><input type="date" data-sem="s"></div>
+    <div class="srow"><span data-i18n="semEnd"></span><input type="date" data-sem="e"></div>
+    <div class="srow"><span data-i18n="exStart"></span><input type="date" data-sem="xs"></div>
+    <div class="srow"><span data-i18n="exEnd"></span><input type="date" data-sem="xe"></div>
+    <button class="link" id="bSemAuto" data-i18n="semAuto"></button>
     <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
     <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)" data-i18n="logout"></button>
+  </div>
+</div>
+<div class="sheet" id="ttSheet" hidden>
+  <div class="box form">
+    <h3><span id="ttFormTitle"></span> <button class="link" id="ttClose" data-i18n="close"></button></h3>
+    <label><span data-i18n="ttCourse"></span><select id="fCourse"></select></label>
+    <label><span data-i18n="ttName"></span><input type="text" id="fTitle" maxlength="60" autocomplete="off"></label>
+    <div class="two">
+      <label><span data-i18n="ttKind"></span><select id="fKind"></select></label>
+      <label><span data-i18n="ttDay"></span><select id="fDay"></select></label>
+    </div>
+    <div class="two">
+      <label><span data-i18n="ttFrom"></span><input type="time" id="fS" step="300"></label>
+      <label><span data-i18n="ttTo"></span><input type="time" id="fE" step="300"></label>
+    </div>
+    <label><span data-i18n="ttPlace"></span><input type="text" id="fPlace" maxlength="60" autocomplete="off"></label>
+    <div class="err" id="fErr"></div>
+    <div class="frow"><button class="primary" id="fSave" data-i18n="save"></button><button id="fDel" style="color:var(--err)" data-i18n="del"></button></div>
   </div>
 </div>
 <div id="toast"></div>
@@ -367,6 +516,23 @@ const I18N = {
     icsAll: "📅 הוסף את כל המטלות ליומן", icsHint: "קובץ יומן עם תזכורת יום לפני ושעתיים לפני כל הגשה. נפתח ביומן של הטלפון או המחשב.", icsNone: "אין מטלות עם מועד להוספה", icsDone: n => n + " מטלות נוספו לקובץ היומן",
     toCal: "📅 ליומן", markDone: "✓ סמן כבוצע", unmarkDone: "↩ בטל סימון", related: n => "📚 חומרים מאותו נושא (" + n + ")",
     focusDay: x => "מסונן: " + x, focusCourse: x => "מסונן: " + x, focusGroup: x => "מסונן: " + x, clearFocus: "✕ נקה", dayEmpty: "אין משימות ביום הזה", calDue: "מועד הגשה",
+    viewTT: "מערכת", ttTitle: "מערכת שעות שבועית", ttAdd: "+ הוסף", ttShare: "🔗 שתף", ttOpen: "למערכת ←", edit: "עריכה",
+    ttEmpty: "עדיין אין מערכת שעות. לחץ ״+ הוסף״ והכנס שיעור (קורס, יום, שעות, חדר), או פתח קישור מערכת שקיבלת מחבר מאותו מסלול.",
+    ttNewTitle: "שיעור חדש", ttEditTitle: "עריכת שיעור", ttCourse: "קורס", ttOtherCourse: "אחר (לא מ-Moodle)", ttName: "שם להצגה", ttKind: "סוג", ttDay: "יום",
+    ttFrom: "משעה", ttTo: "עד שעה", ttPlace: "מקום / חדר", save: "שמור", del: "מחק", delConfirm: "למחוק את השיעור הזה מהמערכת?",
+    kLec: "שיעור", kEx: "תרגול", kLab: "מעבדה", kOther: "אחר", ttBadTime: "שעת הסיום צריכה להיות אחרי שעת ההתחלה.", ttNeedName: "בחר קורס או כתוב שם.",
+    ttImported: n => "המערכת נטענה: " + n + " שיעורים", ttReplace: n => "להחליף את המערכת הנוכחית (" + n + " שיעורים) במערכת מהקישור?", ttBadLink: "קישור המערכת לא תקין",
+    ttCopied: "הקישור הועתק. מי שיפתח אותו יקבל את המערכת שלך (בלי הטוקן ובלי המשימות).", ttNothing: "אין עדיין מה לשתף",
+    todayClasses: "השיעורים היום", ttSetup: "🗓 הוסף את המערכת השבועית שלך", noClassesToday: "אין שיעורים היום", dayOver: "סיימת להיום 🙌",
+    nextClass: (d, s, n) => "הבא: <b>" + d + " " + s + "</b> · " + n, nowLbl: "עכשיו", endsIn: x => "נגמר בעוד " + x, startsIn: x => "בעוד " + x, durHM: (h, m) => (h ? h + " שע׳ " : "") + m + " דק׳",
+    semTitle: "התקדמות הסמסטר", weekOf: (a, b) => "שבוע " + a + " <small>מתוך " + b + "</small>",
+    weeksLeft: n => n === 0 ? "<b>השבוע האחרון!</b>" : n === 1 ? "נשאר <b>שבוע אחד</b>" : "נותרו <b>" + n + " שבועות</b>", toExams: n => n === 1 ? "<b>יום אחד</b> למבחנים" : "<b>" + n + " ימים</b> למבחנים",
+    examsNow: "תקופת המבחנים", examsLeft: n => "נותרו <b>" + n + " ימים</b> עד סוף המבחנים", semBefore: n => "הסמסטר מתחיל בעוד " + n + " ימים", semOver: "הסמסטר נגמר 🎉", semEnded: "הסמסטר נגמר",
+    pctSem: n => n + "% מהסמסטר", examsLbl: "📝 מבחנים", semGuess: "התאריכים חושבו אוטומטית מ-Moodle. כדאי לבדוק מול לוח השנה של המוסד:",
+    semDates: "תאריכי הסמסטר", semHint: "ברירת המחדל מחושבת מתאריכי הקורסים ב-Moodle. אפשר לתקן לפי לוח השנה של המוסד.", semStart: "תחילת הסמסטר", semEnd: "יום הלימודים האחרון",
+    exStart: "תחילת המבחנים", exEnd: "סוף המבחנים", semAuto: "↺ חזור לחישוב האוטומטי",
+    newsTitle: "הודעות מהקורסים", newsNone: "אין הודעות ב-45 הימים האחרונים", newsOff: "לא הצלחתי לטעון הודעות", markAllRead: "סמן הכל כנקרא", newsOpen: "פתח בפורום ↗",
+    newsMore: n => "עוד " + n + " הודעות", newsLess: "הצג פחות", newsLoading: "טוען הודעות…",
   },
   en: {
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "Moodle Tasks", appTitle: "Tasks", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
@@ -403,6 +569,23 @@ const I18N = {
     icsAll: "📅 Add all tasks to my calendar", icsHint: "A calendar file with reminders 1 day and 2 hours before each deadline. Opens in your phone or PC calendar.", icsNone: "No dated tasks to add", icsDone: n => n + " tasks added to the calendar file",
     toCal: "📅 Calendar", markDone: "✓ Mark done", unmarkDone: "↩ Unmark", related: n => "📚 Materials from the same topic (" + n + ")",
     focusDay: x => "Filtered: " + x, focusCourse: x => "Filtered: " + x, focusGroup: x => "Filtered: " + x, clearFocus: "✕ Clear", dayEmpty: "No tasks on this day", calDue: "Due",
+    viewTT: "Timetable", ttTitle: "Weekly timetable", ttAdd: "+ Add", ttShare: "🔗 Share", ttOpen: "Timetable →", edit: "Edit",
+    ttEmpty: "No timetable yet. Tap “+ Add” and enter a class (course, day, hours, room), or open a timetable link from a classmate.",
+    ttNewTitle: "New class", ttEditTitle: "Edit class", ttCourse: "Course", ttOtherCourse: "Other (not on Moodle)", ttName: "Display name", ttKind: "Type", ttDay: "Day",
+    ttFrom: "From", ttTo: "To", ttPlace: "Place / room", save: "Save", del: "Delete", delConfirm: "Delete this class from the timetable?",
+    kLec: "Lecture", kEx: "Tutorial", kLab: "Lab", kOther: "Other", ttBadTime: "The end time must be after the start time.", ttNeedName: "Pick a course or type a name.",
+    ttImported: n => "Timetable loaded: " + n + " classes", ttReplace: n => "Replace your current timetable (" + n + " classes) with the one from the link?", ttBadLink: "The timetable link is not valid",
+    ttCopied: "Link copied. Whoever opens it gets your timetable (not your token or tasks).", ttNothing: "Nothing to share yet",
+    todayClasses: "Today’s classes", ttSetup: "🗓 Add your weekly timetable", noClassesToday: "No classes today", dayOver: "Done for today 🙌",
+    nextClass: (d, s, n) => "Next: <b>" + d + " " + s + "</b> · " + n, nowLbl: "Now", endsIn: x => "ends in " + x, startsIn: x => "in " + x, durHM: (h, m) => (h ? h + " h " : "") + m + " min",
+    semTitle: "Semester progress", weekOf: (a, b) => "Week " + a + " <small>of " + b + "</small>",
+    weeksLeft: n => n === 0 ? "<b>Last week!</b>" : n === 1 ? "<b>1 week</b> left" : "<b>" + n + " weeks</b> left", toExams: n => n === 1 ? "<b>1 day</b> to exams" : "<b>" + n + " days</b> to exams",
+    examsNow: "Exam period", examsLeft: n => "<b>" + n + " days</b> until the end of exams", semBefore: n => "The semester starts in " + n + " days", semOver: "Semester over 🎉", semEnded: "Semester over",
+    pctSem: n => n + "% of the semester", examsLbl: "📝 Exams", semGuess: "Dates were estimated from Moodle. Check them against your institution’s calendar:",
+    semDates: "Semester dates", semHint: "Defaults come from the Moodle course dates. You can correct them from your institution’s calendar.", semStart: "Semester start", semEnd: "Last day of classes",
+    exStart: "Exams start", exEnd: "Exams end", semAuto: "↺ Back to automatic dates",
+    newsTitle: "Course announcements", newsNone: "No announcements in the last 45 days", newsOff: "Couldn’t load announcements", markAllRead: "Mark all read", newsOpen: "Open in forum ↗",
+    newsMore: n => n + " more", newsLess: "Show less", newsLoading: "Loading announcements…",
   },
   fr: {
     locale: "fr-FR", dir: "ltr", weekStart: 1, docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
@@ -439,6 +622,23 @@ const I18N = {
     icsAll: "📅 Ajouter tous les devoirs à mon calendrier", icsHint: "Un fichier calendrier avec rappels 1 jour et 2 heures avant chaque échéance. S’ouvre dans le calendrier du téléphone ou du PC.", icsNone: "Aucun devoir daté à ajouter", icsDone: n => n + " devoirs ajoutés au fichier calendrier",
     toCal: "📅 Calendrier", markDone: "✓ Marquer fait", unmarkDone: "↩ Annuler", related: n => "📚 Supports du même thème (" + n + ")",
     focusDay: x => "Filtré : " + x, focusCourse: x => "Filtré : " + x, focusGroup: x => "Filtré : " + x, clearFocus: "✕ Effacer", dayEmpty: "Aucun devoir ce jour-là", calDue: "Échéance",
+    viewTT: "Emploi du temps", ttTitle: "Emploi du temps hebdomadaire", ttAdd: "+ Ajouter", ttShare: "🔗 Partager", ttOpen: "Emploi du temps →", edit: "Modifier",
+    ttEmpty: "Pas encore d’emploi du temps. Appuyez sur « + Ajouter » et saisissez un cours (matière, jour, horaires, salle), ou ouvrez un lien d’emploi du temps reçu d’un camarade.",
+    ttNewTitle: "Nouveau cours", ttEditTitle: "Modifier le cours", ttCourse: "Matière", ttOtherCourse: "Autre (hors Moodle)", ttName: "Nom affiché", ttKind: "Type", ttDay: "Jour",
+    ttFrom: "De", ttTo: "À", ttPlace: "Lieu / salle", save: "Enregistrer", del: "Supprimer", delConfirm: "Supprimer ce cours de l’emploi du temps ?",
+    kLec: "Cours", kEx: "TD", kLab: "TP", kOther: "Autre", ttBadTime: "L’heure de fin doit être après l’heure de début.", ttNeedName: "Choisissez une matière ou saisissez un nom.",
+    ttImported: n => "Emploi du temps chargé : " + n + " cours", ttReplace: n => "Remplacer votre emploi du temps actuel (" + n + " cours) par celui du lien ?", ttBadLink: "Lien d’emploi du temps invalide",
+    ttCopied: "Lien copié. Celui qui l’ouvre reçoit votre emploi du temps (ni votre jeton ni vos devoirs).", ttNothing: "Rien à partager pour l’instant",
+    todayClasses: "Cours d’aujourd’hui", ttSetup: "🗓 Ajoutez votre emploi du temps", noClassesToday: "Pas de cours aujourd’hui", dayOver: "Fini pour aujourd’hui 🙌",
+    nextClass: (d, s, n) => "Prochain : <b>" + d + " " + s + "</b> · " + n, nowLbl: "En cours", endsIn: x => "fin dans " + x, startsIn: x => "dans " + x, durHM: (h, m) => (h ? h + " h " : "") + m + " min",
+    semTitle: "Avancement du semestre", weekOf: (a, b) => "Semaine " + a + " <small>sur " + b + "</small>",
+    weeksLeft: n => n === 0 ? "<b>Dernière semaine !</b>" : n === 1 ? "plus qu’<b>1 semaine</b>" : "encore <b>" + n + " semaines</b>", toExams: n => n === 1 ? "<b>1 jour</b> avant les examens" : "<b>" + n + " jours</b> avant les examens",
+    examsNow: "Période d’examens", examsLeft: n => "encore <b>" + n + " jours</b> d’examens", semBefore: n => "Le semestre commence dans " + n + " jours", semOver: "Semestre terminé 🎉", semEnded: "Semestre terminé",
+    pctSem: n => n + " % du semestre", examsLbl: "📝 Examens", semGuess: "Dates estimées à partir de Moodle. Vérifiez-les avec le calendrier de votre établissement :",
+    semDates: "Dates du semestre", semHint: "Par défaut, calculées à partir des dates des cours Moodle. Vous pouvez les corriger selon le calendrier de votre établissement.", semStart: "Début du semestre", semEnd: "Dernier jour de cours",
+    exStart: "Début des examens", exEnd: "Fin des examens", semAuto: "↺ Revenir aux dates automatiques",
+    newsTitle: "Annonces des cours", newsNone: "Aucune annonce depuis 45 jours", newsOff: "Impossible de charger les annonces", markAllRead: "Tout marquer comme lu", newsOpen: "Ouvrir dans le forum ↗",
+    newsMore: n => n + " de plus", newsLess: "Afficher moins", newsLoading: "Chargement des annonces…",
   },
 };
 function pickLang() {
@@ -548,7 +748,7 @@ async function fetchAll() {
   };
   const info = await call("core_webservice_get_site_info");
   const raw = await call("core_enrol_get_users_courses", { userid: info.userid });
-  const courses = raw.map(c => ({ id: Number(c.id), name: stripHtml(c.fullname || c.shortname || String(c.id)), end: Number(c.enddate) || 0 }));
+  const courses = raw.map(c => ({ id: Number(c.id), name: stripHtml(c.fullname || c.shortname || String(c.id)), start: Number(c.startdate) || 0, end: Number(c.enddate) || 0 }));
   const ids = courses.map(c => c.id), names = Object.fromEntries(courses.map(c => [c.id, c.name]));
   const now = Math.floor(Date.now() / 1000), tasks = [];
   const site = p => M.url + "/mod/" + p;
@@ -587,7 +787,30 @@ async function fetchAll() {
       due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "",
       intro: stripHtml(e.description), links: introLinks(e.description), files: [], url: e.url || act.url || "" });
   }
-  return { tasks, diag: [...diag], courses, user: info.fullname || "", at: now, contents: (V.data && V.data.contents) || {} };
+  return { tasks, diag: [...diag], courses, user: info.fullname || "", at: now, contents: (V.data && V.data.contents) || {}, news: (V.data && V.data.news) || null };
+}
+/* announcements: the "news" forum of every current course (the one teachers post to) */
+async function fetchNews(d) {
+  const now = nowS();
+  const cids = d.courses.filter(c => !isOff(c.id) && (!c.end || c.end > now - 14 * DAY)).map(c => c.id);
+  if (!cids.length) return [];
+  const fr = await call("mod_forum_get_forums_by_courses", { courseids: cids });
+  const forums = (Array.isArray(fr) ? fr : []).filter(f => f.type === "news" && cids.includes(Number(f.course)));
+  const res = await pool(forums, 3, async f => {
+    try { return [f, await call("mod_forum_get_forum_discussions", { forumid: f.id, page: 0, perpage: 6 })]; }
+    catch (e) {
+      if (e.code === "invalidtoken" || e.code === "network") throw e;
+      try { return [f, await call("mod_forum_get_forum_discussions_paginated", { forumid: f.id, sortby: "timemodified", sortdirection: "DESC", page: 0, perpage: 6 })]; } catch (e2) { return [f, null]; }
+    }
+  });
+  const out = [];
+  for (const [f, r] of res) for (const p of (r && r.discussions) || []) {
+    const at = Number(p.created || p.timemodified) || 0; if (at < now - 45 * DAY) continue;
+    out.push({ id: Number(p.discussion || p.id), cid: Number(f.course), subj: stripHtml(p.subject || p.name || ""), msg: stripHtml(p.message || "").slice(0, 3000),
+      by: stripHtml(p.userfullname || ""), at, pinned: !!p.pinned, url: M.url + "/mod/forum/discuss.php?d=" + Number(p.discussion || p.id),
+      files: (p.attachments || []).map(a => ({ n: a.filename || "", u: a.fileurl || "", s: a.filesize || 0 })).filter(a => a.u).slice(0, 6), links: introLinks(p.message) });
+  }
+  return out.sort((a, b) => b.at - a.at).slice(0, 25);
 }
 /* the course topic (section) that holds a task usually also holds its exercise sheet / slides: keep those files per task */
 async function fetchContents(d) {
@@ -617,9 +840,12 @@ async function fetchContents(d) {
 }
 
 /* ---------- state ---------- */
-const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [] }, LS.get("prefs", {}));
+const DAY = 86400;
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {} }, LS.get("prefs", {}));
 if (!Array.isArray(P.manual)) P.manual = [];
-const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null };
+if (!Array.isArray(P.tt)) P.tt = [];
+if (!P.sem || typeof P.sem !== "object") P.sem = {};
+const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set() };
 const savePrefs = () => LS.set("prefs", P);
 const isOff = cid => P.off.includes(cid);
 function hslHex(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); }
@@ -856,9 +1082,204 @@ function renderDash(d, now) {
   tb.hidden = !urgent; tb.textContent = urgent;
 }
 
+/* ---------- semester progress ---------- */
+const addD = (ts, n) => { const d = new Date(ts * 1000); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + n); return d.getTime() / 1000; };
+const dayStart = ts => addD(ts, 0);
+const parseYmd = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || ""); return m ? new Date(+m[1], +m[2] - 1, +m[3]).getTime() / 1000 : 0; };
+const ymd = ts => dayKey(new Date(ts * 1000));
+const median = a => { a = a.slice().sort((x, y) => x - y); return a.length ? a[Math.floor((a.length - 1) / 2)] : 0; };
+const daysBetween = (a, b) => Math.round((dayStart(b) - dayStart(a)) / DAY);
+function shortDate(ts) { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric" }); } catch (e) { return ymd(ts); } }
+/* defaults from the Moodle dates of the current courses; Moodle often leaves a one-year end date, so a too-long one is replaced by 13 weeks */
+function semAuto(d, now) {
+  const cs = ((d && d.courses) || []).filter(c => !isOff(c.id) && c.start && c.start < now + 60 * DAY && c.start > now - 250 * DAY && (!c.end || c.end > now - 30 * DAY));
+  let s = median(cs.map(c => c.start));
+  if (!s) { const n = new Date(now * 1000), y = n.getFullYear(), mo = n.getMonth(); s = new Date(mo >= 8 ? y : mo < 2 ? y - 1 : y, mo >= 8 || mo < 2 ? 9 : mo < 6 ? 2 : 6, mo >= 8 || mo < 2 ? 20 : 1).getTime() / 1000; }
+  const ends = cs.map(c => c.end).filter(e => e && e - s > 50 * DAY && e - s < 200 * DAY);
+  return { s: dayStart(s), e: ends.length ? addD(median(ends), 1) : addD(s, 13 * 7) };
+}
+/* all ends are exclusive (midnight after the last day) */
+function semDates(d, now) {
+  const a = semAuto(d, now), S = P.sem;
+  const s = parseYmd(S.s) || a.s;
+  let e = S.e ? addD(parseYmd(S.e), 1) : a.e; if (e <= s) e = addD(s, 7);
+  let xs = parseYmd(S.xs) || e; if (xs < e) xs = e;
+  let xe = S.xe ? addD(parseYmd(S.xe), 1) : addD(xs, 5 * 7); if (xe <= xs) xe = addD(xs, 7);
+  return { s, e, xs, xe, guess: !S.ok };
+}
+function renderSem(d, now) {
+  const D = semDates(d, now), segs = [];
+  for (let a = D.s, i = 1; a < D.e; a = addD(a, 7), i++) segs.push({ a, b: Math.min(addD(a, 7), D.e), k: "w", n: i });
+  if (D.xs > D.e) segs.push({ a: D.e, b: D.xs, k: "gap" });
+  for (let a = D.xs; a < D.xe; a = addD(a, 7)) segs.push({ a, b: Math.min(addD(a, 7), D.xe), k: "x" });
+  const weeks = segs.filter(x => x.k === "w").length, cur = segs.find(x => x.k !== "gap" && now >= x.a && now < x.b);
+  const bar = segs.map(x => {
+    const f = Math.max(0, Math.min(1, (now - x.a) / (x.b - x.a)));
+    return '<i class="sg ' + x.k + (x === cur ? " cur" : "") + '" style="flex:' + Math.round((x.b - x.a) / 3600) + '">' + (x.k !== "gap" && f > 0 ? '<b style="width:' + (f * 100).toFixed(1) + '%"></b>' : "") + "</i>";
+  }).join("");
+  const nums = segs.map(x => '<span style="flex:' + Math.round((x.b - x.a) / 3600) + '"' + (x === cur && x.k === "w" ? ' class="cur"' : "") + ">" + (x.k === "w" ? x.n : "") + "</span>").join("");
+  let big = "", sub = "";
+  if (now < D.s) big = esc(t("semBefore", daysBetween(now, D.s)));
+  else if (now < D.e) {
+    const wk = Math.min(weeks, Math.floor((now - D.s) / (7 * DAY)) + 1);
+    big = "<span>" + t("weekOf", wk, weeks) + '</span><small class="pc">' + esc(t("pctSem", Math.round(100 * (now - D.s) / (D.e - D.s)))) + "</small>";
+    sub = t("weeksLeft", weeks - wk) + " · " + t("toExams", daysBetween(now, D.xs));
+  } else if (now < D.xs) { big = esc(t("semEnded")); sub = t("toExams", daysBetween(now, D.xs)); }
+  else if (now < D.xe) { big = esc(t("examsNow")); sub = t("examsLeft", daysBetween(now, D.xe)); }
+  else big = esc(t("semOver"));
+  $("#sem").innerHTML = '<div class="big">' + big + '</div><div class="sub">' + sub + "</div>" +
+    '<div class="sbar" role="img" aria-label="' + esc(stripTags(big + " " + sub)) + '">' + bar + '</div><div class="snum" aria-hidden="true">' + nums + "</div>" +
+    '<div class="slbl"><span>' + esc(shortDate(D.s)) + '</span><span class="xl">' + esc(t("examsLbl")) + ' <bdi dir="ltr">' + esc(shortDate(D.xs) + "–" + shortDate(addD(D.xe, -1))) + "</bdi></span>" + "</div>" +
+    (D.guess ? '<div class="guess">' + esc(t("semGuess")) + ' <button class="link" data-semedit>' + esc(t("edit")) + "</button></div>" : "");
+}
+const stripTags = s => String(s).replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+
+/* ---------- weekly timetable (kept on this device; Moodle has no timetable) ---------- */
+const KINDS = [["lec", "kLec"], ["ex", "kEx"], ["lab", "kLab"], ["other", "kOther"]];
+const hm = s => { const m = /^(\d{1,2}):(\d{2})$/.exec(s || ""); return m && +m[1] < 24 && +m[2] < 60 ? +m[1] * 60 + +m[2] : NaN; };
+const fmtHM = m => String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0");
+function dayName(i, style) { try { return new Date(2024, 0, 7 + i).toLocaleDateString(t("locale"), { weekday: style || "long" }); } catch (e) { return String(i); } }
+const codeOf = name => { const m = /^\s*(\d{5,7})[.\s-]/.exec(name || ""); return m ? m[1] : ""; };
+function ttCid(x) {
+  const cs = (V.data && V.data.courses) || [];
+  if (x.cid && cs.some(c => c.id === x.cid)) return x.cid;
+  if (x.code) { const c = cs.find(c => codeOf(c.name) === x.code && !isOff(c.id)) || cs.find(c => codeOf(c.name) === x.code); if (c) return c.id; }
+  return 0;
+}
+function ttColor(x) { const cid = ttCid(x); return cid ? colorOf(cid) : (x.color || FIXED_COLORS[x.code] || "#868e96"); }
+function ttName(x) {
+  if (x.title) return x.title;
+  const cid = ttCid(x), c = cid && V.data.courses.find(y => y.id === cid);
+  return c ? shortName(c.name) : t("other");
+}
+const ttKind = x => t((KINDS.find(k => k[0] === x.kind) || KINDS[3])[1]);
+/* entries that come from a link (or old storage) are checked field by field: they end up in style attributes and the page */
+function cleanTT(list) {
+  if (!Array.isArray(list)) return null;
+  const out = [];
+  for (const x of list.slice(0, 80)) {
+    if (!x || typeof x !== "object") continue;
+    const day = Number(x.day), s = hm(x.s), e = hm(x.e);
+    if (!(day >= 0 && day <= 6 && Number.isInteger(day)) || !(s < e)) continue;
+    const str = v => String(v == null ? "" : v).slice(0, 60);
+    out.push({ id: typeof x.id === "string" && /^[a-z0-9]{1,16}$/.test(x.id) && !out.some(y => y.id === x.id) ? x.id : Math.random().toString(36).slice(2, 10), cid: Number.isInteger(x.cid) ? x.cid : 0,
+      code: /^\d{5,7}$/.test(x.code) ? x.code : "", title: str(x.title), kind: KINDS.some(k => k[0] === x.kind) ? x.kind : "other",
+      day, s: fmtHM(s), e: fmtHM(e), place: str(x.place), color: /^#[0-9a-f]{6}$/i.test(x.color) ? x.color : "" });
+  }
+  return out;
+}
+P.tt = cleanTT(P.tt) || [];
+function renderTT(now) {
+  const L = P.tt, el = $("#tt");
+  if (!L.length) { el.innerHTML = '<div class="ttempty">' + esc(t("ttEmpty")) + "</div>"; return; }
+  const days = [0, 1, 2, 3, 4, 5, 6].filter(d => d <= 4 || L.some(x => x.day === d));
+  const h0 = Math.floor(Math.min(...L.map(x => hm(x.s))) / 60) * 60, h1 = Math.ceil(Math.max(...L.map(x => hm(x.e))) / 60) * 60;
+  const nd = new Date(now * 1000), td = nd.getDay(), nowM = nd.getHours() * 60 + nd.getMinutes();
+  const pos = m => "calc(var(--pph) * " + ((m - h0) / 60).toFixed(4) + ")";
+  let h = '<div class="ttgrid" style="--nd:' + days.length + ";--rows:" + (h1 - h0) / 60 + '"><span></span>';
+  h += days.map(d => '<div class="th' + (d === td ? " on" : "") + '"><span>' + esc(dayName(d, "short")) + "</span></div>").join("");
+  h += '<div class="tthr">' + Array.from({ length: (h1 - h0) / 60 }, (_, i) => '<span style="top:' + pos(h0 + i * 60) + '">' + fmtHM(h0 + i * 60) + "</span>").join("") + "</div>";
+  for (const d of days) {
+    const items = L.filter(x => x.day === d).map(x => ({ x, s: hm(x.s), e: hm(x.e) })).sort((a, b) => a.s - b.s || b.e - a.e);
+    // side by side when two classes overlap
+    let grp = [], end = -1; const groups = [];
+    for (const it of items) { if (grp.length && it.s >= end) { groups.push(grp); grp = []; end = -1; } grp.push(it); end = Math.max(end, it.e); }
+    if (grp.length) groups.push(grp);
+    for (const g of groups) { const lanes = []; for (const it of g) { let k = lanes.findIndex(e => e <= it.s); if (k < 0) { k = lanes.length; lanes.push(0); } lanes[k] = it.e; it.lane = k; } g.forEach(it => it.n = lanes.length); }
+    h += '<div class="ttc' + (d === td ? " on" : "") + '">' + items.map(it => {
+      const x = it.x, live = d === td && nowM >= it.s && nowM < it.e;
+      return '<button class="tte' + (live ? " now" : "") + '" data-tte="' + esc(x.id) + '" style="--c:' + ttColor(x) + ";top:" + pos(it.s) + ";height:calc(" + pos(it.e) + " - " + pos(it.s) + " - 2px);inset-inline-start:" +
+        (100 * it.lane / it.n).toFixed(2) + "%;width:calc(" + (100 / it.n).toFixed(2) + '% - 2px)"><b><bdi>' + esc(ttName(x)) + "</bdi></b>" + (x.place ? '<span class="pl"><bdi>' + esc(x.place) + "</bdi></span>" : "") + '<span class="tk">' + esc(ttKind(x)) +
+        '</span><span class="tm"><bdi dir="ltr">' + esc(x.s + "–" + x.e) + "</bdi></span></button>";
+    }).join("") + (d === td && nowM >= h0 && nowM <= h1 ? '<i class="ttnow" style="top:' + pos(nowM) + '"></i>' : "") + "</div>";
+  }
+  el.innerHTML = h + "</div>";
+}
+function renderToday(now) {
+  const el = $("#today"), nd = new Date(now * 1000), dow = nd.getDay(), nowM = nd.getHours() * 60 + nd.getMinutes() + nd.getSeconds() / 60;
+  $("#todayTitle").textContent = t("todayClasses") + " · " + dayName(dow);
+  if (!P.tt.length) { el.innerHTML = '<button class="link" data-ttadd>' + esc(t("ttSetup")) + "</button>"; return; }
+  const dur = m => { m = Math.max(1, Math.round(m)); return t("durHM", Math.floor(m / 60), m % 60); };
+  const items = P.tt.filter(x => x.day === dow).sort((a, b) => hm(a.s) - hm(b.s));
+  let h = "", nextShown = false;
+  for (const x of items) {
+    const s = hm(x.s), e = hm(x.e), st = nowM >= e ? "past" : nowM >= s ? "now" : !nextShown ? "next" : "";
+    if (st === "next") nextShown = true;
+    const txt = st === "now" ? t("nowLbl") + "<br>" + esc(t("endsIn", dur(e - nowM))) : st === "next" ? esc(t("startsIn", dur(s - nowM))) : st === "past" ? "✓" : "";
+    h += '<button class="tr ' + st + '" data-ttgo style="--c:' + ttColor(x) + '"><span class="tm">' + esc(x.s) + "<br>" + esc(x.e) + '</span><span class="tb"><b><bdi>' + esc(ttName(x)) +
+      "</bdi></b><small>" + esc(ttKind(x)) + (x.place ? " · <bdi>" + esc(x.place) + "</bdi>" : "") + '</small></span><span class="ts">' + txt + "</span></button>";
+  }
+  if (!items.length || items.every(x => hm(x.e) <= nowM)) {
+    let nx = null;
+    for (let i = 1; i <= 7 && !nx; i++) { const dd = (dow + i) % 7, l = P.tt.filter(x => x.day === dd).sort((a, b) => hm(a.s) - hm(b.s)); if (l.length) nx = { i, dd, x: l[0], n: l.length }; }
+    h += '<div class="nx">' + esc(items.length ? t("dayOver") : t("noClassesToday")) +
+      (nx ? "<br>" + t("nextClass", esc(nx.i === 1 ? dayName(nx.dd) : dayName(nx.dd)), esc(nx.x.s), "<bdi>" + esc(ttName(nx.x)) + "</bdi>") : "") + "</div>";
+  }
+  el.innerHTML = h;
+}
+let ttEditId = null;
+function openTT(id) {
+  ttEditId = id || null;
+  const x = P.tt.find(y => y.id === id) || { day: new Date().getDay() <= 4 ? new Date().getDay() : 0, s: "08:30", e: "10:10", kind: "lec", title: "", place: "" };
+  const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id) || c.id === ttCid(x));
+  $("#fCourse").innerHTML = cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + '<option value="0">' + esc(t("ttOtherCourse")) + "</option>";
+  $("#fCourse").value = String(id ? ttCid(x) : (cs[0] ? cs[0].id : 0));
+  $("#fTitle").value = x.title || ""; $("#fPlace").value = x.place || ""; $("#fS").value = x.s; $("#fE").value = x.e;
+  $("#fKind").innerHTML = KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join(""); $("#fKind").value = x.kind;
+  $("#fDay").innerHTML = [0, 1, 2, 3, 4, 5, 6].map(i => '<option value="' + i + '">' + esc(dayName(i)) + "</option>").join(""); $("#fDay").value = String(x.day);
+  ttTitlePh();
+  $("#ttFormTitle").textContent = t(id ? "ttEditTitle" : "ttNewTitle"); $("#fDel").hidden = !id; $("#fErr").textContent = "";
+  $("#ttSheet").hidden = false;
+}
+function ttTitlePh() { const c = ((V.data && V.data.courses) || []).find(y => y.id === Number($("#fCourse").value)); $("#fTitle").placeholder = c ? shortName(c.name) : ""; }
+function saveTT() {
+  const cid = Number($("#fCourse").value) || 0, c = cid && V.data && V.data.courses.find(y => y.id === cid);
+  const title = $("#fTitle").value.trim(), s = hm($("#fS").value), e = hm($("#fE").value);
+  if (!c && !title) return $("#fErr").textContent = t("ttNeedName");
+  if (!(s < e)) return $("#fErr").textContent = t("ttBadTime");
+  const old = P.tt.find(y => y.id === ttEditId) || {};
+  const x = cleanTT([{ id: ttEditId || undefined, cid, code: c ? codeOf(c.name) : (cid ? old.code : ""), title, kind: $("#fKind").value, day: Number($("#fDay").value), s: fmtHM(s), e: fmtHM(e), place: $("#fPlace").value.trim(), color: c ? "" : old.color }])[0];
+  P.tt = ttEditId ? P.tt.map(y => y.id === ttEditId ? x : y) : [...P.tt, x];
+  savePrefs(); $("#ttSheet").hidden = true; render();
+}
+const b64enc = s => btoa(String.fromCharCode(...new TextEncoder().encode(s))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+async function shareTT() {
+  if (!P.tt.length) return toast(t("ttNothing"));
+  const link = location.origin + location.pathname + "#tt=" + b64enc(JSON.stringify(P.tt.map(({ id, cid, ...r }) => r)));
+  try { if (navigator.share && !wide()) { await navigator.share({ title: t("ttTitle"), url: link }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
+  try { await navigator.clipboard.writeText(link); toast(t("ttCopied"), 5000); } catch (e) { prompt(t("ttTitle"), link); }
+}
+function importTT(raw) {
+  let list = null;
+  try { list = cleanTT(JSON.parse(b64dec(raw))); } catch (e) {}
+  if (!list || !list.length) return toast(t("ttBadLink"));
+  if (P.tt.length && !confirm(t("ttReplace", P.tt.length))) return;
+  P.tt = list; savePrefs(); toast(t("ttImported", list.length));
+}
+
+/* ---------- announcements ---------- */
+const newsBase = () => { let b = LS.get("newsBase", 0); if (!b) { b = nowS() - 3 * DAY; LS.set("newsBase", b); } return b; };
+const newsRead = () => LS.get("newsRead", []);
+const isNewNews = n => n.at > newsBase() && !newsRead().includes(n.id);
+function markRead(ids) { const r = newsRead(); for (const i of ids) if (!r.includes(i)) r.push(i); LS.set("newsRead", r.slice(-300)); }
+function renderNews(d) {
+  const el = $("#news"), all = d.news;
+  if (!all) { el.innerHTML = '<div class="hint">' + esc(V.loading || V.newsLoading ? t("newsLoading") : t("newsOff")) + "</div>"; $("#newsBadge").hidden = true; $("#bNewsRead").hidden = true; return; }
+  const L = all.filter(n => !isOff(n.cid)), fresh = L.filter(isNewNews).length;
+  $("#newsBadge").hidden = !fresh; $("#newsBadge").textContent = fresh; $("#bNewsRead").hidden = !fresh;
+  if (!L.length) { el.innerHTML = '<div class="hint">' + esc(t("newsNone")) + "</div>"; return; }
+  const N = 4, shown = V.newsAll ? L : L.slice(0, N);
+  el.innerHTML = shown.map(n => {
+    const c = d.courses.find(y => y.id === n.cid), own = (n.files || []).concat((n.links || []).map(l => ({ n: l.n, u: l.u, link: /\/pluginfile\.php\//.test(l.u) ? 0 : 1 })));
+    return '<details class="ni' + (isNewNews(n) ? " new" : "") + '" data-nid="' + n.id + '" style="--c:' + colorOf(n.cid) + '"' + (V.newsOpen.has(n.id) ? " open" : "") + '><summary><span class="nt"><b><bdi>' + esc(n.subj) + "</bdi></b><small><bdi>" +
+      esc(shortName(c ? c.name : "")) + "</bdi>" + (n.by ? " · <bdi>" + esc(n.by) + "</bdi>" : "") + " · " + esc(ago(n.at)) + '</small></span></summary><div class="nm"><pre>' + esc(n.msg) + "</pre>" +
+      (own.length ? '<div class="files">' + own.map(fileLink).join("") + "</div>" : "") + '<a class="op" href="' + esc(n.url) + '" target="_blank" rel="noopener noreferrer">' + esc(t("newsOpen")) + "</a></div></details>";
+  }).join("") + (L.length > N ? '<button class="link" id="bNewsMore">' + esc(V.newsAll ? t("newsLess") : t("newsMore", L.length - N)) + "</button>" : "");
+}
+
 /* ---------- render: everything ---------- */
 function setView(v) {
-  V.view = v === "tasks" ? "tasks" : "dash"; LS.set("view", V.view); document.body.dataset.view = V.view;
+  V.view = v === "tasks" || v === "tt" ? v : "dash"; LS.set("view", V.view); document.body.dataset.view = V.view;
   $$("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.v === V.view));
 }
 const wide = () => window.matchMedia("(min-width:760px)").matches;
@@ -869,9 +1290,10 @@ function render() {
   const bn = $("#banner");
   if (V.err) { bn.hidden = false; bn.className = "banner err"; bn.textContent = V.err + (d ? t("lastData") : ""); }
   else bn.hidden = true;
+  { const now = nowS(); renderTT(now); renderToday(now); renderSem(d, now); }
   if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">' + esc(t("loadingTasks")) + "</div>" : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
   const now = nowS();
-  renderDash(d, now);
+  renderDash(d, now); renderNews(d);
   // focus bar (a day / course / group picked on the dashboard)
   const f = V.focus, fb = $("#focus");
   if (f) {
@@ -915,6 +1337,7 @@ function render() {
 
   const relv = d.tasks.filter(x => counted(x) && !isDone(x) && groupOf(x, now) !== "old");
   const dated = relv.filter(x => x.due), late = dated.filter(x => x.due < now), next = dated.filter(x => x.due >= now).sort((a, b) => a.due - b.due)[0];
+  $("#sechN").textContent = late.length ? t("sumLate", late.length) : "";
   $("#sum").innerHTML = t("sumOpen", dated.length) + (late.length ? ' · <b class="late">' + esc(t("sumLate", late.length)) + "</b>" : "") +
     (next ? '<div class="next">' + esc(t("next")) + " <b><bdi>" + esc(next.name) + "</bdi></b> · " + cdSpan(next.due, now) + "</div>" : "");
   const urgent = dated.filter(x => ["late", "today", "week"].includes(groupOf(x, now))).length;
@@ -924,6 +1347,9 @@ function render() {
 function renderSheet() {
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
   $("#who").innerHTML = d ? (d.user ? "<bdi>" + esc(d.user) + "</bdi> · " : "") + "<bdi>" + esc(M.url.replace(/^https?:\/\//, "")) + "</bdi>" : esc(M.url);
+  const D = semDates(d, nowS()), sv = { s: D.s, e: addD(D.e, -1), xs: D.xs, xe: addD(D.xe, -1) };
+  $$("[data-sem]").forEach(i => i.value = ymd(sv[i.dataset.sem]));
+  $("#bSemAuto").hidden = !Object.keys(P.sem).length;
   $("#clist").innerHTML = d ? d.courses.map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span><bdi>" + esc(shortName(c.name)) + "</bdi></span></label>" +
     '<input type="color" data-cc="' + c.id + '" value="' + colorOf(c.id) + '"></div>').join("") : "";
 }
@@ -977,8 +1403,14 @@ async function refresh() {
     V.err = e.message;
     if (e.code === "invalidtoken") { V.loading = false; render(); return showSetup(e.message); }
   }
-  V.loading = false; render();
-  if (d) { try { d.contents = await fetchContents(d); if (V.data === d) { LS.set("cache", d); render(); } } catch (e) {} }
+  V.loading = false; if (d) V.newsLoading = true; render();
+  if (d) {
+    const [c, n] = await Promise.all([fetchContents(d).catch(() => null), fetchNews(d).catch(() => null)]);
+    V.newsLoading = false;
+    if (c) d.contents = c;
+    if (n) d.news = n;
+    if (V.data === d) { LS.set("cache", d); render(); }
+  }
 }
 function launchUrl(site) {
   // Moodle's mobile-app launch page. confirmed=1 makes it show a link with the token (instead of only trying to open the app), on Android too
@@ -998,8 +1430,9 @@ function showMain() {
 }
 function importFromHash() {
   const h = location.hash.slice(1); if (!h) return false;
-  const q = new URLSearchParams(h), tk = q.get("t");
+  const q = new URLSearchParams(h), tk = q.get("t"), tt = q.get("tt");
   history.replaceState(null, "", location.pathname + location.search);   // the token does not stay in the address bar or history
+  if (tt) importTT(tt);
   if (!tk || !/^[A-Za-z0-9]+$/.test(tk)) return false;
   LS.set("token", tk); LS.set("site", normUrl(q.get("u") || DEFAULT_SITE)); LS.del("cache"); V.data = null;
   const p = q.get("p");
@@ -1065,6 +1498,38 @@ $("#dash").addEventListener("click", e => {
   const fc = e.target.closest("[data-fc]"); if (fc) return goTasks({ kind: "course", cid: Number(fc.dataset.fc) });
   const go = e.target.closest("[data-goto]"); if (go) return gotoTask(go.dataset.goto);
 });
+function goTT() { if (wide()) $("#ttCard").scrollIntoView({ block: "start", behavior: "smooth" }); else { setView("tt"); render(); window.scrollTo(0, 0); } }
+function openSemSettings() { renderSheet(); $("#sheet").hidden = false; setTimeout(() => $("#semSet").scrollIntoView({ block: "start" }), 30); }
+$("#dash").addEventListener("click", e => {
+  if (e.target.closest("[data-semedit]")) return openSemSettings();
+  if (e.target.closest("[data-ttadd]")) return openTT();
+  if (e.target.closest("[data-ttgo]")) return goTT();
+  if (e.target.closest("#bNewsMore")) { V.newsAll = !V.newsAll; return render(); }
+  const s = e.target.closest(".ni summary");
+  if (s) {
+    const it = s.parentElement, id = Number(it.dataset.nid);
+    if (it.open) V.newsOpen.delete(id); else { V.newsOpen.add(id); markRead([id]); it.classList.remove("new"); }
+    const fresh = ((V.data && V.data.news) || []).filter(n => !isOff(n.cid) && isNewNews(n)).length;
+    $("#newsBadge").hidden = !fresh; $("#newsBadge").textContent = fresh; $("#bNewsRead").hidden = !fresh;
+  }
+});
+$("#bNewsRead").onclick = () => { markRead(((V.data && V.data.news) || []).map(n => n.id)); render(); };
+$("#bTtGo").onclick = goTT;
+$("#bSemEdit").onclick = openSemSettings;
+$("#bTtAdd").onclick = () => openTT();
+$("#bTtShare").onclick = shareTT;
+$("#tt").addEventListener("click", e => { const b = e.target.closest("[data-tte]"); if (b) openTT(b.dataset.tte); });
+$("#ttClose").onclick = () => $("#ttSheet").hidden = true;
+$("#ttSheet").addEventListener("click", e => { if (e.target.id === "ttSheet") $("#ttSheet").hidden = true; });
+$("#fCourse").onchange = ttTitlePh;
+$("#fSave").onclick = saveTT;
+$("#fDel").onclick = () => { if (!confirm(t("delConfirm"))) return; P.tt = P.tt.filter(y => y.id !== ttEditId); savePrefs(); $("#ttSheet").hidden = true; render(); };
+$$("[data-sem]").forEach(i => i.addEventListener("change", () => {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(i.value)) P.sem[i.dataset.sem] = i.value; else delete P.sem[i.dataset.sem];
+  P.sem.ok = true; savePrefs(); render(); renderSheet();
+}));
+$("#bSemAuto").onclick = () => { P.sem = {}; savePrefs(); render(); renderSheet(); };
+window.addEventListener("hashchange", () => { if (!location.hash) return; if (importFromHash()) showMain(); else render(); });
 $("#mPrev").onclick = () => { V.monthOff--; render(); };
 $("#mNext").onclick = () => { V.monthOff++; render(); };
 $("#mToday").onclick = () => { V.monthOff = 0; render(); };
