@@ -2,7 +2,7 @@
 // הבקשות ל-Moodle לא עוברות כאן ולא נשמרות במטמון.
 // the beta (…/beta/) and the regular app share one site: each keeps and cleans only its own cache
 const CH = /\/beta\/$/.test(self.registration.scope) ? "beta-" : "";
-const CACHE = "moodle-tasks-" + CH + "v21";
+const CACHE = "moodle-tasks-" + CH + "v22";
 const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -14,6 +14,7 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const u = new URL(e.request.url);
   if (e.request.method !== "GET" || u.origin !== self.location.origin) return;
+  if (/\.mp4$/.test(u.pathname)) return;      // videos go straight to the network (phones ask for them in byte ranges)
   e.respondWith(caches.open(CACHE).then(async c => {
     const hit = await c.match(e.request, { ignoreSearch: true });
     const net = fetch(e.request).then(r => { if (r.ok) c.put(e.request, r.clone()); return r; }).catch(() => hit);

@@ -162,6 +162,13 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 /* versions + reminders */
 .betatag{font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--warn);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:3px}
 .wnv{margin:8px 0}
+.gvid{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0 4px;background:var(--row)}
+.gvt{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-bottom:8px}
+.gvbox{display:flex;gap:12px;align-items:flex-start}
+.gvbox video{flex:none;width:min(150px,40%);aspect-ratio:384/848;border-radius:14px;background:#000;border:3px solid #111;box-shadow:0 4px 16px #0003}
+.gvcap{margin:0;padding-inline-start:20px;font-size:14px;line-height:1.45;display:flex;flex-direction:column;gap:6px;color:var(--muted)}
+.gvcap li.on{color:var(--text);font-weight:700}
+.gvcap li.on::marker{color:var(--accent-t)}
 .lvsteps{margin:8px 0 10px;padding-inline-start:22px;line-height:1.6}
 .lvsteps li{margin-bottom:8px}
 .lvsteps b{color:var(--accent-t)}
@@ -545,6 +552,13 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div class="langrow"><span aria-hidden="true">🌐</span><select class="langSel" aria-label="Language"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
     <h2 data-i18n="setupTitle"></h2>
     <div class="hint" data-i18n="setupHint"></div>
+    <div class="gvid" id="gVid">
+      <div class="gvt"><b data-i18n="vidTitle"></b><span class="hint" id="vidNote"></span></div>
+      <div class="gvbox">
+        <video id="vid" src="media/guide-iphone.mp4" poster="media/guide-iphone.jpg" muted playsinline loop preload="metadata" controls></video>
+        <ol class="gvcap" id="vidCap"></ol>
+      </div>
+    </div>
     <ol class="gsteps">
       <li class="gstep">
         <div class="gh"><span class="gn">1</span><b data-i18n="g1Title"></b></div>
@@ -861,6 +875,9 @@ const I18N = {
     pushReady: n => "🔔 ההתראות הופעלו" + (n ? " · " + n + " תזכורות בדרך" : ""), pushOnCard: "🔔 ההתראות פועלות במכשיר הזה",
     pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
     pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
+    vidTitle: "🎬 ככה זה נראה (12 שניות)", vidNoteIos: "צולם באייפון", vidNoteAndroid: "צולם באייפון. באנדרואיד זה כמעט אותו דבר", vidNotePc: "צולם באייפון. במחשב: קליק ימני על הקישור ← ״העתקת כתובת הקישור״",
+    vs1: "לוחצים <b>פתח את Moodle</b>", vs2: "נפתח Moodle. אם שואל ״לפתוח ב-Moodle?״, לוחצים <b>ביטול</b> (Cancel)", vs3: "<b>לחיצה ארוכה</b> על הקישור ״הקליקו כאן…״",
+    vs4: "גוררים אותו חזרה לכאן ומשחררים בשדה, או בוחרים <b>העתק קישור</b> ואז <b>הדבק וחבר</b>", vs5: "<b>התחבר</b>, וזהו",
     lvTitle: "📄 ייבוא המערכת מהלב נט", lvIntro: "פעם אחת בסמסטר, ושוב בכל פעם שהמערכת משתנה. לוקח דקה:",
     lvS1: "נכנסים ל<b>לב נט הישן</b> (לא החדש) ומתחברים.", lvS2: "בתפריט: <b>מערכת</b> ← <b>לו״ז</b>.",
     lvS3: "בוחרים <b>תצוגה כרשימה</b>, ו<b>מחכים כמה שניות</b> עד שהרשימה נטענת.", lvS4: "לוחצים <b>הורד בפורמט Excel</b>. הקובץ יורד למכשיר.",
@@ -1000,6 +1017,9 @@ const I18N = {
     pushReady: n => "🔔 Notifications on" + (n ? " · " + n + " reminders scheduled" : ""), pushOnCard: "🔔 Notifications are on for this device",
     pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
     pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
+    vidTitle: "🎬 What it looks like (12 seconds)", vidNoteIos: "Recorded on an iPhone", vidNoteAndroid: "Recorded on an iPhone. On Android it’s nearly the same", vidNotePc: "Recorded on an iPhone. On a computer: right-click the link → “Copy link address”",
+    vs1: "Tap <b>Open Moodle</b>", vs2: "Moodle opens. If it asks “Open in Moodle?”, tap <b>Cancel</b>", vs3: "<b>Long-press</b> the link “הקליקו כאן…” (click here)",
+    vs4: "Drag it back here and drop it in the box, or choose <b>Copy link</b> then <b>Paste & connect</b>", vs5: "<b>Connect</b>, done",
     lvTitle: "📄 Import your timetable from Levnet", lvIntro: "Once a semester, and again whenever your timetable changes. Takes a minute:",
     lvS1: "Open the <b>old Levnet</b> (not the new one) and sign in.", lvS2: "In the menu: <b>מערכת</b> (Timetable) → <b>לו״ז</b> (Schedule).",
     lvS3: "Choose <b>תצוגה כרשימה</b> (list view) and <b>wait a few seconds</b> for the list to load.", lvS4: "Tap <b>הורד בפורמט Excel</b> (download as Excel). The file downloads to your device.",
@@ -1139,6 +1159,9 @@ const I18N = {
     pushReady: n => "🔔 Notifications activées" + (n ? " · " + n + " rappels programmés" : ""), pushOnCard: "🔔 Notifications activées sur cet appareil",
     pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
     pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
+    vidTitle: "🎬 À quoi ça ressemble (12 secondes)", vidNoteIos: "Filmé sur iPhone", vidNoteAndroid: "Filmé sur iPhone. Sur Android c’est presque pareil", vidNotePc: "Filmé sur iPhone. Sur ordinateur : clic droit sur le lien → « Copier l’adresse du lien »",
+    vs1: "Touchez <b>Ouvrir Moodle</b>", vs2: "Moodle s’ouvre. S’il demande « Ouvrir dans Moodle ? », touchez <b>Annuler</b>", vs3: "<b>Appui long</b> sur le lien « הקליקו כאן… » (cliquez ici)",
+    vs4: "Faites-le glisser ici et lâchez-le dans le champ, ou choisissez <b>Copier le lien</b> puis <b>Coller et se connecter</b>", vs5: "<b>Se connecter</b>, c’est tout",
     lvTitle: "📄 Importer l’emploi du temps depuis Levnet", lvIntro: "Une fois par semestre, et à chaque changement d’emploi du temps. Une minute :",
     lvS1: "Ouvrez l’<b>ancien Levnet</b> (pas le nouveau) et connectez-vous.", lvS2: "Dans le menu : <b>מערכת</b> (Emploi du temps) → <b>לו״ז</b> (Horaire).",
     lvS3: "Choisissez <b>תצוגה כרשימה</b> (affichage en liste) et <b>attendez quelques secondes</b> que la liste se charge.", lvS4: "Touchez <b>הורד בפורמט Excel</b> (télécharger en Excel). Le fichier se télécharge.",
@@ -2225,7 +2248,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.1.1";
+const APP_VERSION = "1.1.2";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2800,7 +2823,21 @@ function detectPlat() {
   return /Android/i.test(ua) || (/Linux/i.test(ua) && touch) ? "android" : /iPhone|iPad|iPod/i.test(ua) || (/Mac/i.test(ua) && touch) ? "ios" : "pc";
 }
 let PLAT = detectPlat();
+/* the short video (a friend's iPhone): captions follow it, so it is clear what each moment shows */
+const VID_STEPS = [[0, "vs1"], [1.4, "vs2"], [5.3, "vs3"], [6.6, "vs4"], [10.6, "vs5"]];
+function renderVid() {
+  const v = $("#vid"); if (!v) return;
+  $("#vidCap").innerHTML = VID_STEPS.map(s => "<li>" + t(s[1]) + "</li>").join("");      // constant strings from I18N
+  $("#vidNote").textContent = t(PLAT === "ios" ? "vidNoteIos" : PLAT === "android" ? "vidNoteAndroid" : "vidNotePc");
+  vidMark();
+}
+function vidMark() {
+  const v = $("#vid"), ct = v ? v.currentTime : 0; let k = 0;
+  VID_STEPS.forEach((s, i) => { if (ct >= s[0]) k = i; });
+  $$("#vidCap li").forEach((li, i) => li.classList.toggle("on", i === k && v && (!v.paused || ct > 0)));
+}
 function renderGuide() {
+  renderVid();
   const key = PLAT === "android" ? "Android" : PLAT === "ios" ? "Ios" : "Pc";
   $$(".gtabs [data-plat]").forEach(b => { b.classList.toggle("on", b.dataset.plat === PLAT); b.setAttribute("aria-selected", b.dataset.plat === PLAT); });
   const items = t("menu" + key);
@@ -2862,6 +2899,15 @@ async function connectWith(raw) {
   catch (e) { $("#setupErr").textContent = e.message; }
 }
 $("#bConnect").onclick = () => connectWith($("#tok").value);
+if ($("#vid")) {
+  $("#vid").addEventListener("timeupdate", vidMark); $("#vid").addEventListener("play", vidMark);
+  // it plays by itself (no sound) once it's on screen, unless the phone asks for less motion
+  const reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) new IntersectionObserver(es => es.forEach(e => {
+    const v = $("#vid"); if (!v || $("#setup").hidden) return;
+    if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
+  }), { threshold: 0.5 }).observe($("#vid"));
+}
 $("#tok").addEventListener("keydown", e => { if (e.key === "Enter") connectWith($("#tok").value); });
 $("#bPaste").onclick = async () => {
   let txt = "";
