@@ -13,4 +13,4 @@
 | `POST /unsub` | `{endpoint}`: שוכח את המכשיר |
 | `POST /test` | `{endpoint, title, body}`: התראה אחת עכשיו |
 
-**העלאה:** אוטומטית מ-GitHub Actions (`.github/workflows/push-worker.yml`) בכל שינוי בתיקייה. צריך את ה-Secrets `CLOUDFLARE_API_TOKEN` ו-`CLOUDFLARE_ACCOUNT_ID`. אחרי ההעלאה הראשונה הכתובת `https://moodle-task-push.<subdomain>.workers.dev` נכנסת ל-`PUSH_URL` ב-`index.html`.
+**העלאה:** אוטומטית מ-GitHub Actions (`.github/workflows/push-worker.yml`) בכל שינוי בתיקייה. צריך Secret אחד, `CLOUDFLARE_API_TOKEN`; מספר החשבון כתוב ב-`wrangler.toml`. הכתובת של השרת, או השגיאה, מופיעה כהודעה בסיכום הריצה. אחרי ההעלאה הראשונה הכתובת `https://moodle-task-push.<subdomain>.workers.dev` נכנסת ל-`PUSH_URL` ב-`index.html`.
