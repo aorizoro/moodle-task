@@ -570,6 +570,25 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .sheet h3{margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
 .srow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .srow:last-child{border-bottom:0}
+.sheet h3 .sh{display:flex;align-items:center;gap:6px;min-width:0}
+.sback{font-size:20px;line-height:1;padding:2px 8px}
+.mgroup{background:var(--bg);border:1px solid var(--line);border-radius:14px;margin:0 0 14px;overflow:hidden}
+.mrow{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 14px}
+.mrow:last-child{border-bottom:0}
+.mrow:active{background:var(--accent-soft)}
+.mrow .mi{font-size:19px;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:var(--accent-soft);flex:none}
+.mrow .mt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.mrow .mt small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow::after{content:"\2039";color:var(--muted);font-size:22px;line-height:1}
+[dir=ltr] .mrow::after{content:"\203A"}
+.prow{display:block;width:100%;margin-top:8px;text-align:start}
+.stitle{margin-top:16px;font-weight:700}
+.spage>.hint{margin:4px 0 6px}
+.kwadd{display:flex;gap:8px;margin-top:6px}.kwadd input{flex:1;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.kwchip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--accent-soft);color:var(--text);border-radius:999px;padding:3px 6px 3px 10px;font-size:13px}
+.kwchip button{border:0;background:none;padding:0 6px;font-size:16px;line-height:1;color:var(--muted)}
+.kwchip.add{background:none;padding:3px 10px;color:var(--accent-t);cursor:pointer}
 .srow input[type=color]{width:38px;height:30px;border:0;padding:0;background:none}
 .srow .cn{display:flex;align-items:center;gap:8px;min-width:0}
 .srow .cn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -733,41 +752,91 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 
 <div class="sheet" id="sheet" hidden>
   <div class="box">
-    <h3><span data-i18n="settings"></span> <button class="link" id="bClose" data-i18n="close"></button></h3>
-    <div class="srow"><span data-i18n="language"></span><select class="langSel"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
-    <div class="srow"><span data-i18n="oldLabel"></span><select id="old"></select></div>
-    <div class="srow"><span><span data-i18n="showHidden"></span> (<span id="hidn">0</span>)</span><input type="checkbox" id="showHid"></div>
-    <div style="margin-top:14px;font-weight:700" data-i18n="coursesColors"></div>
-    <div class="hint" data-i18n="coursesHint"></div>
-    <div id="clist"></div>
-    <div style="margin-top:14px;font-weight:700" id="semSet" data-i18n="semDates"></div>
-    <div class="hint" data-i18n="semHint"></div>
-    <div class="srow"><span data-i18n="semStart"></span><input type="date" data-sem="s"></div>
-    <div class="srow"><span data-i18n="semEnd"></span><input type="date" data-sem="e"></div>
-    <div class="srow"><span data-i18n="exStart"></span><input type="date" data-sem="xs"></div>
-    <div class="srow"><span data-i18n="exEnd"></span><input type="date" data-sem="xe"></div>
-    <div class="hint" id="semSrc"></div>
-    <button class="link" id="bSemAuto" data-i18n="semAuto"></button>
-    <div style="margin-top:14px;font-weight:700" id="syncSet" data-i18n="syncTitle"></div>
-    <div class="srow"><span data-i18n="syncOnLbl"></span><input type="checkbox" id="syncOn"></div>
-    <div class="hint" data-i18n="syncHint"></div>
-    <div class="srow"><span class="hint" id="syncStatus"></span><button class="link" id="bSyncNow" data-i18n="syncNowBtn"></button></div>
-    <button id="bRem" style="width:100%;margin-top:14px" data-i18n="remTitle"></button>
-    <button id="bTheme" style="width:100%;margin-top:8px"><span data-i18n="thTitle"></span> · <span class="thcur"></span></button>
-    <button id="bDashArr" style="width:100%;margin-top:8px" data-i18n="daTitle"></button>
-    <button id="bCal" style="width:100%;margin-top:8px" data-i18n="calBtn"></button>
-    <button id="bTour" style="width:100%;margin-top:8px" data-i18n="tourOpen"></button>
-    <button id="bInst" style="width:100%;margin-top:8px" hidden data-i18n="instTitle"></button>
-    <div id="fbSet" hidden>
-      <div style="margin-top:14px;font-weight:700" data-i18n="fbTitle"></div>
-      <button id="bFb" style="width:100%;margin-top:6px" data-i18n="fbOpen"></button>
+    <h3><span class="sh"><button class="link sback" id="sBack" hidden data-i18n-aria="back"></button><span id="sTitle"></span></span> <button class="link" id="bClose" data-i18n="close"></button></h3>
+    <div id="sMenu">
+      <div class="mgroup">
+        <button class="mrow" data-go="notif"><span class="mi">🔔</span><span class="mt"><b data-i18n="sNotif"></b><small id="sumNotif"></small></span></button>
+        <button class="mrow" data-go="look"><span class="mi">🎨</span><span class="mt"><b data-i18n="sLook"></b><small id="sumLook"></small></span></button>
+        <button class="mrow" data-go="filter"><span class="mi">🔎</span><span class="mt"><b data-i18n="sFilter"></b><small id="sumFilter"></small></span></button>
+        <button class="mrow" data-go="courses"><span class="mi">📚</span><span class="mt"><b data-i18n="sCourses"></b><small id="sumCourses"></small></span></button>
+        <button class="mrow" data-go="sem"><span class="mi">📅</span><span class="mt"><b data-i18n="sSem"></b><small id="sumSem"></small></span></button>
+      </div>
+      <div class="mgroup">
+        <button class="mrow" data-go="acct"><span class="mi">☁️</span><span class="mt"><b data-i18n="sAcct"></b><small id="sumAcct"></small></span></button>
+        <button class="mrow" data-go="help"><span class="mi">💡</span><span class="mt"><b data-i18n="sHelp"></b><small id="sumHelp"></small></span></button>
+      </div>
+      <div class="byset hint by" data-i18n="byHii"></div>
+      <div class="hint" id="verLine" style="text-align:center"></div>
     </div>
-    <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
-    <div class="byset hint by" data-i18n="byHii"></div>
-    <div class="srow"><span class="hint" id="verLine"></span><button class="link" id="bWn" data-i18n="wnTitle"></button></div>
-    <button id="bUpd" style="width:100%;margin-top:6px" data-i18n="updCheck"></button>
-    <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
-    <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)" data-i18n="logout"></button>
+
+    <div class="spage" data-page="notif" hidden>
+      <div class="hint" data-i18n="sNotifHint"></div>
+      <button id="bRem" class="prow" data-i18n="remTitle"></button>
+      <button id="bCal" class="prow" data-i18n="calBtn"></button>
+    </div>
+
+    <div class="spage" data-page="look" hidden>
+      <div class="srow"><span data-i18n="language"></span><select class="langSel"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
+      <button id="bTheme" class="prow"><span data-i18n="thTitle"></span> · <span class="thcur"></span></button>
+      <button id="bDashArr" class="prow" data-i18n="daTitle"></button>
+      <div class="srow"><span data-i18n="cdxLbl"></span><input type="checkbox" id="cdx"></div>
+      <div class="hint" data-i18n="cdxHint"></div>
+    </div>
+
+    <div class="spage" data-page="filter" hidden>
+      <div class="hint" data-i18n="filterHint"></div>
+      <div class="stitle" data-i18n="oldTitle"></div>
+      <div class="srow"><span data-i18n="oldLabel"></span><select id="old"></select></div>
+      <div class="srow"><span data-i18n="oldHideLbl"></span><input type="checkbox" id="oldHide"></div>
+      <div class="stitle" data-i18n="zlTitle"></div>
+      <div class="hint" data-i18n="zlHint"></div>
+      <div class="srow"><select id="zl" style="width:100%"></select></div>
+      <div class="stitle" data-i18n="campusTitle"></div>
+      <div class="hint" data-i18n="campusHint"></div>
+      <div class="srow"><select id="campus" style="width:100%"></select></div>
+      <div class="stitle" data-i18n="kwTitle"></div>
+      <div class="hint" data-i18n="kwHint"></div>
+      <div class="kwadd"><input type="text" id="kwIn" maxlength="40" autocomplete="off" data-i18n-ph="kwPh"><button class="primary" id="kwAdd" data-i18n="kwAdd"></button></div>
+      <div class="chips" id="kwList"></div>
+      <div class="hint" id="kwSug"></div>
+      <div class="stitle" data-i18n="hidTitle"></div>
+      <div class="srow"><span><span data-i18n="showHidden"></span> (<span id="hidn">0</span>)</span><input type="checkbox" id="showHid"></div>
+      <div class="hint" id="ruleInfo"></div>
+    </div>
+
+    <div class="spage" data-page="courses" hidden>
+      <div class="hint" data-i18n="coursesHint"></div>
+      <div id="clist"></div>
+    </div>
+
+    <div class="spage" data-page="sem" hidden>
+      <div class="hint" data-i18n="semHint"></div>
+      <div class="srow"><span data-i18n="semStart"></span><input type="date" data-sem="s"></div>
+      <div class="srow"><span data-i18n="semEnd"></span><input type="date" data-sem="e"></div>
+      <div class="srow"><span data-i18n="exStart"></span><input type="date" data-sem="xs"></div>
+      <div class="srow"><span data-i18n="exEnd"></span><input type="date" data-sem="xe"></div>
+      <div class="hint" id="semSrc"></div>
+      <button class="link" id="bSemAuto" data-i18n="semAuto"></button>
+    </div>
+
+    <div class="spage" data-page="acct" hidden>
+      <div class="stitle" id="syncSet" data-i18n="syncTitle"></div>
+      <div class="srow"><span data-i18n="syncOnLbl"></span><input type="checkbox" id="syncOn"></div>
+      <div class="hint" data-i18n="syncHint"></div>
+      <div class="srow"><span class="hint" id="syncStatus"></span><button class="link" id="bSyncNow" data-i18n="syncNowBtn"></button></div>
+      <div class="stitle" data-i18n="acctTitle"></div>
+      <div class="srow"><span class="hint" id="who"></span></div>
+      <button id="bLogout" class="prow" style="color:var(--err)" data-i18n="logout"></button>
+    </div>
+
+    <div class="spage" data-page="help" hidden>
+      <button id="bTour" class="prow" data-i18n="tourOpen"></button>
+      <button id="bInst" class="prow" hidden data-i18n="instTitle"></button>
+      <div id="fbSet" hidden><button id="bFb" class="prow" data-i18n="fbOpen"></button></div>
+      <button id="bWn" class="prow" data-i18n="wnTitle"></button>
+      <button id="bUpd" class="prow" data-i18n="updCheck"></button>
+      <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
+    </div>
   </div>
 </div>
 <div class="sheet" id="ttSheet" hidden>
@@ -815,8 +884,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <label><span data-i18n="fbKind"></span><select id="fbKind"></select></label>
     <label><span data-i18n="fbMsg"></span><textarea id="fbMsg" rows="5" maxlength="2000"></textarea></label>
     <label><span data-i18n="fbPhone"></span><input type="tel" id="fbContact" maxlength="30" inputmode="tel" autocomplete="tel" dir="ltr"></label>
-    <label class="chk"><input type="checkbox" id="fbWho" checked><span id="fbWhoLbl"></span></label>
-    <label class="chk"><input type="checkbox" id="fbTech" checked><span data-i18n="fbTech"></span></label>
+    <div class="hint" id="fbAuto" data-i18n="fbAuto"></div>
     <div class="err" id="fbErr"></div>
     <button class="primary" id="fbSend" style="width:100%" data-i18n="fbSend"></button>
   </div>
@@ -968,6 +1036,20 @@ function toastUndo(m, undo) {
 /* ---------- languages ---------- */
 const I18N = {
   he: {
+        back: "חזרה", sNotif: "התראות ויומן", sLook: "מראה ותצוגה", sFilter: "סינון מטלות", sCourses: "קורסים וצבעים", sSem: "סמסטר ומבחנים", sAcct: "סנכרון וחשבון", sHelp: "עזרה ועדכונים",
+    sNotifHint: "תזכורות למטלות, למבחנים ולשיעורים — בהתראות ובלוח השנה שלך.",
+    sumRemOn: "תזכורות פועלות", sumRemOff: "תזכורות כבויות", sumCalOn: "יומן מחובר", sumCalOff: "יומן לא מחובר", sumNone: "לא הוגדר", sumSyncOn: "סנכרון פעיל", sumSyncOff: "סנכרון כבוי",
+    sumRules: n => n ? (n === 1 ? "כלל אחד פעיל" : n + " כללים פעילים") : "ללא סינון", sumCourses: (a, b) => a + " מתוך " + b + " קורסים מוצגים",
+    cdxLbl: "ספירה לאחור מדויקת (דקות ושניות)", cdxHint: "כבוי: הזמן שנשאר להגשה מוצג בימים ובשעות בלבד.",
+    filterHint: "בחר אילו מטלות יוצגו. הכללים חלים על הרשימה, על המסך הראשי, על התזכורות ועל היומן.",
+    oldTitle: "מטלות ישנות", oldHideLbl: "הסתר לגמרי מטלות ישנות שלא הוגשו",
+    zlTitle: "קישורי זום שמופיעים כמטלה", zlHint: "חלק מהמרצים מעלים קישור לשיעור כמטלה במודל, ואז זה נראה כמו משהו להגיש.",
+    zlZoom: "הצג כשיעור זום (לא כמטלה)", zlShow: "הצג כמטלה רגילה", zlHide: "הסתר לגמרי",
+    campusTitle: "המכון שלי", campusHint: "מסתיר מטלות של המכון השני לפי שם הקורס. שימושי אם מופיעים כאן קורסים של מכון אחר.",
+    campusAny: "לא משנה — הצג הכל", campusLev: "מכון לב (מסתיר טל ותבונה)", campusTal: "מכון טל (מסתיר לב)",
+    kwTitle: "הסתרה לפי מילים", kwHint: "מטלה שבשמה או בשם הקורס שלה מופיעה אחת המילים (כמילה שלמה) לא תוצג. למשל ״קבוצה ב״ או שם של מרצה.",
+    kwPh: "מילה או ביטוי", kwAdd: "הוסף", kwSug: "הצעות:", kwRemove: "הסר", hidTitle: "מה שהסתרתי ידנית", acctTitle: "החשבון שלי",
+    ruleInfo: n => n ? n + " מטלות מוסתרות כרגע לפי הכללים" : "אף מטלה לא מוסתרת כרגע לפי הכללים", ruleBar: n => n + " מטלות מוסתרות לפי כללי הסינון", ruleEdit: "שינוי",
     locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "האפליקציה של Hii 😉", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
     remTitle: "🔔 תזכורות", remAskTitle: "🔔 רוצה תזכורות?", remIntro: "האפליקציה יכולה להזכיר לך לפני הגשות, מבחנים ושיעורי זום. בחר מתי, והתזכורות ייכנסו ליומן של הטלפון.",
@@ -1131,11 +1213,25 @@ const I18N = {
     syncOtherUser: "המכשיר מחובר עכשיו למשתמש אחר, הסנכרון כובה", syncBlocked: "Moodle באתר הזה לא מאפשר לשמור את נתוני הסנכרון",
     fbTitle: "💬 פידבק", fbOpen: "💬 יש לך רעיון, בקשה או באג? ספר לנו", fbHint: "ההודעה מגיעה ישירות למפתח האפליקציה.",
     fbKind: "סוג", fbIdea: "💡 הצעה לשיפור", fbBug: "🐞 משהו לא עובד", fbQuestion: "❓ שאלה", fbPraise: "❤️ מחמאה", fbMsg: "מה תרצה לספר?",
-    fbContact: "", fbPhone: "📞 טלפון, אם תרצה שיחזרו אליך (לא חובה)", fbWho: n => "צרף את השם שלי מ-Moodle (" + n + ") ואת רשימת הקורסים שלי, כדי שיהיה קל לעזור לי", fbBadPhone: "מספר הטלפון לא נראה תקין", fbTech: "צרף פרטים טכניים (גרסה, סוג מכשיר, שפה) כדי שיהיה קל לתקן", fbSend: "שלח",
+    fbContact: "", fbPhone: "📞 טלפון, אם תרצה שיחזרו אליך (לא חובה)",  fbBadPhone: "מספר הטלפון לא נראה תקין", fbAuto: "📎 השם, רשימת הקורסים ופרטי המכשיר (גרסה, סוג מכשיר, שפה) מצורפים אוטומטית, כדי שיהיה קל לעזור לך", fbSend: "שלח",
     fbEmpty: "כתוב כמה מילים לפני השליחה", fbThanks: "תודה! ההודעה נשלחה 🙏", fbQueued: "אין חיבור עכשיו. ההודעה תישלח אוטומטית כשיחזור החיבור.", syncViaCal: "נשמר כאירוע פרטי ביומן שלך ב-Moodle (בתאריך 1.1.2001, כדי שלא יפריע)", syncViaFiles: "נשמר ב״הקבצים הפרטיים שלי״ ב-Moodle", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
     syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
   en: {
+        back: "Back", sNotif: "Reminders & calendar", sLook: "Look & display", sFilter: "Task filters", sCourses: "Courses & colours", sSem: "Semester & exams", sAcct: "Sync & account", sHelp: "Help & updates",
+    sNotifHint: "Reminders for tasks, exams and classes — as notifications and in your calendar.",
+    sumRemOn: "Reminders on", sumRemOff: "Reminders off", sumCalOn: "Calendar connected", sumCalOff: "Calendar not connected", sumNone: "Not set", sumSyncOn: "Sync on", sumSyncOff: "Sync off",
+    sumRules: n => n ? (n === 1 ? "1 rule active" : n + " rules active") : "No filters", sumCourses: (a, b) => a + " of " + b + " courses shown",
+    cdxLbl: "Exact countdown (minutes and seconds)", cdxHint: "Off: the time left is shown in days and hours only.",
+    filterHint: "Choose which tasks to show. The rules apply to the list, the home screen, reminders and the calendar.",
+    oldTitle: "Old tasks", oldHideLbl: "Hide old unsubmitted tasks completely",
+    zlTitle: "Zoom links posted as tasks", zlHint: "Some lecturers post a class link as an assignment in Moodle, so it looks like something to submit.",
+    zlZoom: "Show as a Zoom class (not a task)", zlShow: "Show as a normal task", zlHide: "Hide completely",
+    campusTitle: "My campus", campusHint: "Hides the other campus’s tasks by course name. Handy if you see courses from another campus.",
+    campusAny: "Doesn’t matter — show all", campusLev: "Machon Lev (hides Tal and Tavuna)", campusTal: "Machon Tal (hides Lev)",
+    kwTitle: "Hide by words", kwHint: "A task whose name or course name contains one of these words (as a whole word) is not shown. For example “Group B” or a lecturer’s name.",
+    kwPh: "Word or phrase", kwAdd: "Add", kwSug: "Suggestions:", kwRemove: "Remove", hidTitle: "What I hid by hand", acctTitle: "My account",
+    ruleInfo: n => n ? n + " tasks are hidden by the rules right now" : "No task is hidden by the rules right now", ruleBar: n => n + " tasks hidden by your filters", ruleEdit: "Change",
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "Hii’s app 😉", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
     remTitle: "🔔 Reminders", remAskTitle: "🔔 Want reminders?", remIntro: "The app can remind you before deadlines, exams and Zoom classes. Choose when, and the reminders go into your phone’s calendar.",
@@ -1299,11 +1395,25 @@ const I18N = {
     syncOtherUser: "This device is now signed in as another user; sync was turned off", syncBlocked: "Moodle on this site doesn’t allow saving the sync data",
     fbTitle: "💬 Feedback", fbOpen: "💬 Got an idea, a request or a bug? Tell us", fbHint: "Your message goes straight to the app’s developer.",
     fbKind: "Type", fbIdea: "💡 Idea", fbBug: "🐞 Something doesn’t work", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "What would you like to say?",
-    fbContact: "", fbPhone: "📞 Phone, if you’d like a call back (optional)", fbWho: n => "Attach my Moodle name (" + n + ") and my course list, so it’s easier to help me", fbBadPhone: "That phone number doesn’t look right", fbTech: "Attach technical details (version, device type, language) to make fixing easier", fbSend: "Send",
+    fbContact: "", fbPhone: "📞 Phone, if you’d like a call back (optional)",  fbBadPhone: "That phone number doesn’t look right", fbAuto: "📎 Your name, course list and device details (version, device type, language) are attached automatically, so it’s easier to help you", fbSend: "Send",
     fbEmpty: "Write a few words before sending", fbThanks: "Thanks! Your message was sent 🙏", fbQueued: "No connection right now. It will be sent automatically when you’re back online.", syncViaCal: "Kept as a private event in your Moodle calendar (dated 1.1.2001, out of the way)", syncViaFiles: "Kept in your Moodle “Private files”", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
     syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
   fr: {
+        back: "Retour", sNotif: "Rappels et agenda", sLook: "Apparence et affichage", sFilter: "Filtres de devoirs", sCourses: "Cours et couleurs", sSem: "Semestre et examens", sAcct: "Synchro et compte", sHelp: "Aide et mises à jour",
+    sNotifHint: "Rappels pour les devoirs, examens et cours — en notifications et dans votre agenda.",
+    sumRemOn: "Rappels activés", sumRemOff: "Rappels désactivés", sumCalOn: "Agenda connecté", sumCalOff: "Agenda non connecté", sumNone: "Non défini", sumSyncOn: "Synchro activée", sumSyncOff: "Synchro désactivée",
+    sumRules: n => n ? (n === 1 ? "1 règle active" : n + " règles actives") : "Aucun filtre", sumCourses: (a, b) => a + " cours sur " + b + " affichés",
+    cdxLbl: "Compte à rebours précis (minutes et secondes)", cdxHint: "Désactivé : le temps restant s’affiche en jours et en heures seulement.",
+    filterHint: "Choisissez les devoirs à afficher. Les règles s’appliquent à la liste, à l’accueil, aux rappels et à l’agenda.",
+    oldTitle: "Anciens devoirs", oldHideLbl: "Masquer complètement les anciens devoirs non rendus",
+    zlTitle: "Liens Zoom publiés comme devoirs", zlHint: "Certains enseignants publient un lien de cours comme devoir dans Moodle, ce qui ressemble à quelque chose à rendre.",
+    zlZoom: "Afficher comme cours Zoom (pas un devoir)", zlShow: "Afficher comme un devoir normal", zlHide: "Masquer complètement",
+    campusTitle: "Mon campus", campusHint: "Masque les devoirs de l’autre campus d’après le nom du cours. Utile si vous voyez des cours d’un autre campus.",
+    campusAny: "Peu importe — tout afficher", campusLev: "Machon Lev (masque Tal et Tavuna)", campusTal: "Machon Tal (masque Lev)",
+    kwTitle: "Masquer par mots", kwHint: "Un devoir dont le nom ou le cours contient l’un de ces mots (mot entier) n’est pas affiché. Par exemple « Groupe B » ou le nom d’un enseignant.",
+    kwPh: "Mot ou expression", kwAdd: "Ajouter", kwSug: "Suggestions :", kwRemove: "Retirer", hidTitle: "Ce que j’ai masqué à la main", acctTitle: "Mon compte",
+    ruleInfo: n => n ? n + " devoirs masqués par les règles en ce moment" : "Aucun devoir masqué par les règles en ce moment", ruleBar: n => n + " devoirs masqués par vos filtres", ruleEdit: "Modifier",
     locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "L’appli de Hii 😉", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     remTitle: "🔔 Rappels", remAskTitle: "🔔 Envie de rappels ?", remIntro: "L’application peut vous rappeler les échéances, examens et cours Zoom. Choisissez quand, et les rappels vont dans le calendrier du téléphone.",
@@ -1467,7 +1577,7 @@ const I18N = {
     syncOtherUser: "Cet appareil est connecté à un autre utilisateur ; synchronisation désactivée", syncBlocked: "Moodle sur ce site ne permet pas d’enregistrer les données de synchronisation",
     fbTitle: "💬 Avis", fbOpen: "💬 Une idée, une demande ou un bug ? Dites-le-nous", fbHint: "Votre message va directement au développeur de l’application.",
     fbKind: "Type", fbIdea: "💡 Idée", fbBug: "🐞 Quelque chose ne marche pas", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "Que voulez-vous nous dire ?",
-    fbContact: "", fbPhone: "📞 Téléphone, si vous voulez être rappelé (facultatif)", fbWho: n => "Joindre mon nom Moodle (" + n + ") et ma liste de cours, pour qu’on puisse mieux m’aider", fbBadPhone: "Ce numéro de téléphone ne semble pas valide", fbTech: "Joindre les détails techniques (version, type d’appareil, langue) pour faciliter la correction", fbSend: "Envoyer",
+    fbContact: "", fbPhone: "📞 Téléphone, si vous voulez être rappelé (facultatif)",  fbBadPhone: "Ce numéro de téléphone ne semble pas valide", fbAuto: "📎 Votre nom, votre liste de cours et les détails de l’appareil (version, type, langue) sont joints automatiquement, pour mieux vous aider", fbSend: "Envoyer",
     fbEmpty: "Écrivez quelques mots avant d’envoyer", fbThanks: "Merci ! Votre message a été envoyé 🙏", fbQueued: "Pas de connexion. Il sera envoyé automatiquement au retour du réseau.", syncViaCal: "Gardé comme événement privé dans votre calendrier Moodle (daté du 1.1.2001, hors de vue)", syncViaFiles: "Gardé dans vos « Fichiers personnels » Moodle", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
     syncFirst: "Synchronisation activée. Sur le premier appareil, ses données sont enregistrées sur Moodle ; les appareils suivants les chargent depuis là.", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
   },
@@ -1493,7 +1603,7 @@ function applyLang(l) {
   $("#old").innerHTML = [7, 14, 30, 60, 90].map(n => '<option value="' + n + '">' + esc(t("days", n)) + "</option>").join("") + '<option value="0">' + esc(t("never")) + "</option>";
   $("#old").value = String(P.old_days);
   if (!$("#app").hidden) render();
-  if (!$("#sheet").hidden) renderSheet();
+  if (!$("#sheet").hidden) { renderSheet(); setPage(V.spage || ""); }
   if (!$("#setup").hidden) renderGuide();
   if (!$("#tour").hidden) renderTour();
   if (!$("#thSheet").hidden) renderThemes();
@@ -1626,7 +1736,7 @@ async function fetchAll() {
       due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "",
       intro: stripHtml(e.description), links: introLinks(e.description), files: [], url: e.url || act.url || "" });
   }
-  LS.set("uid", info.userid);
+  LS.set("uid", info.userid); applyZl(tasks, now);
   return { tasks, diag: [...diag], courses, user: info.fullname || "", userid: info.userid, at: now, contents: (V.data && V.data.contents) || {}, news: (V.data && V.data.news) || null };
 }
 /* announcements: the "news" forum of every current course (the one teachers post to) */
@@ -1682,7 +1792,7 @@ async function fetchContents(d) {
 /* ---------- state ---------- */
 const DAY = 86400;
 const WAS_CONN = (() => { try { return !!JSON.parse(localStorage.getItem(PFX + "token") || '""'); } catch (e) { return false; } })();
-const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [] }, LS.get("prefs", {}));
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [], kw: [], campus: "", zl: "zoom", cdx: false, old_hide: false }, LS.get("prefs", {}));
 if (!Array.isArray(P.manual)) P.manual = [];
 if (!Array.isArray(P.mine)) P.mine = [];
 if (!Array.isArray(P.tt)) P.tt = [];
@@ -1691,7 +1801,7 @@ P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed"];
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -1758,15 +1868,19 @@ function rel(ts, now) {
   else x = t("years", Math.floor(days / 365));
   return d >= 0 ? t("fut", x) : t("past", x);
 }
-/* countdown with minutes and seconds; beyond 30 days stays coarse ("4 months ago") */
+/* countdown: days and hours (exact with minutes and seconds if chosen); beyond 30 days stays coarse ("4 months ago") */
 function cdHTML(ts, now) {
   const d = ts - now, a = Math.abs(d);
   if (a >= 30 * 86400) return esc(rel(ts, now));
   const days = Math.floor(a / 86400), h = Math.floor(a % 86400 / 3600), m = Math.floor(a % 3600 / 60), sec = Math.floor(a % 60);
   const parts = [];
-  if (days) parts.push(t("days", days));
-  if (days || h) parts.push(t("cdH", h));
-  parts.push(t("cdM", m), t("cdS", sec));
+  if (P.cdx) {                                    // exact: down to the second
+    if (days) parts.push(t("days", days));
+    if (days || h) parts.push(t("cdH", h));
+    parts.push(t("cdM", m), t("cdS", sec));
+  } else if (days) parts.push(t("days", days), t("cdH", h));      // simple: days and hours, then hours, then minutes
+  else if (h) parts.push(t("cdH", h));
+  else parts.push(t("cdM", m));
   return esc(d >= 0 ? t("left", parts.join(", ")) : t("overdueBy", parts.join(", ")));
 }
 const cdState = (el, ts, now) => { el.classList.toggle("late", ts < now); el.classList.toggle("soon", ts >= now && ts - now < 86400); };
@@ -1794,7 +1908,36 @@ const GROUPS = [["late", "gLate"], ["today", "gToday"], ["week", "gWeek"], ["lat
 const G_OPEN = { late: true, today: true, week: true, later: true, nodue: false, old: false, done: false };
 const TYPE = { assign: "tAssign", quiz: "tQuiz", event: "tEvent", zoom: "tZoom", mine: "tMine" };
 const dueKey = x => x.due || 9e12;
-const counted = x => !isOff(x.cid) && !P.hidden.includes(x.key);
+/* filtering rules: hidden words (+ "my campus"), zoom links posted as assignments, old overdue tasks */
+const CAMPUS_WORDS = { lev: ["טל", "תבונה"], tal: ["לב"] };
+const ruleWords = () => [...new Set((P.kw || []).concat(CAMPUS_WORDS[P.campus] || []))];
+const isLetter = ch => !!ch && /[\p{L}\p{N}]/u.test(ch);
+function hasWord(hay, w) {                       // whole word / phrase, so "טל" does not match "מטלה"
+  hay = hay.toLowerCase(); w = w.toLowerCase(); let i = -1;
+  while ((i = hay.indexOf(w, i + 1)) >= 0) if (!isLetter(hay[i - 1]) && !isLetter(hay[i + w.length])) return true;
+  return false;
+}
+const ZL_Z = /zoom|זום/i, ZL_L = /קישור|לינק|link|שיעור|הרצאה|מפגש|lecture|session|meeting|class/i;
+const zlIs = x => { const o = x.zlo || x; return o.type === "assign" && ZL_Z.test(x.name || "") && (o.via === "none" || o.status === "na" || ZL_L.test(x.name || "")); };
+function applyZl(tasks, now) {                   // a "zoom link" assignment shows as a class link, not as something to submit (reversible)
+  for (const x of tasks || []) {
+    if (!zlIs(x)) continue;
+    if (P.zl === "zoom") {
+      if (!x.zlo) x.zlo = { type: x.type, via: x.via, status: x.status, pdf: x.pdf };
+      x.type = "zoom"; x.via = "other"; x.pdf = false; x.status = x.zlo.status === "submitted" ? "submitted" : (x.due && x.due < now ? "na" : "unknown");
+    } else if (x.zlo) { Object.assign(x, x.zlo); delete x.zlo; }
+  }
+}
+function ruleHidden(x, now) {
+  if (x.type === "mine") return false;
+  if (P.zl === "hide" && zlIs(x)) return true;
+  if (P.old_hide && groupOf(x, now) === "old") return true;
+  const w = ruleWords(); if (!w.length) return false;
+  const hay = (x.name || "") + " " + (x.course || "");
+  return w.some(k => hasWord(hay, k));
+}
+const ruleCount = () => { const now = nowS(); return V.data ? V.data.tasks.filter(x => !isOff(x.cid) && !P.hidden.includes(x.key) && ruleHidden(x, now)).length : 0; };
+const counted = x => !isOff(x.cid) && !P.hidden.includes(x.key) && !ruleHidden(x, nowS());
 /* sorted by what you actually do: upload a file (scan → PDF) or answer inside Moodle (quizzes, online text, other activities) */
 const viaOf = x => x.type === "mine" ? "mine" : x.via || (x.type === "assign" ? "file" : x.type === "quiz" ? "online" : x.type === "zoom" ? "other" : "online");
 const catOf = x => { const v = viaOf(x); return v === "none" ? "other" : v; };
@@ -1804,7 +1947,7 @@ function mineTasks() {
   return (P.mine || []).map(m => ({ key: "mine:" + m.id, type: "mine", mine: m.id, cid: m.cid || 0, cmid: 0, course: m.cid ? courseName(m.cid) : t("mineCourse"), name: m.title,
     due: m.due, extended: false, from: 0, cutoff: 0, status: "none", grade: "", intro: m.note || "", links: [], files: [], url: "" }));
 }
-function withMine() { if (V.data && Array.isArray(V.data.tasks)) V.data.tasks = V.data.tasks.filter(x => x.type !== "mine").concat(mineTasks()); }            // tasks of courses you follow and did not hide
+function withMine() { if (V.data && Array.isArray(V.data.tasks)) { V.data.tasks = V.data.tasks.filter(x => x.type !== "mine").concat(mineTasks()); applyZl(V.data.tasks, nowS()); } }            // tasks of courses you follow and did not hide
 function inFocus(x, now) {
   const f = V.focus; if (!f) return true;
   if (f.kind === "day") return !!x.due && dueDay(x) === f.d;
@@ -1815,6 +1958,7 @@ function inFocus(x, now) {
 function visible(x, now) {
   if (isOff(x.cid)) return false;
   if (P.hidden.includes(x.key) && !V.showHid) return false;
+  if (ruleHidden(x, now)) return false;
   if (!inFocus(x, now)) return false;
   if (V.cat !== "all" && catOf(x) !== V.cat) return false;
   if (!V.focus || V.focus.kind === "course") {
@@ -2370,6 +2514,10 @@ function cleanKey(k, v) {
       const order = Array.isArray(v.order) ? v.order.filter((x, i, a) => ids.includes(x) && a.indexOf(x) === i) : [];
       return { order: order.concat(ids.filter(x => !order.includes(x))), off: Array.isArray(v.off) ? v.off.filter(x => ids.includes(x) && x !== "hero") : [] }; }
     case "off": return Array.isArray(v) ? v.filter(Number.isInteger).slice(0, 500) : [];
+    case "kw": return Array.isArray(v) ? [...new Set(v.filter(x => typeof x === "string").map(x => x.trim().slice(0, 40)).filter(Boolean))].slice(0, 40) : [];
+    case "campus": return ["lev", "tal"].includes(v) ? v : "";
+    case "zl": return ["zoom", "show", "hide"].includes(v) ? v : "zoom";
+    case "cdx": case "old_hide": return v === true;
     case "old_days": return Number.isFinite(v) ? Math.max(0, Math.min(365, Math.round(v))) : 14;
     case "sort": return ["urgency", "course", "date"].includes(v) ? v : "urgency";
     case "theme": { if (!obj(v)) return null; if (v.id === "custom") { const c = {}; if (obj(v.c)) for (const f of TH_FIELDS) if (/^#[0-9a-f]{6}$/i.test(v.c[f])) c[f] = v.c[f];
@@ -2507,7 +2655,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.3.1-beta.1";
+const APP_VERSION = "1.4.0-beta.1";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2558,7 +2706,8 @@ function usageStats() {
     push: pushOn() ? "on" : pushPerm(), mor: on ? (r.mor || "") : "", mine: (P.mine || []).length, cal: !!(P.feed && P.feed.on), dash: P.dash ? 1 : 0,
     tt: P.tt.filter(x => !x.priv).length, priv: P.tt.filter(x => x.priv).length, att: P.tt.filter(x => x.att).length,
     exams: Object.keys(P.exams || {}).length, sem: !!(P.sem && P.sem.s), hidden: P.hidden.length, off: P.off.length, manual: P.manual.length,
-    colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days, tour: LS.get("tourDone", false) === true,
+    colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days,
+    kw: (P.kw || []).length, campus: P.campus || "", zl: P.zl, cdx: P.cdx ? 1 : 0, oldHide: P.old_hide ? 1 : 0, tour: LS.get("tourDone", false) === true,
     n: LS.get("useCnt", {}),
   };
 }
@@ -2574,7 +2723,6 @@ const FB_KINDS = [["idea", "fbIdea"], ["bug", "fbBug"], ["question", "fbQuestion
 function openFb() {
   useHit("fb");
   $("#fbKind").innerHTML = FB_KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join("");
-  const w = senderInfo(); $("#fbWhoLbl").textContent = t("fbWho", w.name || "—"); $("#fbWho").closest("label").hidden = !w.name && !w.courses;
   $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; $("#fbMsg").focus();
 }
 async function sendFb() {
@@ -2582,8 +2730,8 @@ async function sendFb() {
   if (msg.length < 3) return $("#fbErr").textContent = t("fbEmpty");
   const phone = $("#fbContact").value.trim();
   if (phone && !/^[+\d][\d\s\-()]{6,20}$/.test(phone)) return $("#fbErr").textContent = t("fbBadPhone");
-  const x = { kind: $("#fbKind").value, msg, contact: phone, meta: $("#fbTech").checked ? techMeta() : JSON.stringify({ id: deviceId(), v: APP_VERSION }),
-    who: $("#fbWho").checked ? senderInfo() : null };
+  const x = { kind: $("#fbKind").value, msg, contact: phone, meta: techMeta(),
+    who: senderInfo() };
   $("#fbSend").disabled = true;
   try { await fbPost(x.kind, x.msg, x.contact, x.meta, x.who); toast(t("fbThanks"), 4000); }
   catch (e) { LS.set("fbQueue", LS.get("fbQueue", []).concat([x]).slice(-20)); toast(t("fbQueued"), 5000); }
@@ -2644,7 +2792,7 @@ function render() {
   const withTasks = new Set(d.tasks.map(x => x.cid));
   const cs = d.courses.filter(c => withTasks.has(c.id));
   $("#chips").innerHTML = cs.map(c => {
-    const n = d.tasks.filter(x => x.cid === c.id && !isDone(x) && x.due && groupOf(x, now) !== "old" && !P.hidden.includes(x.key)).length;
+    const n = d.tasks.filter(x => x.cid === c.id && !isDone(x) && x.due && groupOf(x, now) !== "old" && !P.hidden.includes(x.key) && !ruleHidden(x, now)).length;
     return '<span class="chip' + (isOff(c.id) ? "" : " on") + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
   }).join("");
   $$("#seg button").forEach(b => b.classList.toggle("on", b.dataset.f === P.filter));
@@ -2671,7 +2819,8 @@ function render() {
     if (b.open) h += b.items.map(x => card(x, now, groupOf(x, now))).join("");
   }
   $("#list").innerHTML = (h || '<div class="empty">' + esc(V.focus && V.focus.kind === "day" ? t("dayEmpty") : d.tasks.length ? t("noMatch") : t("noTasks")) + "</div>") +
-    (P.hidden.length ? '<div class="hidbar"><button class="link" data-showhid>' + esc(t(V.showHid ? "hidHide" : "hidShow", P.hidden.length)) + "</button></div>" : "");
+    (P.hidden.length ? '<div class="hidbar"><button class="link" data-showhid>' + esc(t(V.showHid ? "hidHide" : "hidShow", P.hidden.length)) + "</button></div>" : "") +
+    (ruleCount() ? '<div class="hidbar"><span class="hint">' + esc(t("ruleBar", ruleCount())) + '</span> <button class="link" data-rules>' + esc(t("ruleEdit")) + "</button></div>" : "");
   { const open = d.tasks.filter(x => counted(x) && !isDone(x)), n = c => open.filter(x => c === "all" || catOf(x) === c).length;
     for (const c of ["all", "file", "online", "other", "mine"]) { const el = $("#catN_" + c); if (el) el.textContent = n(c) ? "(" + n(c) + ")" : ""; }
     $$("#cats [data-cat]").forEach(b => { b.classList.toggle("on", b.dataset.cat === V.cat); b.setAttribute("aria-pressed", b.dataset.cat === V.cat); });
@@ -2686,8 +2835,25 @@ function render() {
   try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
   $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>" + esc(t("diag", d.diag.length)) + "</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
 }
+const SET_PAGES = { notif: "sNotif", look: "sLook", filter: "sFilter", courses: "sCourses", sem: "sSem", acct: "sAcct", help: "sHelp" };
+function setPage(p) {                         // "" = the menu, a name = that page, "all" = every page at once (for tests)
+  V.spage = p || ""; const all = p === "all";
+  $("#sMenu").hidden = !!p; $$(".spage").forEach(el => el.hidden = !(all || el.dataset.page === p));
+  $("#sBack").hidden = !p || all; $("#sBack").textContent = t("dir") === "rtl" ? "→" : "←";
+  $("#sTitle").textContent = p && !all ? t(SET_PAGES[p]) : t("settings");
+  $("#sheet .box").scrollTop = 0;
+}
+function renderKw() {
+  $("#kwList").innerHTML = (P.kw || []).map((w, i) => '<span class="kwchip"><bdi>' + esc(w) + '</bdi><button data-kwdel="' + i + '" aria-label="' + esc(t("kwRemove")) + '">×</button></span>').join("");
+  const sug = ["טל", "תבונה", "לב"].filter(w => !(P.kw || []).includes(w));
+  $("#kwSug").innerHTML = sug.length ? esc(t("kwSug")) + " " + sug.map(w => '<button class="kwchip add" data-kwsug="' + esc(w) + '">+ ' + esc(w) + "</button>").join(" ") : "";
+}
 function renderSheet() {
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
+  $("#oldHide").checked = !!P.old_hide; $("#cdx").checked = !!P.cdx;
+  $("#zl").innerHTML = [["zoom", "zlZoom"], ["show", "zlShow"], ["hide", "zlHide"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#zl").value = P.zl;
+  $("#campus").innerHTML = [["", "campusAny"], ["lev", "campusLev"], ["tal", "campusTal"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#campus").value = P.campus;
+  renderKw(); $("#ruleInfo").textContent = t("ruleInfo", ruleCount());
   $("#who").innerHTML = d ? (d.user ? "<bdi>" + esc(d.user) + "</bdi> · " : "") + "<bdi>" + esc(M.url.replace(/^https?:\/\//, "")) + "</bdi>" : esc(M.url);
   renderSyncStatus();
   $("#fbSet").hidden = !fbReady(); $("#verLine").textContent = t("version", "\u2066" + APP_VERSION + "\u2069") + (CHANNEL === "beta" ? " · beta" : "");     // the number is kept left-to-right inside Hebrew text
@@ -2697,6 +2863,15 @@ function renderSheet() {
   $("#bSemAuto").hidden = !["s", "e", "xs", "xe"].some(k => P.sem[k]);
   $("#clist").innerHTML = d ? d.courses.map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span><bdi>" + esc(shortName(c.name)) + "</bdi></span></label>" +
     '<input type="color" data-cc="' + c.id + '" value="' + colorOf(c.id) + '"></div>').join("") : "";
+  /* one-line summaries on the menu */
+  const on = P.rem && P.rem.on, cal = P.feed && P.feed.on, so = syncOnNow();
+  $("#sumNotif").textContent = t(on ? "sumRemOn" : "sumRemOff") + " · " + t(cal ? "sumCalOn" : "sumCalOff");
+  $("#sumLook").textContent = ({ he: "עברית", en: "English", fr: "Français" })[LANG] + " · " + ($(".thcur") ? $(".thcur").textContent : "");
+  $("#sumFilter").textContent = t("sumRules", (P.old_hide ? 1 : 0) + (P.zl === "hide" ? 1 : 0) + (P.campus ? 1 : 0) + (P.kw || []).length);
+  $("#sumCourses").textContent = d ? t("sumCourses", d.courses.filter(c => !isOff(c.id)).length, d.courses.length) : "";
+  $("#sumSem").textContent = D ? shortDate(D.s) + "–" + shortDate(addD(D.e, -1)) : t("sumNone");
+  $("#sumAcct").textContent = t(so ? "sumSyncOn" : "sumSyncOff") + (d && d.user ? " · " + d.user : "");
+  $("#sumHelp").textContent = t("version", "\u2066" + APP_VERSION + "\u2069");
 }
 
 /* ---------- actions ---------- */
@@ -2770,6 +2945,9 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
+  { v: "1.4.0", date: "2026-11-10", he: ["⚙️ הגדרות מסודרות בקטגוריות: התראות ויומן, מראה, סינון מטלות, קורסים, סמסטר, חשבון ועזרה", "🔎 סינון מטלות: להסתיר לפי מכון (לב / טל), לפי מילים (למשל ״קבוצה ב״ או שם מרצה), וקישורי זום שמופיעים כמטלה", "🧹 אפשר להסתיר לגמרי מטלות ישנות שלא הוגשו", "⏱ הזמן שנשאר להגשה מוצג בימים ובשעות (ספירה מדויקת עם דקות ושניות — בהגדרות)", "💬 בפידבק, השם, הקורסים ופרטי המכשיר מצורפים תמיד כדי שיהיה קל לעזור"],
+    en: ["⚙️ Settings organised into categories: reminders & calendar, look, task filters, courses, semester, account and help", "🔎 Task filters: hide by campus (Lev / Tal), by words (e.g. “Group B” or a lecturer’s name), and Zoom links posted as tasks", "🧹 You can hide old unsubmitted tasks completely", "⏱ Time left is shown in days and hours (exact countdown with minutes and seconds is in settings)", "💬 Feedback always includes your name, courses and device details so it’s easier to help"],
+    fr: ["⚙️ Réglages classés par catégories : rappels et agenda, apparence, filtres, cours, semestre, compte et aide", "🔎 Filtres de devoirs : masquer par campus (Lev / Tal), par mots (p. ex. « Groupe B » ou un enseignant) et les liens Zoom publiés comme devoirs", "🧹 Vous pouvez masquer complètement les anciens devoirs non rendus", "⏱ Le temps restant s’affiche en jours et en heures (compte à rebours précis dans les réglages)", "💬 Les avis incluent toujours votre nom, vos cours et les détails de l’appareil pour mieux vous aider"] },
   { v: "1.3.0", date: "2026-11-09", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד, עם עיגול בצבע של הקורס", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📄 המטלות מסודרות לפי מה שעושים: הגשת קובץ (סריקה ו-PDF) או מענה בתוך Moodle", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה", "🔄 המידע מתרענן בכל חזרה לאפליקציה, וכשיש גרסה חדשה מופיע כפתור ״עדכון עכשיו״ (ואפשר לבדוק גם בהגדרות)"],
     en: ["📄 Tasks sorted by what you do: upload a file (scan → PDF) or answer inside Moodle", "➕ Your own tasks: add a task with a date and it behaves like a Moodle one (countdown, notifications, calendar)", "📅 A calendar that updates itself: add it once to Google Calendar or your iPhone and new assignments come in by themselves, each with a circle in its course’s colour", "☀️ Morning summary: one notification in the morning with today’s deadlines, exams and classes", "🧩 Arrange the overview: what’s shown and in what order (in settings)", "📲 An offer to install on the home screen, and a quick way to import your timetable from the overview", "🔄 Data refreshes every time you come back to the app, and when there’s a new version an “Update now” button shows (you can also check in settings)"],
     fr: ["📄 Tâches classées selon ce qu’il faut faire : déposer un fichier (scan → PDF) ou répondre sur Moodle", "➕ Vos propres tâches : ajoutez une tâche avec une date, elle se comporte comme un devoir Moodle (compte à rebours, notifications, calendrier)", "📅 Un calendrier qui se met à jour seul : ajoutez-le une fois à Google Agenda ou à l’iPhone, les nouveaux devoirs arrivent seuls, avec un rond de la couleur du cours", "☀️ Résumé du matin : une notification le matin avec les échéances, examens et cours du jour", "🧩 Organiser l’aperçu : ce qui s’affiche et dans quel ordre (dans les paramètres)", "📲 Une proposition d’installer sur l’écran d’accueil, et un accès rapide à l’import de l’emploi du temps depuis l’aperçu", "🔄 Les données se rafraîchissent à chaque retour dans l’application, et un bouton « Mettre à jour » apparaît quand une nouvelle version existe (vérifiable aussi dans les paramètres)"] },
@@ -3521,7 +3699,18 @@ document.addEventListener("keydown", e => {
   }); }
 $$(".gtabs [data-plat]").forEach(b => b.addEventListener("click", () => { PLAT = b.dataset.plat; renderGuide(); }));
 $("#bRefresh").onclick = () => { useHit("refresh"); refresh(true); };
-$("#bSet").onclick = () => { renderSheet(); $("#sheet").hidden = false; };
+$("#bSet").onclick = () => { renderSheet(); setPage(""); $("#sheet").hidden = false; };
+$("#sMenu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) setPage(b.dataset.go); });
+$("#sBack").onclick = () => setPage("");
+$("#oldHide").onchange = e => { P.old_hide = e.target.checked; savePrefs(); render(); renderSheet(); };
+$("#cdx").onchange = e => { P.cdx = e.target.checked; savePrefs(); render(); };
+$("#zl").onchange = e => { P.zl = e.target.value; savePrefs(); if (V.data) applyZl(V.data.tasks, nowS()); render(); renderSheet(); };
+$("#campus").onchange = e => { P.campus = e.target.value; savePrefs(); render(); renderSheet(); };
+function kwAdd(w) { w = (w || "").trim().slice(0, 40); if (!w) return; if (!P.kw.some(x => x.toLowerCase() === w.toLowerCase())) { P.kw = [...P.kw, w].slice(0, 40); savePrefs(); render(); } renderSheet(); }
+$("#kwAdd").onclick = () => { kwAdd($("#kwIn").value); $("#kwIn").value = ""; };
+$("#kwIn").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("#kwAdd").click(); } });
+$("#kwList").addEventListener("click", e => { const b = e.target.closest("[data-kwdel]"); if (b) { P.kw = P.kw.filter((_, i) => i !== Number(b.dataset.kwdel)); savePrefs(); render(); renderSheet(); } });
+$("#kwSug").addEventListener("click", e => { const b = e.target.closest("[data-kwsug]"); if (b) kwAdd(b.dataset.kwsug); });
 $("#bClose").onclick = () => $("#sheet").hidden = true;
 $("#sheet").addEventListener("click", e => { if (e.target.id === "sheet") $("#sheet").hidden = true; });
 $("#old").onchange = e => { P.old_days = Number(e.target.value); savePrefs(); render(); };
@@ -3554,6 +3743,7 @@ $("#list").addEventListener("click", e => {
     return;
   }
   if (e.target.closest("[data-showhid]")) { V.showHid = !V.showHid; render(); return; }
+  if (e.target.closest("[data-rules]")) { renderSheet(); setPage("filter"); $("#sheet").hidden = false; return; }
   { const me = e.target.closest("[data-mine]"); if (me) { openMine(me.dataset.mine); return; } }
   const dn = e.target.closest("[data-done]");
   if (dn) { const k = dn.dataset.done; P.manual = P.manual.includes(k) ? P.manual.filter(y => y !== k) : [...P.manual, k]; savePrefs(); render(); return; }
@@ -3567,7 +3757,7 @@ $("#dash").addEventListener("click", e => {
   const go = e.target.closest("[data-goto]"); if (go) return gotoTask(go.dataset.goto);
 });
 function goTT() { if (wide()) $("#ttCard").scrollIntoView({ block: "start", behavior: "smooth" }); else { setView("tt"); render(); window.scrollTo(0, 0); } }
-function openSemSettings() { renderSheet(); $("#sheet").hidden = false; setTimeout(() => $("#semSet").scrollIntoView({ block: "start" }), 30); }
+function openSemSettings() { renderSheet(); setPage("sem"); $("#sheet").hidden = false; }
 $("#dash").addEventListener("click", e => {
   if (e.target.closest("[data-semedit]")) return openSemSettings();
   if (e.target.closest("[data-ttadd]")) return openTT();
