@@ -703,6 +703,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <button class="primary" id="remGo" style="width:100%"></button>
     <button class="link" id="remLater" style="width:100%" data-i18n="remLater"></button>
     <p class="hint" id="remHowTxt"></p>
+    <button id="remTest" style="width:100%;margin-top:8px" hidden data-i18n="pushTestBtn"></button>
     <button class="link" id="remStop" style="width:100%" hidden data-i18n="pushStop"></button>
   </div>
 </div>
@@ -755,7 +756,8 @@ const I18N = {
     pushTestB: n => n ? "נקבעו " + n + " תזכורות לפי מה שבחרת" : "כשיהיה על מה להזכיר, ההתראה תגיע לכאן",
     pushReady: n => "🔔 ההתראות הופעלו" + (n ? " · " + n + " תזכורות בדרך" : ""), pushOnCard: "🔔 ההתראות פועלות במכשיר הזה",
     pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
-    pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
+    pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה", pushTestBtn: "🧪 שלח התראת בדיקה", pushTestT2: "🧪 התראת בדיקה", pushTestB2: "אם רואים את זה, ההתראות עובדות ✓",
+    pushTestSent: "התראת בדיקה תגיע בעוד כ-10 שניות. אפשר לסגור את האפליקציה בינתיים.", pushTestFail: e => "הבדיקה נכשלה: " + e,
     pushDue: (o, w) => "ההגשה בעוד " + o + " · " + w, pushExam: (o, w) => "המבחן בעוד " + o + " · " + w, pushClass: m => "מתחיל בעוד " + m + " דקות",
     wnTitle: "✨ מה חדש", wnOk: "מעולה", version: v => "גרסה " + v, tZoom: "זום", zoomBadge: "📹 זום",
     tourSkip: "דלג", tourBack: "חזרה", tourNext: "הבא", tourDone: "יאללה, מתחילים", tourOpen: "📖 מדריך קצר לאפליקציה",
@@ -879,7 +881,8 @@ const I18N = {
     pushTestB: n => n ? n + " reminders set from your choices" : "When there’s something to remind you about, it will show up here",
     pushReady: n => "🔔 Notifications on" + (n ? " · " + n + " reminders scheduled" : ""), pushOnCard: "🔔 Notifications are on for this device",
     pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
-    pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
+    pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device", pushTestBtn: "🧪 Send a test notification", pushTestT2: "🧪 Test notification", pushTestB2: "If you can see this, notifications work ✓",
+    pushTestSent: "A test notification will arrive in about 10 seconds. You can close the app meanwhile.", pushTestFail: e => "The test failed: " + e,
     pushDue: (o, w) => "Due in " + o + " · " + w, pushExam: (o, w) => "Exam in " + o + " · " + w, pushClass: m => "Starts in " + m + " minutes",
     wnTitle: "✨ What’s new", wnOk: "Great", version: v => "Version " + v, tZoom: "Zoom", zoomBadge: "📹 Zoom",
     tourSkip: "Skip", tourBack: "Back", tourNext: "Next", tourDone: "Let’s go", tourOpen: "📖 Quick guide to the app",
@@ -1003,7 +1006,8 @@ const I18N = {
     pushTestB: n => n ? n + " rappels programmés selon vos choix" : "Quand il y aura un rappel, il arrivera ici",
     pushReady: n => "🔔 Notifications activées" + (n ? " · " + n + " rappels programmés" : ""), pushOnCard: "🔔 Notifications activées sur cet appareil",
     pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
-    pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
+    pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil", pushTestBtn: "🧪 Envoyer une notification de test", pushTestT2: "🧪 Notification de test", pushTestB2: "Si vous voyez ceci, les notifications marchent ✓",
+    pushTestSent: "Une notification de test arrivera dans environ 10 secondes. Vous pouvez fermer l’app en attendant.", pushTestFail: e => "Le test a échoué : " + e,
     pushDue: (o, w) => "À rendre dans " + o + " · " + w, pushExam: (o, w) => "Examen dans " + o + " · " + w, pushClass: m => "Commence dans " + m + " minutes",
     wnTitle: "✨ Nouveautés", wnOk: "Super", version: v => "Version " + v, tZoom: "Zoom", zoomBadge: "📹 Zoom",
     tourSkip: "Passer", tourBack: "Retour", tourNext: "Suivant", tourDone: "C’est parti", tourOpen: "📖 Guide rapide de l’application",
@@ -2070,7 +2074,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.1.0-beta.3";
+const APP_VERSION = "1.1.0-beta.4";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2411,7 +2415,7 @@ function renderRemCard() {
   const on = P.rem && P.rem.on;
   if (on && remHow() === "push") {
     const next = pushOn() && pushItems()[0], perm = pushPerm();
-    el.innerHTML = pushOn() ? '<div class="hint">' + esc(t("pushOnCard")) + (next ? "<br>" + esc(t("pushNext", clockTxt(next.at / 1000), next.title)) : "") + "</div>" + (PS.err ? '<div class="hint">' + esc(t("pushFail")) + "</div>" : "") + '<button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
+    el.innerHTML = pushOn() ? '<div class="hint">' + esc(t("pushOnCard")) + (next ? "<br>" + esc(t("pushNext", clockTxt(next.at / 1000), next.title)) : "") + "</div>" + (PS.err ? '<div class="hint">' + esc(t("pushFail")) + "</div>" : "") + '<button data-rem="test">' + esc(t("pushTestBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
       : pushNeedsInstall() ? '<div class="hint">' + esc(t("pushIos")) + '</div><button data-rem="cal">' + esc(t("remGo")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
       : '<div class="remnew">' + esc(t(perm === "denied" ? "pushBlockedCard" : "pushOffCard")) + '</div><button class="primary" data-rem="push">' + esc(t("pushEnableBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>";
     if (pushOn()) pushSoon();
@@ -2513,6 +2517,17 @@ async function pushEnable() {
   toast(t("pushReady", n), 6000); renderRemCard();
   return true;
 }
+/* a test notification from the server in 10 seconds, so the app can be closed meanwhile */
+async function pushTest() {
+  if (!pushOn()) return pushEnable();
+  try {
+    await pushSync(true);                       // make sure the server knows this device and its current list
+    if (PS.err) throw new Error(PS.err);
+    const sub = await pushSub(), j = await pushPost("/test", { endpoint: sub.endpoint, title: t("pushTestT2"), body: t("pushTestB2"), delay: 10 });
+    if (j.status !== 202 && j.status !== 201) throw new Error("server " + j.status);
+    toast(t("pushTestSent"), 9000);
+  } catch (e) { toast(t("pushTestFail", String(e && e.message || e)), 10000); }
+}
 async function pushDisable() {
   LS.set("pushOn", false); LS.set("pushSig", null);
   try { const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription();
@@ -2526,7 +2541,7 @@ function remModeUI(how) {
   $("#remGo").textContent = t(push ? "remGoPush" : "remGo");
   $("#remHowTxt").textContent = t(push ? "remHowPushTxt" : "remHow");
   $("#remIntro").textContent = t(push ? "remIntroPush" : "remIntro");
-  $("#remStop").hidden = !(push && pushOn());
+  $("#remStop").hidden = $("#remTest").hidden = !(push && pushOn());
 }
 /* ---------- first-run tour: a few cards, skippable, shown once; reopened from settings ---------- */
 const TOUR = { i: 0 };
@@ -2656,11 +2671,12 @@ $("#remGo").onclick = () => {
   if (how === "push") { LS.set("pushSig", null); pushEnable(); } else remExport(false);
 };
 $("#remStop").onclick = () => { $("#remSheet").hidden = true; pushDisable(); };
+$("#remTest").onclick = () => { $("#remSheet").hidden = true; pushTest(); };
 $("#remLater").onclick = () => { remSave({ asked: true }); $("#remSheet").hidden = true; };
 $("#remClose").onclick = () => { if (!$("#remLater").hidden) remSave({ asked: true }); $("#remSheet").hidden = true; };
 $("#bRem").onclick = () => openRem(false);
 $("#dash").addEventListener("click", e => { const r = e.target.closest("[data-rem]"); if (!r) return; const a = r.dataset.rem;
-  if (a === "add") remExport(true); else if (a === "cal") remExport(false); else if (a === "push") pushEnable(); else openRem(false); });
+  if (a === "add") remExport(true); else if (a === "cal") remExport(false); else if (a === "push") pushEnable(); else if (a === "test") pushTest(); else openRem(false); });
 $("#bWn").onclick = () => { $("#sheet").hidden = true; whatsNew(true); };
 const wnDone = () => { $("#wnSheet").hidden = true; setTimeout(maybeAskRem, 400); };
 $("#wnOk").onclick = wnDone; $("#wnClose").onclick = wnDone;

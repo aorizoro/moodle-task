@@ -89,14 +89,19 @@ export class Device extends DurableObject {
   async sync(sub, items, lang) {
     const now = Date.now();
     await this.ctx.storage.put("sub", sub); await this.ctx.storage.put("lang", lang); await this.ctx.storage.put("seen", now);
-    this.sql.exec("DELETE FROM items");
+    this.sql.exec("DELETE FROM items WHERE tag != 'test'");          // a test notification on its way survives a new upload
     const keep = items.filter(x => x && Number.isFinite(x.at) && x.at > now - 60000 && x.at < now + 400 * 86400000).sort((a, b) => a.at - b.at).slice(0, MAX_ITEMS);
     for (const x of keep) this.sql.exec("INSERT INTO items VALUES (?, ?, ?, ?)", Math.round(x.at), clip(x.title, 120), clip(x.body, 240), clip(x.tag, 80));
     return { count: keep.length, next: await this.rearm() };
   }
   async forget() { this.sql.exec("DELETE FROM items"); await this.ctx.storage.delete(["sub", "lang", "seen"]); await this.ctx.storage.deleteAlarm(); }
-  async test(msg) {
+  async test(msg, delay) {
     const sub = await this.ctx.storage.get("sub"); if (!sub) return 404;
+    if (delay > 0) {                                                       // later, so the app can be closed meanwhile
+      this.sql.exec("DELETE FROM items WHERE tag = 'test'");
+      this.sql.exec("INSERT INTO items VALUES (?, ?, ?, 'test')", Date.now() + delay * 1000, msg.title, msg.body);
+      await this.rearm(); return 202;
+    }
     const st = await sendPush(sub, msg, await vapid(this.env), 600);
     if (st === 404 || st === 410) await this.forget();
     return st;
@@ -142,7 +147,7 @@ export default {
       return out(await dev.sync({ endpoint: b.sub.endpoint, keys: { p256dh: b.sub.keys.p256dh, auth: b.sub.keys.auth } }, b.items, clip(b.lang, 5)));
     }
     if (path === "/unsub") { await dev.forget(); return out({ ok: true }); }
-    if (path === "/test") return out({ status: await dev.test({ title: clip(b.title, 120) || "🔔", body: clip(b.body, 240), tag: "test" }) });
+    if (path === "/test") return out({ status: await dev.test({ title: clip(b.title, 120) || "🔔", body: clip(b.body, 240), tag: "test" }, Math.min(Math.max(Number(b.delay) || 0, 0), 120)) });
     return out({ error: "not found" }, 404);
   },
 };
