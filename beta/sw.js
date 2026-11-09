@@ -2,7 +2,7 @@
 // הבקשות ל-Moodle לא עוברות כאן ולא נשמרות במטמון.
 // the beta (…/beta/) and the regular app share one site: each keeps and cleans only its own cache
 const CH = /\/beta\/$/.test(self.registration.scope) ? "beta-" : "";
-const CACHE = "moodle-tasks-" + CH + "v19";
+const CACHE = "moodle-tasks-" + CH + "v20";
 const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
