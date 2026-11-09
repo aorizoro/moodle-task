@@ -74,32 +74,50 @@ export class Keys extends DurableObject {
 }
 const vapid = env => env.KEYS.get(env.KEYS.idFromName("vapid-v1")).get();
 
-/* ---------- one device: its reminders, and an alarm set to the next one ---------- */
+/* ---------- one device: its reminders, and an alarm set to the next one ----------
+   All of a device's reminders are kept as ONE stored value (a sorted list), so an upload or a sent notification is a single write:
+   the free plan allows 100,000 written rows a day, and a row per reminder would have used it up at a couple of hundred users. */
+const sameJson = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 export class Device extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
-    this.sql = ctx.storage.sql;
-    this.sql.exec("CREATE TABLE IF NOT EXISTS items (at INTEGER, title TEXT, body TEXT, tag TEXT)");
+    ctx.blockConcurrencyWhile(async () => {          // devices set up before this kept a table row per reminder: move them over once
+      let rows = null;
+      try { rows = ctx.storage.sql.exec("SELECT at, title, body, tag FROM items ORDER BY at").toArray(); } catch (e) { rows = null; }
+      if (!rows) return;
+      const test = rows.find(r => r.tag === "test");
+      await ctx.storage.put("items", rows.filter(r => r.tag !== "test").map(r => ({ at: r.at, title: r.title, body: r.body, tag: r.tag })));
+      if (test) await ctx.storage.put("test", { at: test.at, title: test.title, body: test.body, tag: "test" });
+      ctx.storage.sql.exec("DROP TABLE items");
+      await this.rearm();
+    });
   }
-  async rearm() {
-    const r = this.sql.exec("SELECT MIN(at) AS t FROM items").one();
-    if (r.t == null) await this.ctx.storage.deleteAlarm(); else await this.ctx.storage.setAlarm(Math.max(r.t, Date.now() + 1000));
-    return r.t;
+  async load() { const m = await this.ctx.storage.get(["items", "test"]); return { items: m.get("items") || [], test: m.get("test") || null }; }
+  async rearm(st) {
+    const { items, test } = st || await this.load();
+    const t = Math.min(items.length ? items[0].at : Infinity, test ? test.at : Infinity);
+    const cur = await this.ctx.storage.getAlarm();
+    if (t === Infinity) { if (cur != null) await this.ctx.storage.deleteAlarm(); return null; }
+    const want = Math.max(t, Date.now() + 1000);
+    if (cur == null || Math.abs(cur - want) > 500) await this.ctx.storage.setAlarm(want);
+    return t;
   }
   async sync(sub, items, lang) {
-    const now = Date.now();
-    await this.ctx.storage.put("sub", sub); await this.ctx.storage.put("lang", lang); await this.ctx.storage.put("seen", now);
-    this.sql.exec("DELETE FROM items WHERE tag != 'test'");          // a test notification on its way survives a new upload
-    const keep = items.filter(x => x && Number.isFinite(x.at) && x.at > now - 60000 && x.at < now + 400 * 86400000).sort((a, b) => a.at - b.at).slice(0, MAX_ITEMS);
-    for (const x of keep) this.sql.exec("INSERT INTO items VALUES (?, ?, ?, ?)", Math.round(x.at), clip(x.title, 120), clip(x.body, 240), clip(x.tag, 80));
-    return { count: keep.length, next: await this.rearm() };
+    const now = Date.now(), old = await this.ctx.storage.get(["sub", "lang", "seen"]), put = {};
+    if (!sameJson(old.get("sub"), sub)) put.sub = sub;
+    if (old.get("lang") !== lang) put.lang = lang;
+    if (now - (old.get("seen") || 0) > 86400000) put.seen = now;              // "still in use" needs a day's precision, not a write per upload
+    const keep = items.filter(x => x && Number.isFinite(x.at) && x.at > now - 60000 && x.at < now + 400 * 86400000).sort((a, b) => a.at - b.at).slice(0, MAX_ITEMS)
+      .map(x => ({ at: Math.round(x.at), title: clip(x.title, 120), body: clip(x.body, 240), tag: clip(x.tag, 80) }));
+    put.items = keep;                                                          // a test notification on its way is kept apart, and survives a new upload
+    await this.ctx.storage.put(put);
+    return { count: keep.length, next: await this.rearm({ items: keep, test: await this.ctx.storage.get("test") || null }) };
   }
-  async forget() { this.sql.exec("DELETE FROM items"); await this.ctx.storage.delete(["sub", "lang", "seen"]); await this.ctx.storage.deleteAlarm(); }
+  async forget() { await this.ctx.storage.delete(["sub", "lang", "seen", "items", "test"]); await this.ctx.storage.deleteAlarm(); }
   async test(msg, delay) {
     const sub = await this.ctx.storage.get("sub"); if (!sub) return 404;
     if (delay > 0) {                                                       // later, so the app can be closed meanwhile
-      this.sql.exec("DELETE FROM items WHERE tag = 'test'");
-      this.sql.exec("INSERT INTO items VALUES (?, ?, ?, 'test')", Date.now() + delay * 1000, msg.title, msg.body);
+      await this.ctx.storage.put("test", { at: Date.now() + delay * 1000, title: msg.title, body: msg.body, tag: "test" });
       await this.rearm(); return 202;
     }
     const st = await sendPush(sub, msg, await vapid(this.env), 600);
@@ -108,17 +126,21 @@ export class Device extends DurableObject {
   }
   async alarm() {
     const sub = await this.ctx.storage.get("sub"); if (!sub) return this.forget();
-    const now = Date.now(), due = this.sql.exec("SELECT rowid AS id, at, title, body, tag FROM items WHERE at <= ? ORDER BY at", now + 1000).toArray();
-    const vk = await vapid(this.env);
-    let retry = false;
+    const now = Date.now(), st = await this.load(), vk = await vapid(this.env);
+    const due = st.items.filter(x => x.at <= now + 1000).concat(st.test && st.test.at <= now + 1000 ? [st.test] : []).sort((a, b) => a.at - b.at);
+    const done = new Set(); let retry = false;
     for (const x of due) {
-      if (x.at < now - 3 * 3600000) { this.sql.exec("DELETE FROM items WHERE rowid = ?", x.id); continue; }      // far too late to be useful
-      let st = 0; try { st = await sendPush(sub, { title: x.title, body: x.body, tag: x.tag, at: x.at }, vk); } catch (e) { st = 0; }
-      if (st === 404 || st === 410) return this.forget();                    // the browser dropped this subscription
-      if (st >= 200 && st < 300 || st === 400 || st === 413) this.sql.exec("DELETE FROM items WHERE rowid = ?", x.id);
-      else retry = true;
+      if (x.at < now - 3 * 3600000) { done.add(x); continue; }                // far too late to be useful
+      let code = 0; try { code = await sendPush(sub, { title: x.title, body: x.body, tag: x.tag, at: x.at }, vk); } catch (e) { code = 0; }
+      if (code === 404 || code === 410) return this.forget();                // the browser dropped this subscription
+      if (code >= 200 && code < 300 || code === 400 || code === 413) done.add(x); else retry = true;
     }
-    if (retry) await this.ctx.storage.setAlarm(Date.now() + 5 * 60000); else await this.rearm();
+    if (done.size) {
+      st.items = st.items.filter(x => !done.has(x));
+      if (st.test && done.has(st.test)) { st.test = null; await this.ctx.storage.delete("test"); }
+      await this.ctx.storage.put("items", st.items);
+    }
+    if (retry) await this.ctx.storage.setAlarm(Date.now() + 5 * 60000); else await this.rearm(st);
     // a device that has not checked in for two months is forgotten
     if (now - ((await this.ctx.storage.get("seen")) || now) > 60 * 86400000) await this.forget();
   }

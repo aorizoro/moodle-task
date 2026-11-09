@@ -172,6 +172,8 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .wnv{margin:8px 0}
 .calbtns{display:flex;flex-direction:column;gap:8px;margin:10px 0}
 .calbtns.busy{opacity:.5;pointer-events:none}
+#updBar{position:fixed;inset-inline:12px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:60;display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--accent);color:var(--on-accent,#fff);border-radius:14px;padding:10px 12px 10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-weight:600;max-width:520px;margin:0 auto}
+#updBar[hidden]{display:none}#updBar button{background:var(--on-accent,#fff);color:var(--accent);border:0;border-radius:10px;padding:8px 14px;font-weight:700;white-space:nowrap}
 .calg{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:4px 0 10px;background:var(--card2,transparent)}.calg ol{margin:6px 0;padding-inline-start:20px;font-size:14px;line-height:1.5}.calg .calbtns{margin:8px 0 0}
 .dalist{display:flex;flex-direction:column;gap:6px}
 .darow{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:6px 8px;background:var(--card)}
@@ -758,6 +760,8 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     </div>
     <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
     <div class="srow"><span class="hint" id="verLine"></span><button class="link" id="bWn" data-i18n="wnTitle"></button></div>
+    <button id="bUpd" style="width:100%;margin-top:6px" data-i18n="updCheck"></button>
+    <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
     <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)" data-i18n="logout"></button>
   </div>
 </div>
@@ -932,6 +936,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
   </div>
 </div>
 <div id="toast"></div>
+<div id="updBar" role="status" hidden><span data-i18n="updReady"></span><button id="updGo" data-i18n="updGo"></button></div>
 
 <script>
 "use strict";
@@ -980,7 +985,7 @@ const I18N = {
     pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
     pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
     calBtn: "📅 הוספה ליומן שלי", calTitle: "📅 MoodlePro ביומן שלך", calIntro: "יומן שמתעדכן לבד: מטלה חדשה נכנסת, מטלה שהגשת יוצאת, וגם המבחנים והשיעורים מהמערכת. מוסיפים אותו פעם אחת, וזהו.",
-    calGoogle: "Google Calendar", calGTitle: "ל-Google מוסיפים פעם אחת, מהמחשב", calGText: "גוגל לא נותן להוסיף יומן מקישור באפליקציה בטלפון, רק באתר שלו במחשב. עושים את זה פעם אחת, ואז היומן מופיע גם בטלפון לבד.", calG1: "שולחים לעצמך את הקישור (בוואטסאפ או במייל) או מעתיקים אותו", calG2: "פותחים אותו במחשב, מחוברים לאותו חשבון Google, ולוחצים ״הוספה״", calG3: "בטלפון: ביומן Google, בתפריט ☰, מוודאים ש-MoodlePro מסומן", calGSend: "📤 שליחת הקישור למחשב", calGCopy: "🔗 העתקת הקישור ל-Google", calGShare: "קישור להוספת היומן של MoodlePro ל-Google Calendar (לפתוח במחשב):", calGDesk: "בחלון שנפתח לוחצים ״הוספה״. האירועים נכנסים תוך כמה דקות.", calApple: "אייפון / Mac / Outlook", calCopy: "🔗 העתקת הקישור",
+    updCheck: "🔄 בדיקה אם יש גרסה חדשה", updHow: "עדכונים נכנסים לבד: כשיש גרסה חדשה מופיע למטה פס ״עדכון עכשיו״. אם לא הופיע, לפעמים צריך לסגור ולפתוח את האפליקציה פעמיים או שלוש ברצף, או ללחוץ כאן על הבדיקה.", updReady: "✨ יש גרסה חדשה", updGo: "עדכון עכשיו", updNone: v => "יש לך את הגרסה הכי חדשה (" + v + ")", updFound: v => "נמצאה גרסה " + v + ", מעדכן…", updFail: "לא הצלחתי לבדוק, כנראה אין אינטרנט", calGoogle: "Google Calendar", calGTitle: "ל-Google מוסיפים פעם אחת, מהמחשב", calGText: "גוגל לא נותן להוסיף יומן מקישור באפליקציה בטלפון, רק באתר שלו במחשב. עושים את זה פעם אחת, ואז היומן מופיע גם בטלפון לבד.", calG1: "שולחים לעצמך את הקישור (בוואטסאפ או במייל) או מעתיקים אותו", calG2: "פותחים אותו במחשב, מחוברים לאותו חשבון Google, ולוחצים ״הוספה״", calG3: "בטלפון: ביומן Google, בתפריט ☰, מוודאים ש-MoodlePro מסומן", calGSend: "📤 שליחת הקישור למחשב", calGCopy: "🔗 העתקת הקישור ל-Google", calGShare: "קישור להוספת היומן של MoodlePro ל-Google Calendar (לפתוח במחשב):", calGDesk: "בחלון שנפתח לוחצים ״הוספה״. האירועים נכנסים תוך כמה דקות.", calApple: "אייפון / Mac / Outlook", calCopy: "🔗 העתקת הקישור",
     calNote: "היומן נכנס כיומן נפרד בשם MoodlePro, וכדי להסיר אותו פשוט מוחקים אותו מהיומן. גוגל מרענן יומנים כאלה כמה פעמים ביום, לא מיד. הקישור פרטי: מי שיש לו את הקישור רואה את המטלות שלך.",
     calFile: "או: הורדת קובץ חד-פעמי (לא מתעדכן)", calStop: "🗑 הפסקת היומן המתעדכן", calStopped: "היומן הופסק. האירועים יירדו מהיומן ברענון הבא שלו, ואפשר גם למחוק אותו משם.",
     calFail: "לא הצלחתי להגיע לשרת, אז ירד קובץ חד-פעמי במקום.", calCopied: "הקישור הועתק", calLive: "היומן שלך מתעדכן לבד", calManage: "ניהול היומן",
@@ -1148,7 +1153,7 @@ const I18N = {
     pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
     pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
     calBtn: "📅 Add to my calendar", calTitle: "📅 MoodlePro in your calendar", calIntro: "A calendar that updates itself: new assignments come in, submitted ones go out, and your exams and classes too. Add it once, and that’s it.",
-    calGoogle: "Google Calendar", calGTitle: "Google: add it once, from a computer", calGText: "Google doesn’t let you add a calendar from a link in the phone app, only on its website on a computer. You do it once, and then the calendar shows on your phone by itself.", calG1: "Send yourself the link (WhatsApp, email) or copy it", calG2: "Open it on a computer, signed in to the same Google account, and click “Add”", calG3: "On your phone: in Google Calendar, menu ☰, make sure MoodlePro is ticked", calGSend: "📤 Send the link to my computer", calGCopy: "🔗 Copy the Google link", calGShare: "Link to add the MoodlePro calendar to Google Calendar (open on a computer):", calGDesk: "In the window that opens, click “Add”. Events appear within a few minutes.", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copy the link",
+    updCheck: "🔄 Check for a new version", updHow: "Updates come in by themselves: when there’s a new version, an “Update now” bar shows at the bottom. If it doesn’t, you sometimes need to close and reopen the app two or three times in a row, or check here.", updReady: "✨ A new version is ready", updGo: "Update now", updNone: v => "You have the latest version (" + v + ")", updFound: v => "Found version " + v + ", updating…", updFail: "Couldn’t check, probably no internet", calGoogle: "Google Calendar", calGTitle: "Google: add it once, from a computer", calGText: "Google doesn’t let you add a calendar from a link in the phone app, only on its website on a computer. You do it once, and then the calendar shows on your phone by itself.", calG1: "Send yourself the link (WhatsApp, email) or copy it", calG2: "Open it on a computer, signed in to the same Google account, and click “Add”", calG3: "On your phone: in Google Calendar, menu ☰, make sure MoodlePro is ticked", calGSend: "📤 Send the link to my computer", calGCopy: "🔗 Copy the Google link", calGShare: "Link to add the MoodlePro calendar to Google Calendar (open on a computer):", calGDesk: "In the window that opens, click “Add”. Events appear within a few minutes.", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copy the link",
     calNote: "It is added as a separate calendar called MoodlePro; to remove it, just delete it from your calendar app. Google refreshes such calendars a few times a day, not instantly. The link is private: whoever has it sees your assignments.",
     calFile: "Or: download a one-time file (doesn’t update)", calStop: "🗑 Stop the updating calendar", calStopped: "Stopped. The events leave your calendar at its next refresh, and you can also delete it there.",
     calFail: "Couldn’t reach the server, so a one-time file was downloaded instead.", calCopied: "Link copied", calLive: "Your calendar updates itself", calManage: "Manage the calendar",
@@ -1316,7 +1321,7 @@ const I18N = {
     pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
     pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
     calBtn: "📅 Ajouter à mon calendrier", calTitle: "📅 MoodlePro dans votre calendrier", calIntro: "Un calendrier qui se met à jour seul : nouveaux devoirs ajoutés, devoirs rendus retirés, et vos examens et cours aussi. On l’ajoute une fois, c’est tout.",
-    calGoogle: "Google Agenda", calGTitle: "Google : l’ajouter une fois, depuis un ordinateur", calGText: "Google ne permet pas d’ajouter un agenda par lien dans l’application du téléphone, seulement sur son site, depuis un ordinateur. On le fait une fois, puis l’agenda apparaît tout seul sur le téléphone.", calG1: "Envoyez-vous le lien (WhatsApp, e-mail) ou copiez-le", calG2: "Ouvrez-le sur un ordinateur, connecté au même compte Google, et cliquez sur « Ajouter »", calG3: "Sur le téléphone : dans Google Agenda, menu ☰, vérifiez que MoodlePro est coché", calGSend: "📤 Envoyer le lien vers mon ordinateur", calGCopy: "🔗 Copier le lien Google", calGShare: "Lien pour ajouter l’agenda MoodlePro à Google Agenda (à ouvrir sur un ordinateur) :", calGDesk: "Dans la fenêtre qui s’ouvre, cliquez sur « Ajouter ». Les événements arrivent en quelques minutes.", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copier le lien",
+    updCheck: "🔄 Vérifier s’il y a une nouvelle version", updHow: "Les mises à jour arrivent seules : quand une nouvelle version existe, une barre « Mettre à jour » apparaît en bas. Sinon, il faut parfois fermer et rouvrir l’application deux ou trois fois de suite, ou vérifier ici.", updReady: "✨ Une nouvelle version est prête", updGo: "Mettre à jour", updNone: v => "Vous avez la dernière version (" + v + ")", updFound: v => "Version " + v + " trouvée, mise à jour…", updFail: "Impossible de vérifier, sans doute pas d’internet", calGoogle: "Google Agenda", calGTitle: "Google : l’ajouter une fois, depuis un ordinateur", calGText: "Google ne permet pas d’ajouter un agenda par lien dans l’application du téléphone, seulement sur son site, depuis un ordinateur. On le fait une fois, puis l’agenda apparaît tout seul sur le téléphone.", calG1: "Envoyez-vous le lien (WhatsApp, e-mail) ou copiez-le", calG2: "Ouvrez-le sur un ordinateur, connecté au même compte Google, et cliquez sur « Ajouter »", calG3: "Sur le téléphone : dans Google Agenda, menu ☰, vérifiez que MoodlePro est coché", calGSend: "📤 Envoyer le lien vers mon ordinateur", calGCopy: "🔗 Copier le lien Google", calGShare: "Lien pour ajouter l’agenda MoodlePro à Google Agenda (à ouvrir sur un ordinateur) :", calGDesk: "Dans la fenêtre qui s’ouvre, cliquez sur « Ajouter ». Les événements arrivent en quelques minutes.", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copier le lien",
     calNote: "Il s’ajoute comme agenda séparé nommé MoodlePro ; pour le retirer, supprimez-le de votre agenda. Google actualise ces agendas quelques fois par jour, pas instantanément. Le lien est privé : qui l’a voit vos devoirs.",
     calFile: "Ou : télécharger un fichier unique (sans mise à jour)", calStop: "🗑 Arrêter le calendrier automatique", calStopped: "Arrêté. Les événements disparaissent à la prochaine actualisation, et vous pouvez aussi le supprimer de votre agenda.",
     calFail: "Serveur injoignable : un fichier unique a été téléchargé à la place.", calCopied: "Lien copié", calLive: "Votre calendrier se met à jour seul", calManage: "Gérer le calendrier",
@@ -2497,7 +2502,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.3.0-beta.2";
+const APP_VERSION = "1.3.0-beta.3";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2712,7 +2717,9 @@ function icsExport() {
     for (const ch of l) { const b = enc.encode(ch).length; if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ""; n = 0; } cur += ch; n += b; }
     out.push(cur); return out.map((x, i) => (i ? " " : "") + x).join("\r\n");
   };
-  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//MoodlePro//EN", "CALSCALE:GREGORIAN", fold("X-WR-CALNAME:" + tx(t("docTitle")))];
+  // classes are wall-clock times in the phone's zone (Israel): say so, or a subscribed calendar (Google's are UTC) shows them hours off
+  const TZ = icsZone(), L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//MoodlePro//EN", "CALSCALE:GREGORIAN", fold("X-WR-CALNAME:" + tx(t("docTitle"))), "X-WR-TIMEZONE:" + TZ];
+  if (TZ === "Asia/Jerusalem") L.push(...VTZ_JERUSALEM);
   for (const x of items) {
     const title = shortName(x.course) + ": " + x.name;
     L.push("BEGIN:VEVENT", "UID:" + x.key.replace(":", "-") + "@moodle-tasks", "DTSTAMP:" + f(now), "DTSTART:" + f(x.due - 1800), "DTEND:" + f(x.due),
@@ -2728,8 +2735,10 @@ function icsExport() {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
   toast(t("icsDone", items.length));
 }
-async function refresh() {
-  if (V.loading || !M.token) return;
+let REF_AGAIN = false;
+async function refresh(manual) {
+  if (!M.token) return;
+  if (V.loading) { if (manual) REF_AGAIN = true; return; }        // a tap during a refresh gets one more right after it, so what's shown is from after the tap
   V.loading = true; V.err = null; render();
   let d = null;
   try {
@@ -2739,6 +2748,7 @@ async function refresh() {
     if (e.code === "invalidtoken") { V.loading = false; render(); return showSetup(e.message); }
   }
   V.loading = false; if (d) V.newsLoading = true; render();
+  if (REF_AGAIN) { REF_AGAIN = false; setTimeout(() => refresh(true), 0); }
   if (d) { syncNow(); ping(); fbFlush(); }
   if (d) {
     const [c, n] = await Promise.all([fetchContents(d).catch(() => null), fetchNews(d).catch(() => null)]);
@@ -2755,9 +2765,9 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
-  { v: "1.3.0", date: "2026-11-10", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📄 המטלות מסודרות לפי מה שעושים: הגשת קובץ (סריקה ו-PDF) או מענה בתוך Moodle", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה"],
-    en: ["📄 Tasks sorted by what you do: upload a file (scan → PDF) or answer inside Moodle", "➕ Your own tasks: add a task with a date and it behaves like a Moodle one (countdown, notifications, calendar)", "📅 A calendar that updates itself: add it once to Google Calendar or your iPhone and new assignments come in by themselves", "☀️ Morning summary: one notification in the morning with today’s deadlines, exams and classes", "🧩 Arrange the overview: what’s shown and in what order (in settings)", "📲 An offer to install on the home screen, and a quick way to import your timetable from the overview"],
-    fr: ["📄 Tâches classées selon ce qu’il faut faire : déposer un fichier (scan → PDF) ou répondre sur Moodle", "➕ Vos propres tâches : ajoutez une tâche avec une date, elle se comporte comme un devoir Moodle (compte à rebours, notifications, calendrier)", "📅 Un calendrier qui se met à jour seul : ajoutez-le une fois à Google Agenda ou à l’iPhone, les nouveaux devoirs arrivent seuls", "☀️ Résumé du matin : une notification le matin avec les échéances, examens et cours du jour", "🧩 Organiser l’aperçu : ce qui s’affiche et dans quel ordre (dans les paramètres)", "📲 Une proposition d’installer sur l’écran d’accueil, et un accès rapide à l’import de l’emploi du temps depuis l’aperçu"] },
+  { v: "1.3.0", date: "2026-11-10", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📄 המטלות מסודרות לפי מה שעושים: הגשת קובץ (סריקה ו-PDF) או מענה בתוך Moodle", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה", "🔄 המידע מתרענן בכל חזרה לאפליקציה, וכשיש גרסה חדשה מופיע כפתור ״עדכון עכשיו״ (ואפשר לבדוק גם בהגדרות)"],
+    en: ["📄 Tasks sorted by what you do: upload a file (scan → PDF) or answer inside Moodle", "➕ Your own tasks: add a task with a date and it behaves like a Moodle one (countdown, notifications, calendar)", "📅 A calendar that updates itself: add it once to Google Calendar or your iPhone and new assignments come in by themselves", "☀️ Morning summary: one notification in the morning with today’s deadlines, exams and classes", "🧩 Arrange the overview: what’s shown and in what order (in settings)", "📲 An offer to install on the home screen, and a quick way to import your timetable from the overview", "🔄 Data refreshes every time you come back to the app, and when there’s a new version an “Update now” button shows (you can also check in settings)"],
+    fr: ["📄 Tâches classées selon ce qu’il faut faire : déposer un fichier (scan → PDF) ou répondre sur Moodle", "➕ Vos propres tâches : ajoutez une tâche avec une date, elle se comporte comme un devoir Moodle (compte à rebours, notifications, calendrier)", "📅 Un calendrier qui se met à jour seul : ajoutez-le une fois à Google Agenda ou à l’iPhone, les nouveaux devoirs arrivent seuls", "☀️ Résumé du matin : une notification le matin avec les échéances, examens et cours du jour", "🧩 Organiser l’aperçu : ce qui s’affiche et dans quel ordre (dans les paramètres)", "📲 Une proposition d’installer sur l’écran d’accueil, et un accès rapide à l’import de l’emploi du temps depuis l’aperçu", "🔄 Les données se rafraîchissent à chaque retour dans l’application, et un bouton « Mettre à jour » apparaît quand une nouvelle version existe (vérifiable aussi dans les paramètres)"] },
   { v: "1.2.0", date: "2026-11-09", he: ["✨ שם חדש ולוגו חדש: MoodlePro", "🗂 בלשונית המשימות: כרטיסיות למטלות, לבחנים ולאירועים", "↩ אפשר לבטל הסתרה של פריט מיד, והמוסתרים מופיעים בסוף הרשימה", "⬅️ כפתור ״חזור״ בטלפון חוזר למסך הקודם וסוגר חלונות, במקום לצאת מהאפליקציה", "📅 ניקוי סינון של יום מהסקירה מחזיר לסקירה", "🗑 אפשר להסיר מהיומן את מה שהאפליקציה הוסיפה"],
     en: ["✨ New name and logo: MoodlePro", "🗂 Tasks tab: tabs for assignments, quizzes and events", "↩ Hiding an item can be undone right away, and hidden items are listed at the end", "⬅️ The phone’s Back button goes to the previous screen and closes windows instead of leaving the app", "📅 Clearing a day picked on the overview takes you back to the overview", "🗑 You can remove from your calendar what the app added"],
     fr: ["✨ Nouveau nom et nouveau logo : MoodlePro", "🗂 Onglet devoirs : onglets pour devoirs, tests et événements", "↩ Masquer un élément peut être annulé tout de suite, et les éléments masqués sont listés à la fin", "⬅️ Le bouton Retour revient à l’écran précédent et ferme les fenêtres au lieu de quitter l’app", "📅 Effacer un jour choisi dans l’aperçu ramène à l’aperçu", "🗑 Vous pouvez retirer du calendrier ce que l’app a ajouté"] },
@@ -2795,17 +2805,24 @@ const remDefaults = () => ({ task: ["1d", "3h"], exam: ["7d", "1d"], cls: "zoom"
 const MOR_TIMES = ["", "06:30", "07:00", "07:30", "08:00", "09:00"];
 const isZoom = x => /זום|zoom/i.test([x.place, x.kname, x.title, x.name].filter(Boolean).join(" "));
 function remCfg() { return Object.assign(remDefaults(), P.rem || {}); }
+const icsZone = () => { try { const z = Intl.DateTimeFormat().resolvedOptions().timeZone; return /^[A-Za-z_]+(\/[A-Za-z0-9_+-]+)+$/.test(z || "") ? z : "Asia/Jerusalem"; } catch (e) { return "Asia/Jerusalem"; } };
+/* Israel's clock rules (summer time from the Friday before the last Sunday of March, to the last Sunday of October) */
+const VTZ_JERUSALEM = ["BEGIN:VTIMEZONE", "TZID:Asia/Jerusalem", "X-LIC-LOCATION:Asia/Jerusalem",
+  "BEGIN:DAYLIGHT", "TZOFFSETFROM:+0200", "TZOFFSETTO:+0300", "TZNAME:IDT", "DTSTART:19700327T020000", "RRULE:FREQ=YEARLY;BYMONTH=3;BYMONTHDAY=23,24,25,26,27,28,29;BYDAY=FR", "END:DAYLIGHT",
+  "BEGIN:STANDARD", "TZOFFSETFROM:+0300", "TZOFFSETTO:+0200", "TZNAME:IST", "DTSTART:19701025T020000", "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU", "END:STANDARD", "END:VTIMEZONE"];
 function icsBuild(items) {
   const now = nowS(), enc = new TextEncoder();
   const f = ts => new Date(ts * 1000).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   const loc = d => d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
   const tx = s => String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
   const fold = l => { const out = []; let cur = "", n = 0; for (const ch of l) { const b = enc.encode(ch).length; if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ""; n = 0; } cur += ch; n += b; } out.push(cur); return out.map((x, i) => (i ? " " : "") + x).join("\r\n"); };
-  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//MoodlePro//EN", "CALSCALE:GREGORIAN", fold("X-WR-CALNAME:" + tx(t("docTitle")))];
+  // classes are wall-clock times in the phone's zone (Israel): say so, or a subscribed calendar (Google's are UTC) shows them hours off
+  const TZ = icsZone(), L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//MoodlePro//EN", "CALSCALE:GREGORIAN", fold("X-WR-CALNAME:" + tx(t("docTitle"))), "X-WR-TIMEZONE:" + TZ];
+  if (TZ === "Asia/Jerusalem") L.push(...VTZ_JERUSALEM);
   for (const x of items) {
     L.push("BEGIN:VEVENT", "UID:" + x.uid + "@moodle-tasks", "DTSTAMP:" + f(now));
     if (x.allDay) { const d = new Date(x.ts * 1000); const e = new Date(d); e.setDate(e.getDate() + 1); L.push("DTSTART;VALUE=DATE:" + loc(d), "DTEND;VALUE=DATE:" + loc(e)); }
-    else if (x.local) L.push("DTSTART:" + x.local.s, "DTEND:" + x.local.e);      // a weekly class: local wall-clock time
+    else if (x.local) L.push("DTSTART;TZID=" + TZ + ":" + x.local.s, "DTEND;TZID=" + TZ + ":" + x.local.e);      // a weekly class: wall-clock time in this zone
     else L.push("DTSTART:" + f(x.ts - (x.dur || 1800)), "DTEND:" + f(x.ts));
     if (x.rrule) L.push("RRULE:" + x.rrule);
     L.push(fold("SUMMARY:" + tx(x.title)));
@@ -3484,7 +3501,7 @@ document.addEventListener("keydown", e => {
     if (Math.abs(dx) > 50) tourStep((dx < 0) === (t("dir") === "rtl") ? -1 : 1);
   }); }
 $$(".gtabs [data-plat]").forEach(b => b.addEventListener("click", () => { PLAT = b.dataset.plat; renderGuide(); }));
-$("#bRefresh").onclick = () => refresh();
+$("#bRefresh").onclick = () => { useHit("refresh"); refresh(true); };
 $("#bSet").onclick = () => { renderSheet(); $("#sheet").hidden = false; };
 $("#bClose").onclick = () => $("#sheet").hidden = true;
 $("#sheet").addEventListener("click", e => { if (e.target.id === "sheet") $("#sheet").hidden = true; });
@@ -3625,13 +3642,46 @@ $("#bFocusClear").onclick = () => {
 $("#tabbar").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !M.token) return;
-  if (!V.data || Date.now() / 1000 - V.data.at > 300) refresh(); else syncSoon(400);
+  if (!V.data || Date.now() / 1000 - V.data.at > 20) refresh(); else syncSoon(400);      // back in the app: fresh data (unless it was just loaded)
 });
+setInterval(() => { if (!document.hidden && M.token && V.data && Date.now() / 1000 - V.data.at >= 300) refresh(); }, 30000);   // open on screen: every 5 minutes
 setInterval(() => { if (!document.hidden && V.data) render(); }, 60000);
 setInterval(tick, 1000);
 window.addEventListener("online", () => { if (M.token) refresh(); });
 
-if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  const hadSw = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+  navigator.serviceWorker.addEventListener("message", e => { if (e.data && e.data.type === "updated") showUpd(); });
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadSw) showUpd(); });
+}
+function showUpd() { if (!$("#updBar").hidden) return; useHit("updBar"); $("#updBar").hidden = false; }
+/* the stored copy of the page is refreshed in the background on every open: if it's a newer version than the one running, say so */
+async function updWaiting() {
+  try {
+    if (!window.caches || !navigator.serviceWorker || !navigator.serviceWorker.controller) return;
+    const here = location.href.split("#")[0].split("?")[0], r = await caches.match(here) || await caches.match(new URL("index.html", here).href);
+    const v = r && (/const APP_VERSION = "([^"]+)"/.exec(await r.text()) || [])[1];
+    if (v && v !== APP_VERSION) showUpd();
+  } catch (e) {}
+}
+[4000, 12000].forEach(ms => setTimeout(updWaiting, ms));
+document.addEventListener("visibilitychange", () => { if (!document.hidden) setTimeout(updWaiting, 4000); });
+$("#updGo").onclick = () => { useHit("updGo"); location.reload(); };
+async function checkUpd() {
+  const b = $("#bUpd"); useHit("updCheck"); b.disabled = true;
+  try {
+    const reg = navigator.serviceWorker && await navigator.serviceWorker.getRegistration(); if (reg) await reg.update().catch(() => {});
+    // asked with cache "reload": the service worker goes to the network for these and keeps what it gets, so a reload shows it
+    const [r] = await Promise.all([fetch("index.html", { cache: "reload" }), fetch("./", { cache: "reload" }).catch(() => null)]);
+    if (!r.ok) throw new Error(r.status);
+    const v = (/const APP_VERSION = "([^"]+)"/.exec(await r.text()) || [])[1];
+    if (v && v !== APP_VERSION) { toast(t("updFound", v), 4000); setTimeout(() => location.reload(), 900); }
+    else toast(t("updNone", APP_VERSION), 4000);
+  } catch (e) { toast(t("updFail"), 4000); }
+  b.disabled = false;
+}
+$("#bUpd").onclick = checkUpd;
 if (pushSupported()) setTimeout(() => pushKey().catch(() => {}), 2500);
 applyLang();
 importFromHash();
