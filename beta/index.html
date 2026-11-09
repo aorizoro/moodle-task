@@ -162,6 +162,9 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 /* versions + reminders */
 .betatag{font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--warn);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:3px}
 .wnv{margin:8px 0}
+.lvsteps{margin:8px 0 10px;padding-inline-start:22px;line-height:1.6}
+.lvsteps li{margin-bottom:8px}
+.lvsteps b{color:var(--accent-t)}
 .wnx{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:10px;display:flex;flex-direction:column;gap:8px}
 .thgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px;margin:6px 0 4px}
 .thgrid.sm{grid-template-columns:repeat(3,1fr)}
@@ -783,6 +786,15 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <button class="link" id="remStop" style="width:100%" hidden data-i18n="pushStop"></button>
   </div>
 </div>
+<div class="sheet" id="lvSheet" hidden>
+  <div class="box">
+    <h3><span data-i18n="lvTitle"></span> <button class="link" id="lvClose" data-i18n="close"></button></h3>
+    <p class="hint" data-i18n="lvIntro"></p>
+    <ol class="lvsteps" id="lvSteps"></ol>
+    <p class="hint" data-i18n="lvNote"></p>
+    <button class="primary" id="lvPick" style="width:100%" data-i18n="lvPick"></button>
+  </div>
+</div>
 <div class="sheet" id="thSheet" hidden>
   <div class="box">
     <h3><span data-i18n="thTitle"></span> <button class="link" id="thClose" data-i18n="close"></button></h3>
@@ -849,6 +861,12 @@ const I18N = {
     pushReady: n => "🔔 ההתראות הופעלו" + (n ? " · " + n + " תזכורות בדרך" : ""), pushOnCard: "🔔 ההתראות פועלות במכשיר הזה",
     pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
     pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
+    lvTitle: "📄 ייבוא המערכת מהלב נט", lvIntro: "פעם אחת בסמסטר, ושוב בכל פעם שהמערכת משתנה. לוקח דקה:",
+    lvS1: "נכנסים ל<b>לב נט הישן</b> (לא החדש) ומתחברים.", lvS2: "בתפריט: <b>מערכת</b> ← <b>לו״ז</b>.",
+    lvS3: "בוחרים <b>תצוגה כרשימה</b>, ו<b>מחכים כמה שניות</b> עד שהרשימה נטענת.", lvS4: "לוחצים <b>הורד בפורמט Excel</b>. הקובץ יורד למכשיר.",
+    lvS5: "חוזרים לכאן, לוחצים על הכפתור למטה ובוחרים את הקובץ שירד.",
+    lvNote: "לא צריך לפתוח את הקובץ או לשמור אותו מחדש באקסל, פשוט בוחרים אותו כמו שהוא. ייבוא חדש מחליף את המערכת הקודמת, ופעילויות פרטיות שהוספת נשארות.",
+    lvPick: "📄 בחירת הקובץ שהורדתי",
     thTitle: "🎨 מראה וצבעים", thIntro: "בחר מראה מוכן, או בנה אחד משלך למטה. השינוי מיידי ומסתנכרן למכשירים האחרים שלך.",
     thg_base: "קלאסי", thg_pastel: "פסטל עדין", thg_vivid: "עזים ומרקר", thg_dark: "כהים", thCustom: "✏️ מותאם אישית", thCustomOn: "(פעיל)",
     thCustomHint: "מתחיל מהמראה הנוכחי. כל צבע שתשנה נכנס לתוקף מיד, והשאר (רקעים רכים, טקסט על כפתורים) מחושבים לבד כדי שהכל יישאר קריא.",
@@ -864,7 +882,7 @@ const I18N = {
     tmTask: "תרגיל 3", tmCourse: "חשבון אינפי׳ 1", tmWhen: "יום ג׳, 23:59", tmC1: "אינפי", tmC2: "מבוא", tmC3: "פיזיקה", tmC4: "בדידה",
     t1Title: "כל המטלות שלך, במקום אחד", t1Text: "האפליקציה מושכת לבד את המטלות, הבחנים ומועדי ההגשה מכל הקורסים ב-Moodle, ומתעדכנת בכל פעם שפותחים אותה. למעלה רואים מה הבא בתור וכמה זמן נשאר.",
     t2Title: "לחיצה על משימה פותחת אותה", t2Text: "בלשונית ״משימות״ יש לכל מטלה ספירה לאחור, הקבצים שלה וחומרים מאותו נושא. סיימת משהו שלא מוגש ב-Moodle? ״סמן כבוצע״. לא רלוונטי? ✕ מסתיר.",
-    t3Title: "מערכת השעות, בלי להקליד", t3Text: "בלשונית ״מערכת״ לוחצים ״📄 מהלבנט״ ובוחרים את קובץ המערכת שהורדת מהלבנט. לחיצה על שיעור מאפשרת לסמן ✋ נוכחות חובה.",
+    t3Title: "מערכת השעות, בלי להקליד", t3Text: "בלשונית ״מערכת״ לוחצים ״📄 מהלבנט״, ושם מוסבר צעד אחר צעד איך מורידים את הקובץ מהלב נט הישן. לחיצה על שיעור מאפשרת לסמן ✋ נוכחות חובה.",
     t4Title: "מבחנים וסמסטר", t4Text: "מועדי המבחנים שפורסמו בלבנט מופיעים לבד, עם תג ״טרם סופי״. מד הסמסטר מראה באיזה שבוע אנחנו וכמה נשאר עד המבחנים.",
     t5Title: "עוד שני דברים קטנים", t5Text: "כדאי לשים את האפליקציה על מסך הבית, כדי שתיפתח כמו אפליקציה רגילה. אפשר לחזור למדריך הזה מתי שרוצים ב-⚙️.",
     tInstAndroid: "בדפדפן: ⋮ ← ״הוספה למסך הבית״", tInstIos: "בספארי: כפתור השיתוף ⬆️ ← ״הוסף למסך הבית״", tInstPc: "בכרום: סמל ההתקנה בשורת הכתובת",
@@ -916,7 +934,7 @@ const I18N = {
     toCal: "📅 ליומן", markDone: "✓ סמן כבוצע", unmarkDone: "↩ בטל סימון", related: n => "📚 חומרים מאותו נושא (" + n + ")",
     focusDay: x => "מסונן: " + x, focusCourse: x => "מסונן: " + x, focusGroup: x => "מסונן: " + x, clearFocus: "✕ נקה", dayEmpty: "אין משימות ביום הזה", calDue: "מועד הגשה",
     viewTT: "מערכת", ttTitle: "מערכת שעות שבועית", ttAdd: "+ הוסף", ttShare: "🔗 שתף", ttOpen: "למערכת ←", edit: "עריכה",
-    ttEmpty: "עדיין אין מערכת שעות. הכי פשוט: הורד מהלבנט את קובץ המערכת האישית שלך וייבא אותו כאן. אפשר גם להוסיף שיעורים ידנית (״+ הוסף״).",
+    ttEmpty: "עדיין אין מערכת שעות. הכי פשוט: מורידים את קובץ המערכת מהלב נט הישן ומייבאים אותו כאן (הכפתור למטה מסביר איך). אפשר גם להוסיף שיעורים ידנית (״+ הוסף״).",
     ttNewTitle: "שיעור חדש", ttEditTitle: "עריכת שיעור", ttCourse: "קורס", ttOtherCourse: "אחר (לא מ-Moodle)", ttName: "שם להצגה", ttKind: "סוג", ttDay: "יום",
     ttFrom: "משעה", ttTo: "עד שעה", ttPlace: "מקום / חדר", save: "שמור", del: "מחק", delConfirm: "למחוק את השיעור הזה מהמערכת?",
     kLec: "שיעור", kEx: "תרגול", kLab: "מעבדה", kOther: "אחר", ttBadTime: "שעת הסיום צריכה להיות אחרי שעת ההתחלה.", ttNeedName: "בחר קורס או כתוב שם.",
@@ -943,7 +961,7 @@ const I18N = {
     ttPriv: "🔒 פרטי (לא נכלל כשמשתפים את המערכת)", ttClear: "מחק את כל המערכת", ttClearConfirm: n => "למחוק את כל " + n + " השיעורים מהמכשיר הזה?",
     importAsk: parts => "הקישור הזה רוצה להוסיף למכשיר שלך:\n" + parts.join("\n") + "\n\nלהוסיף?", importTT: (n, ex) => "• מערכת שעות: " + n + " שיעורים (" + ex + ")" , importTTRep: n => "  (תחליף את המערכת הנוכחית, " + n + " שיעורים)", importCC: n => "• צבעים ל-" + n + " קורסים", importDone: "נוסף ✓",
     ttImport: "📄 מהלבנט", ttImportLong: "📄 ייבוא המערכת מקובץ הלבנט", ttScanLong: "⤓ חיפוש ביומן של Moodle", ttWho: "מרצה",
-    ttFileBad: "לא הצלחתי לקרוא את הקובץ. צריך את קובץ המערכת האישית שמורידים מהלבנט (כמו שהוא, בלי לפתוח ולשמור מחדש באקסל).",
+    ttFileBad: "לא הצלחתי לקרוא את הקובץ. צריך את הקובץ מהלב נט הישן: מערכת ← לו״ז ← תצוגה כרשימה ← הורד בפורמט Excel, כמו שהוא, בלי לפתוח ולשמור באקסל.",
     ttFileAsk: (n, c, old) => "נמצאו בקובץ " + n + " שיעורים ב-" + c + " קורסים." + (old ? "\nהם יחליפו את " + old + " השיעורים שיש עכשיו במערכת (שיעורים שסימנת כפרטיים יישארו)." : "") + "\n\nלייבא?",
     ttFileDone: n => "המערכת יובאה: " + n + " שיעורים ✓",
     exLev: "לבנט · טרם סופי", exLevFinal: "לבנט", exTomorrow: "מחר", exLevNote: d => "תאריכי מועד א׳ כפי שפורסמו בלבנט (טיוטה מ-" + d + "). הם עדיין לא סופיים ועלולים להשתנות.",
@@ -982,6 +1000,12 @@ const I18N = {
     pushReady: n => "🔔 Notifications on" + (n ? " · " + n + " reminders scheduled" : ""), pushOnCard: "🔔 Notifications are on for this device",
     pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
     pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
+    lvTitle: "📄 Import your timetable from Levnet", lvIntro: "Once a semester, and again whenever your timetable changes. Takes a minute:",
+    lvS1: "Open the <b>old Levnet</b> (not the new one) and sign in.", lvS2: "In the menu: <b>מערכת</b> (Timetable) → <b>לו״ז</b> (Schedule).",
+    lvS3: "Choose <b>תצוגה כרשימה</b> (list view) and <b>wait a few seconds</b> for the list to load.", lvS4: "Tap <b>הורד בפורמט Excel</b> (download as Excel). The file downloads to your device.",
+    lvS5: "Come back here, tap the button below and pick the downloaded file.",
+    lvNote: "No need to open the file or re-save it in Excel, just pick it as it is. A new import replaces the previous timetable; private activities you added stay.",
+    lvPick: "📄 Pick the file I downloaded",
     thTitle: "🎨 Look & colours", thIntro: "Pick a ready-made look, or build your own below. It changes right away and syncs to your other devices.",
     thg_base: "Classic", thg_pastel: "Soft pastel", thg_vivid: "Bold & highlighter", thg_dark: "Dark", thCustom: "✏️ Custom", thCustomOn: "(on)",
     thCustomHint: "Starts from the current look. Every colour you change applies at once; the rest (soft backgrounds, text on buttons) is worked out for you so everything stays readable.",
@@ -997,7 +1021,7 @@ const I18N = {
     tmTask: "Exercise 3", tmCourse: "Calculus 1", tmWhen: "Tue, 23:59", tmC1: "Calculus", tmC2: "Intro", tmC3: "Physics", tmC4: "Discrete",
     t1Title: "All your assignments in one place", t1Text: "The app pulls assignments, quizzes and deadlines from all your Moodle courses by itself, and updates every time you open it. At the top you see what’s next and how much time is left.",
     t2Title: "Tap a task to open it", t2Text: "In “Tasks” every assignment has a countdown, its files and materials from the same topic. Finished something not submitted on Moodle? “Mark done”. Not relevant? ✕ hides it.",
-    t3Title: "Your timetable, no typing", t3Text: "In “Timetable” tap “📄 Levnet file” and pick the timetable file you downloaded from Levnet. Tap a class to mark ✋ mandatory attendance.",
+    t3Title: "Your timetable, no typing", t3Text: "In “Timetable” tap “📄 Levnet file”: it shows step by step how to download the file from the old Levnet. Tap a class to mark ✋ mandatory attendance.",
     t4Title: "Exams and the semester", t4Text: "Exam dates published on Levnet show up by themselves, with a “not final” badge. The semester bar shows which week it is and how long until exams.",
     t5Title: "Two more small things", t5Text: "Add the app to your home screen so it opens like a normal app. You can come back to this guide any time from ⚙️.",
     tInstAndroid: "In the browser: ⋮ → “Add to Home screen”", tInstIos: "In Safari: Share ⬆️ → “Add to Home Screen”", tInstPc: "In Chrome: the install icon in the address bar",
@@ -1049,7 +1073,7 @@ const I18N = {
     toCal: "📅 Calendar", markDone: "✓ Mark done", unmarkDone: "↩ Unmark", related: n => "📚 Materials from the same topic (" + n + ")",
     focusDay: x => "Filtered: " + x, focusCourse: x => "Filtered: " + x, focusGroup: x => "Filtered: " + x, clearFocus: "✕ Clear", dayEmpty: "No tasks on this day", calDue: "Due",
     viewTT: "Timetable", ttTitle: "Weekly timetable", ttAdd: "+ Add", ttShare: "🔗 Share", ttOpen: "Timetable →", edit: "Edit",
-    ttEmpty: "No timetable yet. Easiest: download your personal timetable file from Levnet and import it here. You can also add classes manually (“+ Add”).",
+    ttEmpty: "No timetable yet. Easiest: download your timetable file from the old Levnet and import it here (the button below shows how). You can also add classes manually (“+ Add”).",
     ttNewTitle: "New class", ttEditTitle: "Edit class", ttCourse: "Course", ttOtherCourse: "Other (not on Moodle)", ttName: "Display name", ttKind: "Type", ttDay: "Day",
     ttFrom: "From", ttTo: "To", ttPlace: "Place / room", save: "Save", del: "Delete", delConfirm: "Delete this class from the timetable?",
     kLec: "Lecture", kEx: "Tutorial", kLab: "Lab", kOther: "Other", ttBadTime: "The end time must be after the start time.", ttNeedName: "Pick a course or type a name.",
@@ -1076,7 +1100,7 @@ const I18N = {
     ttPriv: "🔒 Private (left out when sharing the timetable)", ttClear: "Delete the whole timetable", ttClearConfirm: n => "Delete all " + n + " classes from this device?",
     importAsk: parts => "This link wants to add to your device:\n" + parts.join("\n") + "\n\nAdd it?", importTT: (n, ex) => "• Timetable: " + n + " classes (" + ex + ")", importTTRep: n => "  (replaces your current timetable, " + n + " classes)", importCC: n => "• Colours for " + n + " courses", importDone: "Added ✓",
     ttImport: "📄 Levnet file", ttImportLong: "📄 Import from the Levnet file", ttScanLong: "⤓ Search the Moodle calendar", ttWho: "Lecturer",
-    ttFileBad: "Couldn’t read that file. Use the personal timetable file downloaded from Levnet (as is, without re-saving it in Excel).",
+    ttFileBad: "Couldn’t read that file. Use the file from the old Levnet: מערכת → לו״ז → list view → download as Excel, as is, without re-saving it in Excel.",
     ttFileAsk: (n, c, old) => "Found " + n + " classes in " + c + " courses." + (old ? "\nThey replace the " + old + " classes you have now (classes marked private stay)." : "") + "\n\nImport?",
     ttFileDone: n => "Timetable imported: " + n + " classes ✓",
     exLev: "Levnet · not final", exLevFinal: "Levnet", exTomorrow: "Tomorrow", exLevNote: d => "1st-sitting dates as published on Levnet (draft of " + d + "). They are not final yet and may change.",
@@ -1115,6 +1139,12 @@ const I18N = {
     pushReady: n => "🔔 Notifications activées" + (n ? " · " + n + " rappels programmés" : ""), pushOnCard: "🔔 Notifications activées sur cet appareil",
     pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
     pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
+    lvTitle: "📄 Importer l’emploi du temps depuis Levnet", lvIntro: "Une fois par semestre, et à chaque changement d’emploi du temps. Une minute :",
+    lvS1: "Ouvrez l’<b>ancien Levnet</b> (pas le nouveau) et connectez-vous.", lvS2: "Dans le menu : <b>מערכת</b> (Emploi du temps) → <b>לו״ז</b> (Horaire).",
+    lvS3: "Choisissez <b>תצוגה כרשימה</b> (affichage en liste) et <b>attendez quelques secondes</b> que la liste se charge.", lvS4: "Touchez <b>הורד בפורמט Excel</b> (télécharger en Excel). Le fichier se télécharge.",
+    lvS5: "Revenez ici, touchez le bouton ci-dessous et choisissez le fichier téléchargé.",
+    lvNote: "Inutile d’ouvrir le fichier ou de le réenregistrer dans Excel : choisissez-le tel quel. Un nouvel import remplace l’emploi du temps précédent ; vos activités privées restent.",
+    lvPick: "📄 Choisir le fichier téléchargé",
     thTitle: "🎨 Apparence et couleurs", thIntro: "Choisissez une apparence prête, ou créez la vôtre plus bas. Le changement est immédiat et se synchronise sur vos autres appareils.",
     thg_base: "Classique", thg_pastel: "Pastel doux", thg_vivid: "Vif et surligneur", thg_dark: "Sombres", thCustom: "✏️ Personnalisé", thCustomOn: "(actif)",
     thCustomHint: "Part de l’apparence actuelle. Chaque couleur modifiée s’applique tout de suite ; le reste (fonds doux, texte des boutons) est calculé pour rester lisible.",
@@ -1130,7 +1160,7 @@ const I18N = {
     tmTask: "Exercice 3", tmCourse: "Analyse 1", tmWhen: "mar., 23:59", tmC1: "Analyse", tmC2: "Intro", tmC3: "Physique", tmC4: "Discrètes",
     t1Title: "Tous vos devoirs au même endroit", t1Text: "L’application récupère seule les devoirs, tests et échéances de tous vos cours Moodle, et se met à jour à chaque ouverture. En haut : le prochain devoir et le temps restant.",
     t2Title: "Touchez un devoir pour l’ouvrir", t2Text: "Dans « Devoirs », chaque devoir a un compte à rebours, ses fichiers et les supports du même thème. Fini quelque chose qui ne se rend pas sur Moodle ? « Marquer fait ». Pas pertinent ? ✕ le masque.",
-    t3Title: "Votre emploi du temps, sans rien taper", t3Text: "Dans « Emploi du temps », touchez « 📄 Fichier Levnet » et choisissez le fichier téléchargé depuis Levnet. Touchez un cours pour marquer ✋ la présence obligatoire.",
+    t3Title: "Votre emploi du temps, sans rien taper", t3Text: "Dans « Emploi du temps », touchez « 📄 Fichier Levnet » : les étapes pour télécharger le fichier depuis l’ancien Levnet y sont expliquées. Touchez un cours pour marquer ✋ la présence obligatoire.",
     t4Title: "Examens et semestre", t4Text: "Les dates d’examen publiées sur Levnet s’affichent seules, avec un badge « provisoire ». La barre du semestre montre la semaine en cours et le temps restant avant les examens.",
     t5Title: "Encore deux petites choses", t5Text: "Ajoutez l’application à l’écran d’accueil pour l’ouvrir comme une vraie application. Ce guide reste accessible dans ⚙️.",
     tInstAndroid: "Dans le navigateur : ⋮ → « Ajouter à l’écran d’accueil »", tInstIos: "Dans Safari : Partager ⬆️ → « Sur l’écran d’accueil »", tInstPc: "Dans Chrome : l’icône d’installation dans la barre d’adresse",
@@ -1182,7 +1212,7 @@ const I18N = {
     toCal: "📅 Calendrier", markDone: "✓ Marquer fait", unmarkDone: "↩ Annuler", related: n => "📚 Supports du même thème (" + n + ")",
     focusDay: x => "Filtré : " + x, focusCourse: x => "Filtré : " + x, focusGroup: x => "Filtré : " + x, clearFocus: "✕ Effacer", dayEmpty: "Aucun devoir ce jour-là", calDue: "Échéance",
     viewTT: "Emploi du temps", ttTitle: "Emploi du temps hebdomadaire", ttAdd: "+ Ajouter", ttShare: "🔗 Partager", ttOpen: "Emploi du temps →", edit: "Modifier",
-    ttEmpty: "Pas encore d’emploi du temps. Le plus simple : téléchargez votre fichier d’emploi du temps depuis Levnet et importez-le ici. Vous pouvez aussi ajouter des cours à la main (« + Ajouter »).",
+    ttEmpty: "Pas encore d’emploi du temps. Le plus simple : téléchargez le fichier depuis l’ancien Levnet et importez-le ici (le bouton ci-dessous explique comment). Vous pouvez aussi ajouter des cours à la main (« + Ajouter »).",
     ttNewTitle: "Nouveau cours", ttEditTitle: "Modifier le cours", ttCourse: "Matière", ttOtherCourse: "Autre (hors Moodle)", ttName: "Nom affiché", ttKind: "Type", ttDay: "Jour",
     ttFrom: "De", ttTo: "À", ttPlace: "Lieu / salle", save: "Enregistrer", del: "Supprimer", delConfirm: "Supprimer ce cours de l’emploi du temps ?",
     kLec: "Cours", kEx: "TD", kLab: "TP", kOther: "Autre", ttBadTime: "L’heure de fin doit être après l’heure de début.", ttNeedName: "Choisissez une matière ou saisissez un nom.",
@@ -1209,7 +1239,7 @@ const I18N = {
     ttPriv: "🔒 Privé (exclu du partage de l’emploi du temps)", ttClear: "Supprimer tout l’emploi du temps", ttClearConfirm: n => "Supprimer les " + n + " cours de cet appareil ?",
     importAsk: parts => "Ce lien veut ajouter à votre appareil :\n" + parts.join("\n") + "\n\nAjouter ?", importTT: (n, ex) => "• Emploi du temps : " + n + " cours (" + ex + ")", importTTRep: n => "  (remplace votre emploi du temps actuel, " + n + " cours)", importCC: n => "• Couleurs pour " + n + " cours", importDone: "Ajouté ✓",
     ttImport: "📄 Fichier Levnet", ttImportLong: "📄 Importer le fichier Levnet", ttScanLong: "⤓ Chercher dans le calendrier Moodle", ttWho: "Enseignant",
-    ttFileBad: "Impossible de lire ce fichier. Utilisez le fichier d’emploi du temps téléchargé depuis Levnet (tel quel, sans le réenregistrer dans Excel).",
+    ttFileBad: "Impossible de lire ce fichier. Utilisez le fichier de l’ancien Levnet : מערכת → לו״ז → liste → télécharger en Excel, tel quel, sans le réenregistrer dans Excel.",
     ttFileAsk: (n, c, old) => n + " cours trouvés dans " + c + " matières." + (old ? "\nIls remplacent les " + old + " cours actuels (les cours privés restent)." : "") + "\n\nImporter ?",
     ttFileDone: n => "Emploi du temps importé : " + n + " cours ✓",
     exLev: "Levnet · provisoire", exLevFinal: "Levnet", exTomorrow: "Demain", exLevNote: d => "Dates de 1re session publiées sur Levnet (brouillon du " + d + "). Elles ne sont pas encore définitives et peuvent changer.",
@@ -1912,10 +1942,10 @@ function readTimetableFile(buf) {
 }
 function importLevnet(buf) {
   const L = readTimetableFile(buf);
-  if (!L || !L.length) return toast(t("ttFileBad"), 7000);
+  if (!L || !L.length) { toast(t("ttFileBad"), 9000); return openLevnet(); }
   const old = P.tt.filter(x => !x.priv).length, courses = new Set(L.map(x => x.code || x.title)).size;
   if (!confirm(t("ttFileAsk", L.length, courses, old))) return;
-  P.tt = P.tt.filter(x => x.priv).concat(L); savePrefs(); render(); toast(t("ttFileDone", L.length));
+  P.tt = P.tt.filter(x => x.priv).concat(L); savePrefs(); render(); toast(t("ttFileDone", L.length)); useHit("ttImport");
 }
 
 /* a shared link only ever adds after the user approves what it contains */
@@ -2195,7 +2225,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.1.0-beta.5";
+const APP_VERSION = "1.1.1";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2235,14 +2265,30 @@ async function fbFlush() {
   LS.set("fbQueue", left);
 }
 function statsOnNow() { return true; }
+/* how this person has the app set up, and what they used since the last daily signal: so it's clear which features people use */
+function useHit(k) { try { const c = LS.get("useCnt", {}); c[k] = Math.min((c[k] || 0) + 1, 9999); LS.set("useCnt", c); } catch (e) {} }
+function usageStats() {
+  const r = remCfg(), on = !!(P.rem && P.rem.on);
+  return {
+    theme: (P.theme && P.theme.id) || "auto",
+    rem: on ? (remHow() === "push" ? "push" : "cal") : (P.rem && P.rem.asked ? "no" : "unset"),
+    remT: on ? r.task.join("+") || "-" : "", remE: on ? r.exam.join("+") || "-" : "", remC: on ? (r.cls === "none" ? "none" : r.cls + "/" + r.clsMin) : "",
+    push: pushOn() ? "on" : pushPerm(),
+    tt: P.tt.filter(x => !x.priv).length, priv: P.tt.filter(x => x.priv).length, att: P.tt.filter(x => x.att).length,
+    exams: Object.keys(P.exams || {}).length, sem: !!(P.sem && P.sem.s), hidden: P.hidden.length, off: P.off.length, manual: P.manual.length,
+    colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days, tour: LS.get("tourDone", false) === true,
+    n: LS.get("useCnt", {}),
+  };
+}
 async function ping() {
   if (!fbReady() || !statsOnNow() || !M.token || navigator.onLine === false) return;
   const today = dayKey(new Date());
   if (LS.get("pingDay", "") === today) return;
-  try { await fbPost("ping", "", "", techMeta({ courses: ((V.data && V.data.courses) || []).filter(c => !isOff(c.id)).length, tt: P.tt.length > 0 }), senderInfo()); LS.set("pingDay", today); } catch (e) {}
+  try { await fbPost("ping", "", "", techMeta({ courses: ((V.data && V.data.courses) || []).filter(c => !isOff(c.id)).length, tt: P.tt.length > 0, u: usageStats() }), senderInfo()); LS.set("pingDay", today); LS.set("useCnt", {}); } catch (e) {}
 }
 const FB_KINDS = [["idea", "fbIdea"], ["bug", "fbBug"], ["question", "fbQuestion"], ["praise", "fbPraise"]];
 function openFb() {
+  useHit("fb");
   $("#fbKind").innerHTML = FB_KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join("");
   const w = senderInfo(); $("#fbWhoLbl").textContent = t("fbWho", w.name || "—"); $("#fbWho").closest("label").hidden = !w.name && !w.courses;
   $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; $("#fbMsg").focus();
@@ -2282,7 +2328,7 @@ function renderNews(d) {
 
 /* ---------- render: everything ---------- */
 function setView(v) {
-  V.view = v === "tasks" || v === "tt" ? v : "dash"; LS.set("view", V.view); document.body.dataset.view = V.view;
+  V.view = v === "tasks" || v === "tt" ? v : "dash"; LS.set("view", V.view); document.body.dataset.view = V.view; useHit("v_" + V.view);
   $$("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.v === V.view));
 }
 const wide = () => window.matchMedia("(min-width:760px)").matches;
@@ -2442,11 +2488,11 @@ function whatsNew(force) {
   if (!force) {
     if (!WAS_CONN) { LS.set("seenVer", APP_VERSION); return false; }      // someone connecting just now gets the tour, not a changelog
     if (seen === APP_VERSION) return false;
-    const a = seenNum(seen), b = verNum(APP_VERSION);
-    if (a > b || (a === b && CHANNEL !== "beta")) return false;         // the beta shows it again for every test build
   }
-  const from = force ? verNum(APP_VERSION) - 1000 : Math.min(seenNum(seen), verNum(APP_VERSION) - 1);
+  // only versions listed in CHANGES are announced: an update with fixes only (not listed) opens nothing
+  const from = force ? verNum(APP_VERSION) - 1000 : seenNum(seen);
   const list = CHANGES.filter(c => verNum(c.v) > from && verNum(c.v) <= verNum(APP_VERSION));
+  if (!list.length) { if (!force) LS.set("seenVer", APP_VERSION); return false; }
   $("#wnList").innerHTML = list.map(c => '<div class="wnv"><b>' + esc(t("version", c.v)) + "</b><ul>" + (c[LANG] || c.he).map(x => "<li>" + esc(x) + "</li>").join("") + "</ul></div>").join("");
   $("#wnRem").textContent = t(P.rem && P.rem.on ? "wnRemBtn2" : "wnRemBtn");
   $("#wnThemes").innerHTML = TH_FEATURED.map(id => thSwatch(THEMES.find(p => p.id === id), id === thCur())).join("");
@@ -2528,6 +2574,7 @@ function remExport(fresh) {
 }
 const REM_CHOICES = { task: ["7d", "3d", "1d", "3h", "1h"], exam: ["7d", "3d", "1d"] };
 function openRem(ask) {
+  useHit(ask ? "remAsk" : "rem");
   const c = remCfg();
   $("#remTitle").textContent = t(ask ? "remAskTitle" : "remTitle");
   $("#remIntro").hidden = !ask;
@@ -2704,7 +2751,7 @@ function setTheme(th) {
   $$(".thcur").forEach(e => e.textContent = thCur() === "custom" ? t("thCustom") : thName(THEMES.find(p => p.id === thCur()) || THEMES[0]));
   if (!$("#thSheet").hidden) { $("#thCustomOn").hidden = thCur() !== "custom"; if (thCur() !== "custom") { const cc = thEffective(); $$("#thEdit [data-thf]").forEach(i => i.value = cc[i.dataset.thf]); } }
 }
-function openThemes() { $("#sheet").hidden = true; $("#wnSheet").hidden = true; renderThemes(); $("#thSheet").hidden = false; }
+function openThemes() { useHit("themes"); $("#sheet").hidden = true; $("#wnSheet").hidden = true; renderThemes(); $("#thSheet").hidden = false; }
 let thLast = "";
 function themeSync() {
   const j = JSON.stringify(P.theme || null); if (j !== thLast) { thLast = j; applyTheme(P.theme); }
@@ -2780,7 +2827,7 @@ function showMain() {
   M.url = LS.get("site", DEFAULT_SITE); M.token = LS.get("token", "");
   document.body.classList.add("app"); $("#tabbar").hidden = false; setView(V.view);
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
-  render(); refresh();
+  render(); refresh(); useHit("open");
   // the tour opens once, after the app first opens (not in automated test browsers, where it would cover everything)
   if (!LS.get("tourDone", false) && !navigator.webdriver) setTimeout(() => { if (!LS.get("tourDone", false) && $("#tour").hidden) openTour(); }, 700);
   else if (!navigator.webdriver) setTimeout(() => { if ($("#tour").hidden) whatsNew(); }, 900);
@@ -2941,9 +2988,17 @@ $("#bSemEdit").onclick = openSemSettings;
 $("#bTtAdd").onclick = () => openTT();
 $("#bTtShare").onclick = shareTT;
 $("#bTtScan").onclick = scanTT;
-$("#bTtFile").onclick = () => $("#ttFile").click();
+function openLevnet() {
+  useHit("lvGuide"); $("#sheet").hidden = true;
+  $("#lvSteps").innerHTML = ["lvS1", "lvS2", "lvS3", "lvS4", "lvS5"].map(k => "<li>" + t(k) + "</li>").join("");     // constant strings from I18N (with <b>)
+  $("#lvSheet").hidden = false;
+}
+$("#bTtFile").onclick = openLevnet;
+$("#lvPick").onclick = () => { $("#lvSheet").hidden = true; $("#ttFile").click(); };
+$("#lvClose").onclick = () => { $("#lvSheet").hidden = true; };
+$("#lvSheet").addEventListener("click", e => { if (e.target.id === "lvSheet") $("#lvSheet").hidden = true; });
 $("#ttFile").onchange = async e => { const f = e.target.files[0]; e.target.value = ""; if (f) importLevnet(await f.arrayBuffer()); };
-$("#tt").addEventListener("click", e => { if (e.target.closest("[data-ttfile]")) $("#ttFile").click(); else if (e.target.closest("[data-ttscan]")) scanTT(); });
+$("#tt").addEventListener("click", e => { if (e.target.closest("[data-ttfile]")) openLevnet(); else if (e.target.closest("[data-ttscan]")) scanTT(); });
 $("#bTtClear").onclick = () => { if (P.tt.length && confirm(t("ttClearConfirm", P.tt.length))) { P.tt = []; savePrefs(); render(); } };
 $("#scClose").onclick = () => $("#scSheet").hidden = true;
 $("#scSheet").addEventListener("click", e => { if (e.target.id === "scSheet") $("#scSheet").hidden = true; });
