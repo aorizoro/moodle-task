@@ -13,5 +13,8 @@
    (`release-1.0.0` is the first). To roll back: copy `index.html` and `sw.js` from the previous
    release branch to the root and bump `CACHE`.
 
+"מה חדש" opens only for versions that have an entry in `CHANGES` inside `index.html`. A fix-only release
+(PATCH) gets no entry there, so it updates quietly; it still goes into CHANGELOG.md.
+
 Version numbers: `MAJOR.MINOR.PATCH` — PATCH for fixes, MINOR for new features, MAJOR for changes
 that need users to do something (reconnect, re-import).
