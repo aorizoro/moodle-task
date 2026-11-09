@@ -99,6 +99,79 @@ body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
 .btn.primary{background:var(--accent);color:#fff}
 details{margin:10px 0}
 summary{cursor:pointer;padding:4px 0;font-weight:600}
+/* first-run tour */
+.tour{position:fixed;inset:0;z-index:50;background:#0009;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom))}
+.tbox{position:relative;background:var(--card);border-radius:20px;width:100%;max-width:440px;padding:18px 18px 16px;box-shadow:0 20px 60px #0005;display:flex;flex-direction:column;gap:6px;max-height:100%;overflow:auto}
+.tskip{position:absolute;inset-block-start:8px;inset-inline-end:10px;font-size:14px}
+.tart{height:190px;border-radius:14px;background:var(--row);display:flex;align-items:center;justify-content:center;overflow:hidden;margin-top:26px;padding:12px;pointer-events:none}
+.tart>*{width:100%;max-width:330px}
+.tbox h3{margin:10px 0 0;font-size:20px;text-wrap:balance}
+.tbox p{margin:0;color:var(--muted);line-height:1.55;font-size:15px;min-height:4.6em}
+.tfoot{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.tdots{display:flex;gap:6px}
+.tdots i{width:7px;height:7px;border-radius:50%;background:var(--line)}
+.tdots i.on{background:var(--accent);width:18px;border-radius:99px}
+.tbtns{display:flex;gap:8px}
+@media (prefers-reduced-motion:no-preference){ .tart>*{animation:tin .35s ease} }
+@keyframes tin{from{opacity:0;transform:translateY(8px)}}
+/* tour pictures, drawn with the app's own pieces */
+.tm-hero{border-radius:14px;color:#fff;padding:12px 14px;background:linear-gradient(135deg,color-mix(in srgb,#fa7a17 72%,#000),color-mix(in srgb,#fa7a17 55%,#3b1470))}
+.tm-hero small{opacity:.85;display:block;font-size:12px}
+.tm-hero b{display:block;font-size:17px;margin:2px 0}
+.tm-hero span{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.tm-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+.tm-tiles div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 8px;font-size:11px;color:var(--muted)}
+.tm-tiles div b{display:block;font-size:18px;color:var(--text)}
+.tm-tiles div:first-child b{color:var(--err)}
+.tart .task{margin:0;font-size:14px}
+.tart .task .tname{font-size:15px}
+.tm-tt{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;height:136px}
+.tm-tt>div{position:relative;background:var(--card);border-radius:8px}
+.tm-tt i{position:absolute;inset-inline:3px;border-radius:7px;color:#fff;font-style:normal;font-size:11.5px;font-weight:700;padding:4px 5px;background:var(--c)}
+.tm-tt i.att{background:repeating-linear-gradient(135deg,var(--c) 0 7px,color-mix(in srgb,var(--c) 80%,#000) 7px 14px);box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--c) 55%,#000)}
+.tm-file{display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:4px 10px;font-size:12.5px}
+.tm-sem>b{display:block;font-size:16px;margin-bottom:8px}
+.tm-sem>b small{font-size:13px;color:var(--muted);font-weight:600}
+.tart .er{margin:10px 0 0;background:var(--card)}
+.tm-steps{display:grid;gap:8px;font-size:14px}
+.tm-steps div{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.tm-steps span{font-size:22px;flex:none;width:30px;text-align:center}
+/* setup guide */
+.gsteps{list-style:none;margin:14px 0 6px;padding:0;display:grid;gap:12px}
+.gstep{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--row)}
+.gstep.flash{animation:fl 1.2s ease 2}
+@keyframes fl{50%{box-shadow:0 0 0 4px var(--warn)}}
+.gh{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.gh b{font-size:16.5px}
+.gn{flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+.gp{margin:6px 0;line-height:1.55}
+.gdo{font-weight:600;background:var(--accent-soft);color:var(--accent);border-radius:10px;padding:8px 10px}
+.gnote{font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.5}
+.gnote code{direction:ltr;unicode-bidi:isolate;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:0 5px;font-size:12.5px}
+.gnote.warn{color:var(--text)}
+.gtabs{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:6px 0 10px;background:var(--card)}
+.gtabs button{border:0;border-radius:0;padding:7px 12px;font-size:14px;background:none}
+.gtabs button.on{background:var(--accent);color:#fff;font-weight:600}
+.ill{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--card);max-width:340px;margin:0 auto;box-shadow:0 4px 18px #0001}
+.ill-bar{background:var(--row);border-bottom:1px solid var(--line);padding:7px 10px;font-size:12px;color:var(--muted);direction:ltr;text-align:left}
+.ill-bar span{display:inline-block;background:var(--card);border-radius:99px;padding:2px 10px}
+.ill-page{position:relative;padding:16px 14px 150px;text-align:start}
+.ill-line{display:block;height:8px;border-radius:4px;background:var(--track);width:85%;margin-bottom:8px}
+.ill-line.s{width:55%}
+.ill-link{display:inline-block;margin-top:8px;color:#1a73e8;text-decoration:underline;font-size:15px;font-weight:600;padding:2px 4px;border-radius:4px;background:#1a73e81f}
+.ill-finger{position:absolute;inset-inline-start:38px;top:56px;font-size:30px;filter:drop-shadow(0 2px 2px #0004)}
+.ill-finger::after{content:"";position:absolute;left:2px;top:-6px;width:22px;height:22px;border-radius:50%;border:3px solid #1a73e8;opacity:0}
+@media (prefers-reduced-motion:no-preference){ .ill-finger::after{animation:press 1.6s ease-out infinite} }
+@keyframes press{0%{opacity:.9;transform:scale(.6)}70%{opacity:0;transform:scale(1.6)}100%{opacity:0}}
+.ill-menu{position:absolute;inset-inline-start:56px;top:92px;inset-inline-end:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 6px 22px #0003;font-size:13.5px;overflow:hidden}
+.ill-menu div{padding:7px 10px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:6px;align-items:center}
+.ill-menu div:last-child{border-bottom:0}
+.ill-menu .ok{background:color-mix(in srgb,var(--ok) 16%,var(--card));font-weight:700;color:var(--text)}
+.ill-menu .no{color:var(--muted);text-decoration:line-through}
+.ill-menu .ok::after{content:"✓";color:var(--ok);font-weight:800}
+.ill-menu .no::after{content:"✕";color:var(--err);text-decoration:none}
+.ill-page.pc .ill-finger{display:none}
+.ill-menu .hd{font-size:11.5px;color:var(--muted);direction:ltr;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;display:block}
 .langrow{display:flex;justify-content:flex-end;align-items:center;gap:6px;margin:0 0 4px}
 .langrow select{font-size:14px;padding:5px 8px}
 
@@ -381,12 +454,39 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div class="langrow"><span aria-hidden="true">🌐</span><select class="langSel" aria-label="Language"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
     <h2 data-i18n="setupTitle"></h2>
     <div class="hint" data-i18n="setupHint"></div>
-    <div class="step"><b>1.</b> <span data-i18n="step1"></span>
-      <a class="btn primary" id="bGet" target="_blank" rel="noopener noreferrer" data-i18n="getToken"></a></div>
-    <div class="step"><b>2.</b> <span data-i18n-html="step2"></span>
-      <div class="hint" data-i18n="step2hint"></div></div>
-    <div class="step"><b>3.</b> <span data-i18n="step3"></span>
-      <button class="primary" id="bPaste" style="width:100%" data-i18n="pasteConnect"></button></div>
+    <ol class="gsteps">
+      <li class="gstep">
+        <div class="gh"><span class="gn">1</span><b data-i18n="g1Title"></b></div>
+        <a class="btn primary" id="bGet" target="_blank" rel="noopener noreferrer" data-i18n="getToken"></a>
+        <div class="hint" data-i18n="g1Hint"></div>
+      </li>
+      <li class="gstep" id="gStep2">
+        <div class="gh"><span class="gn">2</span><b data-i18n="g2Title"></b></div>
+        <p class="gp" data-i18n-html="g2Text"></p>
+        <div class="gtabs" role="tablist">
+          <button data-plat="android" role="tab" data-i18n="platAndroid"></button>
+          <button data-plat="ios" role="tab" data-i18n="platIos"></button>
+          <button data-plat="pc" role="tab" data-i18n="platPc"></button>
+        </div>
+        <div class="ill" aria-hidden="true">
+          <div class="ill-bar"><span>🔒 moodle.jct.ac.il</span></div>
+          <div class="ill-page">
+            <i class="ill-line"></i><i class="ill-line s"></i>
+            <span class="ill-link" data-i18n="illLink"></span>
+            <span class="ill-finger" id="illFinger">👆</span>
+            <div class="ill-menu" id="illMenu"></div>
+          </div>
+        </div>
+        <p class="gp gdo" id="gDo"></p>
+        <div class="gnote">🔑 <span data-i18n-html="g2Looks"></span></div>
+        <div class="gnote warn">⚠️ <span data-i18n="step2hint"></span></div>
+      </li>
+      <li class="gstep">
+        <div class="gh"><span class="gn">3</span><b data-i18n="g3Title"></b></div>
+        <button class="primary" id="bPaste" style="width:100%" data-i18n="pasteConnect"></button>
+        <div class="hint" data-i18n="g3Hint"></div>
+      </li>
+    </ol>
     <label for="tok" data-i18n="manual"></label>
     <input type="password" id="tok" autocomplete="off" data-i18n-ph="tokPh">
     <button id="bConnect" style="width:100%;margin-top:10px" data-i18n="connect"></button>
@@ -499,6 +599,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div class="srow"><span data-i18n="syncOnLbl"></span><input type="checkbox" id="syncOn"></div>
     <div class="hint" data-i18n="syncHint"></div>
     <div class="srow"><span class="hint" id="syncStatus"></span><button class="link" id="bSyncNow" data-i18n="syncNowBtn"></button></div>
+    <button id="bTour" style="width:100%;margin-top:14px" data-i18n="tourOpen"></button>
     <div id="fbSet" hidden>
       <div style="margin-top:14px;font-weight:700" data-i18n="fbTitle"></div>
       <button id="bFb" style="width:100%;margin-top:6px" data-i18n="fbOpen"></button>
@@ -558,6 +659,18 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <button class="primary" id="fbSend" style="width:100%" data-i18n="fbSend"></button>
   </div>
 </div>
+<div class="tour" id="tour" hidden role="dialog" aria-modal="true" aria-labelledby="tourTitle">
+  <div class="tbox">
+    <button class="link tskip" id="tourSkip" data-i18n="tourSkip"></button>
+    <div class="tart" id="tourArt" aria-hidden="true"></div>
+    <h3 id="tourTitle"></h3>
+    <p id="tourText"></p>
+    <div class="tfoot">
+      <div class="tdots" id="tourDots"></div>
+      <div class="tbtns"><button id="tourBack" data-i18n="tourBack"></button><button class="primary" id="tourNext"></button></div>
+    </div>
+  </div>
+</div>
 <div id="toast"></div>
 
 <script>
@@ -578,6 +691,29 @@ const I18N = {
   he: {
     locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "משימות Moodle", appTitle: "משימות", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
+    tourSkip: "דלג", tourBack: "חזרה", tourNext: "הבא", tourDone: "יאללה, מתחילים", tourOpen: "📖 מדריך קצר לאפליקציה",
+    tmTask: "תרגיל 3", tmCourse: "חשבון אינפי׳ 1", tmWhen: "יום ג׳, 23:59", tmC1: "אינפי", tmC2: "מבוא", tmC3: "פיזיקה", tmC4: "בדידה",
+    t1Title: "כל המטלות שלך, במקום אחד", t1Text: "האפליקציה מושכת לבד את המטלות, הבחנים ומועדי ההגשה מכל הקורסים ב-Moodle, ומתעדכנת בכל פעם שפותחים אותה. למעלה רואים מה הבא בתור וכמה זמן נשאר.",
+    t2Title: "לחיצה על משימה פותחת אותה", t2Text: "בלשונית ״משימות״ יש לכל מטלה ספירה לאחור, הקבצים שלה וחומרים מאותו נושא. סיימת משהו שלא מוגש ב-Moodle? ״סמן כבוצע״. לא רלוונטי? ✕ מסתיר.",
+    t3Title: "מערכת השעות, בלי להקליד", t3Text: "בלשונית ״מערכת״ לוחצים ״📄 מהלבנט״ ובוחרים את קובץ המערכת שהורדת מהלבנט. לחיצה על שיעור מאפשרת לסמן ✋ נוכחות חובה.",
+    t4Title: "מבחנים וסמסטר", t4Text: "מועדי המבחנים שפורסמו בלבנט מופיעים לבד, עם תג ״טרם סופי״. מד הסמסטר מראה באיזה שבוע אנחנו וכמה נשאר עד המבחנים.",
+    t5Title: "עוד שני דברים קטנים", t5Text: "כדאי לשים את האפליקציה על מסך הבית, כדי שתיפתח כמו אפליקציה רגילה. אפשר לחזור למדריך הזה מתי שרוצים ב-⚙️.",
+    tInstAndroid: "בדפדפן: ⋮ ← ״הוספה למסך הבית״", tInstIos: "בספארי: כפתור השיתוף ⬆️ ← ״הוסף למסך הבית״", tInstPc: "בכרום: סמל ההתקנה בשורת הכתובת",
+    t5Sync: "מחובר גם מהמחשב? הכל מסתנכרן לבד", t5Fb: "רעיון או תקלה? ⚙️ ← 💬",
+    g1Title: "פתח את Moodle", g1Hint: "אם יבקשו, התחבר עם שם המשתמש והסיסמה של המכון. בסוף ייפתח עמוד קצר עם קישור אחד.",
+    g2Title: "העתק את הקישור, לא את הטקסט שלו",
+    g2Text: "בעמוד שייפתח יש <b>קישור כחול אחד</b>. מה שכתוב עליו לא חשוב: <b>מאחורי הקישור מסתתר המפתח (הטוקן) שלך</b>. לכן מעתיקים את <b>כתובת הקישור</b>, לא את הטקסט שלו.",
+    g2Looks: "מה שמעתיקים נראה בערך כך: <code>moodlemobile://token=…</code>", illLink: "לחצו כאן…",
+    g3Title: "חזור לכאן ולחץ", g3Hint: "אם הדפדפן שואל אם לאפשר הדבקה, אשר. הטוקן נשמר רק במכשיר הזה ונשלח רק ל-Moodle.",
+    platAndroid: "אנדרואיד", platIos: "אייפון", platPc: "מחשב",
+    menuAndroid: ["~moodlemobile://token=…", "פתיחה בכרטיסייה חדשה", "+העתקת כתובת הקישור", "-העתקת טקסט הקישור"],
+    menuIos: ["~moodlemobile://token=…", "פתח", "+העתק קישור", "שתף…"],
+    menuPc: ["פתיחת הקישור בכרטיסייה חדשה", "+העתקת כתובת הקישור", "-העתקה"],
+    doAndroid: "👉 לחיצה ארוכה על הקישור הכחול (לא לחיצה רגילה), ובתפריט: ״העתקת כתובת הקישור״",
+    doIos: "👉 לחיצה ארוכה על הקישור הכחול (לא לחיצה רגילה), ובתפריט: ״העתק קישור״",
+    doPc: "👉 קליק ימני על הקישור הכחול, ובתפריט: ״העתקת כתובת הקישור״",
+    errLinkText: "העתקת את הטקסט של הקישור ולא את הכתובת שלו. בתפריט של הלחיצה הארוכה בוחרים ״העתקת כתובת הקישור״ (ראה את הציור בשלב 2).",
+    errPageUrl: "זו הכתובת של העמוד עצמו. צריך את הכתובת של הקישור הכחול שבתוך העמוד: לחיצה ארוכה עליו ← ״העתקת כתובת הקישור״.",
     step1: "לחץ כאן והתחבר ל-Moodle אם יבקשו:", getToken: "פתח את Moodle לקבלת טוקן ↗",
     step2: "בעמוד שנפתח יש קישור אחד (״לחץ כאן לפתיחת היישומון״ / Click here to launch the app). <b>לחיצה ארוכה</b> עליו ← <b>העתק כתובת קישור</b>.",
     step2hint: "אם נפתחה אפליקציית Moodle או הודעה כמו \u201cURL not valid\u201d, זה בסדר: חזור לדפדפן ועשה את הלחיצה הארוכה.",
@@ -658,6 +794,29 @@ const I18N = {
   en: {
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "Moodle Tasks", appTitle: "Tasks", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
+    tourSkip: "Skip", tourBack: "Back", tourNext: "Next", tourDone: "Let’s go", tourOpen: "📖 Quick guide to the app",
+    tmTask: "Exercise 3", tmCourse: "Calculus 1", tmWhen: "Tue, 23:59", tmC1: "Calculus", tmC2: "Intro", tmC3: "Physics", tmC4: "Discrete",
+    t1Title: "All your assignments in one place", t1Text: "The app pulls assignments, quizzes and deadlines from all your Moodle courses by itself, and updates every time you open it. At the top you see what’s next and how much time is left.",
+    t2Title: "Tap a task to open it", t2Text: "In “Tasks” every assignment has a countdown, its files and materials from the same topic. Finished something not submitted on Moodle? “Mark done”. Not relevant? ✕ hides it.",
+    t3Title: "Your timetable, no typing", t3Text: "In “Timetable” tap “📄 Levnet file” and pick the timetable file you downloaded from Levnet. Tap a class to mark ✋ mandatory attendance.",
+    t4Title: "Exams and the semester", t4Text: "Exam dates published on Levnet show up by themselves, with a “not final” badge. The semester bar shows which week it is and how long until exams.",
+    t5Title: "Two more small things", t5Text: "Add the app to your home screen so it opens like a normal app. You can come back to this guide any time from ⚙️.",
+    tInstAndroid: "In the browser: ⋮ → “Add to Home screen”", tInstIos: "In Safari: Share ⬆️ → “Add to Home Screen”", tInstPc: "In Chrome: the install icon in the address bar",
+    t5Sync: "Signed in on your computer too? Everything syncs by itself", t5Fb: "Idea or problem? ⚙️ → 💬",
+    g1Title: "Open Moodle", g1Hint: "Sign in with your institution username and password if asked. A short page with a single link opens at the end.",
+    g2Title: "Copy the link, not its text",
+    g2Text: "The page that opens has <b>one blue link</b>. What it says doesn’t matter: <b>your key (token) is hidden behind the link</b>. So you copy the <b>link address</b>, not its text.",
+    g2Looks: "What you copy looks roughly like: <code>moodlemobile://token=…</code>", illLink: "Click here…",
+    g3Title: "Come back here and tap", g3Hint: "If the browser asks to allow pasting, allow it. The token is stored only on this device and sent only to Moodle.",
+    platAndroid: "Android", platIos: "iPhone", platPc: "Computer",
+    menuAndroid: ["~moodlemobile://token=…", "Open in new tab", "+Copy link address", "-Copy link text"],
+    menuIos: ["~moodlemobile://token=…", "Open", "+Copy Link", "Share…"],
+    menuPc: ["Open link in new tab", "+Copy link address", "-Copy"],
+    doAndroid: "👉 Long-press the blue link (not a normal tap), then choose “Copy link address”",
+    doIos: "👉 Long-press the blue link (not a normal tap), then choose “Copy Link”",
+    doPc: "👉 Right-click the blue link, then choose “Copy link address”",
+    errLinkText: "You copied the link’s text, not its address. In the long-press menu choose “Copy link address” (see the drawing in step 2).",
+    errPageUrl: "That’s the address of the page itself. You need the address of the blue link inside the page: long-press it → “Copy link address”.",
     step1: "Tap here and sign in to Moodle if asked:", getToken: "Open Moodle to get a token ↗",
     step2: "The page that opens has one link (“Click here to launch the app”). <b>Long-press</b> it → <b>Copy link address</b>.",
     step2hint: "If the Moodle app opens or a message like “URL not valid” appears, that’s fine: go back to the browser and do the long-press.",
@@ -738,6 +897,29 @@ const I18N = {
   fr: {
     locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
+    tourSkip: "Passer", tourBack: "Retour", tourNext: "Suivant", tourDone: "C’est parti", tourOpen: "📖 Guide rapide de l’application",
+    tmTask: "Exercice 3", tmCourse: "Analyse 1", tmWhen: "mar., 23:59", tmC1: "Analyse", tmC2: "Intro", tmC3: "Physique", tmC4: "Discrètes",
+    t1Title: "Tous vos devoirs au même endroit", t1Text: "L’application récupère seule les devoirs, tests et échéances de tous vos cours Moodle, et se met à jour à chaque ouverture. En haut : le prochain devoir et le temps restant.",
+    t2Title: "Touchez un devoir pour l’ouvrir", t2Text: "Dans « Devoirs », chaque devoir a un compte à rebours, ses fichiers et les supports du même thème. Fini quelque chose qui ne se rend pas sur Moodle ? « Marquer fait ». Pas pertinent ? ✕ le masque.",
+    t3Title: "Votre emploi du temps, sans rien taper", t3Text: "Dans « Emploi du temps », touchez « 📄 Fichier Levnet » et choisissez le fichier téléchargé depuis Levnet. Touchez un cours pour marquer ✋ la présence obligatoire.",
+    t4Title: "Examens et semestre", t4Text: "Les dates d’examen publiées sur Levnet s’affichent seules, avec un badge « provisoire ». La barre du semestre montre la semaine en cours et le temps restant avant les examens.",
+    t5Title: "Encore deux petites choses", t5Text: "Ajoutez l’application à l’écran d’accueil pour l’ouvrir comme une vraie application. Ce guide reste accessible dans ⚙️.",
+    tInstAndroid: "Dans le navigateur : ⋮ → « Ajouter à l’écran d’accueil »", tInstIos: "Dans Safari : Partager ⬆️ → « Sur l’écran d’accueil »", tInstPc: "Dans Chrome : l’icône d’installation dans la barre d’adresse",
+    t5Sync: "Connecté aussi sur l’ordinateur ? Tout se synchronise seul", t5Fb: "Une idée, un problème ? ⚙️ → 💬",
+    g1Title: "Ouvrez Moodle", g1Hint: "Connectez-vous avec l’identifiant de l’établissement si demandé. Une courte page avec un seul lien s’ouvre à la fin.",
+    g2Title: "Copiez le lien, pas son texte",
+    g2Text: "La page qui s’ouvre contient <b>un seul lien bleu</b>. Son texte n’a pas d’importance : <b>votre clé (jeton) est cachée derrière le lien</b>. On copie donc <b>l’adresse du lien</b>, pas son texte.",
+    g2Looks: "Ce que vous copiez ressemble à : <code>moodlemobile://token=…</code>", illLink: "Cliquez ici…",
+    g3Title: "Revenez ici et appuyez", g3Hint: "Si le navigateur demande d’autoriser le collage, acceptez. Le jeton reste sur cet appareil et n’est envoyé qu’à Moodle.",
+    platAndroid: "Android", platIos: "iPhone", platPc: "Ordinateur",
+    menuAndroid: ["~moodlemobile://token=…", "Ouvrir dans un nouvel onglet", "+Copier l’adresse du lien", "-Copier le texte du lien"],
+    menuIos: ["~moodlemobile://token=…", "Ouvrir", "+Copier le lien", "Partager…"],
+    menuPc: ["Ouvrir le lien dans un nouvel onglet", "+Copier l’adresse du lien", "-Copier"],
+    doAndroid: "👉 Appui long sur le lien bleu (pas un appui simple), puis « Copier l’adresse du lien »",
+    doIos: "👉 Appui long sur le lien bleu (pas un appui simple), puis « Copier le lien »",
+    doPc: "👉 Clic droit sur le lien bleu, puis « Copier l’adresse du lien »",
+    errLinkText: "Vous avez copié le texte du lien, pas son adresse. Dans le menu de l’appui long, choisissez « Copier l’adresse du lien » (voir le dessin à l’étape 2).",
+    errPageUrl: "C’est l’adresse de la page elle-même. Il faut l’adresse du lien bleu dans la page : appui long dessus → « Copier l’adresse du lien ».",
     step1: "Appuyez ici et connectez-vous à Moodle si demandé :", getToken: "Ouvrir Moodle pour obtenir un jeton ↗",
     step2: "La page qui s’ouvre contient un seul lien (« Click here to launch the app » ou son équivalent). <b>Appui long</b> dessus → <b>Copier l’adresse du lien</b>.",
     step2hint: "Si l’application Moodle s’ouvre ou qu’un message comme « URL not valid » apparaît, c’est normal : revenez au navigateur et faites l’appui long.",
@@ -838,6 +1020,8 @@ function applyLang(l) {
   $("#old").value = String(P.old_days);
   if (!$("#app").hidden) render();
   if (!$("#sheet").hidden) renderSheet();
+  if (!$("#setup").hidden) renderGuide();
+  if (!$("#tour").hidden) renderTour();
 }
 
 /* ---------- connection ---------- */
@@ -2002,17 +2186,79 @@ function launchUrl(site) {
   // Moodle's mobile-app launch page. confirmed=1 makes it show a link with the token (instead of only trying to open the app), on Android too
   return normUrl(site) + "/admin/tool/mobile/launch.php?service=moodle_mobile_app&passport=" + Math.floor(Math.random() * 1e9) + "&urlscheme=moodlemobile&confirmed=1";
 }
+/* ---------- first-run tour: a few cards, skippable, shown once; reopened from settings ---------- */
+const TOUR = { i: 0 };
+function tourSlides() {
+  const isPwa = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+  const inst = PLAT === "ios" ? t("tInstIos") : PLAT === "android" ? t("tInstAndroid") : t("tInstPc");
+  const bars = [1, 1, 1, 1, 0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(f => '<i class="sg w' + (f > 0 && f < 1 ? " cur" : "") + '" style="flex:1">' + (f ? '<b style="width:' + f * 100 + '%"></b>' : "") + "</i>").join("");
+  return [
+    { title: t("t1Title"), text: t("t1Text"),
+      art: '<div><div class="tm-hero"><small>' + esc(t("upNext")) + "</small><b>" + esc(t("tmTask")) + "</b><span>" + esc(t("left", t("days", 2) + ", " + t("cdH", 4))) + "</span></div>" +
+        '<div class="tm-tiles"><div><b>1</b>' + esc(t("tLate")) + "</div><div><b>2</b>" + esc(t("tToday")) + "</div><div><b>5</b>" + esc(t("tWeek")) + "</div></div></div>" },
+    { title: t("t2Title"), text: t("t2Text"),
+      art: '<div class="task" style="--c:#13c57b"><div class="tl"><span class="tname">' + esc(t("tmTask")) + '</span><span class="st none">' + esc(t("stNone")) +
+        '</span><span class="tc">' + esc(t("tAssign") + " · " + t("tmCourse")) + '</span></div><div class="due"><b>' + esc(t("tmWhen")) + '</b><br><span class="cd soon">' +
+        esc(t("left", t("cdH", 20) + ", " + t("cdM", 12))) + '</span></div><div class="act"><a>' +
+        esc(t("openSite")) + "</a><button>" + esc(t("markDone")) + "</button></div></div>" },
+    { title: t("t3Title"), text: t("t3Text"),
+      art: '<div><span class="tm-file">' + esc(t("ttImport")) + '</span><div class="tm-tt"><div><i style="--c:#fa7a17;top:6px;height:50px">' + esc(t("tmC1")) +
+        '</i><i style="--c:#9260f7;top:66px;height:58px">' + esc(t("tmC2")) + '</i></div><div><i class="att" style="--c:#5264d2;top:24px;height:64px">' + esc(t("tmC3")) +
+        ' ✋</i></div><div><i style="--c:#ffb701;top:12px;height:48px">' + esc(t("tmC4")) + "</i></div></div></div>" },
+    { title: t("t4Title"), text: t("t4Text"),
+      art: '<div class="tm-sem"><b>' + t("weekOf", 5, 14) + '</b><div class="sbar">' + bars + '<i class="sg x" style="flex:1"></i><i class="sg x" style="flex:1"></i><i class="sg x" style="flex:1"></i></div>' +
+        '<div class="er a" style="--c:#fa7a17"><span class="eb"><b>' + esc(t("tmCourse")) + "</b><small>" + esc(t("moedA")) + ' <span class="lv">' + esc(t("exLev")) +
+        '</span></small></span><span class="ec"><span class="en">73</span><span class="eu">' + esc(t("daysU", 73)) + "</span></span></div></div>" },
+    { title: t("t5Title"), text: t("t5Text"),
+      art: '<div class="tm-steps">' + (isPwa ? "" : "<div><span>📲</span>" + esc(inst) + "</div>") + "<div><span>☁️</span>" + esc(t("t5Sync")) + "</div><div><span>💬</span>" + esc(t("t5Fb")) + "</div></div>" },
+  ];
+}
+function renderTour() {
+  const S = tourSlides(), i = Math.max(0, Math.min(TOUR.i, S.length - 1)), x = S[i];
+  $("#tourArt").innerHTML = x.art; $("#tourTitle").textContent = x.title; $("#tourText").textContent = x.text;
+  $("#tourDots").innerHTML = S.map((_, k) => "<i" + (k === i ? ' class="on"' : "") + "></i>").join("");
+  $("#tourBack").hidden = i === 0; $("#tourNext").textContent = i === S.length - 1 ? t("tourDone") : t("tourNext");
+  $("#tourSkip").hidden = i === S.length - 1;
+}
+function openTour() { TOUR.i = 0; renderTour(); $("#sheet").hidden = true; $("#tour").hidden = false; $("#tourNext").focus(); }
+function closeTour() { $("#tour").hidden = true; LS.set("tourDone", true); }
+function tourStep(d) { const n = tourSlides().length; if (TOUR.i + d >= n) return closeTour(); TOUR.i = Math.max(0, TOUR.i + d); renderTour(); }
+/* the token guide: which menu the person will see depends on the device */
+function detectPlat() {
+  const ua = navigator.userAgent, touch = (navigator.maxTouchPoints || 0) > 1;
+  return /Android/i.test(ua) || (/Linux/i.test(ua) && touch) ? "android" : /iPhone|iPad|iPod/i.test(ua) || (/Mac/i.test(ua) && touch) ? "ios" : "pc";
+}
+let PLAT = detectPlat();
+function renderGuide() {
+  const key = PLAT === "android" ? "Android" : PLAT === "ios" ? "Ios" : "Pc";
+  $$(".gtabs [data-plat]").forEach(b => { b.classList.toggle("on", b.dataset.plat === PLAT); b.setAttribute("aria-selected", b.dataset.plat === PLAT); });
+  const items = t("menu" + key);
+  $("#illMenu").innerHTML = (Array.isArray(items) ? items : []).map(x => {
+    const c = x[0] === "~" ? "hd" : x[0] === "+" ? "ok" : x[0] === "-" ? "no" : "";
+    return '<div class="' + c + '">' + esc(c ? x.slice(1) : x) + "</div>";
+  }).join("");
+  $("#gDo").textContent = t("do" + key);
+  $(".ill-page").classList.toggle("pc", PLAT === "pc");
+}
+function guideError(msg) {
+  $("#setupErr").textContent = msg;
+  const st = $("#gStep2"); st.classList.remove("flash"); void st.offsetWidth; st.classList.add("flash");
+  st.scrollIntoView({ block: "center", behavior: "smooth" });
+}
 function showSetup(err) {
   document.body.classList.remove("app"); $("#tabbar").hidden = true;
   $("#setup").hidden = false; $("#app").hidden = true; $("#bRefresh").hidden = true; $("#bSet").hidden = true;
   $("#site").value = LS.get("site", DEFAULT_SITE); $("#setupErr").textContent = err || ""; $("#upd").textContent = "";
   $("#bGet").href = launchUrl($("#site").value);
+  renderGuide();
 }
 function showMain() {
   M.url = LS.get("site", DEFAULT_SITE); M.token = LS.get("token", "");
   document.body.classList.add("app"); $("#tabbar").hidden = false; setView(V.view);
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
   render(); refresh();
+  // the tour opens once, after the app first opens (not in automated test browsers, where it would cover everything)
+  if (!LS.get("tourDone", false) && !navigator.webdriver) setTimeout(() => { if (!LS.get("tourDone", false) && $("#tour").hidden) openTour(); }, 700);
 }
 function importFromHash() {
   const h = location.hash.slice(1); if (!h) return false;
@@ -2031,7 +2277,12 @@ function importFromHash() {
 async function connectWith(raw) {
   let tok; try { tok = extractToken(raw); } catch (e) { $("#setupErr").textContent = e.message; return; }
   if (!tok) { $("#setupErr").textContent = t("missingToken"); return; }
-  if (!/^[A-Za-z0-9]{10,}$/.test(tok)) { $("#setupErr").textContent = t("notToken"); return; }
+  if (!/^[A-Za-z0-9]{10,}$/.test(tok)) {
+    const r = String(raw || "");
+    if (/launch\.php|admin\/tool\/mobile/i.test(r)) return guideError(t("errPageUrl"));                 // copied the page's own address
+    if (!/token=/i.test(r) && /\s|[\u0590-\u05FF]|click|cliquez|app/i.test(r)) return guideError(t("errLinkText"));   // copied the words of the link
+    return guideError(t("notToken"));
+  }
   $("#setupErr").textContent = t("checking");
   M.url = normUrl($("#site").value); M.token = tok;
   try { await call("core_webservice_get_site_info"); LS.set("token", tok); LS.set("site", M.url); LS.del("cache"); V.data = null; $("#tok").value = ""; $("#setupErr").textContent = ""; showMain(); toast(t("connected")); }
@@ -2047,6 +2298,24 @@ $("#bPaste").onclick = async () => {
 };
 $("#site").addEventListener("input", () => { $("#bGet").href = launchUrl($("#site").value); });
 $$(".langSel").forEach(s => s.addEventListener("change", e => applyLang(e.target.value)));
+$("#tourNext").onclick = () => tourStep(1);
+$("#tourBack").onclick = () => tourStep(-1);
+$("#tourSkip").onclick = closeTour;
+$("#bTour").onclick = openTour;
+document.addEventListener("keydown", e => {
+  if ($("#tour").hidden) return;
+  const rtl = t("dir") === "rtl";
+  if (e.key === "Escape") closeTour();
+  else if (e.key === (rtl ? "ArrowLeft" : "ArrowRight")) tourStep(1);
+  else if (e.key === (rtl ? "ArrowRight" : "ArrowLeft")) tourStep(-1);
+});
+{ let x0 = null;   // swipe between cards: towards the reading direction goes forward
+  $("#tour").addEventListener("touchstart", e => { x0 = e.touches[0].clientX; }, { passive: true });
+  $("#tour").addEventListener("touchend", e => {
+    if (x0 == null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 50) tourStep((dx < 0) === (t("dir") === "rtl") ? -1 : 1);
+  }); }
+$$(".gtabs [data-plat]").forEach(b => b.addEventListener("click", () => { PLAT = b.dataset.plat; renderGuide(); }));
 $("#bRefresh").onclick = () => refresh();
 $("#bSet").onclick = () => { renderSheet(); $("#sheet").hidden = false; };
 $("#bClose").onclick = () => $("#sheet").hidden = true;
