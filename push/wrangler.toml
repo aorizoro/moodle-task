@@ -1,4 +1,5 @@
 name = "moodle-task-push"
+account_id = "5b6913e04b60fcfeb7dd7c2eba90586a"   # not a secret: it only says which Cloudflare account; the token is in GitHub Secrets
 main = "worker.js"
 compatibility_date = "2025-09-01"
 workers_dev = true

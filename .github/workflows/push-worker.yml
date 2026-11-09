@@ -1,5 +1,6 @@
 # מעלה את שרת ההתראות (התיקייה push/) ל-Cloudflare בכל שינוי בו, או בלחיצה ידנית ב-Actions.
-# צריך שני Secrets בהגדרות הריפו: CLOUDFLARE_API_TOKEN ו-CLOUDFLARE_ACCOUNT_ID.
+# צריך Secret אחד בהגדרות הריפו: CLOUDFLARE_API_TOKEN (מספר החשבון כתוב ב-push/wrangler.toml).
+# התוצאה (הכתובת של השרת, או השגיאה) מופיעה כהודעה בסיכום הריצה.
 name: Deploy push server
 on:
   push:
@@ -11,23 +12,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check the Cloudflare secrets are set
-        env:
-          T: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          A: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          if [ -z "$T" ] || [ -z "$A" ]; then echo "::error::Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in Settings → Secrets and variables → Actions"; exit 1; fi
-      - name: Deploy
-        uses: cloudflare/wrangler-action@v3
+      - uses: actions/setup-node@v4
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: push
-          wranglerVersion: "4.158.0"
-          command: deploy
-      - name: Check it answers
+          node-version: 22
+      - name: Deploy
+        working-directory: push
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: |
-          sleep 5
-          for u in $(grep -ho 'https://moodle-task-push\.[a-z0-9-]*\.workers\.dev' $GITHUB_WORKSPACE/beta/index.html $GITHUB_WORKSPACE/index.html | sort -u); do
-            echo "$u/key"; curl -fsS "$u/key"; echo
-          done
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then echo "::error::Add the CLOUDFLARE_API_TOKEN secret in Settings → Secrets and variables → Actions"; exit 1; fi
+          set +e
+          npx --yes wrangler@4.158.0 deploy > out.txt 2>&1; st=$?
+          cat out.txt
+          url=$(grep -o 'https://moodle-task-push\.[a-z0-9-]*\.workers\.dev' out.txt | head -1)
+          if [ $st -ne 0 ]; then
+            msg=$(grep -v '^\s*$' out.txt | tail -25 | sed 's/\x1b\[[0-9;]*m//g' | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')
+            echo "::error title=wrangler deploy failed::$msg"; exit $st
+          fi
+          echo "::notice title=Push server URL::$url"
+          sleep 5; key=$(curl -fsS "$url/key" || echo FAILED)
+          echo "::notice title=Push server /key::$key"
