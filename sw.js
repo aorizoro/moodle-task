@@ -2,8 +2,8 @@
 // הבקשות ל-Moodle לא עוברות כאן ולא נשמרות במטמון.
 // the beta (…/beta/) and the regular app share one site: each keeps and cleans only its own cache
 const CH = /\/beta\/$/.test(self.registration.scope) ? "beta-" : "";
-const CACHE = "moodle-tasks-" + CH + "v22";
-const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
+const CACHE = "moodle-tasks-" + CH + "v24";
+const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "icon-any-192.png", "icon-any-512.png", "apple-touch-icon.png", "favicon-64.png", "badge-96.png", "logo.svg"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
@@ -25,8 +25,8 @@ self.addEventListener("fetch", e => {
 self.addEventListener("push", e => {
   let d = {};
   try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data ? e.data.text() : "" }; }
-  e.waitUntil(self.registration.showNotification(d.title || "משימות Moodle", {
-    body: d.body || "", tag: d.tag || undefined, renotify: !!d.tag, icon: "icon-192.png", badge: "icon-192.png", dir: "auto",
+  e.waitUntil(self.registration.showNotification(d.title || "MoodlePro", {
+    body: d.body || "", tag: d.tag || undefined, renotify: !!d.tag, icon: "icon-any-192.png", badge: "badge-96.png", dir: "auto",
     timestamp: d.at || Date.now(), data: { tag: d.tag || "" } }));
 });
 self.addEventListener("notificationclick", e => {

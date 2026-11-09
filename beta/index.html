@@ -5,14 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
-<title>משימות Moodle</title>
+<title>MoodlePro</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
+<link rel="icon" href="favicon-64.png" sizes="64x64">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#3b5bdb">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="משימות">
+<meta name="apple-mobile-web-app-title" content="MoodlePro">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <script>
 /* ---------- themes: ready-made looks plus a custom one. Applied here, in <head>, so the page never flashes the wrong colours ---------- */
@@ -107,6 +108,13 @@ select{width:auto}
   padding:max(10px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) 10px max(14px,env(safe-area-inset-left))}
 .top .ttl{flex:1;min-width:0;display:flex;flex-direction:column}
 .top .ttl b{font-size:18px}
+.top .logo{flex:none;width:34px;height:34px;border-radius:9px;box-shadow:0 2px 8px #2a186833}
+.wm{font-weight:800;letter-spacing:-.01em;unicode-bidi:isolate}
+.wm span{margin-inline-start:1px;background:linear-gradient(120deg,var(--accent-t),#7b5cff 60%,#e0a020);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand{display:flex;align-items:center;gap:12px;margin:2px 0 12px}
+.brand img{width:56px;height:56px;border-radius:15px;box-shadow:0 6px 18px #2a186840}
+.brand .wm{font-size:26px;display:block;line-height:1.1}
+.brand .hint{margin-top:2px}
 .top .ttl .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ic{width:42px;height:42px;padding:0;font-size:19px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px}
 .ic.spin{animation:s 1s linear infinite}
@@ -162,6 +170,11 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 /* versions + reminders */
 .betatag{font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--warn);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:3px}
 .wnv{margin:8px 0}
+.seg.cats{display:flex;width:100%;margin:8px 0 4px}
+.seg.cats button{flex:1;padding-inline:4px;white-space:nowrap}
+.seg.cats i{font-style:normal;font-size:12px;opacity:.75}
+.hidbar{display:flex;justify-content:center;margin:10px 0}
+#toast button{margin-inline-start:12px;background:none;border:0;color:#9db4ff;font-weight:700;padding:0}
 .gvid{border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin:10px 0 4px;background:var(--row)}
 .gvt{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-bottom:8px}
 .gvbox{display:flex;gap:12px;align-items:flex-start}
@@ -541,7 +554,8 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 </head>
 <body>
 <header class="top">
-  <div class="ttl"><span><b data-i18n="appTitle">משימות</b> <span class="betatag" id="betaTag" hidden>BETA</span></span><span class="hint" id="upd"></span></div>
+  <img class="logo" src="icon-any-192.png" alt="" width="34" height="34">
+  <div class="ttl"><span><b class="wm" dir="ltr">Moodle<span>Pro</span></b> <span class="betatag" id="betaTag" hidden>BETA</span></span><span class="hint" id="upd"></span></div>
   <button class="ic" id="bRefresh" data-i18n-aria="refresh" aria-label="רענן" hidden>⟳</button>
   <button class="ic" id="bSet" data-i18n-aria="settings" aria-label="הגדרות" hidden>⚙</button>
 </header>
@@ -550,6 +564,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 <section id="setup" hidden>
   <div class="card">
     <div class="langrow"><span aria-hidden="true">🌐</span><select class="langSel" aria-label="Language"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
+    <div class="brand"><img src="icon-any-192.png" alt="" width="56" height="56"><div><b class="wm" dir="ltr">Moodle<span>Pro</span></b><div class="hint" data-i18n="brandTag"></div></div></div>
     <h2 data-i18n="setupTitle"></h2>
     <div class="hint" data-i18n="setupHint"></div>
     <div class="gvid" id="gVid">
@@ -657,6 +672,12 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div id="banner" class="banner" hidden></div>
     <div id="focus" class="focus" hidden><span id="focusTxt"></span><button id="bFocusClear" data-i18n="clearFocus"></button></div>
     <div id="sum"></div>
+    <div class="seg cats" id="cats">
+      <button data-cat="all"><span data-i18n="catAll"></span> <i id="catN_all"></i></button>
+      <button data-cat="assign"><span data-i18n="catAssign"></span> <i id="catN_assign"></i></button>
+      <button data-cat="quiz"><span data-i18n="catQuiz"></span> <i id="catN_quiz"></i></button>
+      <button data-cat="other"><span data-i18n="catOther"></span> <i id="catN_other"></i></button>
+    </div>
     <div class="chips" id="chips"></div>
     <div class="ctl">
       <div class="seg" id="seg">
@@ -798,6 +819,8 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <p class="hint" id="remHowTxt"></p>
     <button id="remTest" style="width:100%;margin-top:8px" hidden data-i18n="pushTestBtn"></button>
     <button class="link" id="remStop" style="width:100%" hidden data-i18n="pushStop"></button>
+    <button class="link" id="remCalDel" style="width:100%" hidden data-i18n="remDelBtn"></button>
+    <p class="hint" id="remCalDelHint" hidden data-i18n="remDelHint"></p>
   </div>
 </div>
 <div class="sheet" id="lvSheet" hidden>
@@ -850,11 +873,16 @@ const LS = {
   del(k) { try { localStorage.removeItem(PFX + k); } catch (e) {} },
 };
 function toast(m, ms) { const t = $("#toast"); t.textContent = m; t.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = "none", ms || 3500); }
+/* a message with a "Undo" button */
+function toastUndo(m, undo) {
+  toast(m, 6500); const b = document.createElement("button"); b.textContent = t("undo");
+  b.onclick = () => { $("#toast").style.display = "none"; undo(); }; $("#toast").append(b);
+}
 
 /* ---------- languages ---------- */
 const I18N = {
   he: {
-    locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "משימות Moodle", appTitle: "משימות", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
+    locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
     remTitle: "🔔 תזכורות", remAskTitle: "🔔 רוצה תזכורות?", remIntro: "האפליקציה יכולה להזכיר לך לפני הגשות, מבחנים ושיעורי זום. בחר מתי, והתזכורות ייכנסו ליומן של הטלפון.",
     remTasks: "מטלות ובחנים: כמה זמן לפני ההגשה", remExams: "מבחנים: כמה זמן לפני", remClasses: "שיעורים", remClsZoom: "רק שיעורי זום", remClsAll: "כל השיעורים", remClsNone: "בלי",
@@ -875,6 +903,10 @@ const I18N = {
     pushReady: n => "🔔 ההתראות הופעלו" + (n ? " · " + n + " תזכורות בדרך" : ""), pushOnCard: "🔔 ההתראות פועלות במכשיר הזה",
     pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
     pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
+    catAll: "הכל", catAssign: "מטלות", catQuiz: "בחנים", catOther: "אירועים", hidDone: "הוסתר", undo: "↩ בטל",
+    hidShow: n => "👁 " + n + (n === 1 ? " פריט מוסתר" : " פריטים מוסתרים") + " · הצג", hidHide: n => "הסתר שוב את " + n + " המוסתרים",
+    remDelBtn: "🗑 להסיר מהיומן את מה שהאפליקציה הוסיפה", remDelHint: "יורד קובץ שמבטל את האירועים. ביומן של אייפון ושל Outlook הוא מסיר אותם. ב-Google Calendar ייבוא לא מוחק, ולכן הכי פשוט להוסיף מלכתחילה ליומן נפרד (למשל MoodlePro) ולמחוק אותו כשרוצים.",
+    remDelDone: "ירד קובץ הסרה. פתח אותו כדי להסיר את האירועים מהיומן.",
     vidTitle: "🎬 ככה זה נראה (12 שניות)", vidNoteIos: "צולם באייפון", vidNoteAndroid: "צולם באייפון. באנדרואיד זה כמעט אותו דבר", vidNotePc: "צולם באייפון. במחשב: קליק ימני על הקישור ← ״העתקת כתובת הקישור״",
     vs1: "לוחצים <b>פתח את Moodle</b>", vs2: "נפתח Moodle. אם שואל ״לפתוח ב-Moodle?״, לוחצים <b>ביטול</b> (Cancel)", vs3: "<b>לחיצה ארוכה</b> על הקישור ״הקליקו כאן…״",
     vs4: "גוררים אותו חזרה לכאן ומשחררים בשדה, או בוחרים <b>העתק קישור</b> ואז <b>הדבק וחבר</b>", vs5: "<b>התחבר</b>, וזהו",
@@ -996,7 +1028,7 @@ const I18N = {
     syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
   en: {
-    locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "Moodle Tasks", appTitle: "Tasks", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
+    locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
     remTitle: "🔔 Reminders", remAskTitle: "🔔 Want reminders?", remIntro: "The app can remind you before deadlines, exams and Zoom classes. Choose when, and the reminders go into your phone’s calendar.",
     remTasks: "Assignments and quizzes: how long before the deadline", remExams: "Exams: how long before", remClasses: "Classes", remClsZoom: "Zoom classes only", remClsAll: "All classes", remClsNone: "None",
@@ -1017,6 +1049,10 @@ const I18N = {
     pushReady: n => "🔔 Notifications on" + (n ? " · " + n + " reminders scheduled" : ""), pushOnCard: "🔔 Notifications are on for this device",
     pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
     pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
+    catAll: "All", catAssign: "Assignments", catQuiz: "Quizzes", catOther: "Events", hidDone: "Hidden", undo: "↩ Undo",
+    hidShow: n => "👁 " + n + (n === 1 ? " hidden item" : " hidden items") + " · show", hidHide: n => "Hide the " + n + " hidden items again",
+    remDelBtn: "🗑 Remove from my calendar what the app added", remDelHint: "Downloads a file that cancels the events. iPhone and Outlook calendars remove them. Google Calendar imports don’t delete, so it’s easiest to add to a separate calendar (e.g. MoodlePro) and delete that when you want.",
+    remDelDone: "A removal file was downloaded. Open it to take the events out of your calendar.",
     vidTitle: "🎬 What it looks like (12 seconds)", vidNoteIos: "Recorded on an iPhone", vidNoteAndroid: "Recorded on an iPhone. On Android it’s nearly the same", vidNotePc: "Recorded on an iPhone. On a computer: right-click the link → “Copy link address”",
     vs1: "Tap <b>Open Moodle</b>", vs2: "Moodle opens. If it asks “Open in Moodle?”, tap <b>Cancel</b>", vs3: "<b>Long-press</b> the link “הקליקו כאן…” (click here)",
     vs4: "Drag it back here and drop it in the box, or choose <b>Copy link</b> then <b>Paste & connect</b>", vs5: "<b>Connect</b>, done",
@@ -1138,7 +1174,7 @@ const I18N = {
     syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
   fr: {
-    locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "Devoirs Moodle", appTitle: "Devoirs", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
+    locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     remTitle: "🔔 Rappels", remAskTitle: "🔔 Envie de rappels ?", remIntro: "L’application peut vous rappeler les échéances, examens et cours Zoom. Choisissez quand, et les rappels vont dans le calendrier du téléphone.",
     remTasks: "Devoirs et tests : combien de temps avant l’échéance", remExams: "Examens : combien de temps avant", remClasses: "Cours", remClsZoom: "Cours Zoom seulement", remClsAll: "Tous les cours", remClsNone: "Aucun",
@@ -1159,6 +1195,10 @@ const I18N = {
     pushReady: n => "🔔 Notifications activées" + (n ? " · " + n + " rappels programmés" : ""), pushOnCard: "🔔 Notifications activées sur cet appareil",
     pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
     pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
+    catAll: "Tout", catAssign: "Devoirs", catQuiz: "Tests", catOther: "Événements", hidDone: "Masqué", undo: "↩ Annuler",
+    hidShow: n => "👁 " + n + (n === 1 ? " élément masqué" : " éléments masqués") + " · afficher", hidHide: n => "Masquer à nouveau les " + n + " éléments",
+    remDelBtn: "🗑 Retirer du calendrier ce que l’app a ajouté", remDelHint: "Télécharge un fichier qui annule les événements. Les calendriers iPhone et Outlook les retirent. Google Agenda ne supprime pas à l’import : le plus simple est d’ajouter dans un agenda séparé (ex. MoodlePro) et de le supprimer au besoin.",
+    remDelDone: "Un fichier de retrait a été téléchargé. Ouvrez-le pour retirer les événements du calendrier.",
     vidTitle: "🎬 À quoi ça ressemble (12 secondes)", vidNoteIos: "Filmé sur iPhone", vidNoteAndroid: "Filmé sur iPhone. Sur Android c’est presque pareil", vidNotePc: "Filmé sur iPhone. Sur ordinateur : clic droit sur le lien → « Copier l’adresse du lien »",
     vs1: "Touchez <b>Ouvrir Moodle</b>", vs2: "Moodle s’ouvre. S’il demande « Ouvrir dans Moodle ? », touchez <b>Annuler</b>", vs3: "<b>Appui long</b> sur le lien « הקליקו כאן… » (cliquez ici)",
     vs4: "Faites-le glisser ici et lâchez-le dans le champ, ou choisissez <b>Copier le lien</b> puis <b>Coller et se connecter</b>", vs5: "<b>Se connecter</b>, c’est tout",
@@ -1492,7 +1532,7 @@ if (!Array.isArray(P.tt)) P.tt = [];
 for (const k of ["sem", "exams", "ccode", "colors"]) if (!P[k] || typeof P[k] !== "object" || Array.isArray(P[k])) P[k] = {};
 P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^\d+$/);
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
-const V = { data: LS.get("cache", null), q: "", showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
+const V = { data: LS.get("cache", null), q: "", cat: LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
 const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
@@ -1596,7 +1636,8 @@ const GROUPS = [["late", "gLate"], ["today", "gToday"], ["week", "gWeek"], ["lat
 const G_OPEN = { late: true, today: true, week: true, later: true, nodue: false, old: false, done: false };
 const TYPE = { assign: "tAssign", quiz: "tQuiz", event: "tEvent", zoom: "tZoom" };
 const dueKey = x => x.due || 9e12;
-const counted = x => !isOff(x.cid) && !P.hidden.includes(x.key);            // tasks of courses you follow and did not hide
+const counted = x => !isOff(x.cid) && !P.hidden.includes(x.key);
+const catOf = x => x.type === "assign" ? "assign" : x.type === "quiz" ? "quiz" : "other";            // tasks of courses you follow and did not hide
 function inFocus(x, now) {
   const f = V.focus; if (!f) return true;
   if (f.kind === "day") return !!x.due && dueDay(x) === f.d;
@@ -1608,6 +1649,7 @@ function visible(x, now) {
   if (isOff(x.cid)) return false;
   if (P.hidden.includes(x.key) && !V.showHid) return false;
   if (!inFocus(x, now)) return false;
+  if (V.cat !== "all" && catOf(x) !== V.cat) return false;
   if (!V.focus || V.focus.kind === "course") {
     if (P.filter === "open" && isDone(x)) return false;
     if (P.filter === "done" && !isDone(x)) return false;
@@ -2248,7 +2290,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.1.2";
+const APP_VERSION = "1.2.0";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2350,8 +2392,10 @@ function renderNews(d) {
 }
 
 /* ---------- render: everything ---------- */
-function setView(v) {
-  V.view = v === "tasks" || v === "tt" ? v : "dash"; LS.set("view", V.view); document.body.dataset.view = V.view; useHit("v_" + V.view);
+function setView(v, fromHistory) {
+  const prev = V.view;
+  V.view = v === "tasks" || v === "tt" ? v : "dash";
+  if (!fromHistory && NAV.ready && V.view !== prev) history.pushState({ v: V.view }, ""); LS.set("view", V.view); document.body.dataset.view = V.view; useHit("v_" + V.view);
   $$("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.v === V.view));
 }
 const wide = () => window.matchMedia("(min-width:760px)").matches;
@@ -2406,7 +2450,12 @@ function render() {
     if (b.cls !== "plain") h += '<div class="grp ' + b.cls + '" data-g="' + esc(b.key) + '"' + (b.color ? ' style="--c:' + b.color + '"' : "") + '><span class="tw">' + (b.open ? "▾" : t("closedArrow")) + "</span><bdi>" + esc(b.label) + '</bdi> <span class="cnt">' + b.items.length + "</span></div>";
     if (b.open) h += b.items.map(x => card(x, now, groupOf(x, now))).join("");
   }
-  $("#list").innerHTML = h || '<div class="empty">' + esc(V.focus && V.focus.kind === "day" ? t("dayEmpty") : d.tasks.length ? t("noMatch") : t("noTasks")) + "</div>";
+  $("#list").innerHTML = (h || '<div class="empty">' + esc(V.focus && V.focus.kind === "day" ? t("dayEmpty") : d.tasks.length ? t("noMatch") : t("noTasks")) + "</div>") +
+    (P.hidden.length ? '<div class="hidbar"><button class="link" data-showhid>' + esc(t(V.showHid ? "hidHide" : "hidShow", P.hidden.length)) + "</button></div>" : "");
+  { const open = d.tasks.filter(x => counted(x) && !isDone(x)), n = c => open.filter(x => c === "all" || catOf(x) === c).length;
+    for (const c of ["all", "assign", "quiz", "other"]) { const el = $("#catN_" + c); if (el) el.textContent = n(c) ? "(" + n(c) + ")" : ""; }
+    $$("#cats [data-cat]").forEach(b => { b.classList.toggle("on", b.dataset.cat === V.cat); b.setAttribute("aria-pressed", b.dataset.cat === V.cat); });
+    const ob = $("#cats [data-cat=other]"); if (ob) ob.hidden = !d.tasks.some(x => catOf(x) === "other") && V.cat !== "other"; }
 
   const relv = d.tasks.filter(x => counted(x) && !isDone(x) && groupOf(x, now) !== "old");
   const dated = relv.filter(x => x.due), late = dated.filter(x => x.due < now), next = dated.filter(x => x.due >= now).sort((a, b) => a.due - b.due)[0];
@@ -2431,7 +2480,7 @@ function renderSheet() {
 }
 
 /* ---------- actions ---------- */
-function goTasks(focus) { V.focus = focus || null; V.hl = null; if (!wide()) setView("tasks"); render(); if (!wide()) window.scrollTo(0, 0); else $("#tasks").scrollIntoView({ block: "start" }); }
+function goTasks(focus) { V.focusFrom = V.view; V.focus = focus || null; V.hl = null; if (!wide()) setView("tasks"); render(); if (!wide()) window.scrollTo(0, 0); else $("#tasks").scrollIntoView({ block: "start" }); }
 function gotoTask(key) {
   V.focus = null; V.hl = key; if (!wide()) setView("tasks");
   const x = V.data.tasks.find(y => y.key === key);
@@ -2453,7 +2502,7 @@ function icsExport() {
     for (const ch of l) { const b = enc.encode(ch).length; if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ""; n = 0; } cur += ch; n += b; }
     out.push(cur); return out.map((x, i) => (i ? " " : "") + x).join("\r\n");
   };
-  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//moodle-tasks//EN", "CALSCALE:GREGORIAN", fold("X-WR-CALNAME:" + tx(t("docTitle")))];
+  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//MoodlePro//EN", "CALSCALE:GREGORIAN", fold("X-WR-CALNAME:" + tx(t("docTitle")))];
   for (const x of items) {
     const title = shortName(x.course) + ": " + x.name;
     L.push("BEGIN:VEVENT", "UID:" + x.key.replace(":", "-") + "@moodle-tasks", "DTSTAMP:" + f(now), "DTSTART:" + f(x.due - 1800), "DTEND:" + f(x.due),
@@ -2496,6 +2545,9 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
+  { v: "1.2.0", date: "2026-11-09", he: ["✨ שם חדש ולוגו חדש: MoodlePro", "🗂 בלשונית המשימות: כרטיסיות למטלות, לבחנים ולאירועים", "↩ אפשר לבטל הסתרה של פריט מיד, והמוסתרים מופיעים בסוף הרשימה", "⬅️ כפתור ״חזור״ בטלפון חוזר למסך הקודם וסוגר חלונות, במקום לצאת מהאפליקציה", "📅 ניקוי סינון של יום מהסקירה מחזיר לסקירה", "🗑 אפשר להסיר מהיומן את מה שהאפליקציה הוסיפה"],
+    en: ["✨ New name and logo: MoodlePro", "🗂 Tasks tab: tabs for assignments, quizzes and events", "↩ Hiding an item can be undone right away, and hidden items are listed at the end", "⬅️ The phone’s Back button goes to the previous screen and closes windows instead of leaving the app", "📅 Clearing a day picked on the overview takes you back to the overview", "🗑 You can remove from your calendar what the app added"],
+    fr: ["✨ Nouveau nom et nouveau logo : MoodlePro", "🗂 Onglet devoirs : onglets pour devoirs, tests et événements", "↩ Masquer un élément peut être annulé tout de suite, et les éléments masqués sont listés à la fin", "⬅️ Le bouton Retour revient à l’écran précédent et ferme les fenêtres au lieu de quitter l’app", "📅 Effacer un jour choisi dans l’aperçu ramène à l’aperçu", "🗑 Vous pouvez retirer du calendrier ce que l’app a ajouté"] },
   { v: "1.1.0", date: "2026-11-09", he: ["🔔 התראות: האפליקציה שולחת התראה לפני הגשות, מבחנים ושיעורי זום, לפי הזמנים שבוחרים, גם כשהיא סגורה (או ליומן של הטלפון)", "🎨 ערכות צבעים: 22 מראות בהירים וכהים, מפסטל עדין ועד מרקר וניאון, וגם בנייה של מראה משלך", "📹 שיעורי זום מסומנים במערכת ובשיעורי היום", "🏷 מספר גרסה ו״מה חדש״ בהגדרות"],
     en: ["🔔 Notifications: the app notifies you before deadlines, exams and Zoom classes at the times you choose, even when closed (or into your phone’s calendar)", "🎨 Colour themes: 22 light and dark looks, from soft pastel to highlighter and neon, plus building your own", "📹 Zoom classes are marked in the timetable and today’s classes", "🏷 Version number and “What’s new” in settings"],
     fr: ["🔔 Notifications : l’app vous prévient avant les échéances, examens et cours Zoom aux moments choisis, même fermée (ou dans le calendrier du téléphone)", "🎨 Thèmes : 22 apparences claires et sombres, du pastel doux au surligneur et au néon, et la vôtre sur mesure", "📹 Les cours Zoom sont signalés dans l’emploi du temps et les cours du jour", "🏷 Numéro de version et « Nouveautés » dans les paramètres"] },
@@ -2535,7 +2587,7 @@ function icsBuild(items) {
   const loc = d => d.getFullYear() + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
   const tx = s => String(s).replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
   const fold = l => { const out = []; let cur = "", n = 0; for (const ch of l) { const b = enc.encode(ch).length; if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ""; n = 0; } cur += ch; n += b; } out.push(cur); return out.map((x, i) => (i ? " " : "") + x).join("\r\n"); };
-  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//moodle-tasks//EN", "CALSCALE:GREGORIAN", fold("X-WR-CALNAME:" + tx(t("docTitle")))];
+  const L = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//MoodlePro//EN", "CALSCALE:GREGORIAN", fold("X-WR-CALNAME:" + tx(t("docTitle")))];
   for (const x of items) {
     L.push("BEGIN:VEVENT", "UID:" + x.uid + "@moodle-tasks", "DTSTAMP:" + f(now));
     if (x.allDay) { const d = new Date(x.ts * 1000); const e = new Date(d); e.setDate(e.getDate() + 1); L.push("DTSTART;VALUE=DATE:" + loc(d), "DTEND;VALUE=DATE:" + loc(e)); }
@@ -2594,6 +2646,17 @@ function remExport(fresh) {
   const done = LS.get("remDone", { tasks: [], exams: [], cls: "" });
   LS.set("remDone", { tasks: [...new Set(done.tasks.concat(r.tasks.map(x => x.key)))].slice(-800), exams: [...new Set(done.exams.concat(r.exams.map(x => x.key)))].slice(-200), cls: r.sig != null ? r.sig : done.cls });
   toast(t("remAdded", all.length), 6000); render();
+}
+/* a calendar file that cancels every event this app added (same ids); calendars that honour cancellations remove them */
+function remRemoveCal() {
+  const r = remItems(false), all = r.tasks.concat(r.exams, r.classes);
+  if (!all.length) { toast(t("remNothing")); return; }
+  const ics = icsBuild(all).replace("CALSCALE:GREGORIAN", "CALSCALE:GREGORIAN\r\nMETHOD:CANCEL").replace(/BEGIN:VEVENT\r\n/g, "BEGIN:VEVENT\r\nSTATUS:CANCELLED\r\nSEQUENCE:1\r\n").replace(/BEGIN:VALARM[\s\S]*?END:VALARM\r\n/g, "");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([ics], { type: "text/calendar;charset=utf-8" }));
+  a.download = "moodlepro-remove.ics"; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+  LS.set("remDone", { tasks: [], exams: [], cls: "" }); toast(t("remDelDone"), 9000); render();
 }
 const REM_CHOICES = { task: ["7d", "3d", "1d", "3h", "1h"], exam: ["7d", "3d", "1d"] };
 function openRem(ask) {
@@ -2740,6 +2803,8 @@ function remModeUI(how) {
   $("#remHowTxt").textContent = t(push ? "remHowPushTxt" : "remHow");
   $("#remIntro").textContent = t(push ? "remIntroPush" : "remIntro");
   $("#remStop").hidden = $("#remTest").hidden = !(push && pushOn());
+  const calUsed = !!(LS.get("remDone", { tasks: [] }).tasks || []).length || !!LS.get("remDone", {}).cls;
+  $("#remCalDel").hidden = $("#remCalDelHint").hidden = !calUsed;
 }
 /* ---------- the theme picker: ready-made looks in groups, and a custom one built colour by colour ---------- */
 const TH_GROUPS = ["base", "pastel", "vivid", "dark"];
@@ -2864,7 +2929,7 @@ function showMain() {
   M.url = LS.get("site", DEFAULT_SITE); M.token = LS.get("token", "");
   document.body.classList.add("app"); $("#tabbar").hidden = false; setView(V.view);
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
-  render(); refresh(); useHit("open");
+  render(); refresh(); useHit("open"); navInit();
   // the tour opens once, after the app first opens (not in automated test browsers, where it would cover everything)
   if (!LS.get("tourDone", false) && !navigator.webdriver) setTimeout(() => { if (!LS.get("tourDone", false) && $("#tour").hidden) openTour(); }, 700);
   else if (!navigator.webdriver) setTimeout(() => { if ($("#tour").hidden) whatsNew(); }, 900);
@@ -2908,6 +2973,32 @@ if ($("#vid")) {
     if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
   }), { threshold: 0.5 }).observe($("#vid"));
 }
+/* Back: every window that opens is a step in the browser's history, and so is every change of tab */
+const NAV = { ready: false, skip: 0, open: [] };
+function navInit() {
+  if (NAV.ready) return; NAV.ready = true;
+  history.replaceState({ v: V.view }, "");
+  const watch = new MutationObserver(ms => {
+    const closed = [], opened = [];
+    for (const m of ms) { const el = m.target, id = el.id;
+      if (!el.hidden && !NAV.open.includes(id)) { NAV.open.push(id); opened.push(id); }
+      else if (el.hidden && NAV.open.includes(id)) { NAV.open = NAV.open.filter(x => x !== id); closed.push(id); } }
+    let step = history.state && closed.includes(history.state.w);       // the window on top was closed by its own button
+    for (const id of opened) {
+      if (step) { history.replaceState({ v: V.view, w: id }, ""); step = false; }   // one window replaced by the next (settings → reminders)
+      else history.pushState({ v: V.view, w: id }, "");
+    }
+    if (step) { NAV.skip++; history.back(); }                                      // take its step out of the history too
+  });
+  $$(".sheet, #tour").forEach(el => watch.observe(el, { attributes: true, attributeFilter: ["hidden"] }));
+  window.addEventListener("popstate", e => {
+    if (NAV.skip) { NAV.skip--; return; }
+    const top = NAV.open[NAV.open.length - 1];
+    if (top) { NAV.open.pop(); const el = document.getElementById(top); if (el) { if (top === "tour") closeTour(); else el.hidden = true; } return; }
+    const v = (e.state && e.state.v) || "dash";
+    if (v !== V.view) { if (v === "dash") V.focus = null; setView(v, true); render(); window.scrollTo(0, 0); }
+  });
+}
 $("#tok").addEventListener("keydown", e => { if (e.key === "Enter") connectWith($("#tok").value); });
 $("#bPaste").onclick = async () => {
   let txt = "";
@@ -2931,6 +3022,7 @@ $("#remGo").onclick = () => {
   if (how === "push") { LS.set("pushSig", null); pushEnable(); } else remExport(false);
 };
 $("#remStop").onclick = () => { $("#remSheet").hidden = true; pushDisable(); };
+$("#remCalDel").onclick = () => { $("#remSheet").hidden = true; remRemoveCal(); };
 $("#remTest").onclick = () => { $("#remSheet").hidden = true; pushTest(); };
 $("#remLater").onclick = () => { remSave({ asked: true }); $("#remSheet").hidden = true; };
 $("#remClose").onclick = () => { if (!$("#remLater").hidden) remSave({ asked: true }); $("#remSheet").hidden = true; };
@@ -2994,12 +3086,19 @@ $("#chips").addEventListener("click", e => {
   const c = e.target.closest("[data-c]"); if (!c) return;
   const id = Number(c.dataset.c); P.off = isOff(id) ? P.off.filter(x => x !== id) : [...P.off, id]; savePrefs(); render();
 });
+$("#cats").addEventListener("click", e => { const b = e.target.closest("[data-cat]"); if (b) { V.cat = b.dataset.cat; LS.set("cat", V.cat); useHit("cat_" + V.cat); render(); } });
 $("#seg").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { P.filter = b.dataset.f; savePrefs(); render(); } });
 $("#sort").onchange = e => { P.sort = e.target.value; savePrefs(); render(); };
 let qt; $("#q").addEventListener("input", e => { clearTimeout(qt); qt = setTimeout(() => { V.q = e.target.value.trim(); render(); }, 120); });
 $("#list").addEventListener("click", e => {
   const x = e.target.closest("[data-hide]");
-  if (x) { const k = x.dataset.hide; P.hidden = P.hidden.includes(k) ? P.hidden.filter(y => y !== k) : [...P.hidden, k]; savePrefs(); render(); return; }
+  if (x) {
+    const k = x.dataset.hide, was = P.hidden.includes(k);
+    P.hidden = was ? P.hidden.filter(y => y !== k) : [...P.hidden, k]; savePrefs(); render();
+    if (!was) toastUndo(t("hidDone"), () => { P.hidden = P.hidden.filter(y => y !== k); savePrefs(); render(); });
+    return;
+  }
+  if (e.target.closest("[data-showhid]")) { V.showHid = !V.showHid; render(); return; }
   const dn = e.target.closest("[data-done]");
   if (dn) { const k = dn.dataset.done; P.manual = P.manual.includes(k) ? P.manual.filter(y => y !== k) : [...P.manual, k]; savePrefs(); render(); return; }
   const g = e.target.closest("[data-g]");
@@ -3098,7 +3197,10 @@ window.addEventListener("hashchange", () => { if (!location.hash) return; if (im
 $("#mPrev").onclick = () => { V.monthOff--; render(); };
 $("#mNext").onclick = () => { V.monthOff++; render(); };
 $("#mToday").onclick = () => { V.monthOff = 0; render(); };
-$("#bFocusClear").onclick = () => { V.focus = null; render(); };
+$("#bFocusClear").onclick = () => {
+  const back = V.focusFrom === "dash" && !wide(); V.focus = null; V.focusFrom = null;
+  if (back) { if (history.state && history.state.v === "tasks") history.back(); else { setView("dash"); render(); window.scrollTo(0, 0); } } else render();
+};
 $("#tabbar").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !M.token) return;
