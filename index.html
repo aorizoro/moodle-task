@@ -502,7 +502,6 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div id="fbSet" hidden>
       <div style="margin-top:14px;font-weight:700" data-i18n="fbTitle"></div>
       <button id="bFb" style="width:100%;margin-top:6px" data-i18n="fbOpen"></button>
-      <div class="hint" data-i18n="statsHint" style="margin-top:8px"></div>
     </div>
     <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
     <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)" data-i18n="logout"></button>
@@ -653,8 +652,7 @@ const I18N = {
     fbTitle: "💬 פידבק", fbOpen: "💬 יש לך רעיון, בקשה או באג? ספר לנו", fbHint: "ההודעה מגיעה ישירות למפתח האפליקציה.",
     fbKind: "סוג", fbIdea: "💡 הצעה לשיפור", fbBug: "🐞 משהו לא עובד", fbQuestion: "❓ שאלה", fbPraise: "❤️ מחמאה", fbMsg: "מה תרצה לספר?",
     fbContact: "", fbPhone: "📞 טלפון, אם תרצה שיחזרו אליך (לא חובה)", fbWho: n => "צרף את השם שלי מ-Moodle (" + n + ") ואת רשימת הקורסים שלי, כדי שיהיה קל לעזור לי", fbBadPhone: "מספר הטלפון לא נראה תקין", fbTech: "צרף פרטים טכניים (גרסה, סוג מכשיר, שפה) כדי שיהיה קל לתקן", fbSend: "שלח",
-    fbEmpty: "כתוב כמה מילים לפני השליחה", fbThanks: "תודה! ההודעה נשלחה 🙏", fbQueued: "אין חיבור עכשיו. ההודעה תישלח אוטומטית כשיחזור החיבור.",
-    statsHint: "📊 פעם ביום האפליקציה שולחת למפתח שלה את השם שלך מ-Moodle, את רשימת הקורסים, הגרסה וסוג המכשיר, כדי לדעת מי משתמש בה ולעזור כשמשהו לא עובד. הטוקן, המשימות והציונים לא נשלחים.", syncViaCal: "נשמר כאירוע פרטי ביומן שלך ב-Moodle (בתאריך 1.1.2001, כדי שלא יפריע)", syncViaFiles: "נשמר ב״הקבצים הפרטיים שלי״ ב-Moodle", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
+    fbEmpty: "כתוב כמה מילים לפני השליחה", fbThanks: "תודה! ההודעה נשלחה 🙏", fbQueued: "אין חיבור עכשיו. ההודעה תישלח אוטומטית כשיחזור החיבור.", syncViaCal: "נשמר כאירוע פרטי ביומן שלך ב-Moodle (בתאריך 1.1.2001, כדי שלא יפריע)", syncViaFiles: "נשמר ב״הקבצים הפרטיים שלי״ ב-Moodle", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
     syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
   en: {
@@ -734,8 +732,7 @@ const I18N = {
     fbTitle: "💬 Feedback", fbOpen: "💬 Got an idea, a request or a bug? Tell us", fbHint: "Your message goes straight to the app’s developer.",
     fbKind: "Type", fbIdea: "💡 Idea", fbBug: "🐞 Something doesn’t work", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "What would you like to say?",
     fbContact: "", fbPhone: "📞 Phone, if you’d like a call back (optional)", fbWho: n => "Attach my Moodle name (" + n + ") and my course list, so it’s easier to help me", fbBadPhone: "That phone number doesn’t look right", fbTech: "Attach technical details (version, device type, language) to make fixing easier", fbSend: "Send",
-    fbEmpty: "Write a few words before sending", fbThanks: "Thanks! Your message was sent 🙏", fbQueued: "No connection right now. It will be sent automatically when you’re back online.",
-    statsHint: "📊 Once a day the app sends its developer your Moodle name, your course list, the app version and device type, to know who uses it and to help when something breaks. Your token, tasks and grades are never sent.", syncViaCal: "Kept as a private event in your Moodle calendar (dated 1.1.2001, out of the way)", syncViaFiles: "Kept in your Moodle “Private files”", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
+    fbEmpty: "Write a few words before sending", fbThanks: "Thanks! Your message was sent 🙏", fbQueued: "No connection right now. It will be sent automatically when you’re back online.", syncViaCal: "Kept as a private event in your Moodle calendar (dated 1.1.2001, out of the way)", syncViaFiles: "Kept in your Moodle “Private files”", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
     syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
   fr: {
@@ -815,8 +812,7 @@ const I18N = {
     fbTitle: "💬 Avis", fbOpen: "💬 Une idée, une demande ou un bug ? Dites-le-nous", fbHint: "Votre message va directement au développeur de l’application.",
     fbKind: "Type", fbIdea: "💡 Idée", fbBug: "🐞 Quelque chose ne marche pas", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "Que voulez-vous nous dire ?",
     fbContact: "", fbPhone: "📞 Téléphone, si vous voulez être rappelé (facultatif)", fbWho: n => "Joindre mon nom Moodle (" + n + ") et ma liste de cours, pour qu’on puisse mieux m’aider", fbBadPhone: "Ce numéro de téléphone ne semble pas valide", fbTech: "Joindre les détails techniques (version, type d’appareil, langue) pour faciliter la correction", fbSend: "Envoyer",
-    fbEmpty: "Écrivez quelques mots avant d’envoyer", fbThanks: "Merci ! Votre message a été envoyé 🙏", fbQueued: "Pas de connexion. Il sera envoyé automatiquement au retour du réseau.",
-    statsHint: "📊 Une fois par jour, l’application envoie à son développeur votre nom Moodle, votre liste de cours, la version et le type d’appareil, pour savoir qui l’utilise et aider en cas de problème. Votre jeton, vos devoirs et vos notes ne sont jamais envoyés.", syncViaCal: "Gardé comme événement privé dans votre calendrier Moodle (daté du 1.1.2001, hors de vue)", syncViaFiles: "Gardé dans vos « Fichiers personnels » Moodle", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
+    fbEmpty: "Écrivez quelques mots avant d’envoyer", fbThanks: "Merci ! Votre message a été envoyé 🙏", fbQueued: "Pas de connexion. Il sera envoyé automatiquement au retour du réseau.", syncViaCal: "Gardé comme événement privé dans votre calendrier Moodle (daté du 1.1.2001, hors de vue)", syncViaFiles: "Gardé dans vos « Fichiers personnels » Moodle", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
     syncFirst: "Synchronisation activée. Sur le premier appareil, ses données sont enregistrées sur Moodle ; les appareils suivants les chargent depuis là.", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
   },
 };
