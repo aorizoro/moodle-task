@@ -1,0 +1,16 @@
+name = "moodle-task-push"
+main = "worker.js"
+compatibility_date = "2025-09-01"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "DEVICES"
+class_name = "Device"
+
+[[durable_objects.bindings]]
+name = "KEYS"
+class_name = "Keys"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Device", "Keys"]

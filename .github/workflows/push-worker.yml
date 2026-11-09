@@ -1,0 +1,33 @@
+# מעלה את שרת ההתראות (התיקייה push/) ל-Cloudflare בכל שינוי בו, או בלחיצה ידנית ב-Actions.
+# צריך שני Secrets בהגדרות הריפו: CLOUDFLARE_API_TOKEN ו-CLOUDFLARE_ACCOUNT_ID.
+name: Deploy push server
+on:
+  push:
+    branches: [main]
+    paths: ["push/**", ".github/workflows/push-worker.yml"]
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the Cloudflare secrets are set
+        env:
+          T: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          A: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$T" ] || [ -z "$A" ]; then echo "::error::Add CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in Settings → Secrets and variables → Actions"; exit 1; fi
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: push
+          wranglerVersion: "4.158.0"
+          command: deploy
+      - name: Check it answers
+        run: |
+          sleep 5
+          for u in $(grep -ho 'https://moodle-task-push\.[a-z0-9-]*\.workers\.dev' $GITHUB_WORKSPACE/beta/index.html $GITHUB_WORKSPACE/index.html | sort -u); do
+            echo "$u/key"; curl -fsS "$u/key"; echo
+          done

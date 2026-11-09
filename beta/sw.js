@@ -2,7 +2,7 @@
 // הבקשות ל-Moodle לא עוברות כאן ולא נשמרות במטמון.
 // the beta (…/beta/) and the regular app share one site: each keeps and cleans only its own cache
 const CH = /\/beta\/$/.test(self.registration.scope) ? "beta-" : "";
-const CACHE = "moodle-tasks-" + CH + "v18";
+const CACHE = "moodle-tasks-" + CH + "v19";
 const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -18,5 +18,20 @@ self.addEventListener("fetch", e => {
     const hit = await c.match(e.request, { ignoreSearch: true });
     const net = fetch(e.request).then(r => { if (r.ok) c.put(e.request, r.clone()); return r; }).catch(() => hit);
     return hit || net;
+  }));
+});
+// התראות: השרת שולח את התזכורת בזמן שלה, וכאן היא מוצגת בטלפון. לחיצה פותחת את האפליקציה.
+self.addEventListener("push", e => {
+  let d = {};
+  try { d = e.data ? e.data.json() : {}; } catch (x) { d = { body: e.data ? e.data.text() : "" }; }
+  e.waitUntil(self.registration.showNotification(d.title || "משימות Moodle", {
+    body: d.body || "", tag: d.tag || undefined, renotify: !!d.tag, icon: "icon-192.png", badge: "icon-192.png", dir: "auto",
+    timestamp: d.at || Date.now(), data: { tag: d.tag || "" } }));
+});
+self.addEventListener("notificationclick", e => {
+  e.notification.close();
+  e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(cs => {
+    const c = cs.find(w => w.url.startsWith(self.registration.scope));
+    return c ? c.focus() : self.clients.openWindow(self.registration.scope);
   }));
 });

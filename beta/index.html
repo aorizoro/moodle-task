@@ -689,16 +689,21 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 <div class="sheet" id="remSheet" hidden>
   <div class="box form">
     <h3><span id="remTitle"></span> <button class="link" id="remClose" data-i18n="close"></button></h3>
-    <p class="hint" id="remIntro" data-i18n="remIntro"></p>
+    <p class="hint" id="remIntro"></p>
     <div class="rgrp"><b data-i18n="remTasks"></b><div class="rchips" id="rem_task"></div></div>
     <div class="rgrp"><b data-i18n="remExams"></b><div class="rchips" id="rem_exam"></div></div>
     <div class="rgrp"><b data-i18n="remClasses"></b>
       <div class="rchips" id="remCls"><button class="rchip" data-cls="zoom" data-i18n="remClsZoom"></button><button class="rchip" data-cls="all" data-i18n="remClsAll"></button><button class="rchip" data-cls="none" data-i18n="remClsNone"></button></div>
       <label class="rmin"><span data-i18n="remBefore"></span><select id="remMin"></select></label>
     </div>
-    <button class="primary" id="remGo" style="width:100%" data-i18n="remGo"></button>
+    <div class="rgrp" id="remHowG"><b data-i18n="remHowLbl"></b>
+      <div class="rchips" id="remHowC"><button class="rchip" data-how="push" data-i18n="remHowPush"></button><button class="rchip" data-how="cal" data-i18n="remHowCal"></button></div>
+      <p class="hint" id="remIosNote" hidden data-i18n="pushIos"></p>
+    </div>
+    <button class="primary" id="remGo" style="width:100%"></button>
     <button class="link" id="remLater" style="width:100%" data-i18n="remLater"></button>
-    <p class="hint" data-i18n="remHow"></p>
+    <p class="hint" id="remHowTxt"></p>
+    <button class="link" id="remStop" style="width:100%" hidden data-i18n="pushStop"></button>
   </div>
 </div>
 <div class="sheet" id="wnSheet" hidden>
@@ -740,6 +745,18 @@ const I18N = {
     remAdded: n => n + " אירועים עם תזכורות מוכנים. פתח את הקובץ שירד כדי להוסיף אותם ליומן.",
     remCardOff: "תזכורות לפני הגשות, מבחנים ושיעורי זום, ישר ביומן של הטלפון.", remSetBtn: "🔔 הגדר תזכורות", remCardNew: n => n === 1 ? "פריט חדש אחד עוד לא ביומן" : n + " פריטים חדשים עוד לא ביומן",
     remUpdateBtn: "📅 הוסף אותם ליומן", remChange: "שינוי התזכורות", remCardOk: "כל מה שצריך כבר ביומן עם תזכורות",
+    remIntroPush: "האפליקציה יכולה לשלוח לך התראה לפני הגשות, מבחנים ושיעורי זום. בחר מתי, ואפשר לסמן כמה זמנים: לכל אחד תגיע התראה.",
+    remHowLbl: "איך להזכיר", remHowPush: "🔔 התראות מהאפליקציה", remHowCal: "📅 ביומן של הטלפון", remGoPush: "🔔 הפעל התראות",
+    remHowPushTxt: "הטלפון יבקש אישור להתראות. הן מגיעות גם כשהאפליקציה סגורה. כל פתיחה של האפליקציה מעדכנת אותן: מטלה שהגשת יורדת, ומטלה חדשה נוספת.",
+    remCardOffPush: "התראות לפני הגשות, מבחנים ושיעורי זום, גם כשהאפליקציה סגורה.",
+    pushIos: "באייפון ההתראות עובדות רק מהאפליקציה שבמסך הבית: בספארי שיתוף ← ״הוסף למסך הבית״, ולפתוח משם.",
+    pushDenied: "ההתראות חסומות בדפדפן. כדי להתיר: 🔒 ליד הכתובת ← הרשאות ← התראות ← לאפשר.", pushNotNow: "בלי אישור אין התראות. אפשר לנסות שוב מהכרטיס בסקירה.",
+    pushFail: "לא הצלחתי להתחבר לשרת ההתראות. אנסה שוב בפתיחה הבאה.", pushTestT: "🔔 ההתראות פועלות",
+    pushTestB: n => n ? "נקבעו " + n + " תזכורות לפי מה שבחרת" : "כשיהיה על מה להזכיר, ההתראה תגיע לכאן",
+    pushReady: n => "🔔 ההתראות הופעלו" + (n ? " · " + n + " תזכורות בדרך" : ""), pushOnCard: "🔔 ההתראות פועלות במכשיר הזה",
+    pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
+    pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
+    pushDue: (o, w) => "ההגשה בעוד " + o + " · " + w, pushExam: (o, w) => "המבחן בעוד " + o + " · " + w, pushClass: m => "מתחיל בעוד " + m + " דקות",
     wnTitle: "✨ מה חדש", wnOk: "מעולה", version: v => "גרסה " + v, tZoom: "זום", zoomBadge: "📹 זום",
     tourSkip: "דלג", tourBack: "חזרה", tourNext: "הבא", tourDone: "יאללה, מתחילים", tourOpen: "📖 מדריך קצר לאפליקציה",
     tmTask: "תרגיל 3", tmCourse: "חשבון אינפי׳ 1", tmWhen: "יום ג׳, 23:59", tmC1: "אינפי", tmC2: "מבוא", tmC3: "פיזיקה", tmC4: "בדידה",
@@ -852,6 +869,18 @@ const I18N = {
     remAdded: n => n + " events with reminders are ready. Open the downloaded file to add them to your calendar.",
     remCardOff: "Reminders before deadlines, exams and Zoom classes, right in your phone’s calendar.", remSetBtn: "🔔 Set up reminders", remCardNew: n => n === 1 ? "1 new item not in your calendar yet" : n + " new items not in your calendar yet",
     remUpdateBtn: "📅 Add them to my calendar", remChange: "Change reminders", remCardOk: "Everything is in your calendar with reminders",
+    remIntroPush: "The app can send you a notification before deadlines, exams and Zoom classes. Choose when; pick several times and you get one for each.",
+    remHowLbl: "How to remind", remHowPush: "🔔 App notifications", remHowCal: "📅 In my phone’s calendar", remGoPush: "🔔 Turn on notifications",
+    remHowPushTxt: "Your phone will ask to allow notifications. They arrive even when the app is closed. Each time you open the app they update: a submitted assignment drops out, a new one is added.",
+    remCardOffPush: "Notifications before deadlines, exams and Zoom classes, even with the app closed.",
+    pushIos: "On iPhone, notifications work only from the home-screen app: in Safari, Share → “Add to Home Screen”, then open it from there.",
+    pushDenied: "Notifications are blocked in the browser. To allow: 🔒 next to the address → Permissions → Notifications → Allow.", pushNotNow: "Without permission there are no notifications. You can try again from the overview card.",
+    pushFail: "Couldn’t reach the notification server. I’ll try again next time.", pushTestT: "🔔 Notifications are on",
+    pushTestB: n => n ? n + " reminders set from your choices" : "When there’s something to remind you about, it will show up here",
+    pushReady: n => "🔔 Notifications on" + (n ? " · " + n + " reminders scheduled" : ""), pushOnCard: "🔔 Notifications are on for this device",
+    pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
+    pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
+    pushDue: (o, w) => "Due in " + o + " · " + w, pushExam: (o, w) => "Exam in " + o + " · " + w, pushClass: m => "Starts in " + m + " minutes",
     wnTitle: "✨ What’s new", wnOk: "Great", version: v => "Version " + v, tZoom: "Zoom", zoomBadge: "📹 Zoom",
     tourSkip: "Skip", tourBack: "Back", tourNext: "Next", tourDone: "Let’s go", tourOpen: "📖 Quick guide to the app",
     tmTask: "Exercise 3", tmCourse: "Calculus 1", tmWhen: "Tue, 23:59", tmC1: "Calculus", tmC2: "Intro", tmC3: "Physics", tmC4: "Discrete",
@@ -964,6 +993,18 @@ const I18N = {
     remAdded: n => n + " événements avec rappels sont prêts. Ouvrez le fichier téléchargé pour les ajouter au calendrier.",
     remCardOff: "Des rappels avant les échéances, examens et cours Zoom, directement dans le calendrier du téléphone.", remSetBtn: "🔔 Configurer les rappels", remCardNew: n => n === 1 ? "1 nouvel élément pas encore dans le calendrier" : n + " nouveaux éléments pas encore dans le calendrier",
     remUpdateBtn: "📅 Les ajouter au calendrier", remChange: "Modifier les rappels", remCardOk: "Tout est dans votre calendrier avec rappels",
+    remIntroPush: "L’application peut vous envoyer une notification avant les échéances, examens et cours Zoom. Choisissez quand ; plusieurs moments = une notification pour chacun.",
+    remHowLbl: "Comment rappeler", remHowPush: "🔔 Notifications de l’app", remHowCal: "📅 Dans le calendrier", remGoPush: "🔔 Activer les notifications",
+    remHowPushTxt: "Le téléphone demandera d’autoriser les notifications. Elles arrivent même application fermée. À chaque ouverture elles se mettent à jour : un devoir rendu disparaît, un nouveau s’ajoute.",
+    remCardOffPush: "Notifications avant les échéances, examens et cours Zoom, même application fermée.",
+    pushIos: "Sur iPhone, les notifications ne marchent que depuis l’app de l’écran d’accueil : dans Safari, Partager → « Sur l’écran d’accueil », puis l’ouvrir de là.",
+    pushDenied: "Les notifications sont bloquées dans le navigateur. Pour autoriser : 🔒 à côté de l’adresse → Autorisations → Notifications → Autoriser.", pushNotNow: "Sans autorisation, pas de notifications. Vous pouvez réessayer depuis la carte de l’aperçu.",
+    pushFail: "Impossible de joindre le serveur de notifications. Nouvel essai la prochaine fois.", pushTestT: "🔔 Les notifications sont activées",
+    pushTestB: n => n ? n + " rappels programmés selon vos choix" : "Quand il y aura un rappel, il arrivera ici",
+    pushReady: n => "🔔 Notifications activées" + (n ? " · " + n + " rappels programmés" : ""), pushOnCard: "🔔 Notifications activées sur cet appareil",
+    pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
+    pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
+    pushDue: (o, w) => "À rendre dans " + o + " · " + w, pushExam: (o, w) => "Examen dans " + o + " · " + w, pushClass: m => "Commence dans " + m + " minutes",
     wnTitle: "✨ Nouveautés", wnOk: "Super", version: v => "Version " + v, tZoom: "Zoom", zoomBadge: "📹 Zoom",
     tourSkip: "Passer", tourBack: "Retour", tourNext: "Suivant", tourDone: "C’est parti", tourOpen: "📖 Guide rapide de l’application",
     tmTask: "Exercice 3", tmCourse: "Analyse 1", tmWhen: "mar., 23:59", tmC1: "Analyse", tmC2: "Intro", tmC3: "Physique", tmC4: "Discrètes",
@@ -1899,7 +1940,7 @@ function cleanKey(k, v) {
     case "sort": return ["urgency", "course", "date"].includes(v) ? v : "urgency";
     case "rem": { if (!obj(v)) return null; const ok = (a, set) => Array.isArray(a) ? a.filter(x => set.includes(x)) : [];
       return { task: ok(v.task, REM_CHOICES.task), exam: ok(v.exam, REM_CHOICES.exam), cls: ["zoom", "all", "none"].includes(v.cls) ? v.cls : "zoom",
-        clsMin: [5, 10, 15, 30].includes(v.clsMin) ? v.clsMin : 10, asked: v.asked === true, on: v.on === true }; }
+        clsMin: [5, 10, 15, 30].includes(v.clsMin) ? v.clsMin : 10, asked: v.asked === true, on: v.on === true, how: v.how === "cal" ? "cal" : "push" }; }
   }
   return v;
 }
@@ -2029,7 +2070,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.1.0-beta.1";
+const APP_VERSION = "1.1.0-beta.2";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2260,9 +2301,9 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
-  { v: "1.1.0", date: "2026-11-09", he: ["🔔 תזכורות: בוחרים כמה זמן לפני להזכיר על הגשות, מבחנים ושיעורי זום, והן נכנסות ליומן של הטלפון", "📹 שיעורי זום מסומנים במערכת ובשיעורי היום", "🏷 מספר גרסה ו״מה חדש״ בהגדרות"],
-    en: ["🔔 Reminders: choose how long before deadlines, exams and Zoom classes to be reminded, and they go into your phone’s calendar", "📹 Zoom classes are marked in the timetable and today’s classes", "🏷 Version number and “What’s new” in settings"],
-    fr: ["🔔 Rappels : choisissez combien de temps avant les échéances, examens et cours Zoom être prévenu, et ils vont dans le calendrier du téléphone", "📹 Les cours Zoom sont signalés dans l’emploi du temps et les cours du jour", "🏷 Numéro de version et « Nouveautés » dans les paramètres"] },
+  { v: "1.1.0", date: "2026-11-09", he: ["🔔 התראות: האפליקציה שולחת התראה לפני הגשות, מבחנים ושיעורי זום, לפי הזמנים שבוחרים, גם כשהיא סגורה (או ליומן של הטלפון)", "📹 שיעורי זום מסומנים במערכת ובשיעורי היום", "🏷 מספר גרסה ו״מה חדש״ בהגדרות"],
+    en: ["🔔 Notifications: the app notifies you before deadlines, exams and Zoom classes at the times you choose, even when closed (or into your phone’s calendar)", "📹 Zoom classes are marked in the timetable and today’s classes", "🏷 Version number and “What’s new” in settings"],
+    fr: ["🔔 Notifications : l’app vous prévient avant les échéances, examens et cours Zoom aux moments choisis, même fermée (ou dans le calendrier du téléphone)", "📹 Les cours Zoom sont signalés dans l’emploi du temps et les cours du jour", "🏷 Numéro de version et « Nouveautés » dans les paramètres"] },
   { v: "1.0.0", date: "2026-11-09", he: ["כל המטלות והבחנים מכל הקורסים במקום אחד, עם ספירה לאחור", "מערכת שעות מקובץ הלבנט, מועדי מבחנים מהלבנט ומד התקדמות לסמסטר", "סנכרון בין הטלפון למחשב, פידבק ומדריך קצר"],
     en: ["All assignments and quizzes from every course in one place, with countdowns", "Timetable from the Levnet file, exam dates from Levnet and a semester progress bar", "Sync between phone and computer, feedback and a short guide"],
     fr: ["Tous les devoirs et tests de tous les cours au même endroit, avec comptes à rebours", "Emploi du temps depuis le fichier Levnet, dates d’examen Levnet et barre du semestre", "Synchronisation téléphone/ordinateur, avis et petit guide"] },
@@ -2361,13 +2402,23 @@ function openRem(ask) {
   for (const g of ["task", "exam"]) $("#rem_" + g).innerHTML = REM_CHOICES[g].map(k => '<button class="rchip' + (c[g].includes(k) ? " on" : "") + '" data-g="' + g + '" data-k="' + k + '" aria-pressed="' + c[g].includes(k) + '">' + esc(t("off_" + k)) + "</button>").join("");
   $$("#remCls [data-cls]").forEach(b => b.classList.toggle("on", b.dataset.cls === c.cls));
   $("#remMin").innerHTML = [5, 10, 15, 30].map(m => '<option value="' + m + '">' + esc(t("remMinOpt", m)) + "</option>").join(""); $("#remMin").value = String(c.clsMin);
+  $("#remHowG").hidden = !pushAvail(); remModeUI(remHow());
   $("#remLater").hidden = !ask; $("#sheet").hidden = true; $("#remSheet").hidden = false;
 }
 function remSave(patch) { P.rem = Object.assign(remCfg(), patch); savePrefs(); }
 function renderRemCard() {
   const el = $("#remCardBody"); if (!el) return;
-  const on = P.rem && P.rem.on, n = on ? remPending() : 0;
-  el.innerHTML = !on ? '<div class="hint">' + esc(t("remCardOff")) + '</div><button class="primary" data-rem="set">' + esc(t("remSetBtn")) + "</button>"
+  const on = P.rem && P.rem.on;
+  if (on && remHow() === "push") {
+    const next = pushOn() && pushItems()[0], perm = pushPerm();
+    el.innerHTML = pushOn() ? '<div class="hint">' + esc(t("pushOnCard")) + (next ? "<br>" + esc(t("pushNext", clockTxt(next.at / 1000), next.title)) : "") + "</div>" + (PS.err ? '<div class="hint">' + esc(t("pushFail")) + "</div>" : "") + '<button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
+      : pushNeedsInstall() ? '<div class="hint">' + esc(t("pushIos")) + '</div><button data-rem="cal">' + esc(t("remGo")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
+      : '<div class="remnew">' + esc(t(perm === "denied" ? "pushBlockedCard" : "pushOffCard")) + '</div><button class="primary" data-rem="push">' + esc(t("pushEnableBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>";
+    if (pushOn()) pushSoon();
+    return;
+  }
+  const n = on ? remPending() : 0;
+  el.innerHTML = !on ? '<div class="hint">' + esc(t(pushAvail() ? "remCardOffPush" : "remCardOff")) + '</div><button class="primary" data-rem="set">' + esc(t("remSetBtn")) + "</button>"
     : n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button class="primary" data-rem="add">' + esc(t("remUpdateBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
     : '<div class="hint">✓ ' + esc(t("remCardOk")) + '</div><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>";
 }
@@ -2376,6 +2427,106 @@ function maybeAskRem() {
   if ((P.rem && P.rem.asked) || !V.data || !$("#tour").hidden || !$("#wnSheet").hidden || !$("#remSheet").hidden || navigator.webdriver) return;
   if (!V.data.tasks.some(x => counted(x) && !isDone(x) && x.due > nowS())) return;
   openRem(true);
+}
+/* ---------- notifications from the app itself: the reminder times go to a small push server (push/ in the repo),
+   which sends each one when it is due, even with the app closed. Only titles and times leave the phone, never the token. ---------- */
+const PUSH_URL = "";      // the push server, once deployed (https://moodle-task-push.<name>.workers.dev)
+const pushUrl = () => String(LS.get("pushUrl", PUSH_URL) || "").replace(/\/+$/, "");
+const isStandalone = () => (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
+const pushSupported = () => !!pushUrl() && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && location.protocol !== "file:";
+const pushNeedsInstall = () => !!pushUrl() && PLAT === "ios" && !isStandalone() && !("PushManager" in window);   // iPhone: only from the home-screen app
+const pushAvail = () => pushSupported() || pushNeedsInstall();
+const pushPerm = () => ("Notification" in window) ? Notification.permission : "default";
+const pushOn = () => pushSupported() && LS.get("pushOn", false) === true && pushPerm() === "granted";
+const remHow = () => { const h = remCfg().how; return pushAvail() ? (h || "push") : "cal"; };
+const OFF_S = { "7d": 7 * DAY, "3d": 3 * DAY, "1d": DAY, "3h": 3 * 3600, "1h": 3600, "30m": 1800 };
+const PS = { p: null, err: null, timer: 0 };
+const clockTxt = ts => { const d = new Date(ts * 1000); try { return d.toLocaleString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return d.toLocaleString(); } };
+/* every notification this device should get, by the chosen offsets: one per offset per item */
+function pushItems() {
+  const c = remCfg(), now = nowS(), d = V.data, out = [];
+  const add = (at, title, body, tag) => { if (at > now) out.push({ at: at * 1000, title, body, tag }); };
+  if (d) for (const x of d.tasks) {
+    if (!counted(x) || isDone(x) || !x.due || x.due < now) continue;
+    if (x.type === "zoom") { if (c.cls !== "none") add(x.due - c.clsMin * 60, "📹 " + shortName(x.course) + ": " + x.name, t("pushClass", c.clsMin), "z:" + x.key); continue; }
+    for (const k of c.task) add(x.due - OFF_S[k], "⏰ " + shortName(x.course) + ": " + x.name, t("pushDue", t("off_" + k), clockTxt(x.due)), "t:" + x.key + ":" + k);
+  }
+  for (const x of examList()) for (const k of c.exam) {
+    const at = x.allDay ? dayStart(x.ts) - OFF_S[k] + 9 * 3600 : x.ts - OFF_S[k];      // an all-day exam: at 09:00 that many days before
+    add(at, "📝 " + courseName(x.cid) + " · " + t(x.m === "a" ? "moedA" : "moedB"), t("pushExam", t("off_" + k), x.allDay ? dayDate(x.ts) : clockTxt(x.ts)) + (x.lev ? " · " + t("exLev") : ""), "e:" + x.cid + ":" + x.m + ":" + k);
+  }
+  if (c.cls !== "none") {
+    const D = semDates(now), until = D ? D.e : addD(now, 15 * 7), list = P.tt.filter(x => c.cls === "all" || isZoom(x));
+    const base = new Date((D && D.s > now ? D.s : now) * 1000); base.setHours(0, 0, 0, 0);
+    for (let i = 0; i < 200 && list.length; i++) {
+      const day = new Date(base); day.setDate(base.getDate() + i);
+      if (day.getTime() / 1000 >= until) break;
+      for (const x of list) {
+        const m = hm(x.s); if (x.day !== day.getDay() || isNaN(m)) continue;
+        const st = new Date(day.getFullYear(), day.getMonth(), day.getDate(), Math.floor(m / 60), m % 60).getTime() / 1000;   // wall-clock time, right across clock changes
+        add(st - c.clsMin * 60, (isZoom(x) ? "📹 " : "🎓 ") + ttName(x) + " · " + ttKind(x), t("pushClass", c.clsMin) + (x.place ? " · " + x.place : ""), "c:" + x.id + ":" + dayKey(day));
+      }
+    }
+  }
+  return out.sort((a, b) => a.at - b.at).slice(0, 500);
+}
+const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4)), c => c.charCodeAt(0));
+function strHash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + ":" + s.length; }
+async function pushKey() {
+  const k = LS.get("pushKey", null); if (k && k.u === pushUrl()) return k.k;
+  const r = await fetch(pushUrl() + "/key"); if (!r.ok) throw new Error("key " + r.status);
+  const j = await r.json(); LS.set("pushKey", { u: pushUrl(), k: j.key }); return j.key;
+}
+async function pushSub() {
+  const reg = await navigator.serviceWorker.ready;
+  return (await reg.pushManager.getSubscription()) || reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: unb64u(await pushKey()) });
+}
+const pushPost = (path, body) => fetch(pushUrl() + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+  .then(r => { if (!r.ok) throw new Error(path + " " + r.status); return r.json(); });
+/* send the current list to the server when it changed (and twice a day anyway, so the server knows this device is alive) */
+function pushSync(force) {                 // one at a time: a call made while another runs waits for it, then checks again
+  PS.p = (PS.p || Promise.resolve()).then(async () => {
+    if (!pushOn()) return;
+    const items = pushItems(), sig = strHash(JSON.stringify(items)), last = LS.get("pushSig", null);
+    if (!force && last && last.s === sig && Date.now() - last.at < 12 * 3600e3) return;
+    try {
+      const sub = await pushSub(), j = await pushPost("/sync", { sub: sub.toJSON(), items, lang: LANG });
+      LS.set("pushSig", { s: sig, at: Date.now(), n: j.count }); PS.err = null;
+    } catch (e) { PS.err = String(e && e.message || e); }
+    renderRemCard();
+  });
+  return PS.p;
+}
+const pushSoon = () => { clearTimeout(PS.timer); PS.timer = setTimeout(() => pushSync(false), 1500); };
+/* turned on from a tap: ask the phone for permission, subscribe, upload, and send one right away so it's clear it works */
+async function pushEnable() {
+  if (pushNeedsInstall()) { toast(t("pushIos"), 9000); renderRemCard(); return false; }
+  if (!pushSupported()) return false;
+  let p = pushPerm();
+  if (p === "default") { try { p = await Notification.requestPermission(); } catch (e) { p = "default"; } }
+  if (p !== "granted") { toast(t(p === "denied" ? "pushDenied" : "pushNotNow"), 8000); renderRemCard(); return false; }
+  LS.set("pushOn", true); LS.set("pushSig", null);
+  await pushSync(true);
+  if (PS.err) { toast(t("pushFail"), 7000); return false; }
+  const n = (LS.get("pushSig", {}) || {}).n || 0;
+  try { const sub = await pushSub(); await pushPost("/test", { endpoint: sub.endpoint, title: t("pushTestT"), body: t("pushTestB", n) }); } catch (e) {}
+  toast(t("pushReady", n), 6000); renderRemCard();
+  return true;
+}
+async function pushDisable() {
+  LS.set("pushOn", false); LS.set("pushSig", null);
+  try { const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription();
+    if (sub) { await pushPost("/unsub", { endpoint: sub.endpoint }).catch(() => {}); await sub.unsubscribe(); } } catch (e) {}
+  toast(t("pushStopped")); renderRemCard();
+}
+function remModeUI(how) {
+  const push = how === "push";
+  $$("#remHowC [data-how]").forEach(b => { b.classList.toggle("on", b.dataset.how === how); b.setAttribute("aria-pressed", b.dataset.how === how); });
+  $("#remIosNote").hidden = !(push && pushNeedsInstall());
+  $("#remGo").textContent = t(push ? "remGoPush" : "remGo");
+  $("#remHowTxt").textContent = t(push ? "remHowPushTxt" : "remHow");
+  $("#remIntro").textContent = t(push ? "remIntroPush" : "remIntro");
+  $("#remStop").hidden = !(push && pushOn());
 }
 /* ---------- first-run tour: a few cards, skippable, shown once; reopened from settings ---------- */
 const TOUR = { i: 0 };
@@ -2495,16 +2646,21 @@ $("#remSheet").addEventListener("click", e => {
   if (e.target.id === "remSheet") { $("#remSheet").hidden = true; if (!$("#remLater").hidden) remSave({ asked: true }); return; }
   const b = e.target.closest("[data-g]"); if (b) { b.classList.toggle("on"); b.setAttribute("aria-pressed", b.classList.contains("on")); return; }
   const c = e.target.closest("[data-cls]"); if (c) $$("#remCls [data-cls]").forEach(x => x.classList.toggle("on", x === c));
+  const h = e.target.closest("[data-how]"); if (h) remModeUI(h.dataset.how);
 });
 $("#remGo").onclick = () => {
   const pick = g => $$("#rem_" + g + " .rchip.on").map(b => b.dataset.k), cls = ($("#remCls .rchip.on") || {}).dataset;
-  remSave({ task: pick("task"), exam: pick("exam"), cls: cls ? cls.cls : "zoom", clsMin: Number($("#remMin").value) || 10, on: true, asked: true });
-  $("#remSheet").hidden = true; remExport(false);
+  const how = pushAvail() && $("#remHowC .rchip.on") ? $("#remHowC .rchip.on").dataset.how : "cal";
+  remSave({ task: pick("task"), exam: pick("exam"), cls: cls ? cls.cls : "zoom", clsMin: Number($("#remMin").value) || 10, on: true, asked: true, how });
+  $("#remSheet").hidden = true;
+  if (how === "push") { LS.set("pushSig", null); pushEnable(); } else remExport(false);
 };
+$("#remStop").onclick = () => { $("#remSheet").hidden = true; pushDisable(); };
 $("#remLater").onclick = () => { remSave({ asked: true }); $("#remSheet").hidden = true; };
 $("#remClose").onclick = () => { if (!$("#remLater").hidden) remSave({ asked: true }); $("#remSheet").hidden = true; };
 $("#bRem").onclick = () => openRem(false);
-$("#dash").addEventListener("click", e => { const r = e.target.closest("[data-rem]"); if (!r) return; if (r.dataset.rem === "add") remExport(true); else openRem(false); });
+$("#dash").addEventListener("click", e => { const r = e.target.closest("[data-rem]"); if (!r) return; const a = r.dataset.rem;
+  if (a === "add") remExport(true); else if (a === "cal") remExport(false); else if (a === "push") pushEnable(); else openRem(false); });
 $("#bWn").onclick = () => { $("#sheet").hidden = true; whatsNew(true); };
 const wnDone = () => { $("#wnSheet").hidden = true; setTimeout(maybeAskRem, 400); };
 $("#wnOk").onclick = wnDone; $("#wnClose").onclick = wnDone;
@@ -2655,6 +2811,7 @@ setInterval(tick, 1000);
 window.addEventListener("online", () => { if (M.token) refresh(); });
 
 if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
+if (pushSupported()) setTimeout(() => pushKey().catch(() => {}), 2500);
 applyLang();
 importFromHash();
 if (LS.get("token", "")) showMain(); else showSetup();
