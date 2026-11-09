@@ -172,6 +172,7 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .wnv{margin:8px 0}
 .calbtns{display:flex;flex-direction:column;gap:8px;margin:10px 0}
 .calbtns.busy{opacity:.5;pointer-events:none}
+.calg{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:4px 0 10px;background:var(--card2,transparent)}.calg ol{margin:6px 0;padding-inline-start:20px;font-size:14px;line-height:1.5}.calg .calbtns{margin:8px 0 0}
 .dalist{display:flex;flex-direction:column;gap:6px}
 .darow{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:6px 8px;background:var(--card)}
 .darow.off{opacity:.55}
@@ -692,8 +693,8 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div id="sum"></div>
     <div class="seg cats" id="cats">
       <button data-cat="all"><span data-i18n="catAll"></span> <i id="catN_all"></i></button>
-      <button data-cat="assign"><span data-i18n="catAssign"></span> <i id="catN_assign"></i></button>
-      <button data-cat="quiz"><span data-i18n="catQuiz"></span> <i id="catN_quiz"></i></button>
+      <button data-cat="file"><span data-i18n="catFile"></span> <i id="catN_file"></i></button>
+      <button data-cat="online"><span data-i18n="catOnline"></span> <i id="catN_online"></i></button>
       <button data-cat="other"><span data-i18n="catOther"></span> <i id="catN_other"></i></button>
       <button data-cat="mine"><span data-i18n="catMine"></span> <i id="catN_mine"></i></button>
     </div>
@@ -858,6 +859,12 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <button id="calApple" data-i18n="calApple"></button>
       <button id="calCopy" data-i18n="calCopy"></button>
     </div>
+    <div class="calg" id="calG" hidden>
+      <b data-i18n="calGTitle"></b>
+      <p class="hint" data-i18n="calGText"></p>
+      <ol><li data-i18n="calG1"></li><li data-i18n="calG2"></li><li data-i18n="calG3"></li></ol>
+      <div class="calbtns"><button class="primary" id="calGSend" data-i18n="calGSend"></button><button id="calGCopy" data-i18n="calGCopy"></button></div>
+    </div>
     <p class="hint" data-i18n="calNote"></p>
     <p class="err" id="calErr" hidden></p>
     <button class="link" id="calFile" style="width:100%" data-i18n="calFile"></button>
@@ -973,7 +980,7 @@ const I18N = {
     pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
     pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
     calBtn: "📅 הוספה ליומן שלי", calTitle: "📅 MoodlePro ביומן שלך", calIntro: "יומן שמתעדכן לבד: מטלה חדשה נכנסת, מטלה שהגשת יוצאת, וגם המבחנים והשיעורים מהמערכת. מוסיפים אותו פעם אחת, וזהו.",
-    calGoogle: "Google Calendar (גם לאנדרואיד)", calApple: "אייפון / Mac / Outlook", calCopy: "🔗 העתקת הקישור",
+    calGoogle: "Google Calendar", calGTitle: "ל-Google מוסיפים פעם אחת, מהמחשב", calGText: "גוגל לא נותן להוסיף יומן מקישור באפליקציה בטלפון, רק באתר שלו במחשב. עושים את זה פעם אחת, ואז היומן מופיע גם בטלפון לבד.", calG1: "שולחים לעצמך את הקישור (בוואטסאפ או במייל) או מעתיקים אותו", calG2: "פותחים אותו במחשב, מחוברים לאותו חשבון Google, ולוחצים ״הוספה״", calG3: "בטלפון: ביומן Google, בתפריט ☰, מוודאים ש-MoodlePro מסומן", calGSend: "📤 שליחת הקישור למחשב", calGCopy: "🔗 העתקת הקישור ל-Google", calGShare: "קישור להוספת היומן של MoodlePro ל-Google Calendar (לפתוח במחשב):", calGDesk: "בחלון שנפתח לוחצים ״הוספה״. האירועים נכנסים תוך כמה דקות.", calApple: "אייפון / Mac / Outlook", calCopy: "🔗 העתקת הקישור",
     calNote: "היומן נכנס כיומן נפרד בשם MoodlePro, וכדי להסיר אותו פשוט מוחקים אותו מהיומן. גוגל מרענן יומנים כאלה כמה פעמים ביום, לא מיד. הקישור פרטי: מי שיש לו את הקישור רואה את המטלות שלך.",
     calFile: "או: הורדת קובץ חד-פעמי (לא מתעדכן)", calStop: "🗑 הפסקת היומן המתעדכן", calStopped: "היומן הופסק. האירועים יירדו מהיומן ברענון הבא שלו, ואפשר גם למחוק אותו משם.",
     calFail: "לא הצלחתי להגיע לשרת, אז ירד קובץ חד-פעמי במקום.", calCopied: "הקישור הועתק", calLive: "היומן שלך מתעדכן לבד", calManage: "ניהול היומן",
@@ -994,7 +1001,7 @@ const I18N = {
     instAnd1: "לוחצים על <b>⋮</b> בפינה של הדפדפן", instAnd2: "בוחרים <b>״הוספה למסך הבית״</b> או <b>״התקנת אפליקציה״</b>", instAnd3: "מאשרים, ומעכשיו פותחים מהאייקון החדש",
     remGoBoth: "🔔 הפעל התראות ו📅 הוסף ליומן", remHowBothTxt: "בנוסף, התזכורות נכנסות גם ליומן של הטלפון.",
     ttFileOld: "הקובץ נשמר מחדש באקסל בפורמט הישן, ואותו אי אפשר לקרוא כאן. צריך את הקובץ המקורי מהלב נט, או לשמור אותו באקסל כ-xlsx או csv.",
-    catAll: "הכל", catAssign: "מטלות", catQuiz: "בחנים", catOther: "אירועים", hidDone: "הוסתר", undo: "↩ בטל",
+    catAll: "הכל", catFile: "📄 הגשת קובץ", catOnline: "✍️ מענה במודל", catOther: "אחר", hidDone: "הוסתר", undo: "↩ בטל",
     hidShow: n => "👁 " + n + (n === 1 ? " פריט מוסתר" : " פריטים מוסתרים") + " · הצג", hidHide: n => "הסתר שוב את " + n + " המוסתרים",
     remDelBtn: "🗑 להסיר מהיומן את מה שהאפליקציה הוסיפה", remDelHint: "יורד קובץ שמבטל את האירועים. ביומן של אייפון ושל Outlook הוא מסיר אותם. ב-Google Calendar ייבוא לא מוחק, ולכן הכי פשוט להוסיף מלכתחילה ליומן נפרד (למשל MoodlePro) ולמחוק אותו כשרוצים.",
     remDelDone: "ירד קובץ הסרה. פתח אותו כדי להסיר את האירועים מהיומן.",
@@ -1051,7 +1058,7 @@ const I18N = {
     coursesHint: "לחיצה על שם הקורס מציגה או מסתירה אותו. לחיצה על הצבע משנה אותו.", logout: "נתק את הטלפון הזה (מוחק את הטוקן ממנו)",
     logoutConfirm: "למחוק את הטוקן מהטלפון הזה? כדי לחזור תצטרך להתחבר שוב.",
     gLate: "באיחור", gToday: "היום", gWeek: "בשבוע הקרוב", gLater: "בהמשך", gNodue: "ללא מועד הגשה", gOld: "ישנות (באיחור)", gDone: "הוגשו",
-    tAssign: "מטלה", tQuiz: "בוחן", tEvent: "אירוע",
+    tAssign: "מטלה", tQuiz: "בוחן", tEvent: "אירוע", viaFile: "הגשת קובץ", viaPdf: "הגשת PDF", viaOnline: "מענה במודל", viaNone: "בלי הגשה במודל",
     stSubmitted: "הוגש ✓", stManual: "בוצע (סימון שלי) ✓", stDraft: "טיוטה, לא הוגש", stNa: "ללא הגשה אונליין", stUnknown: "סטטוס לא ידוע", stLate: "באיחור", stNone: "לא הוגש", grade: x => "ציון: " + x,
     extended: "הארכה אישית", noDue: "אין מועד הגשה", opens: x => "נפתח להגשה: " + x, cutoff: x => "נעילה סופית: " + x, details: "תוכן המטלה", openSite: "פתח באתר ↗", hide: "הסתר", restore: "החזר",
     loading: "טוען…", refreshing: "מרענן…", updated: x => "עודכן " + x, lastData: " (מוצגים הנתונים האחרונים)", loadingTasks: "טוען משימות…",
@@ -1141,7 +1148,7 @@ const I18N = {
     pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
     pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
     calBtn: "📅 Add to my calendar", calTitle: "📅 MoodlePro in your calendar", calIntro: "A calendar that updates itself: new assignments come in, submitted ones go out, and your exams and classes too. Add it once, and that’s it.",
-    calGoogle: "Google Calendar (Android too)", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copy the link",
+    calGoogle: "Google Calendar", calGTitle: "Google: add it once, from a computer", calGText: "Google doesn’t let you add a calendar from a link in the phone app, only on its website on a computer. You do it once, and then the calendar shows on your phone by itself.", calG1: "Send yourself the link (WhatsApp, email) or copy it", calG2: "Open it on a computer, signed in to the same Google account, and click “Add”", calG3: "On your phone: in Google Calendar, menu ☰, make sure MoodlePro is ticked", calGSend: "📤 Send the link to my computer", calGCopy: "🔗 Copy the Google link", calGShare: "Link to add the MoodlePro calendar to Google Calendar (open on a computer):", calGDesk: "In the window that opens, click “Add”. Events appear within a few minutes.", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copy the link",
     calNote: "It is added as a separate calendar called MoodlePro; to remove it, just delete it from your calendar app. Google refreshes such calendars a few times a day, not instantly. The link is private: whoever has it sees your assignments.",
     calFile: "Or: download a one-time file (doesn’t update)", calStop: "🗑 Stop the updating calendar", calStopped: "Stopped. The events leave your calendar at its next refresh, and you can also delete it there.",
     calFail: "Couldn’t reach the server, so a one-time file was downloaded instead.", calCopied: "Link copied", calLive: "Your calendar updates itself", calManage: "Manage the calendar",
@@ -1162,7 +1169,7 @@ const I18N = {
     instAnd1: "Tap <b>⋮</b> in the browser’s corner", instAnd2: "Choose <b>“Add to Home screen”</b> or <b>“Install app”</b>", instAnd3: "Confirm, and from now on open it from the new icon",
     remGoBoth: "🔔 Turn on notifications and 📅 add to calendar", remHowBothTxt: "The reminders also go into your phone’s calendar.",
     ttFileOld: "This file was re-saved in Excel’s old format, which can’t be read here. Use the original file from Levnet, or save it in Excel as xlsx or csv.",
-    catAll: "All", catAssign: "Assignments", catQuiz: "Quizzes", catOther: "Events", hidDone: "Hidden", undo: "↩ Undo",
+    catAll: "All", catFile: "📄 File upload", catOnline: "✍️ Answer in Moodle", catOther: "Other", hidDone: "Hidden", undo: "↩ Undo",
     hidShow: n => "👁 " + n + (n === 1 ? " hidden item" : " hidden items") + " · show", hidHide: n => "Hide the " + n + " hidden items again",
     remDelBtn: "🗑 Remove from my calendar what the app added", remDelHint: "Downloads a file that cancels the events. iPhone and Outlook calendars remove them. Google Calendar imports don’t delete, so it’s easiest to add to a separate calendar (e.g. MoodlePro) and delete that when you want.",
     remDelDone: "A removal file was downloaded. Open it to take the events out of your calendar.",
@@ -1219,7 +1226,7 @@ const I18N = {
     coursesHint: "Tap a course name to show or hide it. Tap the colour to change it.", logout: "Disconnect this phone (deletes the token from it)",
     logoutConfirm: "Delete the token from this phone? You will need to connect again.",
     gLate: "Overdue", gToday: "Today", gWeek: "This week", gLater: "Later", gNodue: "No due date", gOld: "Old (overdue)", gDone: "Submitted",
-    tAssign: "Assignment", tQuiz: "Quiz", tEvent: "Event",
+    tAssign: "Assignment", tQuiz: "Quiz", tEvent: "Event", viaFile: "Upload a file", viaPdf: "Upload a PDF", viaOnline: "Answer in Moodle", viaNone: "No Moodle submission",
     stSubmitted: "Submitted ✓", stManual: "Done (marked by me) ✓", stDraft: "Draft, not submitted", stNa: "No online submission", stUnknown: "Status unknown", stLate: "Overdue", stNone: "Not submitted", grade: x => "Grade: " + x,
     extended: "personal extension", noDue: "No due date", opens: x => "Opens: " + x, cutoff: x => "Final cutoff: " + x, details: "Assignment details", openSite: "Open on site ↗", hide: "Hide", restore: "Restore",
     loading: "Loading…", refreshing: "Refreshing…", updated: x => "Updated " + x, lastData: " (showing last data)", loadingTasks: "Loading tasks…",
@@ -1309,7 +1316,7 @@ const I18N = {
     pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
     pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
     calBtn: "📅 Ajouter à mon calendrier", calTitle: "📅 MoodlePro dans votre calendrier", calIntro: "Un calendrier qui se met à jour seul : nouveaux devoirs ajoutés, devoirs rendus retirés, et vos examens et cours aussi. On l’ajoute une fois, c’est tout.",
-    calGoogle: "Google Agenda (Android aussi)", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copier le lien",
+    calGoogle: "Google Agenda", calGTitle: "Google : l’ajouter une fois, depuis un ordinateur", calGText: "Google ne permet pas d’ajouter un agenda par lien dans l’application du téléphone, seulement sur son site, depuis un ordinateur. On le fait une fois, puis l’agenda apparaît tout seul sur le téléphone.", calG1: "Envoyez-vous le lien (WhatsApp, e-mail) ou copiez-le", calG2: "Ouvrez-le sur un ordinateur, connecté au même compte Google, et cliquez sur « Ajouter »", calG3: "Sur le téléphone : dans Google Agenda, menu ☰, vérifiez que MoodlePro est coché", calGSend: "📤 Envoyer le lien vers mon ordinateur", calGCopy: "🔗 Copier le lien Google", calGShare: "Lien pour ajouter l’agenda MoodlePro à Google Agenda (à ouvrir sur un ordinateur) :", calGDesk: "Dans la fenêtre qui s’ouvre, cliquez sur « Ajouter ». Les événements arrivent en quelques minutes.", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copier le lien",
     calNote: "Il s’ajoute comme agenda séparé nommé MoodlePro ; pour le retirer, supprimez-le de votre agenda. Google actualise ces agendas quelques fois par jour, pas instantanément. Le lien est privé : qui l’a voit vos devoirs.",
     calFile: "Ou : télécharger un fichier unique (sans mise à jour)", calStop: "🗑 Arrêter le calendrier automatique", calStopped: "Arrêté. Les événements disparaissent à la prochaine actualisation, et vous pouvez aussi le supprimer de votre agenda.",
     calFail: "Serveur injoignable : un fichier unique a été téléchargé à la place.", calCopied: "Lien copié", calLive: "Votre calendrier se met à jour seul", calManage: "Gérer le calendrier",
@@ -1330,7 +1337,7 @@ const I18N = {
     instAnd1: "Touchez <b>⋮</b> dans le coin du navigateur", instAnd2: "Choisissez <b>« Ajouter à l’écran d’accueil »</b> ou <b>« Installer l’application »</b>", instAnd3: "Confirmez, puis ouvrez-la depuis la nouvelle icône",
     remGoBoth: "🔔 Activer les notifications et 📅 ajouter au calendrier", remHowBothTxt: "Les rappels vont aussi dans le calendrier du téléphone.",
     ttFileOld: "Ce fichier a été réenregistré dans l’ancien format Excel, illisible ici. Utilisez le fichier d’origine de Levnet, ou enregistrez-le en xlsx ou csv.",
-    catAll: "Tout", catAssign: "Devoirs", catQuiz: "Tests", catOther: "Événements", hidDone: "Masqué", undo: "↩ Annuler",
+    catAll: "Tout", catFile: "📄 Dépôt de fichier", catOnline: "✍️ Réponse sur Moodle", catOther: "Autre", hidDone: "Masqué", undo: "↩ Annuler",
     hidShow: n => "👁 " + n + (n === 1 ? " élément masqué" : " éléments masqués") + " · afficher", hidHide: n => "Masquer à nouveau les " + n + " éléments",
     remDelBtn: "🗑 Retirer du calendrier ce que l’app a ajouté", remDelHint: "Télécharge un fichier qui annule les événements. Les calendriers iPhone et Outlook les retirent. Google Agenda ne supprime pas à l’import : le plus simple est d’ajouter dans un agenda séparé (ex. MoodlePro) et de le supprimer au besoin.",
     remDelDone: "Un fichier de retrait a été téléchargé. Ouvrez-le pour retirer les événements du calendrier.",
@@ -1387,7 +1394,7 @@ const I18N = {
     coursesHint: "Appuyez sur un cours pour l’afficher ou le masquer, et sur la couleur pour la changer.", logout: "Déconnecter ce téléphone (supprime le jeton)",
     logoutConfirm: "Supprimer le jeton de ce téléphone ? Il faudra vous reconnecter.",
     gLate: "En retard", gToday: "Aujourd’hui", gWeek: "Cette semaine", gLater: "Plus tard", gNodue: "Sans date limite", gOld: "Anciens (en retard)", gDone: "Rendus",
-    tAssign: "Devoir", tQuiz: "Test", tEvent: "Événement",
+    tAssign: "Devoir", tQuiz: "Test", tEvent: "Événement", viaFile: "Déposer un fichier", viaPdf: "Déposer un PDF", viaOnline: "Réponse sur Moodle", viaNone: "Sans dépôt Moodle",
     stSubmitted: "Rendu ✓", stManual: "Fait (marqué par moi) ✓", stDraft: "Brouillon, non rendu", stNa: "Pas de remise en ligne", stUnknown: "Statut inconnu", stLate: "En retard", stNone: "Non rendu", grade: x => "Note : " + x,
     extended: "prolongation personnelle", noDue: "Pas de date limite", opens: x => "Ouverture : " + x, cutoff: x => "Clôture définitive : " + x, details: "Contenu du devoir", openSite: "Ouvrir sur le site ↗", hide: "Masquer", restore: "Rétablir",
     loading: "Chargement…", refreshing: "Actualisation…", updated: x => "Mis à jour " + x, lastData: " (dernières données affichées)", loadingTasks: "Chargement des devoirs…",
@@ -1575,11 +1582,14 @@ async function fetchAll() {
   const assigns = [];
   for (const c of ar.courses || []) for (const a of c.assignments || []) assigns.push(Object.assign({}, a, { _cid: Number(c.id) }));
   const subs = await pool(assigns, 4, a => safe("mod_assign_get_submission_status", { assignid: a.id }));
+  const sp = (a, p, n) => ((a.configs || []).find(c => c.subtype === "assignsubmission" && c.plugin === p && c.name === n) || {}).value;
+  const viaA = a => a.nosubmissions ? "none" : String(sp(a, "file", "enabled")) === "1" ? "file" : String(sp(a, "onlinetext", "enabled")) === "1" ? "online" : (a.configs || []).length ? "none" : "file";
+  const pdfOnly = a => { const l = String(sp(a, "file", "filetypeslist") || "").toLowerCase().split(/[\s,;]+/).filter(Boolean); return l.length > 0 && l.every(x => /pdf/.test(x)); };
   assigns.forEach((a, k) => {
     const r = subs[k], last = (r && r.lastattempt) || {}, rawSt = (last.submission || {}).status;
     const status = a.nosubmissions ? "na" : !r ? "unknown" : rawSt === "submitted" ? "submitted" : rawSt === "draft" ? "draft" : "none";
     const due = a.duedate || 0, ext = last.extensionduedate || 0, fb = (r && r.feedback) || {};
-    tasks.push({ key: "assign:" + a.id, type: "assign", cid: a._cid, cmid: Number(a.cmid) || 0, course: names[a._cid] || "", name: stripHtml(a.name),
+    tasks.push({ key: "assign:" + a.id, type: "assign", via: viaA(a), pdf: viaA(a) === "file" && pdfOnly(a), cid: a._cid, cmid: Number(a.cmid) || 0, course: names[a._cid] || "", name: stripHtml(a.name),
       due: ext ? Math.max(due, ext) : due, extended: !!(ext && ext > due), from: a.allowsubmissionsfromdate || 0, cutoff: a.cutoffdate || 0,
       status, grade: (last.graded || fb.gradefordisplay) ? stripHtml(fb.gradefordisplay || "") : "",
       intro: stripHtml(a.intro), links: introLinks(a.intro),
@@ -1592,7 +1602,7 @@ async function fetchAll() {
   quizzes.forEach((q, k) => {
     const r = atts[k], states = ((r && r.attempts) || []).map(x => x.state);
     const status = r == null ? "unknown" : states.includes("finished") ? "submitted" : states.includes("inprogress") ? "draft" : "none";
-    tasks.push({ key: "quiz:" + q.id, type: "quiz", cid: Number(q.course), cmid: Number(q.coursemodule) || 0, course: names[q.course] || "", name: stripHtml(q.name),
+    tasks.push({ key: "quiz:" + q.id, type: "quiz", via: "online", cid: Number(q.course), cmid: Number(q.coursemodule) || 0, course: names[q.course] || "", name: stripHtml(q.name),
       due: q.timeclose || 0, extended: false, from: q.timeopen || 0, cutoff: 0, status, grade: "",
       intro: stripHtml(q.intro), links: introLinks(q.intro), files: [], url: site("quiz/view.php?id=" + q.coursemodule) });
   });
@@ -1601,7 +1611,8 @@ async function fetchAll() {
   for (const e of cal.events || []) {
     if (e.modulename === "assign" || e.modulename === "quiz") continue;
     const c = e.course || {}, act = e.action || {};
-    tasks.push({ key: "event:" + e.id, type: e.modulename === "zoom" || /zoom|זום/i.test(e.name || "") ? "zoom" : "event", cid: Number(c.id) || 0, cmid: 0, course: names[c.id] || stripHtml(c.fullname || ""), name: stripHtml(e.name),
+    const zm = e.modulename === "zoom" || /zoom|זום/i.test(e.name || "");
+    tasks.push({ key: "event:" + e.id, type: zm ? "zoom" : "event", via: zm || !e.modulename ? "other" : "online", cid: Number(c.id) || 0, cmid: 0, course: names[c.id] || stripHtml(c.fullname || ""), name: stripHtml(e.name),
       due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "",
       intro: stripHtml(e.description), links: introLinks(e.description), files: [], url: e.url || act.url || "" });
   }
@@ -1668,7 +1679,7 @@ if (!Array.isArray(P.tt)) P.tt = [];
 for (const k of ["sem", "exams", "ccode", "colors"]) if (!P[k] || typeof P[k] !== "object" || Array.isArray(P[k])) P[k] = {};
 P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^\d+$/);
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
-const V = { data: LS.get("cache", null), q: "", cat: LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
+const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
 const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
@@ -1774,7 +1785,10 @@ const G_OPEN = { late: true, today: true, week: true, later: true, nodue: false,
 const TYPE = { assign: "tAssign", quiz: "tQuiz", event: "tEvent", zoom: "tZoom", mine: "tMine" };
 const dueKey = x => x.due || 9e12;
 const counted = x => !isOff(x.cid) && !P.hidden.includes(x.key);
-const catOf = x => x.type === "assign" ? "assign" : x.type === "quiz" ? "quiz" : x.type === "mine" ? "mine" : "other";
+/* sorted by what you actually do: upload a file (scan → PDF) or answer inside Moodle (quizzes, online text, other activities) */
+const viaOf = x => x.type === "mine" ? "mine" : x.via || (x.type === "assign" ? "file" : x.type === "quiz" ? "online" : x.type === "zoom" ? "other" : "online");
+const catOf = x => { const v = viaOf(x); return v === "none" ? "other" : v; };
+const typeLabel = x => { const v = viaOf(x); return v === "file" ? t(x.pdf ? "viaPdf" : "viaFile") : v === "online" ? t("viaOnline") : v === "none" ? t("viaNone") : t(TYPE[x.type]) || ""; };
 /* my own tasks live in the synced settings and join Moodle's list as type "mine" */
 function mineTasks() {
   return (P.mine || []).map(m => ({ key: "mine:" + m.id, type: "mine", mine: m.id, cid: m.cid || 0, cmid: 0, course: m.cid ? courseName(m.cid) : t("mineCourse"), name: m.title,
@@ -1837,7 +1851,7 @@ function card(x, now, g) {
   if (x.mine) acts.push('<button data-mine="' + esc(x.mine) + '">' + esc(t("mineEdit")) + "</button>");
   return '<div class="task' + (g === "done" ? " done" : "") + (hid ? " hid" : "") + (V.hl === x.key ? " hl" : "") + '" data-key="' + esc(x.key) + '" style="--c:' + colorOf(x.cid) + '">' +
     '<button class="x" data-hide="' + esc(x.key) + '" aria-label="' + esc(hid ? t("restore") : t("hide")) + '">' + (hid ? "↩" : "✕") + "</button>" +
-    '<div class="tl"><span class="tname"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(t(TYPE[x.type]) || "") + " · <bdi>" + esc(shortName(x.course)) + "</bdi></span></div>" +
+    '<div class="tl"><span class="tname"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(typeLabel(x)) + " · <bdi>" + esc(shortName(x.course)) + "</bdi></span></div>" +
     '<div class="due">' + due + "</div>" + extra + files + relHtml + body + '<div class="act">' + acts.join("") + "</div></div>";
 }
 
@@ -2483,7 +2497,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.3.0-beta.1";
+const APP_VERSION = "1.3.0-beta.2";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2649,9 +2663,9 @@ function render() {
   $("#list").innerHTML = (h || '<div class="empty">' + esc(V.focus && V.focus.kind === "day" ? t("dayEmpty") : d.tasks.length ? t("noMatch") : t("noTasks")) + "</div>") +
     (P.hidden.length ? '<div class="hidbar"><button class="link" data-showhid>' + esc(t(V.showHid ? "hidHide" : "hidShow", P.hidden.length)) + "</button></div>" : "");
   { const open = d.tasks.filter(x => counted(x) && !isDone(x)), n = c => open.filter(x => c === "all" || catOf(x) === c).length;
-    for (const c of ["all", "assign", "quiz", "other", "mine"]) { const el = $("#catN_" + c); if (el) el.textContent = n(c) ? "(" + n(c) + ")" : ""; }
+    for (const c of ["all", "file", "online", "other", "mine"]) { const el = $("#catN_" + c); if (el) el.textContent = n(c) ? "(" + n(c) + ")" : ""; }
     $$("#cats [data-cat]").forEach(b => { b.classList.toggle("on", b.dataset.cat === V.cat); b.setAttribute("aria-pressed", b.dataset.cat === V.cat); });
-    for (const c of ["other", "mine"]) { const ob = $("#cats [data-cat=" + c + "]"); if (ob) ob.hidden = !d.tasks.some(x => catOf(x) === c) && V.cat !== c; } }
+    for (const c of ["other", "mine"]) { const ob = $("#cats [data-cat=" + c + "]"); if (ob) ob.hidden = !open.some(x => catOf(x) === c) && V.cat !== c; } }
 
   const relv = d.tasks.filter(x => counted(x) && !isDone(x) && groupOf(x, now) !== "old");
   const dated = relv.filter(x => x.due), late = dated.filter(x => x.due < now), next = dated.filter(x => x.due >= now).sort((a, b) => a.due - b.due)[0];
@@ -2741,9 +2755,9 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
-  { v: "1.3.0", date: "2026-11-10", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה"],
-    en: ["➕ Your own tasks: add a task with a date and it behaves like a Moodle one (countdown, notifications, calendar)", "📅 A calendar that updates itself: add it once to Google Calendar or your iPhone and new assignments come in by themselves", "☀️ Morning summary: one notification in the morning with today’s deadlines, exams and classes", "🧩 Arrange the overview: what’s shown and in what order (in settings)", "📲 An offer to install on the home screen, and a quick way to import your timetable from the overview"],
-    fr: ["➕ Vos propres tâches : ajoutez une tâche avec une date, elle se comporte comme un devoir Moodle (compte à rebours, notifications, calendrier)", "📅 Un calendrier qui se met à jour seul : ajoutez-le une fois à Google Agenda ou à l’iPhone, les nouveaux devoirs arrivent seuls", "☀️ Résumé du matin : une notification le matin avec les échéances, examens et cours du jour", "🧩 Organiser l’aperçu : ce qui s’affiche et dans quel ordre (dans les paramètres)", "📲 Une proposition d’installer sur l’écran d’accueil, et un accès rapide à l’import de l’emploi du temps depuis l’aperçu"] },
+  { v: "1.3.0", date: "2026-11-10", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📄 המטלות מסודרות לפי מה שעושים: הגשת קובץ (סריקה ו-PDF) או מענה בתוך Moodle", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה"],
+    en: ["📄 Tasks sorted by what you do: upload a file (scan → PDF) or answer inside Moodle", "➕ Your own tasks: add a task with a date and it behaves like a Moodle one (countdown, notifications, calendar)", "📅 A calendar that updates itself: add it once to Google Calendar or your iPhone and new assignments come in by themselves", "☀️ Morning summary: one notification in the morning with today’s deadlines, exams and classes", "🧩 Arrange the overview: what’s shown and in what order (in settings)", "📲 An offer to install on the home screen, and a quick way to import your timetable from the overview"],
+    fr: ["📄 Tâches classées selon ce qu’il faut faire : déposer un fichier (scan → PDF) ou répondre sur Moodle", "➕ Vos propres tâches : ajoutez une tâche avec une date, elle se comporte comme un devoir Moodle (compte à rebours, notifications, calendrier)", "📅 Un calendrier qui se met à jour seul : ajoutez-le une fois à Google Agenda ou à l’iPhone, les nouveaux devoirs arrivent seuls", "☀️ Résumé du matin : une notification le matin avec les échéances, examens et cours du jour", "🧩 Organiser l’aperçu : ce qui s’affiche et dans quel ordre (dans les paramètres)", "📲 Une proposition d’installer sur l’écran d’accueil, et un accès rapide à l’import de l’emploi du temps depuis l’aperçu"] },
   { v: "1.2.0", date: "2026-11-09", he: ["✨ שם חדש ולוגו חדש: MoodlePro", "🗂 בלשונית המשימות: כרטיסיות למטלות, לבחנים ולאירועים", "↩ אפשר לבטל הסתרה של פריט מיד, והמוסתרים מופיעים בסוף הרשימה", "⬅️ כפתור ״חזור״ בטלפון חוזר למסך הקודם וסוגר חלונות, במקום לצאת מהאפליקציה", "📅 ניקוי סינון של יום מהסקירה מחזיר לסקירה", "🗑 אפשר להסיר מהיומן את מה שהאפליקציה הוסיפה"],
     en: ["✨ New name and logo: MoodlePro", "🗂 Tasks tab: tabs for assignments, quizzes and events", "↩ Hiding an item can be undone right away, and hidden items are listed at the end", "⬅️ The phone’s Back button goes to the previous screen and closes windows instead of leaving the app", "📅 Clearing a day picked on the overview takes you back to the overview", "🗑 You can remove from your calendar what the app added"],
     fr: ["✨ Nouveau nom et nouveau logo : MoodlePro", "🗂 Onglet devoirs : onglets pour devoirs, tests et événements", "↩ Masquer un élément peut être annulé tout de suite, et les éléments masqués sont listés à la fin", "⬅️ Le bouton Retour revient à l’écran précédent et ferme les fenêtres au lieu de quitter l’app", "📅 Effacer un jour choisi dans l’aperçu ramène à l’aperçu", "🗑 Vous pouvez retirer du calendrier ce que l’app a ajouté"] },
@@ -2881,7 +2895,7 @@ async function openCal() {
   if (!pushUrl()) return remExport(false);
   if (!P.feed || !P.feed.key) P.feed = { key: newFeedKey(), on: true }; else if (!P.feed.on) P.feed = { key: P.feed.key, on: true };
   savePrefs(); LS.set("feedSig", null);
-  $("#calErr").hidden = true; $("#calSheet").hidden = false; $("#calBtns").classList.add("busy");
+  $("#calErr").hidden = true; $("#calG").hidden = true; $("#calApple").hidden = detectPlat() === "android"; $("#calSheet").hidden = false; $("#calBtns").classList.add("busy");
   await feedSync(true);
   $("#calBtns").classList.remove("busy");
   if (FEED.err) {                                  // the server can't be reached: fall back to a one-time file
@@ -2980,9 +2994,22 @@ $("#daReset").onclick = () => { P.dash = null; savePrefs(); applyDash(); renderD
 $("#daClose").onclick = () => { $("#daSheet").hidden = true; };
 $("#bDashArr").onclick = openDashArr;
 $("#bCal").onclick = () => openCal();
-$("#calGoogle").onclick = () => { useHit("calGoogle"); window.open("https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(feedHttps().replace(/^https?:/, "webcal:")), "_blank", "noopener"); };
+/* Google takes a calendar link only on its website on a computer (its phone app can't); so on a phone: send the link over */
+const googleSubUrl = () => "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(feedHttps().replace(/^https?:/, "webcal:"));
+const copyTxt = async (txt, msg) => { try { await navigator.clipboard.writeText(txt); toast(msg || t("calCopied")); } catch (e) { prompt(t("calCopy"), txt); } };
+$("#calGoogle").onclick = () => {
+  useHit("calGoogle");
+  if (detectPlat() !== "pc") { useHit("calGPhone"); $("#calG").hidden = false; $("#calGSend").focus(); $("#calG").scrollIntoView({ block: "nearest" }); return; }
+  window.open(googleSubUrl(), "_blank", "noopener"); toast(t("calGDesk"), 9000);
+};
+$("#calGSend").onclick = async () => {
+  useHit("calGSend"); const url = googleSubUrl();
+  if (navigator.share) { try { await navigator.share({ title: "MoodlePro", text: t("calGShare"), url }); return; } catch (e) { if (e && e.name === "AbortError") return; } }
+  copyTxt(url);
+};
+$("#calGCopy").onclick = () => { useHit("calGCopy"); copyTxt(googleSubUrl()); };
 $("#calApple").onclick = () => { useHit("calApple"); location.href = feedHttps().replace(/^https?:/, "webcal:"); };
-$("#calCopy").onclick = async () => { try { await navigator.clipboard.writeText(feedHttps()); toast(t("calCopied")); } catch (e) { prompt(t("calCopy"), feedHttps()); } };
+$("#calCopy").onclick = () => copyTxt(feedHttps());
 $("#calFile").onclick = () => { $("#calSheet").hidden = true; remExport(false); };
 $("#calStop").onclick = stopCal;
 $("#calClose").onclick = () => { $("#calSheet").hidden = true; };

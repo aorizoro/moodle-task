@@ -36,3 +36,14 @@ jobs:
           echo "::notice title=Push server URL::$url"
           sleep 5; key=$(curl -fsS "$url/key" || echo FAILED)
           echo "::notice title=Push server /key::$key"
+          # the calendar feed, the way a calendar app sees it: upload a test calendar, read it back with a Google-like fetcher, empty it
+          k=smoke$(head -c 18 /dev/urandom | base64 | tr '+/' '-_' | tr -d '=')
+          ics='BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//MoodlePro//EN\r\nX-WR-CALNAME:MoodlePro\r\nBEGIN:VEVENT\r\nUID:smoke-1\r\nDTSTAMP:20261109T000000Z\r\nDTSTART:20261201T080000Z\r\nDTEND:20261201T083000Z\r\nSUMMARY:smoke\r\nEND:VEVENT\r\nEND:VCALENDAR\r\n'
+          up=$(curl -sS -X POST "$url/feed" -H "Origin: https://aorizoro.github.io" -H "Content-Type: application/json" --data "{\"key\":\"$k\",\"ics\":\"$ics\"}" || echo FAILED)
+          h=$(curl -sSI -A "Google-Calendar-Importer" "$url/feed/$k.ics" | tr -d '\r' | grep -i '^content-type\|^HTTP' | tr '\n' ' ')
+          body=$(curl -sS -A "Google-Calendar-Importer" "$url/feed/$k.ics" | tr -d '\r' | grep -c 'SUMMARY:smoke')
+          stop=$(curl -sS -X POST "$url/feed/stop" -H "Origin: https://aorizoro.github.io" -H "Content-Type: application/json" --data "{\"key\":\"$k\"}" || echo FAILED)
+          after=$(curl -sS "$url/feed/$k.ics" | tr -d '\r' | grep -c 'SUMMARY:smoke')
+          echo "::notice title=Calendar feed check::upload=$up | head=$h | events served=$body | stop=$stop | after stop=$after"
+          sleep 90; beta=$(curl -sS https://aorizoro.github.io/moodle-task/beta/ | grep -o 'APP_VERSION = "[^"]*"' | head -1)
+          echo "::notice title=Beta page::$beta"
