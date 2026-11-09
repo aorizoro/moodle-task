@@ -9,7 +9,9 @@
 3. **Promote.** Copy `beta/index.html` and `beta/sw.js` to the root, drop the `-beta.N` suffix
    from `APP_VERSION`, bump `CACHE` in the root `sw.js`, and move the CHANGELOG entry out of "בבדיקה".
    Users see "מה חדש" once after the update.
-4. **Tag.** `git tag vX.Y.Z && git push --tags`. To roll back: copy the files from the previous tag.
+4. **Keep the version.** Push the released commit as a branch: `git push origin HEAD:refs/heads/release-X.Y.Z`
+   (`release-1.0.0` is the first). To roll back: copy `index.html` and `sw.js` from the previous
+   release branch to the root and bump `CACHE`.
 
 Version numbers: `MAJOR.MINOR.PATCH` — PATCH for fixes, MINOR for new features, MAJOR for changes
 that need users to do something (reconnect, re-import).
