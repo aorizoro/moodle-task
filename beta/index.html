@@ -2070,7 +2070,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.1.0-beta.2";
+const APP_VERSION = "1.1.0-beta.3";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2430,7 +2430,7 @@ function maybeAskRem() {
 }
 /* ---------- notifications from the app itself: the reminder times go to a small push server (push/ in the repo),
    which sends each one when it is due, even with the app closed. Only titles and times leave the phone, never the token. ---------- */
-const PUSH_URL = "";      // the push server, once deployed (https://moodle-task-push.<name>.workers.dev)
+const PUSH_URL = "https://moodle-task-push.aorizoro.workers.dev";      // the push server (push/ in the repo, on Cloudflare)
 const pushUrl = () => String(LS.get("pushUrl", PUSH_URL) || "").replace(/\/+$/, "");
 const isStandalone = () => (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
 const pushSupported = () => !!pushUrl() && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window && location.protocol !== "file:";
