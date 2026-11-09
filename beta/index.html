@@ -663,7 +663,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtFile" data-i18n="ttImport"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
       <div id="tt"></div>
       <div class="ttfoot" id="ttFoot"><span><button class="link" id="bTtShare" data-i18n="ttShare"></button><button class="link" id="bTtScan" data-i18n="ttScan"></button></span><button class="link" id="bTtClear" style="color:var(--err)" data-i18n="ttClear"></button></div>
-      <input type="file" id="ttFile" accept=".xls,.xlsx,.csv,.htm,.html,text/csv,application/vnd.ms-excel" hidden>
+      <input type="file" id="ttFile" hidden>
     </div>
   </section>
 
@@ -893,7 +893,7 @@ const I18N = {
     remCardOff: "תזכורות לפני הגשות, מבחנים ושיעורי זום, ישר ביומן של הטלפון.", remSetBtn: "🔔 הגדר תזכורות", remCardNew: n => n === 1 ? "פריט חדש אחד עוד לא ביומן" : n + " פריטים חדשים עוד לא ביומן",
     remUpdateBtn: "📅 הוסף אותם ליומן", remChange: "שינוי התזכורות", remCardOk: "כל מה שצריך כבר ביומן עם תזכורות",
     remIntroPush: "האפליקציה יכולה לשלוח לך התראה לפני הגשות, מבחנים ושיעורי זום. בחר מתי, ואפשר לסמן כמה זמנים: לכל אחד תגיע התראה.",
-    remHowLbl: "איך להזכיר", remHowPush: "🔔 התראות מהאפליקציה", remHowCal: "📅 ביומן של הטלפון", remGoPush: "🔔 הפעל התראות",
+    remHowLbl: "איך להזכיר (אפשר לבחור את שניהם)", remHowPush: "🔔 התראות מהאפליקציה", remHowCal: "📅 ביומן של הטלפון", remGoPush: "🔔 הפעל התראות",
     remHowPushTxt: "הטלפון יבקש אישור להתראות. הן מגיעות גם כשהאפליקציה סגורה. כל פתיחה של האפליקציה מעדכנת אותן: מטלה שהגשת יורדת, ומטלה חדשה נוספת.",
     remCardOffPush: "התראות לפני הגשות, מבחנים ושיעורי זום, גם כשהאפליקציה סגורה.",
     pushIos: "באייפון ההתראות עובדות רק מהאפליקציה שבמסך הבית: בספארי שיתוף ← ״הוסף למסך הבית״, ולפתוח משם.",
@@ -903,6 +903,8 @@ const I18N = {
     pushReady: n => "🔔 ההתראות הופעלו" + (n ? " · " + n + " תזכורות בדרך" : ""), pushOnCard: "🔔 ההתראות פועלות במכשיר הזה",
     pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
     pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
+    remGoBoth: "🔔 הפעל התראות ו📅 הוסף ליומן", remHowBothTxt: "בנוסף, התזכורות נכנסות גם ליומן של הטלפון.",
+    ttFileOld: "הקובץ נשמר מחדש באקסל בפורמט הישן, ואותו אי אפשר לקרוא כאן. צריך את הקובץ המקורי מהלב נט, או לשמור אותו באקסל כ-xlsx או csv.",
     catAll: "הכל", catAssign: "מטלות", catQuiz: "בחנים", catOther: "אירועים", hidDone: "הוסתר", undo: "↩ בטל",
     hidShow: n => "👁 " + n + (n === 1 ? " פריט מוסתר" : " פריטים מוסתרים") + " · הצג", hidHide: n => "הסתר שוב את " + n + " המוסתרים",
     remDelBtn: "🗑 להסיר מהיומן את מה שהאפליקציה הוסיפה", remDelHint: "יורד קובץ שמבטל את האירועים. ביומן של אייפון ושל Outlook הוא מסיר אותם. ב-Google Calendar ייבוא לא מוחק, ולכן הכי פשוט להוסיף מלכתחילה ליומן נפרד (למשל MoodlePro) ולמחוק אותו כשרוצים.",
@@ -1039,7 +1041,7 @@ const I18N = {
     remCardOff: "Reminders before deadlines, exams and Zoom classes, right in your phone’s calendar.", remSetBtn: "🔔 Set up reminders", remCardNew: n => n === 1 ? "1 new item not in your calendar yet" : n + " new items not in your calendar yet",
     remUpdateBtn: "📅 Add them to my calendar", remChange: "Change reminders", remCardOk: "Everything is in your calendar with reminders",
     remIntroPush: "The app can send you a notification before deadlines, exams and Zoom classes. Choose when; pick several times and you get one for each.",
-    remHowLbl: "How to remind", remHowPush: "🔔 App notifications", remHowCal: "📅 In my phone’s calendar", remGoPush: "🔔 Turn on notifications",
+    remHowLbl: "How to remind (you can pick both)", remHowPush: "🔔 App notifications", remHowCal: "📅 In my phone’s calendar", remGoPush: "🔔 Turn on notifications",
     remHowPushTxt: "Your phone will ask to allow notifications. They arrive even when the app is closed. Each time you open the app they update: a submitted assignment drops out, a new one is added.",
     remCardOffPush: "Notifications before deadlines, exams and Zoom classes, even with the app closed.",
     pushIos: "On iPhone, notifications work only from the home-screen app: in Safari, Share → “Add to Home Screen”, then open it from there.",
@@ -1049,6 +1051,8 @@ const I18N = {
     pushReady: n => "🔔 Notifications on" + (n ? " · " + n + " reminders scheduled" : ""), pushOnCard: "🔔 Notifications are on for this device",
     pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
     pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
+    remGoBoth: "🔔 Turn on notifications and 📅 add to calendar", remHowBothTxt: "The reminders also go into your phone’s calendar.",
+    ttFileOld: "This file was re-saved in Excel’s old format, which can’t be read here. Use the original file from Levnet, or save it in Excel as xlsx or csv.",
     catAll: "All", catAssign: "Assignments", catQuiz: "Quizzes", catOther: "Events", hidDone: "Hidden", undo: "↩ Undo",
     hidShow: n => "👁 " + n + (n === 1 ? " hidden item" : " hidden items") + " · show", hidHide: n => "Hide the " + n + " hidden items again",
     remDelBtn: "🗑 Remove from my calendar what the app added", remDelHint: "Downloads a file that cancels the events. iPhone and Outlook calendars remove them. Google Calendar imports don’t delete, so it’s easiest to add to a separate calendar (e.g. MoodlePro) and delete that when you want.",
@@ -1185,7 +1189,7 @@ const I18N = {
     remCardOff: "Des rappels avant les échéances, examens et cours Zoom, directement dans le calendrier du téléphone.", remSetBtn: "🔔 Configurer les rappels", remCardNew: n => n === 1 ? "1 nouvel élément pas encore dans le calendrier" : n + " nouveaux éléments pas encore dans le calendrier",
     remUpdateBtn: "📅 Les ajouter au calendrier", remChange: "Modifier les rappels", remCardOk: "Tout est dans votre calendrier avec rappels",
     remIntroPush: "L’application peut vous envoyer une notification avant les échéances, examens et cours Zoom. Choisissez quand ; plusieurs moments = une notification pour chacun.",
-    remHowLbl: "Comment rappeler", remHowPush: "🔔 Notifications de l’app", remHowCal: "📅 Dans le calendrier", remGoPush: "🔔 Activer les notifications",
+    remHowLbl: "Comment rappeler (les deux possibles)", remHowPush: "🔔 Notifications de l’app", remHowCal: "📅 Dans le calendrier", remGoPush: "🔔 Activer les notifications",
     remHowPushTxt: "Le téléphone demandera d’autoriser les notifications. Elles arrivent même application fermée. À chaque ouverture elles se mettent à jour : un devoir rendu disparaît, un nouveau s’ajoute.",
     remCardOffPush: "Notifications avant les échéances, examens et cours Zoom, même application fermée.",
     pushIos: "Sur iPhone, les notifications ne marchent que depuis l’app de l’écran d’accueil : dans Safari, Partager → « Sur l’écran d’accueil », puis l’ouvrir de là.",
@@ -1195,6 +1199,8 @@ const I18N = {
     pushReady: n => "🔔 Notifications activées" + (n ? " · " + n + " rappels programmés" : ""), pushOnCard: "🔔 Notifications activées sur cet appareil",
     pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
     pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
+    remGoBoth: "🔔 Activer les notifications et 📅 ajouter au calendrier", remHowBothTxt: "Les rappels vont aussi dans le calendrier du téléphone.",
+    ttFileOld: "Ce fichier a été réenregistré dans l’ancien format Excel, illisible ici. Utilisez le fichier d’origine de Levnet, ou enregistrez-le en xlsx ou csv.",
     catAll: "Tout", catAssign: "Devoirs", catQuiz: "Tests", catOther: "Événements", hidDone: "Masqué", undo: "↩ Annuler",
     hidShow: n => "👁 " + n + (n === 1 ? " élément masqué" : " éléments masqués") + " · afficher", hidHide: n => "Masquer à nouveau les " + n + " éléments",
     remDelBtn: "🗑 Retirer du calendrier ce que l’app a ajouté", remDelHint: "Télécharge un fichier qui annule les événements. Les calendriers iPhone et Outlook les retirent. Google Agenda ne supprime pas à l’import : le plus simple est d’ajouter dans un agenda séparé (ex. MoodlePro) et de le supprimer au besoin.",
@@ -1994,9 +2000,47 @@ function levnetTT(rows) {
   }
   return cleanTT(out);
 }
-function readTimetableFile(buf) {
+/* a file saved again in Excel (.xlsx) is a zip of XML: read its first sheet into rows */
+function unzipEntries(buf) {
+  const v = new DataView(buf), u8 = new Uint8Array(buf), out = {};
+  let e = -1; for (let i = u8.length - 22; i >= Math.max(0, u8.length - 66000); i--) if (v.getUint32(i, true) === 0x06054b50) { e = i; break; }
+  if (e < 0) throw new Error("zip");
+  let p = v.getUint32(e + 16, true);
+  for (let k = v.getUint16(e + 10, true); k > 0 && v.getUint32(p, true) === 0x02014b50; k--) {
+    const method = v.getUint16(p + 10, true), size = v.getUint32(p + 20, true), nl = v.getUint16(p + 28, true), xl = v.getUint16(p + 30, true), cl = v.getUint16(p + 32, true), off = v.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(u8.subarray(p + 46, p + 46 + nl)), start = off + 30 + v.getUint16(off + 26, true) + v.getUint16(off + 28, true);
+    out[name] = { method, data: u8.subarray(start, start + size) }; p += 46 + nl + xl + cl;
+  }
+  return out;
+}
+async function zipText(en) {
+  if (!en) return "";
+  if (en.method === 0) return new TextDecoder().decode(en.data);
+  const st = new Blob([en.data]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+  return new TextDecoder().decode(await new Response(st).arrayBuffer());
+}
+async function xlsxRows(buf) {
+  const z = unzipEntries(buf), X = s => new DOMParser().parseFromString(s, "application/xml");
+  const strings = [...X(await zipText(z["xl/sharedStrings.xml"]) || "<sst/>").getElementsByTagName("si")].map(si => [...si.getElementsByTagName("t")].map(t => t.textContent).join(""));
+  const sheet = Object.keys(z).filter(n => /^xl\/worksheets\/sheet\d+\.xml$/.test(n)).sort((a, b) => parseInt(a.match(/\d+/)) - parseInt(b.match(/\d+/)))[0];
+  if (!sheet) return [];
+  const colOf = ref => { let n = 0; for (const ch of String(ref).replace(/\d+/g, "")) n = n * 26 + ch.charCodeAt(0) - 64; return n - 1; };
+  const hhmm = f => { const m = Math.round(f * 1440); return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); };
+  return [...X(await zipText(z[sheet])).getElementsByTagName("row")].map(r => {
+    const row = [];
+    for (const c of r.getElementsByTagName("c")) {
+      const ty = c.getAttribute("t"), v = c.getElementsByTagName("v")[0], is = c.getElementsByTagName("is")[0];
+      let val = ty === "s" ? strings[+(v ? v.textContent : -1)] : ty === "inlineStr" ? (is ? is.textContent : "") : (v ? v.textContent : "");
+      if (!ty && /^0?\.\d+$/.test(val || "")) val = hhmm(+val);             // a time Excel turned into a fraction of a day
+      row[colOf(c.getAttribute("r") || "A1")] = val == null ? "" : String(val);
+    }
+    return Array.from(row, x => x == null ? "" : x);
+  });
+}
+async function readTimetableFile(buf) {
   const b = new Uint8Array(buf);
-  if ((b[0] === 0xD0 && b[1] === 0xCF) || (b[0] === 0x50 && b[1] === 0x4B)) return null;   // a real Excel file, not the Levnet export
+  if (b[0] === 0x50 && b[1] === 0x4B) { try { const rows = await xlsxRows(buf); return rows.length > 1 ? levnetTT(rows) : null; } catch (e) { return null; } }
+  if (b[0] === 0xD0 && b[1] === 0xCF) return "oldxls";                       // saved again in Excel's old format: not readable here
   let text = new TextDecoder("utf-8").decode(buf);
   if (text.includes("\uFFFD")) { try { text = new TextDecoder("windows-1255").decode(buf); } catch (e) {} }
   text = text.replace(/^\uFEFF/, "");
@@ -2005,8 +2049,9 @@ function readTimetableFile(buf) {
   else { const first = text.split(/\r?\n/)[0]; rows = parseCSV(text, (first.match(/\t/g) || []).length > (first.match(/,/g) || []).length ? "\t" : ","); }
   return rows.length > 1 ? levnetTT(rows) : null;
 }
-function importLevnet(buf) {
-  const L = readTimetableFile(buf);
+async function importLevnet(buf) {
+  const L = await readTimetableFile(buf);
+  if (L === "oldxls") { toast(t("ttFileOld"), 10000); return openLevnet(); }
   if (!L || !L.length) { toast(t("ttFileBad"), 9000); return openLevnet(); }
   const old = P.tt.filter(x => !x.priv).length, courses = new Set(L.map(x => x.code || x.title)).size;
   if (!confirm(t("ttFileAsk", L.length, courses, old))) return;
@@ -2160,7 +2205,7 @@ function cleanKey(k, v) {
       return ["bg", "card", "text", "accent"].every(f => c[f]) ? { id: "custom", c } : null; } return THEMES.some(p => p.id === v.id) ? { id: v.id } : null; }
     case "rem": { if (!obj(v)) return null; const ok = (a, set) => Array.isArray(a) ? a.filter(x => set.includes(x)) : [];
       return { task: ok(v.task, REM_CHOICES.task), exam: ok(v.exam, REM_CHOICES.exam), cls: ["zoom", "all", "none"].includes(v.cls) ? v.cls : "zoom",
-        clsMin: [5, 10, 15, 30].includes(v.clsMin) ? v.clsMin : 10, asked: v.asked === true, on: v.on === true, how: v.how === "cal" ? "cal" : "push" }; }
+        clsMin: [5, 10, 15, 30].includes(v.clsMin) ? v.clsMin : 10, asked: v.asked === true, on: v.on === true, how: ["cal", "both"].includes(v.how) ? v.how : "push" }; }
   }
   return v;
 }
@@ -2290,7 +2335,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.2.0";
+const APP_VERSION = "1.2.1";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2336,7 +2381,7 @@ function usageStats() {
   const r = remCfg(), on = !!(P.rem && P.rem.on);
   return {
     theme: (P.theme && P.theme.id) || "auto",
-    rem: on ? (remHow() === "push" ? "push" : "cal") : (P.rem && P.rem.asked ? "no" : "unset"),
+    rem: on ? remHow() : (P.rem && P.rem.asked ? "no" : "unset"),
     remT: on ? r.task.join("+") || "-" : "", remE: on ? r.exam.join("+") || "-" : "", remC: on ? (r.cls === "none" ? "none" : r.cls + "/" + r.clsMin) : "",
     push: pushOn() ? "on" : pushPerm(),
     tt: P.tt.filter(x => !x.priv).length, priv: P.tt.filter(x => x.priv).length, att: P.tt.filter(x => x.att).length,
@@ -2674,11 +2719,14 @@ function remSave(patch) { P.rem = Object.assign(remCfg(), patch); savePrefs(); }
 function renderRemCard() {
   const el = $("#remCardBody"); if (!el) return;
   const on = P.rem && P.rem.on;
-  if (on && remHow() === "push") {
+  const calLine = () => { if (!useCal()) return ""; const n = remPending();
+    return n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button data-rem="add">' + esc(t("remUpdateBtn")) + "</button>" : '<div class="hint">📅 ' + esc(t("remCardOk")) + "</div>"; };
+  if (on && usePush()) {
     const next = pushOn() && pushItems()[0], perm = pushPerm();
-    el.innerHTML = pushOn() ? '<div class="hint">' + esc(t("pushOnCard")) + (next ? "<br>" + esc(t("pushNext", clockTxt(next.at / 1000), next.title)) : "") + "</div>" + (PS.err ? '<div class="hint">' + esc(t("pushFail")) + "</div>" : "") + '<button data-rem="test">' + esc(t("pushTestBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
+    el.innerHTML = (pushOn() ? '<div class="hint">' + esc(t("pushOnCard")) + (next ? "<br>" + esc(t("pushNext", clockTxt(next.at / 1000), next.title)) : "") + "</div>" + (PS.err ? '<div class="hint">' + esc(t("pushFail")) + "</div>" : "") + '<button data-rem="test">' + esc(t("pushTestBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
       : pushNeedsInstall() ? '<div class="hint">' + esc(t("pushIos")) + '</div><button data-rem="cal">' + esc(t("remGo")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
-      : '<div class="remnew">' + esc(t(perm === "denied" ? "pushBlockedCard" : "pushOffCard")) + '</div><button class="primary" data-rem="push">' + esc(t("pushEnableBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>";
+      : '<div class="remnew">' + esc(t(perm === "denied" ? "pushBlockedCard" : "pushOffCard")) + '</div><button class="primary" data-rem="push">' + esc(t("pushEnableBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>");
+    if (remHow() === "both" && !pushNeedsInstall()) el.insertAdjacentHTML("beforeend", calLine());
     if (pushOn()) pushSoon();
     return;
   }
@@ -2703,7 +2751,8 @@ const pushNeedsInstall = () => !!pushUrl() && PLAT === "ios" && !isStandalone() 
 const pushAvail = () => pushSupported() || pushNeedsInstall();
 const pushPerm = () => ("Notification" in window) ? Notification.permission : "default";
 const pushOn = () => pushSupported() && LS.get("pushOn", false) === true && pushPerm() === "granted";
-const remHow = () => { const h = remCfg().how; return pushAvail() ? (h || "push") : "cal"; };
+const remHow = () => { const h = remCfg().how; return pushAvail() ? (h || "push") : "cal"; };      // "push", "cal" or "both"
+const usePush = () => remHow() !== "cal", useCal = () => remHow() !== "push";
 const OFF_S = { "7d": 7 * DAY, "3d": 3 * DAY, "1d": DAY, "3h": 3 * 3600, "1h": 3600, "30m": 1800 };
 const PS = { p: null, err: null, timer: 0 };
 const clockTxt = ts => { const d = new Date(ts * 1000); try { return d.toLocaleString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return d.toLocaleString(); } };
@@ -2796,11 +2845,11 @@ async function pushDisable() {
   toast(t("pushStopped")); renderRemCard();
 }
 function remModeUI(how) {
-  const push = how === "push";
-  $$("#remHowC [data-how]").forEach(b => { b.classList.toggle("on", b.dataset.how === how); b.setAttribute("aria-pressed", b.dataset.how === how); });
+  const push = how !== "cal", cal = how !== "push";
+  $$("#remHowC [data-how]").forEach(b => { const on = b.dataset.how === "push" ? push : cal; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
   $("#remIosNote").hidden = !(push && pushNeedsInstall());
-  $("#remGo").textContent = t(push ? "remGoPush" : "remGo");
-  $("#remHowTxt").textContent = t(push ? "remHowPushTxt" : "remHow");
+  $("#remGo").textContent = t(push && cal ? "remGoBoth" : push ? "remGoPush" : "remGo");
+  $("#remHowTxt").textContent = push && cal ? t("remHowPushTxt") + " " + t("remHowBothTxt") : t(push ? "remHowPushTxt" : "remHow");
   $("#remIntro").textContent = t(push ? "remIntroPush" : "remIntro");
   $("#remStop").hidden = $("#remTest").hidden = !(push && pushOn());
   const calUsed = !!(LS.get("remDone", { tasks: [] }).tasks || []).length || !!LS.get("remDone", {}).cls;
@@ -3012,14 +3061,23 @@ $("#remSheet").addEventListener("click", e => {
   if (e.target.id === "remSheet") { $("#remSheet").hidden = true; if (!$("#remLater").hidden) remSave({ asked: true }); return; }
   const b = e.target.closest("[data-g]"); if (b) { b.classList.toggle("on"); b.setAttribute("aria-pressed", b.classList.contains("on")); return; }
   const c = e.target.closest("[data-cls]"); if (c) $$("#remCls [data-cls]").forEach(x => x.classList.toggle("on", x === c));
-  const h = e.target.closest("[data-how]"); if (h) remModeUI(h.dataset.how);
+  const h = e.target.closest("[data-how]");
+  if (h) {   // each one on or off by itself; at least one stays on
+    const on = k => $("#remHowC [data-how=" + k + "]").classList.contains("on");
+    let push = on("push"), cal = on("cal");
+    if (h.dataset.how === "push") push = !push; else cal = !cal;
+    if (!push && !cal) { if (h.dataset.how === "push") cal = true; else push = true; }
+    remModeUI(push && cal ? "both" : push ? "push" : "cal");
+  }
 });
 $("#remGo").onclick = () => {
   const pick = g => $$("#rem_" + g + " .rchip.on").map(b => b.dataset.k), cls = ($("#remCls .rchip.on") || {}).dataset;
-  const how = pushAvail() && $("#remHowC .rchip.on") ? $("#remHowC .rchip.on").dataset.how : "cal";
+  const on = k => !!$("#remHowC [data-how=" + k + "].on");
+  const how = !pushAvail() ? "cal" : on("push") && on("cal") ? "both" : on("cal") ? "cal" : "push";
   remSave({ task: pick("task"), exam: pick("exam"), cls: cls ? cls.cls : "zoom", clsMin: Number($("#remMin").value) || 10, on: true, asked: true, how });
   $("#remSheet").hidden = true;
-  if (how === "push") { LS.set("pushSig", null); pushEnable(); } else remExport(false);
+  if (how !== "cal") { LS.set("pushSig", null); pushEnable(); }       // asks for permission right inside the tap
+  if (how !== "push") remExport(false);
 };
 $("#remStop").onclick = () => { $("#remSheet").hidden = true; pushDisable(); };
 $("#remCalDel").onclick = () => { $("#remSheet").hidden = true; remRemoveCal(); };
