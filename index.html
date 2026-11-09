@@ -553,7 +553,8 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div class="hint" data-i18n="fbHint"></div>
     <label><span data-i18n="fbKind"></span><select id="fbKind"></select></label>
     <label><span data-i18n="fbMsg"></span><textarea id="fbMsg" rows="5" maxlength="2000"></textarea></label>
-    <label><span data-i18n="fbContact"></span><input type="text" id="fbContact" maxlength="120" autocomplete="email"></label>
+    <label><span data-i18n="fbPhone"></span><input type="tel" id="fbContact" maxlength="30" inputmode="tel" autocomplete="tel" dir="ltr"></label>
+    <label class="chk"><input type="checkbox" id="fbWho" checked><span id="fbWhoLbl"></span></label>
     <label class="chk"><input type="checkbox" id="fbTech" checked><span data-i18n="fbTech"></span></label>
     <div class="err" id="fbErr"></div>
     <button class="primary" id="fbSend" style="width:100%" data-i18n="fbSend"></button>
@@ -650,9 +651,9 @@ const I18N = {
     syncNowBtn: "סנכרן עכשיו", syncOk: x => "✓ מסונכרן · " + x, syncBusy: "מסנכרן…", syncErr: m => "הסנכרון נכשל: " + m, syncOffSt: "כבוי במכשיר הזה",
     syncDone: "מסונכרן ✓", syncPulled: "עודכן מהמכשיר השני ✓", syncNotSaved: "הקובץ לא נשמר ב-Moodle (ייתכן ש״הקבצים הפרטיים״ חסומים באתר)", syncNoUpload: "Moodle לא מאפשר להעלות קבצים מהאפליקציה",
     syncOtherUser: "המכשיר מחובר עכשיו למשתמש אחר, הסנכרון כובה", syncBlocked: "Moodle באתר הזה לא מאפשר לשמור את נתוני הסנכרון",
-    fbTitle: "💬 פידבק", fbOpen: "💬 יש לך רעיון, בקשה או באג? ספר לנו", fbHint: "ההודעה מגיעה ישירות למפתח האפליקציה. בלי שם, בלי פרטי Moodle.",
+    fbTitle: "💬 פידבק", fbOpen: "💬 יש לך רעיון, בקשה או באג? ספר לנו", fbHint: "ההודעה מגיעה ישירות למפתח האפליקציה.",
     fbKind: "סוג", fbIdea: "💡 הצעה לשיפור", fbBug: "🐞 משהו לא עובד", fbQuestion: "❓ שאלה", fbPraise: "❤️ מחמאה", fbMsg: "מה תרצה לספר?",
-    fbContact: "אם תרצה תשובה: מייל או טלפון (לא חובה)", fbTech: "צרף פרטים טכניים (גרסה, סוג מכשיר, שפה) כדי שיהיה קל לתקן", fbSend: "שלח",
+    fbContact: "", fbPhone: "📞 טלפון, אם תרצה שיחזרו אליך (לא חובה)", fbWho: n => "צרף את השם שלי מ-Moodle (" + n + ") ואת רשימת הקורסים שלי, כדי שיהיה קל לעזור לי", fbBadPhone: "מספר הטלפון לא נראה תקין", fbTech: "צרף פרטים טכניים (גרסה, סוג מכשיר, שפה) כדי שיהיה קל לתקן", fbSend: "שלח",
     fbEmpty: "כתוב כמה מילים לפני השליחה", fbThanks: "תודה! ההודעה נשלחה 🙏", fbQueued: "אין חיבור עכשיו. ההודעה תישלח אוטומטית כשיחזור החיבור.",
     statsLbl: "📊 שליחת סטטיסטיקה אנונימית", statsHint: "פעם ביום נשלח סימן ״האפליקציה בשימוש״ עם מזהה אקראי, גרסה, שפה וסוג מכשיר, כדי לדעת כמה משתמשים יש. בלי שם, בלי פרטי Moodle.", syncViaCal: "נשמר כאירוע פרטי ביומן שלך ב-Moodle (בתאריך 1.1.2001, כדי שלא יפריע)", syncViaFiles: "נשמר ב״הקבצים הפרטיים שלי״ ב-Moodle", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
     syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
@@ -731,9 +732,9 @@ const I18N = {
     syncNowBtn: "Sync now", syncOk: x => "✓ Synced · " + x, syncBusy: "Syncing…", syncErr: m => "Sync failed: " + m, syncOffSt: "Off on this device",
     syncDone: "Synced ✓", syncPulled: "Updated from your other device ✓", syncNotSaved: "The file wasn’t saved on Moodle (Private files may be blocked on this site)", syncNoUpload: "Moodle doesn’t allow uploading files from the app",
     syncOtherUser: "This device is now signed in as another user; sync was turned off", syncBlocked: "Moodle on this site doesn’t allow saving the sync data",
-    fbTitle: "💬 Feedback", fbOpen: "💬 Got an idea, a request or a bug? Tell us", fbHint: "Your message goes straight to the app’s developer. No name, no Moodle details.",
+    fbTitle: "💬 Feedback", fbOpen: "💬 Got an idea, a request or a bug? Tell us", fbHint: "Your message goes straight to the app’s developer.",
     fbKind: "Type", fbIdea: "💡 Idea", fbBug: "🐞 Something doesn’t work", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "What would you like to say?",
-    fbContact: "If you’d like an answer: email or phone (optional)", fbTech: "Attach technical details (version, device type, language) to make fixing easier", fbSend: "Send",
+    fbContact: "", fbPhone: "📞 Phone, if you’d like a call back (optional)", fbWho: n => "Attach my Moodle name (" + n + ") and my course list, so it’s easier to help me", fbBadPhone: "That phone number doesn’t look right", fbTech: "Attach technical details (version, device type, language) to make fixing easier", fbSend: "Send",
     fbEmpty: "Write a few words before sending", fbThanks: "Thanks! Your message was sent 🙏", fbQueued: "No connection right now. It will be sent automatically when you’re back online.",
     statsLbl: "📊 Send anonymous usage stats", statsHint: "Once a day a “the app is in use” signal is sent with a random id, version, language and device type, to know how many people use it. No name, no Moodle details.", syncViaCal: "Kept as a private event in your Moodle calendar (dated 1.1.2001, out of the way)", syncViaFiles: "Kept in your Moodle “Private files”", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
     syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
@@ -812,9 +813,9 @@ const I18N = {
     syncNowBtn: "Synchroniser", syncOk: x => "✓ Synchronisé · " + x, syncBusy: "Synchronisation…", syncErr: m => "Échec de la synchronisation : " + m, syncOffSt: "Désactivée sur cet appareil",
     syncDone: "Synchronisé ✓", syncPulled: "Mis à jour depuis votre autre appareil ✓", syncNotSaved: "Le fichier n’a pas été enregistré sur Moodle (les fichiers personnels sont peut-être bloqués)", syncNoUpload: "Moodle n’autorise pas l’envoi de fichiers depuis l’application",
     syncOtherUser: "Cet appareil est connecté à un autre utilisateur ; synchronisation désactivée", syncBlocked: "Moodle sur ce site ne permet pas d’enregistrer les données de synchronisation",
-    fbTitle: "💬 Avis", fbOpen: "💬 Une idée, une demande ou un bug ? Dites-le-nous", fbHint: "Votre message va directement au développeur de l’application. Ni nom, ni données Moodle.",
+    fbTitle: "💬 Avis", fbOpen: "💬 Une idée, une demande ou un bug ? Dites-le-nous", fbHint: "Votre message va directement au développeur de l’application.",
     fbKind: "Type", fbIdea: "💡 Idée", fbBug: "🐞 Quelque chose ne marche pas", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "Que voulez-vous nous dire ?",
-    fbContact: "Pour une réponse : e-mail ou téléphone (facultatif)", fbTech: "Joindre les détails techniques (version, type d’appareil, langue) pour faciliter la correction", fbSend: "Envoyer",
+    fbContact: "", fbPhone: "📞 Téléphone, si vous voulez être rappelé (facultatif)", fbWho: n => "Joindre mon nom Moodle (" + n + ") et ma liste de cours, pour qu’on puisse mieux m’aider", fbBadPhone: "Ce numéro de téléphone ne semble pas valide", fbTech: "Joindre les détails techniques (version, type d’appareil, langue) pour faciliter la correction", fbSend: "Envoyer",
     fbEmpty: "Écrivez quelques mots avant d’envoyer", fbThanks: "Merci ! Votre message a été envoyé 🙏", fbQueued: "Pas de connexion. Il sera envoyé automatiquement au retour du réseau.",
     statsLbl: "📊 Envoyer des statistiques anonymes", statsHint: "Une fois par jour, un signal « l’application est utilisée » est envoyé avec un identifiant aléatoire, la version, la langue et le type d’appareil, pour savoir combien de personnes l’utilisent. Ni nom, ni données Moodle.", syncViaCal: "Gardé comme événement privé dans votre calendrier Moodle (daté du 1.1.2001, hors de vue)", syncViaFiles: "Gardé dans vos « Fichiers personnels » Moodle", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
     syncFirst: "Synchronisation activée. Sur le premier appareil, ses données sont enregistrées sur Moodle ; les appareils suivants les chargent depuis là.", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
@@ -1779,7 +1780,7 @@ async function syncNow(manual) {
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
 const APP_VERSION = "2026.11.09";
-const FEEDBACK = { url: "", f: { kind: "", msg: "", contact: "", meta: "" } };   // filled in once the form exists
+const FEEDBACK = { url: "", f: { kind: "", msg: "", contact: "", meta: "", name: "", courses: "" } };   // filled in once the form exists
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
 function deviceId() { let id = LS.get("iid", ""); if (!/^[a-z0-9]{12}$/.test(id)) { id = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => "abcdefghijklmnopqrstuvwxyz0123456789"[b % 36]).join(""); LS.set("iid", id); } return id; }
 function techMeta(extra) {
@@ -1788,10 +1789,19 @@ function techMeta(extra) {
   const pwa = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
   return JSON.stringify(Object.assign({ id: deviceId(), v: APP_VERSION, lang: LANG, os, pwa, w: innerWidth, site: host, sync: syncOnNow() ? (LS.get("syncStore", "files")) : "off" }, extra || {}));
 }
-async function fbPost(kind, msg, contact, meta) {
-  const body = new URLSearchParams();
-  body.append("entry." + FEEDBACK.f.kind, kind); body.append("entry." + FEEDBACK.f.msg, msg); body.append("entry." + FEEDBACK.f.meta, meta);
-  if (FEEDBACK.f.contact) body.append("entry." + FEEDBACK.f.contact, contact || "");
+/* who sent it (only in feedback, only if the user leaves the box ticked): the Moodle name and the current courses */
+function senderInfo() {
+  const d = V.data || {}, now = nowS();
+  const cs = (d.courses || []).filter(c => !isOff(c.id) && (!c.end || c.end > now - 30 * DAY)).map(c => ((codeOf(c.name) ? codeOf(c.name) + " " : "") + shortName(c.name)).slice(0, 80));
+  return { name: String(d.user || "").slice(0, 80), courses: cs.slice(0, 25).join("; ") };
+}
+async function fbPost(kind, msg, contact, meta, who) {
+  const body = new URLSearchParams(), F = FEEDBACK.f;
+  if (who && !(F.name && F.courses)) { const m = JSON.parse(meta); if (!F.name) m.name = who.name; if (!F.courses) m.courses = who.courses; meta = JSON.stringify(m); }
+  body.append("entry." + F.kind, kind); body.append("entry." + F.msg, msg); body.append("entry." + F.meta, meta);
+  if (F.contact) body.append("entry." + F.contact, contact || "");
+  if (who && F.name) body.append("entry." + F.name, who.name);
+  if (who && F.courses) body.append("entry." + F.courses, who.courses);
   // Google Forms does not let other sites read its answer, so the request is sent "no-cors"; it still arrives
   await fetch(FEEDBACK.url.replace(/\/(viewform|edit)?(\?.*)?$/, "") + "/formResponse", { method: "POST", mode: "no-cors", body, credentials: "omit", referrerPolicy: "no-referrer" });
 }
@@ -1800,7 +1810,7 @@ async function fbFlush() {
   if (!fbReady() || navigator.onLine === false) return;
   const q = LS.get("fbQueue", []); if (!q.length) return;
   const left = [];
-  for (const x of q) { try { await fbPost(x.kind, x.msg, x.contact, x.meta); } catch (e) { left.push(x); } }
+  for (const x of q) { try { await fbPost(x.kind, x.msg, x.contact, x.meta, x.who); } catch (e) { left.push(x); } }
   LS.set("fbQueue", left);
 }
 function statsOnNow() { return LS.get("statsOn", true) !== false; }
@@ -1813,14 +1823,18 @@ async function ping() {
 const FB_KINDS = [["idea", "fbIdea"], ["bug", "fbBug"], ["question", "fbQuestion"], ["praise", "fbPraise"]];
 function openFb() {
   $("#fbKind").innerHTML = FB_KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join("");
+  const w = senderInfo(); $("#fbWhoLbl").textContent = t("fbWho", w.name || "—"); $("#fbWho").closest("label").hidden = !w.name && !w.courses;
   $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; $("#fbMsg").focus();
 }
 async function sendFb() {
   const msg = $("#fbMsg").value.trim();
   if (msg.length < 3) return $("#fbErr").textContent = t("fbEmpty");
-  const x = { kind: $("#fbKind").value, msg, contact: $("#fbContact").value.trim(), meta: $("#fbTech").checked ? techMeta() : JSON.stringify({ id: deviceId(), v: APP_VERSION }) };
+  const phone = $("#fbContact").value.trim();
+  if (phone && !/^[+\d][\d\s\-()]{6,20}$/.test(phone)) return $("#fbErr").textContent = t("fbBadPhone");
+  const x = { kind: $("#fbKind").value, msg, contact: phone, meta: $("#fbTech").checked ? techMeta() : JSON.stringify({ id: deviceId(), v: APP_VERSION }),
+    who: $("#fbWho").checked ? senderInfo() : null };
   $("#fbSend").disabled = true;
-  try { await fbPost(x.kind, x.msg, x.contact, x.meta); toast(t("fbThanks"), 4000); }
+  try { await fbPost(x.kind, x.msg, x.contact, x.meta, x.who); toast(t("fbThanks"), 4000); }
   catch (e) { LS.set("fbQueue", LS.get("fbQueue", []).concat([x]).slice(-20)); toast(t("fbQueued"), 5000); }
   $("#fbSend").disabled = false; $("#fbMsg").value = ""; LS.del("fbDraft"); $("#fbSheet").hidden = true;
 }
