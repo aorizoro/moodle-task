@@ -9,7 +9,7 @@ import { DurableObject } from "cloudflare:workers";
 
 const ORIGINS = ["https://aorizoro.github.io"];
 const PUSH_HOSTS = /^(fcm\.googleapis\.com|android\.googleapis\.com|updates\.push\.services\.mozilla\.com|web\.push\.apple\.com|[a-z0-9-]+\.push\.apple\.com|[a-z0-9.-]+\.notify\.windows\.com)$/;
-const MAX_ITEMS = 500, MAX_BODY = 256 * 1024, SUBJECT = "https://aorizoro.github.io/moodle-task/";
+const MAX_ITEMS = 500, MAX_BODY = 768 * 1024, MAX_ICS = 700 * 1024, SUBJECT = "https://aorizoro.github.io/moodle-task/";
 
 const enc = new TextEncoder();
 const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
@@ -124,6 +124,16 @@ export class Device extends DurableObject {
   }
 }
 
+/* ---------- a private calendar feed: the app uploads the calendar, calendar apps subscribe to its secret address ---------- */
+const EMPTY_ICS = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//MoodlePro//EN\r\nCALSCALE:GREGORIAN\r\nX-WR-CALNAME:MoodlePro\r\nEND:VCALENDAR\r\n";
+const okKey = k => typeof k === "string" && /^[A-Za-z0-9_-]{24,64}$/.test(k);
+export class Feed extends DurableObject {
+  async put(ics) { await this.ctx.storage.put("ics", ics); await this.ctx.storage.put("at", Date.now()); return { ok: true, bytes: ics.length }; }
+  async stop() { await this.ctx.storage.put("ics", EMPTY_ICS); await this.ctx.storage.put("at", Date.now()); return { ok: true }; }   // stays subscribable, just empty
+  async get() { return (await this.ctx.storage.get("ics")) || EMPTY_ICS; }
+}
+const feed = async (env, key) => env.FEEDS.get(env.FEEDS.idFromName(await sha256("feed:" + key)));
+
 /* ---------- the HTTP side the app talks to ---------- */
 export default {
   async fetch(req, env) {
@@ -135,10 +145,25 @@ export default {
     const path = new URL(req.url).pathname;
     if (req.method === "GET" && path === "/key") return out({ key: (await vapid(env)).pub });
     if (req.method === "GET" && path === "/") return out({ ok: true });
+    { const m = /^\/feed\/([A-Za-z0-9_-]{24,64})\.ics$/.exec(path);
+      if (m && (req.method === "GET" || req.method === "HEAD")) {
+        const ics = await (await feed(env, m[1])).get();
+        return new Response(req.method === "HEAD" ? null : ics, { headers: { "Content-Type": "text/calendar; charset=utf-8", "Cache-Control": "max-age=600",
+          "Content-Disposition": 'inline; filename="moodlepro.ics"', "X-Content-Type-Options": "nosniff", "Access-Control-Allow-Origin": "*" } });
+      } }
     if (req.method !== "POST") return out({ error: "not found" }, 404);
     if (!allowed) return out({ error: "origin" }, 403);
     const raw = await req.text(); if (raw.length > MAX_BODY) return out({ error: "too big" }, 413);
     let b; try { b = JSON.parse(raw); } catch (e) { return out({ error: "json" }, 400); }
+    if (path === "/feed" || path === "/feed/stop") {
+      if (!b || !okKey(b.key)) return out({ error: "key" }, 400);
+      const f = await feed(env, b.key);
+      if (path === "/feed/stop") return out(await f.stop());
+      const ics = typeof b.ics === "string" ? b.ics : "";
+      if (ics.length > MAX_ICS) return out({ error: "too big" }, 413);
+      if (!/^BEGIN:VCALENDAR\r?\n/.test(ics) || !/END:VCALENDAR\r?\n?$/.test(ics) || /<\s*(script|html|iframe)/i.test(ics)) return out({ error: "not a calendar" }, 400);
+      return out(await f.put(ics));
+    }
     const ep = b && (b.sub ? b.sub.endpoint : b.endpoint);
     if (typeof ep !== "string" || !okEndpoint(ep, env)) return out({ error: "endpoint" }, 400);
     const dev = env.DEVICES.get(env.DEVICES.idFromName(await sha256(ep)));

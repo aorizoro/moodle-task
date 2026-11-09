@@ -170,6 +170,24 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 /* versions + reminders */
 .betatag{font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--warn);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:3px}
 .wnv{margin:8px 0}
+.calbtns{display:flex;flex-direction:column;gap:8px;margin:10px 0}
+.calbtns.busy{opacity:.5;pointer-events:none}
+.dalist{display:flex;flex-direction:column;gap:6px}
+.darow{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;padding:6px 8px;background:var(--card)}
+.darow.off{opacity:.55}
+.darow .dn{flex:1;font-size:15px}
+.darow button.mv{width:38px;height:36px;padding:0;font-size:16px}
+.darow label{display:flex;align-items:center;gap:4px;font-size:13px;color:var(--muted)}
+.dhide{display:none!important}
+.mineadd{width:100%;margin:2px 0 8px;border-style:dashed}
+.fld{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;font-size:14px;color:var(--muted)}
+.fld input,.fld select,.fld textarea{font:inherit;font-size:16px;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%}
+.fld2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.link.danger{color:var(--err)}
+.ttnone{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.inst{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.inst img{width:52px;height:52px;border-radius:14px;flex:none}
+.inststeps{margin:6px 0 10px;padding-inline-start:22px;line-height:1.6}
 .seg.cats{display:flex;width:100%;margin:8px 0 4px}
 .seg.cats button{flex:1;padding-inline:4px;white-space:nowrap}
 .seg.cats i{font-style:normal;font-size:12px;opacity:.75}
@@ -677,7 +695,9 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <button data-cat="assign"><span data-i18n="catAssign"></span> <i id="catN_assign"></i></button>
       <button data-cat="quiz"><span data-i18n="catQuiz"></span> <i id="catN_quiz"></i></button>
       <button data-cat="other"><span data-i18n="catOther"></span> <i id="catN_other"></i></button>
+      <button data-cat="mine"><span data-i18n="catMine"></span> <i id="catN_mine"></i></button>
     </div>
+    <button id="bMineAdd" class="mineadd" data-i18n="mineAdd"></button>
     <div class="chips" id="chips"></div>
     <div class="ctl">
       <div class="seg" id="seg">
@@ -727,7 +747,10 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <div class="srow"><span class="hint" id="syncStatus"></span><button class="link" id="bSyncNow" data-i18n="syncNowBtn"></button></div>
     <button id="bRem" style="width:100%;margin-top:14px" data-i18n="remTitle"></button>
     <button id="bTheme" style="width:100%;margin-top:8px"><span data-i18n="thTitle"></span> · <span class="thcur"></span></button>
+    <button id="bDashArr" style="width:100%;margin-top:8px" data-i18n="daTitle"></button>
+    <button id="bCal" style="width:100%;margin-top:8px" data-i18n="calBtn"></button>
     <button id="bTour" style="width:100%;margin-top:8px" data-i18n="tourOpen"></button>
+    <button id="bInst" style="width:100%;margin-top:8px" hidden data-i18n="instTitle"></button>
     <div id="fbSet" hidden>
       <div style="margin-top:14px;font-weight:700" data-i18n="fbTitle"></div>
       <button id="bFb" style="width:100%;margin-top:6px" data-i18n="fbOpen"></button>
@@ -810,6 +833,9 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <div class="rchips" id="remCls"><button class="rchip" data-cls="zoom" data-i18n="remClsZoom"></button><button class="rchip" data-cls="all" data-i18n="remClsAll"></button><button class="rchip" data-cls="none" data-i18n="remClsNone"></button></div>
       <label class="rmin"><span data-i18n="remBefore"></span><select id="remMin"></select></label>
     </div>
+    <div class="rgrp" id="remMorG"><b data-i18n="morTitle"></b><span class="hint" data-i18n="morHint"></span>
+      <label class="rmin"><span data-i18n="morAt"></span><select id="remMor"></select></label>
+    </div>
     <div class="rgrp" id="remHowG"><b data-i18n="remHowLbl"></b>
       <div class="rchips" id="remHowC"><button class="rchip" data-how="push" data-i18n="remHowPush"></button><button class="rchip" data-how="cal" data-i18n="remHowCal"></button></div>
       <p class="hint" id="remIosNote" hidden data-i18n="pushIos"></p>
@@ -821,6 +847,49 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <button class="link" id="remStop" style="width:100%" hidden data-i18n="pushStop"></button>
     <button class="link" id="remCalDel" style="width:100%" hidden data-i18n="remDelBtn"></button>
     <p class="hint" id="remCalDelHint" hidden data-i18n="remDelHint"></p>
+  </div>
+</div>
+<div class="sheet" id="calSheet" hidden>
+  <div class="box">
+    <h3><span data-i18n="calTitle"></span> <button class="link" id="calClose" data-i18n="close"></button></h3>
+    <p class="hint" data-i18n="calIntro"></p>
+    <div class="calbtns" id="calBtns">
+      <button class="primary" id="calGoogle" data-i18n="calGoogle"></button>
+      <button id="calApple" data-i18n="calApple"></button>
+      <button id="calCopy" data-i18n="calCopy"></button>
+    </div>
+    <p class="hint" data-i18n="calNote"></p>
+    <p class="err" id="calErr" hidden></p>
+    <button class="link" id="calFile" style="width:100%" data-i18n="calFile"></button>
+    <button class="link danger" id="calStop" style="width:100%;margin-top:4px" data-i18n="calStop"></button>
+  </div>
+</div>
+<div class="sheet" id="daSheet" hidden>
+  <div class="box">
+    <h3><span data-i18n="daTitle"></span> <button class="link" id="daClose" data-i18n="close"></button></h3>
+    <p class="hint" data-i18n="daIntro"></p>
+    <div id="daList" class="dalist"></div>
+    <button class="link" id="daReset" style="width:100%;margin-top:8px" data-i18n="daReset"></button>
+  </div>
+</div>
+<div class="sheet" id="mineSheet" hidden>
+  <div class="box">
+    <h3><span id="mineTitle"></span> <button class="link" id="mineClose" data-i18n="close"></button></h3>
+    <label class="fld"><span data-i18n="mineName"></span><input id="mineName" maxlength="200" autocomplete="off" data-i18n-ph="mineNamePh"></label>
+    <div class="fld2"><label class="fld"><span data-i18n="mineDate"></span><input type="date" id="mineDate"></label><label class="fld"><span data-i18n="mineTime"></span><input type="time" id="mineTime" value="23:59"></label></div>
+    <label class="fld"><span data-i18n="mineCid"></span><select id="mineCid"></select></label>
+    <label class="fld"><span data-i18n="mineNote"></span><textarea id="mineNote" rows="3" maxlength="2000"></textarea></label>
+    <p class="err" id="mineErr" hidden></p>
+    <button class="primary" id="mineSave" style="width:100%" data-i18n="save"></button>
+    <button class="link danger" id="mineDel" style="width:100%;margin-top:6px" hidden data-i18n="mineDelete"></button>
+  </div>
+</div>
+<div class="sheet" id="instSheet" hidden>
+  <div class="box">
+    <div class="inst"><img src="icon-any-192.png" alt="" width="52" height="52"><div><b data-i18n="instTitle"></b><div class="hint" id="instWhy"></div></div></div>
+    <ol class="inststeps" id="instSteps" hidden></ol>
+    <button class="primary" id="instGo" style="width:100%" hidden data-i18n="instBtn"></button>
+    <button class="link" id="instLater" style="width:100%;margin-top:6px" data-i18n="remLater"></button>
   </div>
 </div>
 <div class="sheet" id="lvSheet" hidden>
@@ -903,6 +972,26 @@ const I18N = {
     pushReady: n => "🔔 ההתראות הופעלו" + (n ? " · " + n + " תזכורות בדרך" : ""), pushOnCard: "🔔 ההתראות פועלות במכשיר הזה",
     pushNext: (w, x) => "הבאה: " + w + " · " + x, pushOffCard: "ההתראות עוד לא הופעלו במכשיר הזה", pushBlockedCard: "ההתראות חסומות בדפדפן של המכשיר הזה",
     pushEnableBtn: "🔔 הפעל התראות כאן", pushStop: "כבה את ההתראות במכשיר הזה", pushStopped: "ההתראות כובו במכשיר הזה",
+    calBtn: "📅 הוספה ליומן שלי", calTitle: "📅 MoodlePro ביומן שלך", calIntro: "יומן שמתעדכן לבד: מטלה חדשה נכנסת, מטלה שהגשת יוצאת, וגם המבחנים והשיעורים מהמערכת. מוסיפים אותו פעם אחת, וזהו.",
+    calGoogle: "Google Calendar (גם לאנדרואיד)", calApple: "אייפון / Mac / Outlook", calCopy: "🔗 העתקת הקישור",
+    calNote: "היומן נכנס כיומן נפרד בשם MoodlePro, וכדי להסיר אותו פשוט מוחקים אותו מהיומן. גוגל מרענן יומנים כאלה כמה פעמים ביום, לא מיד. הקישור פרטי: מי שיש לו את הקישור רואה את המטלות שלך.",
+    calFile: "או: הורדת קובץ חד-פעמי (לא מתעדכן)", calStop: "🗑 הפסקת היומן המתעדכן", calStopped: "היומן הופסק. האירועים יירדו מהיומן ברענון הבא שלו, ואפשר גם למחוק אותו משם.",
+    calFail: "לא הצלחתי להגיע לשרת, אז ירד קובץ חד-פעמי במקום.", calCopied: "הקישור הועתק", calLive: "היומן שלך מתעדכן לבד", calManage: "ניהול היומן",
+    morTitle: "☀️ סיכום בוקר", morHint: "התראה אחת בבוקר עם מה שיש היום: הגשות, מבחנים ושיעורים. רק בימים שיש בהם משהו.", morAt: "באיזו שעה", morOff: "בלי",
+    morHead: d => "☀️ בוקר טוב · " + d, morExam: c => "📝 מבחן היום: " + c,
+    morDue: (n, h, x) => n === 1 ? "⏰ הגשה עד " + h + ": " + x : "⏰ " + n + " הגשות היום, הראשונה עד " + h,
+    morCls: (n, h, z) => (n === 1 ? "🎓 שיעור אחד" : "🎓 " + n + " שיעורים") + ", הראשון ב-" + h + (z ? " (זום)" : ""),
+    daTitle: "🧩 סידור הסקירה", daIntro: "באיזה סדר להציג את הכרטיסים בסקירה, ואילו להסתיר. במחשב (מסך רחב) הסדר קבוע, אבל ההסתרה עובדת.", daReset: "חזרה לסדר המקורי",
+    daUp: "למעלה", daDown: "למטה", daShown: "מוצג", dcHero: "הבאה בתור", dcStats: "מספרים (באיחור, להיום, השבוע)", dcToday: "השיעורים היום", dcExams: "מבחנים", dcSem: "הסמסטר",
+    dcWeek: "השבוע", dcMonth: "לוח החודש", dcNews: "הודעות מהקורסים", dcLoad: "עומס בשבועות הקרובים", dcRem: "תזכורות",
+    catMine: "שלי", tMine: "משימה שלי", mineCourse: "משימה שלי", mineAdd: "➕ משימה משלי", mineNewTitle: "➕ משימה חדשה", mineEditTitle: "✏️ עריכת משימה", mineEdit: "✏️ עריכה",
+    mineName: "מה צריך לעשות", mineNamePh: "למשל: לסכם פרק 3", mineDate: "עד תאריך", mineTime: "שעה", mineCid: "קורס", mineNoCourse: "בלי קורס", mineNote: "הערה (לא חובה)",
+    mineDelete: "🗑 מחיקת המשימה", mineNeedName: "צריך לכתוב מה המשימה", mineNeedDate: "צריך לבחור תאריך", mineAdded: "המשימה נוספה", mineSaved: "נשמר", mineDeleted: "המשימה נמחקה",
+    ttNoneTxt: "המערכת שלך עוד לא כאן. איתה רואים פה כל יום את השיעורים, ומקבלים תזכורת לפני שיעורי זום.", ttNoneBtn: "📄 ייבוא מהלב נט (דקה)", ttNoneManual: "✏️ או הוספה ידנית",
+    instTitle: "📲 להתקין את MoodlePro במסך הבית", instWhy: "ככה היא נפתחת מהמסך הראשי כמו אפליקציה רגילה, במסך מלא, בלי שורת כתובת.",
+    instWhyIos: "ככה היא נפתחת מהמסך הראשי כמו אפליקציה רגילה, ובאייפון רק ככה אפשר לקבל ממנה התראות.", instBtn: "📲 התקנה",
+    instIos1: "לוחצים על כפתור השיתוף <b>⬆️</b> (בספארי: בתחתית המסך)", instIos2: "גוללים ובוחרים <b>״הוסף למסך הבית״</b>", instIos3: "<b>״הוסף״</b>, ומעכשיו פותחים מהאייקון החדש",
+    instAnd1: "לוחצים על <b>⋮</b> בפינה של הדפדפן", instAnd2: "בוחרים <b>״הוספה למסך הבית״</b> או <b>״התקנת אפליקציה״</b>", instAnd3: "מאשרים, ומעכשיו פותחים מהאייקון החדש",
     remGoBoth: "🔔 הפעל התראות ו📅 הוסף ליומן", remHowBothTxt: "בנוסף, התזכורות נכנסות גם ליומן של הטלפון.",
     ttFileOld: "הקובץ נשמר מחדש באקסל בפורמט הישן, ואותו אי אפשר לקרוא כאן. צריך את הקובץ המקורי מהלב נט, או לשמור אותו באקסל כ-xlsx או csv.",
     catAll: "הכל", catAssign: "מטלות", catQuiz: "בחנים", catOther: "אירועים", hidDone: "הוסתר", undo: "↩ בטל",
@@ -1051,6 +1140,26 @@ const I18N = {
     pushReady: n => "🔔 Notifications on" + (n ? " · " + n + " reminders scheduled" : ""), pushOnCard: "🔔 Notifications are on for this device",
     pushNext: (w, x) => "Next: " + w + " · " + x, pushOffCard: "Notifications aren’t on for this device yet", pushBlockedCard: "Notifications are blocked in this device’s browser",
     pushEnableBtn: "🔔 Turn on notifications here", pushStop: "Turn off notifications on this device", pushStopped: "Notifications turned off on this device",
+    calBtn: "📅 Add to my calendar", calTitle: "📅 MoodlePro in your calendar", calIntro: "A calendar that updates itself: new assignments come in, submitted ones go out, and your exams and classes too. Add it once, and that’s it.",
+    calGoogle: "Google Calendar (Android too)", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copy the link",
+    calNote: "It is added as a separate calendar called MoodlePro; to remove it, just delete it from your calendar app. Google refreshes such calendars a few times a day, not instantly. The link is private: whoever has it sees your assignments.",
+    calFile: "Or: download a one-time file (doesn’t update)", calStop: "🗑 Stop the updating calendar", calStopped: "Stopped. The events leave your calendar at its next refresh, and you can also delete it there.",
+    calFail: "Couldn’t reach the server, so a one-time file was downloaded instead.", calCopied: "Link copied", calLive: "Your calendar updates itself", calManage: "Manage the calendar",
+    morTitle: "☀️ Morning summary", morHint: "One notification in the morning with what’s on today: deadlines, exams and classes. Only on days that have something.", morAt: "At", morOff: "Off",
+    morHead: d => "☀️ Good morning · " + d, morExam: c => "📝 Exam today: " + c,
+    morDue: (n, h, x) => n === 1 ? "⏰ Due by " + h + ": " + x : "⏰ " + n + " deadlines today, the first by " + h,
+    morCls: (n, h, z) => (n === 1 ? "🎓 1 class" : "🎓 " + n + " classes") + ", the first at " + h + (z ? " (Zoom)" : ""),
+    daTitle: "🧩 Arrange the overview", daIntro: "The order of the cards on the overview, and which to hide. On a computer (wide screen) the order is fixed, but hiding works.", daReset: "Back to the original order",
+    daUp: "Up", daDown: "Down", daShown: "Shown", dcHero: "Next up", dcStats: "Numbers (late, today, this week)", dcToday: "Today’s classes", dcExams: "Exams", dcSem: "Semester",
+    dcWeek: "This week", dcMonth: "Month calendar", dcNews: "Course announcements", dcLoad: "Workload in the coming weeks", dcRem: "Reminders",
+    catMine: "Mine", tMine: "My task", mineCourse: "My task", mineAdd: "➕ Add my own task", mineNewTitle: "➕ New task", mineEditTitle: "✏️ Edit task", mineEdit: "✏️ Edit",
+    mineName: "What needs doing", mineNamePh: "e.g. summarise chapter 3", mineDate: "Due date", mineTime: "Time", mineCid: "Course", mineNoCourse: "No course", mineNote: "Note (optional)",
+    mineDelete: "🗑 Delete this task", mineNeedName: "Write what the task is", mineNeedDate: "Pick a date", mineAdded: "Task added", mineSaved: "Saved", mineDeleted: "Task deleted",
+    ttNoneTxt: "Your timetable isn’t here yet. With it you see today’s classes here, and get a reminder before Zoom classes.", ttNoneBtn: "📄 Import from Levnet (1 minute)", ttNoneManual: "✏️ or add it by hand",
+    instTitle: "📲 Install MoodlePro on your home screen", instWhy: "It then opens from your home screen like a regular app, full screen, with no address bar.",
+    instWhyIos: "It then opens from your home screen like a regular app, and on iPhone that is the only way to get its notifications.", instBtn: "📲 Install",
+    instIos1: "Tap the Share button <b>⬆️</b> (in Safari: at the bottom)", instIos2: "Scroll and choose <b>“Add to Home Screen”</b>", instIos3: "<b>“Add”</b>, and from now on open it from the new icon",
+    instAnd1: "Tap <b>⋮</b> in the browser’s corner", instAnd2: "Choose <b>“Add to Home screen”</b> or <b>“Install app”</b>", instAnd3: "Confirm, and from now on open it from the new icon",
     remGoBoth: "🔔 Turn on notifications and 📅 add to calendar", remHowBothTxt: "The reminders also go into your phone’s calendar.",
     ttFileOld: "This file was re-saved in Excel’s old format, which can’t be read here. Use the original file from Levnet, or save it in Excel as xlsx or csv.",
     catAll: "All", catAssign: "Assignments", catQuiz: "Quizzes", catOther: "Events", hidDone: "Hidden", undo: "↩ Undo",
@@ -1199,6 +1308,26 @@ const I18N = {
     pushReady: n => "🔔 Notifications activées" + (n ? " · " + n + " rappels programmés" : ""), pushOnCard: "🔔 Notifications activées sur cet appareil",
     pushNext: (w, x) => "Prochaine : " + w + " · " + x, pushOffCard: "Notifications pas encore activées sur cet appareil", pushBlockedCard: "Notifications bloquées dans le navigateur de cet appareil",
     pushEnableBtn: "🔔 Activer les notifications ici", pushStop: "Désactiver les notifications sur cet appareil", pushStopped: "Notifications désactivées sur cet appareil",
+    calBtn: "📅 Ajouter à mon calendrier", calTitle: "📅 MoodlePro dans votre calendrier", calIntro: "Un calendrier qui se met à jour seul : nouveaux devoirs ajoutés, devoirs rendus retirés, et vos examens et cours aussi. On l’ajoute une fois, c’est tout.",
+    calGoogle: "Google Agenda (Android aussi)", calApple: "iPhone / Mac / Outlook", calCopy: "🔗 Copier le lien",
+    calNote: "Il s’ajoute comme agenda séparé nommé MoodlePro ; pour le retirer, supprimez-le de votre agenda. Google actualise ces agendas quelques fois par jour, pas instantanément. Le lien est privé : qui l’a voit vos devoirs.",
+    calFile: "Ou : télécharger un fichier unique (sans mise à jour)", calStop: "🗑 Arrêter le calendrier automatique", calStopped: "Arrêté. Les événements disparaissent à la prochaine actualisation, et vous pouvez aussi le supprimer de votre agenda.",
+    calFail: "Serveur injoignable : un fichier unique a été téléchargé à la place.", calCopied: "Lien copié", calLive: "Votre calendrier se met à jour seul", calManage: "Gérer le calendrier",
+    morTitle: "☀️ Résumé du matin", morHint: "Une notification le matin avec le programme du jour : échéances, examens et cours. Seulement les jours où il y a quelque chose.", morAt: "À", morOff: "Désactivé",
+    morHead: d => "☀️ Bonjour · " + d, morExam: c => "📝 Examen aujourd’hui : " + c,
+    morDue: (n, h, x) => n === 1 ? "⏰ À rendre avant " + h + " : " + x : "⏰ " + n + " échéances aujourd’hui, la première avant " + h,
+    morCls: (n, h, z) => (n === 1 ? "🎓 1 cours" : "🎓 " + n + " cours") + ", le premier à " + h + (z ? " (Zoom)" : ""),
+    daTitle: "🧩 Organiser l’aperçu", daIntro: "L’ordre des cartes de l’aperçu, et lesquelles masquer. Sur ordinateur (écran large) l’ordre est fixe, mais le masquage marche.", daReset: "Revenir à l’ordre d’origine",
+    daUp: "Monter", daDown: "Descendre", daShown: "Affiché", dcHero: "Prochain", dcStats: "Chiffres (en retard, aujourd’hui, semaine)", dcToday: "Cours du jour", dcExams: "Examens", dcSem: "Semestre",
+    dcWeek: "Cette semaine", dcMonth: "Calendrier du mois", dcNews: "Annonces des cours", dcLoad: "Charge des semaines à venir", dcRem: "Rappels",
+    catMine: "Les miens", tMine: "Ma tâche", mineCourse: "Ma tâche", mineAdd: "➕ Ajouter ma propre tâche", mineNewTitle: "➕ Nouvelle tâche", mineEditTitle: "✏️ Modifier la tâche", mineEdit: "✏️ Modifier",
+    mineName: "Ce qu’il faut faire", mineNamePh: "ex. résumer le chapitre 3", mineDate: "Pour le", mineTime: "Heure", mineCid: "Cours", mineNoCourse: "Sans cours", mineNote: "Note (facultatif)",
+    mineDelete: "🗑 Supprimer la tâche", mineNeedName: "Écrivez la tâche", mineNeedDate: "Choisissez une date", mineAdded: "Tâche ajoutée", mineSaved: "Enregistré", mineDeleted: "Tâche supprimée",
+    ttNoneTxt: "Votre emploi du temps n’est pas encore là. Avec lui, vous voyez ici les cours du jour et recevez un rappel avant les cours Zoom.", ttNoneBtn: "📄 Importer depuis Levnet (1 minute)", ttNoneManual: "✏️ ou l’ajouter à la main",
+    instTitle: "📲 Installer MoodlePro sur l’écran d’accueil", instWhy: "Elle s’ouvre alors depuis l’écran d’accueil comme une vraie app, en plein écran, sans barre d’adresse.",
+    instWhyIos: "Elle s’ouvre alors depuis l’écran d’accueil comme une vraie app, et sur iPhone c’est la seule façon de recevoir ses notifications.", instBtn: "📲 Installer",
+    instIos1: "Touchez le bouton Partager <b>⬆️</b> (dans Safari : en bas)", instIos2: "Faites défiler et choisissez <b>« Sur l’écran d’accueil »</b>", instIos3: "<b>« Ajouter »</b>, puis ouvrez-la depuis la nouvelle icône",
+    instAnd1: "Touchez <b>⋮</b> dans le coin du navigateur", instAnd2: "Choisissez <b>« Ajouter à l’écran d’accueil »</b> ou <b>« Installer l’application »</b>", instAnd3: "Confirmez, puis ouvrez-la depuis la nouvelle icône",
     remGoBoth: "🔔 Activer les notifications et 📅 ajouter au calendrier", remHowBothTxt: "Les rappels vont aussi dans le calendrier du téléphone.",
     ttFileOld: "Ce fichier a été réenregistré dans l’ancien format Excel, illisible ici. Utilisez le fichier d’origine de Levnet, ou enregistrez-le en xlsx ou csv.",
     catAll: "Tout", catAssign: "Devoirs", catQuiz: "Tests", catOther: "Événements", hidDone: "Masqué", undo: "↩ Annuler",
@@ -1532,15 +1661,16 @@ async function fetchContents(d) {
 /* ---------- state ---------- */
 const DAY = 86400;
 const WAS_CONN = (() => { try { return !!JSON.parse(localStorage.getItem(PFX + "token") || '""'); } catch (e) { return false; } })();
-const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {} }, LS.get("prefs", {}));
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [] }, LS.get("prefs", {}));
 if (!Array.isArray(P.manual)) P.manual = [];
+if (!Array.isArray(P.mine)) P.mine = [];
 if (!Array.isArray(P.tt)) P.tt = [];
 for (const k of ["sem", "exams", "ccode", "colors"]) if (!P[k] || typeof P[k] !== "object" || Array.isArray(P[k])) P[k] = {};
 P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^\d+$/);
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme"];
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -1549,8 +1679,9 @@ function savePrefs() {
   const now = Date.now(); let ch = false;
   for (const k of SYNC_KEYS) { const j = JSON.stringify(P[k]); if (j !== syncSnap[k]) { syncSnap[k] = j; P._ts[k] = now; ch = true; } }
   LS.set("prefs", P);
-  if (ch) syncSoon();
+  if (ch) { syncSoon(); pingSoon(); }
 }
+const pingSoon = () => { clearTimeout(pingSoon.t); pingSoon.t = setTimeout(() => ping(), 30000); };
 const isOff = cid => P.off.includes(cid);
 function hslHex(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); }
 /* course colours. The six courses of the calendar palette (chosen by the owner from his calendar, by course code) always get their calendar colour.
@@ -1640,10 +1771,16 @@ function groupOf(x, now) {
 }
 const GROUPS = [["late", "gLate"], ["today", "gToday"], ["week", "gWeek"], ["later", "gLater"], ["nodue", "gNodue"], ["old", "gOld"], ["done", "gDone"]];
 const G_OPEN = { late: true, today: true, week: true, later: true, nodue: false, old: false, done: false };
-const TYPE = { assign: "tAssign", quiz: "tQuiz", event: "tEvent", zoom: "tZoom" };
+const TYPE = { assign: "tAssign", quiz: "tQuiz", event: "tEvent", zoom: "tZoom", mine: "tMine" };
 const dueKey = x => x.due || 9e12;
 const counted = x => !isOff(x.cid) && !P.hidden.includes(x.key);
-const catOf = x => x.type === "assign" ? "assign" : x.type === "quiz" ? "quiz" : "other";            // tasks of courses you follow and did not hide
+const catOf = x => x.type === "assign" ? "assign" : x.type === "quiz" ? "quiz" : x.type === "mine" ? "mine" : "other";
+/* my own tasks live in the synced settings and join Moodle's list as type "mine" */
+function mineTasks() {
+  return (P.mine || []).map(m => ({ key: "mine:" + m.id, type: "mine", mine: m.id, cid: m.cid || 0, cmid: 0, course: m.cid ? courseName(m.cid) : t("mineCourse"), name: m.title,
+    due: m.due, extended: false, from: 0, cutoff: 0, status: "none", grade: "", intro: m.note || "", links: [], files: [], url: "" }));
+}
+function withMine() { if (V.data && Array.isArray(V.data.tasks)) V.data.tasks = V.data.tasks.filter(x => x.type !== "mine").concat(mineTasks()); }            // tasks of courses you follow and did not hide
 function inFocus(x, now) {
   const f = V.focus; if (!f) return true;
   if (f.kind === "day") return !!x.due && dueDay(x) === f.d;
@@ -1697,6 +1834,7 @@ function card(x, now, g) {
   if (/^https?:\/\//.test(x.url)) acts.push('<a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + esc(t("openSite")) + "</a>");
   if (x.due && x.due > now && !isDone(x)) acts.push('<a href="' + esc(gcalHref(x)) + '" target="_blank" rel="noopener noreferrer">' + esc(t("toCal")) + "</a>");
   if (st !== "submitted" && st !== "na") acts.push('<button data-done="' + esc(x.key) + '">' + esc(man ? t("unmarkDone") : t("markDone")) + "</button>");
+  if (x.mine) acts.push('<button data-mine="' + esc(x.mine) + '">' + esc(t("mineEdit")) + "</button>");
   return '<div class="task' + (g === "done" ? " done" : "") + (hid ? " hid" : "") + (V.hl === x.key ? " hl" : "") + '" data-key="' + esc(x.key) + '" style="--c:' + colorOf(x.cid) + '">' +
     '<button class="x" data-hide="' + esc(x.key) + '" aria-label="' + esc(hid ? t("restore") : t("hide")) + '">' + (hid ? "↩" : "✕") + "</button>" +
     '<div class="tl"><span class="tname"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(t(TYPE[x.type]) || "") + " · <bdi>" + esc(shortName(x.course)) + "</bdi></span></div>" +
@@ -1914,7 +2052,10 @@ function renderTT(now) {
 function renderToday(now) {
   const el = $("#today"), nd = new Date(now * 1000), dow = nd.getDay(), nowM = nd.getHours() * 60 + nd.getMinutes() + nd.getSeconds() / 60;
   $("#todayTitle").textContent = t("todayClasses") + " · " + dayName(dow);
-  if (!P.tt.length) { el.innerHTML = '<button class="link" data-ttadd>' + esc(t("ttSetup")) + "</button>"; return; }
+  if (!P.tt.length) {
+    el.innerHTML = '<div class="ttnone"><div class="hint">' + esc(t("ttNoneTxt")) + '</div><button class="primary" data-ttlev>' + esc(t("ttNoneBtn")) + '</button><button class="link" data-ttadd>' + esc(t("ttNoneManual")) + "</button></div>";
+    return;
+  }
   const dur = m => { m = Math.max(1, Math.round(m)); return t("durHM", Math.floor(m / 60), m % 60); };
   const items = P.tt.filter(x => x.day === dow).sort((a, b) => hm(a.s) - hm(b.s));
   let h = "", nextShown = false;
@@ -2198,14 +2339,21 @@ function cleanKey(k, v) {
       if (x.a || x.b || x.noLev) o[c] = x; } return o; }
     case "sem": { const o = {}; if (obj(v)) for (const f of ["s", "e", "xs", "xe"]) if (/^\d{4}-\d{2}-\d{2}$/.test(v[f])) o[f] = v[f]; return o; }
     case "manual": case "hidden": return Array.isArray(v) ? v.filter(x => typeof x === "string" && x.length < 120).slice(0, 3000) : [];
+    case "mine": return Array.isArray(v) ? v.filter(x => obj(x) && typeof x.id === "string" && /^m[\w-]{1,30}$/.test(x.id) && typeof x.title === "string" && x.title.trim() && Number.isFinite(x.due))
+      .map(x => ({ id: x.id, title: x.title.slice(0, 200), due: Math.round(x.due), cid: Number.isFinite(x.cid) ? x.cid : 0, note: typeof x.note === "string" ? x.note.slice(0, 2000) : "" })).slice(0, 300) : [];
+    case "feed": return obj(v) && typeof v.key === "string" && /^[A-Za-z0-9_-]{24,64}$/.test(v.key) ? { key: v.key, on: v.on === true } : null;
+    case "dash": { if (!obj(v)) return null; const ids = DASH_CARDS.map(c => c.id);
+      const order = Array.isArray(v.order) ? v.order.filter((x, i, a) => ids.includes(x) && a.indexOf(x) === i) : [];
+      return { order: order.concat(ids.filter(x => !order.includes(x))), off: Array.isArray(v.off) ? v.off.filter(x => ids.includes(x) && x !== "hero") : [] }; }
     case "off": return Array.isArray(v) ? v.filter(Number.isInteger).slice(0, 500) : [];
     case "old_days": return Number.isFinite(v) ? Math.max(0, Math.min(365, Math.round(v))) : 14;
     case "sort": return ["urgency", "course", "date"].includes(v) ? v : "urgency";
     case "theme": { if (!obj(v)) return null; if (v.id === "custom") { const c = {}; if (obj(v.c)) for (const f of TH_FIELDS) if (/^#[0-9a-f]{6}$/i.test(v.c[f])) c[f] = v.c[f];
       return ["bg", "card", "text", "accent"].every(f => c[f]) ? { id: "custom", c } : null; } return THEMES.some(p => p.id === v.id) ? { id: v.id } : null; }
     case "rem": { if (!obj(v)) return null; const ok = (a, set) => Array.isArray(a) ? a.filter(x => set.includes(x)) : [];
+      const mor = MOR_TIMES.includes(v.mor) ? v.mor : "";
       return { task: ok(v.task, REM_CHOICES.task), exam: ok(v.exam, REM_CHOICES.exam), cls: ["zoom", "all", "none"].includes(v.cls) ? v.cls : "zoom",
-        clsMin: [5, 10, 15, 30].includes(v.clsMin) ? v.clsMin : 10, asked: v.asked === true, on: v.on === true, how: ["cal", "both"].includes(v.how) ? v.how : "push" }; }
+        clsMin: [5, 10, 15, 30].includes(v.clsMin) ? v.clsMin : 10, asked: v.asked === true, on: v.on === true, how: ["cal", "both"].includes(v.how) ? v.how : "push", mor }; }
   }
   return v;
 }
@@ -2335,7 +2483,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.2.1";
+const APP_VERSION = "1.3.0-beta.1";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2383,7 +2531,7 @@ function usageStats() {
     theme: (P.theme && P.theme.id) || "auto",
     rem: on ? remHow() : (P.rem && P.rem.asked ? "no" : "unset"),
     remT: on ? r.task.join("+") || "-" : "", remE: on ? r.exam.join("+") || "-" : "", remC: on ? (r.cls === "none" ? "none" : r.cls + "/" + r.clsMin) : "",
-    push: pushOn() ? "on" : pushPerm(),
+    push: pushOn() ? "on" : pushPerm(), mor: on ? (r.mor || "") : "", mine: (P.mine || []).length, cal: !!(P.feed && P.feed.on), dash: P.dash ? 1 : 0,
     tt: P.tt.filter(x => !x.priv).length, priv: P.tt.filter(x => x.priv).length, att: P.tt.filter(x => x.att).length,
     exams: Object.keys(P.exams || {}).length, sem: !!(P.sem && P.sem.s), hidden: P.hidden.length, off: P.off.length, manual: P.manual.length,
     colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days, tour: LS.get("tourDone", false) === true,
@@ -2392,9 +2540,11 @@ function usageStats() {
 }
 async function ping() {
   if (!fbReady() || !statsOnNow() || !M.token || navigator.onLine === false) return;
-  const today = dayKey(new Date());
-  if (LS.get("pingDay", "") === today) return;
-  try { await fbPost("ping", "", "", techMeta({ courses: ((V.data && V.data.courses) || []).filter(c => !isOff(c.id)).length, tt: P.tt.length > 0, u: usageStats() }), senderInfo()); LS.set("pingDay", today); LS.set("useCnt", {}); } catch (e) {}
+  const today = dayKey(new Date()), u = usageStats(), sig = JSON.stringify(Object.assign({}, u, { n: 0 }));
+  // once a day, and again when the settings changed since the last one (not more than once an hour)
+  if (LS.get("pingDay", "") === today && (LS.get("pingSig", "") === sig || Date.now() - LS.get("pingAt", 0) < 3600e3)) return;
+  try { await fbPost("ping", "", "", techMeta({ courses: ((V.data && V.data.courses) || []).filter(c => !isOff(c.id)).length, tt: P.tt.length > 0, u }), senderInfo());
+    LS.set("pingDay", today); LS.set("pingSig", sig); LS.set("pingAt", Date.now()); LS.set("useCnt", {}); } catch (e) {}
 }
 const FB_KINDS = [["idea", "fbIdea"], ["bug", "fbBug"], ["question", "fbQuestion"], ["praise", "fbPraise"]];
 function openFb() {
@@ -2445,6 +2595,7 @@ function setView(v, fromHistory) {
 }
 const wide = () => window.matchMedia("(min-width:760px)").matches;
 function render() {
+  withMine(); applyDash();
   const d = V.data;
   $("#bRefresh").classList.toggle("spin", V.loading);
   $("#upd").textContent = (V.loading && !d ? t("loading") : d ? (V.loading ? t("refreshing") + " · " : "") + t("updated", ago(d.at)) : "") + syncBadge();
@@ -2498,9 +2649,9 @@ function render() {
   $("#list").innerHTML = (h || '<div class="empty">' + esc(V.focus && V.focus.kind === "day" ? t("dayEmpty") : d.tasks.length ? t("noMatch") : t("noTasks")) + "</div>") +
     (P.hidden.length ? '<div class="hidbar"><button class="link" data-showhid>' + esc(t(V.showHid ? "hidHide" : "hidShow", P.hidden.length)) + "</button></div>" : "");
   { const open = d.tasks.filter(x => counted(x) && !isDone(x)), n = c => open.filter(x => c === "all" || catOf(x) === c).length;
-    for (const c of ["all", "assign", "quiz", "other"]) { const el = $("#catN_" + c); if (el) el.textContent = n(c) ? "(" + n(c) + ")" : ""; }
+    for (const c of ["all", "assign", "quiz", "other", "mine"]) { const el = $("#catN_" + c); if (el) el.textContent = n(c) ? "(" + n(c) + ")" : ""; }
     $$("#cats [data-cat]").forEach(b => { b.classList.toggle("on", b.dataset.cat === V.cat); b.setAttribute("aria-pressed", b.dataset.cat === V.cat); });
-    const ob = $("#cats [data-cat=other]"); if (ob) ob.hidden = !d.tasks.some(x => catOf(x) === "other") && V.cat !== "other"; }
+    for (const c of ["other", "mine"]) { const ob = $("#cats [data-cat=" + c + "]"); if (ob) ob.hidden = !d.tasks.some(x => catOf(x) === c) && V.cat !== c; } }
 
   const relv = d.tasks.filter(x => counted(x) && !isDone(x) && groupOf(x, now) !== "old");
   const dated = relv.filter(x => x.due), late = dated.filter(x => x.due < now), next = dated.filter(x => x.due >= now).sort((a, b) => a.due - b.due)[0];
@@ -2581,7 +2732,7 @@ async function refresh() {
     if (c) d.contents = c;
     if (n) d.news = n;
     if (V.data === d) { LS.set("cache", d); render(); }
-    setTimeout(maybeAskRem, 1200);
+    setTimeout(maybeAskRem, 1200); setTimeout(maybeAskInstall, 2600);
   }
 }
 function launchUrl(site) {
@@ -2590,6 +2741,9 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
+  { v: "1.3.0", date: "2026-11-10", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה"],
+    en: ["➕ Your own tasks: add a task with a date and it behaves like a Moodle one (countdown, notifications, calendar)", "📅 A calendar that updates itself: add it once to Google Calendar or your iPhone and new assignments come in by themselves", "☀️ Morning summary: one notification in the morning with today’s deadlines, exams and classes", "🧩 Arrange the overview: what’s shown and in what order (in settings)", "📲 An offer to install on the home screen, and a quick way to import your timetable from the overview"],
+    fr: ["➕ Vos propres tâches : ajoutez une tâche avec une date, elle se comporte comme un devoir Moodle (compte à rebours, notifications, calendrier)", "📅 Un calendrier qui se met à jour seul : ajoutez-le une fois à Google Agenda ou à l’iPhone, les nouveaux devoirs arrivent seuls", "☀️ Résumé du matin : une notification le matin avec les échéances, examens et cours du jour", "🧩 Organiser l’aperçu : ce qui s’affiche et dans quel ordre (dans les paramètres)", "📲 Une proposition d’installer sur l’écran d’accueil, et un accès rapide à l’import de l’emploi du temps depuis l’aperçu"] },
   { v: "1.2.0", date: "2026-11-09", he: ["✨ שם חדש ולוגו חדש: MoodlePro", "🗂 בלשונית המשימות: כרטיסיות למטלות, לבחנים ולאירועים", "↩ אפשר לבטל הסתרה של פריט מיד, והמוסתרים מופיעים בסוף הרשימה", "⬅️ כפתור ״חזור״ בטלפון חוזר למסך הקודם וסוגר חלונות, במקום לצאת מהאפליקציה", "📅 ניקוי סינון של יום מהסקירה מחזיר לסקירה", "🗑 אפשר להסיר מהיומן את מה שהאפליקציה הוסיפה"],
     en: ["✨ New name and logo: MoodlePro", "🗂 Tasks tab: tabs for assignments, quizzes and events", "↩ Hiding an item can be undone right away, and hidden items are listed at the end", "⬅️ The phone’s Back button goes to the previous screen and closes windows instead of leaving the app", "📅 Clearing a day picked on the overview takes you back to the overview", "🗑 You can remove from your calendar what the app added"],
     fr: ["✨ Nouveau nom et nouveau logo : MoodlePro", "🗂 Onglet devoirs : onglets pour devoirs, tests et événements", "↩ Masquer un élément peut être annulé tout de suite, et les éléments masqués sont listés à la fin", "⬅️ Le bouton Retour revient à l’écran précédent et ferme les fenêtres au lieu de quitter l’app", "📅 Effacer un jour choisi dans l’aperçu ramène à l’aperçu", "🗑 Vous pouvez retirer du calendrier ce que l’app a ajouté"] },
@@ -2623,7 +2777,8 @@ function whatsNew(force) {
 /* ---------- reminders: into the phone's own calendar, so they ring even when the app is closed ---------- */
 const REM_OFF = { "7d": "-P7D", "3d": "-P3D", "1d": "-P1D", "3h": "-PT3H", "1h": "-PT1H", "30m": "-PT30M" };
 const REM_DAYOFF = { "7d": "-P6DT15H", "3d": "-P2DT15H", "1d": "-PT15H" };     // an all-day exam: 09:00 that many days before
-const remDefaults = () => ({ task: ["1d", "3h"], exam: ["7d", "1d"], cls: "zoom", clsMin: 10, asked: false });
+const remDefaults = () => ({ task: ["1d", "3h"], exam: ["7d", "1d"], cls: "zoom", clsMin: 10, asked: false, mor: "" });
+const MOR_TIMES = ["", "06:30", "07:00", "07:30", "08:00", "09:00"];
 const isZoom = x => /זום|zoom/i.test([x.place, x.kname, x.title, x.name].filter(Boolean).join(" "));
 function remCfg() { return Object.assign(remDefaults(), P.rem || {}); }
 function icsBuild(items) {
@@ -2650,8 +2805,8 @@ function icsBuild(items) {
   return L.join("\r\n") + "\r\n";
 }
 /* what the calendar should hold now; "fresh" leaves out what this device already added */
-function remItems(fresh) {
-  const c = remCfg(), now = nowS(), d = V.data, done = LS.get("remDone", { tasks: [], exams: [], cls: "" }), out = { tasks: [], exams: [], classes: [] };
+function remItems(fresh, cf) {
+  const c = cf || remCfg(), now = nowS(), d = V.data, done = LS.get("remDone", { tasks: [], exams: [], cls: "" }), out = { tasks: [], exams: [], classes: [] };
   if (d && c.task.length) for (const x of d.tasks) {
     if (!counted(x) || isDone(x) || !x.due || x.due < now || (fresh && done.tasks.includes(x.key))) continue;
     const zoom = x.type === "zoom";
@@ -2692,6 +2847,55 @@ function remExport(fresh) {
   LS.set("remDone", { tasks: [...new Set(done.tasks.concat(r.tasks.map(x => x.key)))].slice(-800), exams: [...new Set(done.exams.concat(r.exams.map(x => x.key)))].slice(-200), cls: r.sig != null ? r.sig : done.cls });
   toast(t("remAdded", all.length), 6000); render();
 }
+/* ---------- a calendar that updates itself: the app keeps a private feed on the server up to date, the phone's calendar subscribes to it ---------- */
+const FEED = { p: null, err: null, timer: 0 };
+const feedOn = () => !!(P.feed && P.feed.on && P.feed.key && pushUrl());
+const feedHttps = () => P.feed && P.feed.key ? pushUrl() + "/feed/" + P.feed.key + ".ics" : "";
+function feedIcs() {
+  const c = remCfg(), alarms = remHow() === "cal";            // alarms only when the calendar is the way to be reminded
+  const r = remItems(false, Object.assign({}, c, { task: c.task.length ? c.task : ["1d"], exam: c.exam.length ? c.exam : ["1d"], cls: "all" }));
+  let ics = icsBuild(r.tasks.concat(r.exams, r.classes)).replace("CALSCALE:GREGORIAN", "CALSCALE:GREGORIAN\r\nREFRESH-INTERVAL;VALUE=DURATION:PT1H\r\nX-PUBLISHED-TTL:PT1H");
+  if (!alarms) ics = ics.replace(/BEGIN:VALARM[\s\S]*?END:VALARM\r\n/g, "");
+  return ics;
+}
+function feedPost(path, body) {
+  const ac = new AbortController(), to = setTimeout(() => ac.abort(), 8000);
+  return fetch(pushUrl() + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: ac.signal })
+    .then(r => { clearTimeout(to); if (!r.ok) throw new Error(path + " " + r.status); return r.json(); });
+}
+function feedSync(force) {
+  FEED.p = (FEED.p || Promise.resolve()).then(async () => {
+    if (!feedOn()) return;
+    const ics = feedIcs(), sig = strHash(ics), last = LS.get("feedSig", null);
+    if (!force && last && last.s === sig && Date.now() - last.at < 12 * 3600e3) return;
+    try { await feedPost("/feed", { key: P.feed.key, ics }); LS.set("feedSig", { s: sig, at: Date.now() }); FEED.err = null; }
+    catch (e) { FEED.err = String(e && e.message || e); }
+  });
+  return FEED.p;
+}
+const feedSoon = () => { if (!feedOn()) return; clearTimeout(FEED.timer); FEED.timer = setTimeout(() => feedSync(false), 2000); };
+function newFeedKey() { const b = crypto.getRandomValues(new Uint8Array(24)); return btoa(String.fromCharCode(...b)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
+/* turn it on (once per person: the address is shared by their devices through sync) and show how to subscribe */
+async function openCal() {
+  useHit("calOpen"); $("#sheet").hidden = true; $("#remSheet").hidden = true;
+  if (!pushUrl()) return remExport(false);
+  if (!P.feed || !P.feed.key) P.feed = { key: newFeedKey(), on: true }; else if (!P.feed.on) P.feed = { key: P.feed.key, on: true };
+  savePrefs(); LS.set("feedSig", null);
+  $("#calErr").hidden = true; $("#calSheet").hidden = false; $("#calBtns").classList.add("busy");
+  await feedSync(true);
+  $("#calBtns").classList.remove("busy");
+  if (FEED.err) {                                  // the server can't be reached: fall back to a one-time file
+    P.feed = { key: P.feed.key, on: false }; savePrefs();
+    $("#calSheet").hidden = true; remExport(false); toast(t("calFail"), 8000); return;
+  }
+  render();
+}
+async function stopCal() {
+  if (!P.feed) return; const key = P.feed.key;
+  P.feed = { key, on: false }; savePrefs(); $("#calSheet").hidden = true;
+  try { await feedPost("/feed/stop", { key }); toast(t("calStopped"), 8000); } catch (e) { toast(t("calFail"), 6000); }
+  render();
+}
 /* a calendar file that cancels every event this app added (same ids); calendars that honour cancellations remove them */
 function remRemoveCal() {
   const r = remItems(false), all = r.tasks.concat(r.exams, r.classes);
@@ -2712,6 +2916,9 @@ function openRem(ask) {
   for (const g of ["task", "exam"]) $("#rem_" + g).innerHTML = REM_CHOICES[g].map(k => '<button class="rchip' + (c[g].includes(k) ? " on" : "") + '" data-g="' + g + '" data-k="' + k + '" aria-pressed="' + c[g].includes(k) + '">' + esc(t("off_" + k)) + "</button>").join("");
   $$("#remCls [data-cls]").forEach(b => b.classList.toggle("on", b.dataset.cls === c.cls));
   $("#remMin").innerHTML = [5, 10, 15, 30].map(m => '<option value="' + m + '">' + esc(t("remMinOpt", m)) + "</option>").join(""); $("#remMin").value = String(c.clsMin);
+  // the morning summary: suggested at 08:00 the first time reminders are set up
+  $("#remMor").innerHTML = MOR_TIMES.map(m => '<option value="' + m + '">' + esc(m ? m : t("morOff")) + "</option>").join("");
+  $("#remMor").value = P.rem && P.rem.mor !== undefined && (P.rem.on || P.rem.mor) ? c.mor : "08:00";
   $("#remHowG").hidden = !pushAvail(); remModeUI(remHow());
   $("#remLater").hidden = !ask; $("#sheet").hidden = true; $("#remSheet").hidden = false;
 }
@@ -2719,21 +2926,114 @@ function remSave(patch) { P.rem = Object.assign(remCfg(), patch); savePrefs(); }
 function renderRemCard() {
   const el = $("#remCardBody"); if (!el) return;
   const on = P.rem && P.rem.on;
-  const calLine = () => { if (!useCal()) return ""; const n = remPending();
+  if (feedOn()) feedSoon();
+  const calLine = () => { if (feedOn()) return '<div class="hint">📅 ' + esc(t("calLive")) + "</div>"; if (!useCal()) return ""; const n = remPending();
     return n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button data-rem="add">' + esc(t("remUpdateBtn")) + "</button>" : '<div class="hint">📅 ' + esc(t("remCardOk")) + "</div>"; };
   if (on && usePush()) {
     const next = pushOn() && pushItems()[0], perm = pushPerm();
     el.innerHTML = (pushOn() ? '<div class="hint">' + esc(t("pushOnCard")) + (next ? "<br>" + esc(t("pushNext", clockTxt(next.at / 1000), next.title)) : "") + "</div>" + (PS.err ? '<div class="hint">' + esc(t("pushFail")) + "</div>" : "") + '<button data-rem="test">' + esc(t("pushTestBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
       : pushNeedsInstall() ? '<div class="hint">' + esc(t("pushIos")) + '</div><button data-rem="cal">' + esc(t("remGo")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
       : '<div class="remnew">' + esc(t(perm === "denied" ? "pushBlockedCard" : "pushOffCard")) + '</div><button class="primary" data-rem="push">' + esc(t("pushEnableBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>");
-    if (remHow() === "both" && !pushNeedsInstall()) el.insertAdjacentHTML("beforeend", calLine());
+    if ((remHow() === "both" || feedOn()) && !pushNeedsInstall()) el.insertAdjacentHTML("beforeend", calLine());
     if (pushOn()) pushSoon();
     return;
   }
   const n = on ? remPending() : 0;
+  if (on && feedOn()) { el.innerHTML = '<div class="hint">📅 ' + esc(t("calLive")) + '</div><button class="link" data-rem="feed">' + esc(t("calManage")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"; return; }
   el.innerHTML = !on ? '<div class="hint">' + esc(t(pushAvail() ? "remCardOffPush" : "remCardOff")) + '</div><button class="primary" data-rem="set">' + esc(t("remSetBtn")) + "</button>"
     : n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button class="primary" data-rem="add">' + esc(t("remUpdateBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
     : '<div class="hint">✓ ' + esc(t("remCardOk")) + '</div><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>";
+}
+/* ---------- arrange the overview: the order of its cards, and which are shown ---------- */
+const DASH_CARDS = [{ id: "hero", k: "dcHero" }, { id: "stats", k: "dcStats" }, { id: "todayCard", k: "dcToday" }, { id: "examCard", k: "dcExams" }, { id: "semCard", k: "dcSem" },
+  { id: "weekCard", k: "dcWeek" }, { id: "monthCard", k: "dcMonth" }, { id: "newsCard", k: "dcNews" }, { id: "loadCard", k: "dcLoad" }, { id: "icsCard", k: "dcRem" }];
+function dashCfg() {
+  const ids = DASH_CARDS.map(c => c.id), v = P.dash || {}, order = (Array.isArray(v.order) ? v.order : []).filter(x => ids.includes(x));
+  return { order: order.concat(ids.filter(x => !order.includes(x))), off: (Array.isArray(v.off) ? v.off : []).filter(x => ids.includes(x) && x !== "hero") };
+}
+let daLast = "";
+function applyDash() {
+  const c = dashCfg(), sig = JSON.stringify(c); if (sig === daLast) return; daLast = sig;
+  const box = $("#dash"); if (!box) return;
+  for (const id of c.order) { const el = document.getElementById(id); if (el && el.parentNode === box) box.appendChild(el); }   // the wide layout places cards by area; this order is for phones
+  for (const d of DASH_CARDS) { const el = document.getElementById(d.id); if (el) el.classList.toggle("dhide", c.off.includes(d.id)); }
+}
+function renderDashArr() {
+  const c = dashCfg();
+  $("#daList").innerHTML = c.order.map((id, i) => { const d = DASH_CARDS.find(x => x.id === id), on = !c.off.includes(id);
+    return '<div class="darow' + (on ? "" : " off") + '" data-da="' + id + '"><span class="dn">' + esc(t(d.k)) + '</span>' +
+      '<button class="mv" data-up aria-label="' + esc(t("daUp")) + '"' + (i ? "" : " disabled") + '>↑</button><button class="mv" data-down aria-label="' + esc(t("daDown")) + '"' + (i < c.order.length - 1 ? "" : " disabled") + '>↓</button>' +
+      (id === "hero" ? '<label><input type="checkbox" checked disabled>' + esc(t("daShown")) + "</label>" : '<label><input type="checkbox" data-show' + (on ? " checked" : "") + ">" + esc(t("daShown")) + "</label>") + "</div>"; }).join("");
+}
+function openDashArr() { useHit("dashArr"); $("#sheet").hidden = true; renderDashArr(); $("#daSheet").hidden = false; }
+$("#daList").addEventListener("click", e => {
+  const row = e.target.closest("[data-da]"); if (!row) return;
+  const c = dashCfg(), id = row.dataset.da, i = c.order.indexOf(id);
+  if (e.target.closest("[data-up]") && i > 0) [c.order[i - 1], c.order[i]] = [c.order[i], c.order[i - 1]];
+  else if (e.target.closest("[data-down]") && i < c.order.length - 1) [c.order[i + 1], c.order[i]] = [c.order[i], c.order[i + 1]];
+  else if (e.target.matches("[data-show]")) c.off = e.target.checked ? c.off.filter(x => x !== id) : c.off.concat(id);
+  else return;
+  P.dash = c; savePrefs(); applyDash(); renderDashArr();
+  const b = $("#daList [data-da=" + id + "] " + (e.target.closest("[data-up]") ? "[data-up]" : e.target.closest("[data-down]") ? "[data-down]" : "[data-show]")); if (b && !b.disabled) b.focus();
+});
+$("#daReset").onclick = () => { P.dash = null; savePrefs(); applyDash(); renderDashArr(); };
+$("#daClose").onclick = () => { $("#daSheet").hidden = true; };
+$("#bDashArr").onclick = openDashArr;
+$("#bCal").onclick = () => openCal();
+$("#calGoogle").onclick = () => { useHit("calGoogle"); window.open("https://calendar.google.com/calendar/r?cid=" + encodeURIComponent(feedHttps().replace(/^https?:/, "webcal:")), "_blank", "noopener"); };
+$("#calApple").onclick = () => { useHit("calApple"); location.href = feedHttps().replace(/^https?:/, "webcal:"); };
+$("#calCopy").onclick = async () => { try { await navigator.clipboard.writeText(feedHttps()); toast(t("calCopied")); } catch (e) { prompt(t("calCopy"), feedHttps()); } };
+$("#calFile").onclick = () => { $("#calSheet").hidden = true; remExport(false); };
+$("#calStop").onclick = stopCal;
+$("#calClose").onclick = () => { $("#calSheet").hidden = true; };
+$("#calSheet").addEventListener("click", e => { if (e.target.id === "calSheet") $("#calSheet").hidden = true; });
+$("#daSheet").addEventListener("click", e => { if (e.target.id === "daSheet") $("#daSheet").hidden = true; });
+/* ---------- my own tasks: add, edit, delete ---------- */
+const MINE = { id: null };
+function openMine(id) {
+  const m = id ? (P.mine || []).find(x => x.id === id) : null; MINE.id = m ? m.id : null;
+  $("#mineTitle").textContent = t(m ? "mineEditTitle" : "mineNewTitle");
+  const two = n => String(n).padStart(2, "0"), d = new Date(((m && m.due) || (nowS() + DAY)) * 1000);
+  $("#mineName").value = m ? m.title : ""; $("#mineNote").value = m ? m.note || "" : "";
+  $("#mineDate").value = d.getFullYear() + "-" + two(d.getMonth() + 1) + "-" + two(d.getDate());
+  $("#mineTime").value = m ? two(d.getHours()) + ":" + two(d.getMinutes()) : "23:59";
+  const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id));
+  $("#mineCid").innerHTML = '<option value="0">' + esc(t("mineNoCourse")) + "</option>" + cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("");
+  $("#mineCid").value = String(m ? m.cid || 0 : V.focus && V.focus.kind === "course" ? V.focus.cid : 0);
+  $("#mineDel").hidden = !m; $("#mineErr").hidden = true; $("#sheet").hidden = true; $("#mineSheet").hidden = false;
+  if (!m) setTimeout(() => $("#mineName").focus(), 50);
+}
+function saveMine() {
+  const title = $("#mineName").value.trim(), dv = $("#mineDate").value, tv = $("#mineTime").value || "23:59";
+  const [y, mo, da] = dv.split("-").map(Number), [hh, mm] = tv.split(":").map(Number);
+  if (!title || !y) { $("#mineErr").textContent = t(!title ? "mineNeedName" : "mineNeedDate"); $("#mineErr").hidden = false; return; }
+  const due = Math.round(new Date(y, mo - 1, da, hh || 0, mm || 0).getTime() / 1000);
+  const rec = { id: MINE.id || "m" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), title, due, cid: Number($("#mineCid").value) || 0, note: $("#mineNote").value.trim() };
+  P.mine = (P.mine || []).filter(x => x.id !== rec.id).concat(rec); savePrefs(); useHit(MINE.id ? "mineEdit" : "mineAdd");
+  $("#mineSheet").hidden = true; V.hl = "mine:" + rec.id; render(); toast(t(MINE.id ? "mineSaved" : "mineAdded"));
+}
+function deleteMine() {
+  const old = (P.mine || []).find(x => x.id === MINE.id); if (!old) return;
+  P.mine = P.mine.filter(x => x.id !== old.id); P.manual = P.manual.filter(k => k !== "mine:" + old.id); savePrefs(); $("#mineSheet").hidden = true; render();
+  toastUndo(t("mineDeleted"), () => { P.mine = P.mine.concat(old); savePrefs(); render(); });
+}
+/* ---------- install to the home screen ---------- */
+const INST = { ev: null };
+window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); INST.ev = e; });      // Android / desktop Chrome: its own install dialog, on our button
+window.addEventListener("appinstalled", () => { LS.set("installAsked", true); useHit("installed"); $("#instSheet").hidden = true; });
+function openInstall() {
+  useHit("instOpen"); $("#sheet").hidden = true;
+  const ios = PLAT === "ios";
+  $("#instWhy").textContent = t(ios ? "instWhyIos" : "instWhy");
+  $("#instGo").hidden = !INST.ev;
+  const steps = INST.ev ? [] : ios ? ["instIos1", "instIos2", "instIos3"] : ["instAnd1", "instAnd2", "instAnd3"];
+  $("#instSteps").hidden = !steps.length; $("#instSteps").innerHTML = steps.map(k => "<li>" + t(k) + "</li>").join("");     // constant strings from I18N
+  $("#instSheet").hidden = false;
+}
+function maybeAskInstall() {
+  if (isStandalone() || LS.get("installAsked", false) || LS.get("opens", 0) < 3 || navigator.webdriver) return;
+  if (!$("#tour").hidden || $$(".sheet").some(x => !x.hidden)) return;
+  LS.set("installAsked", true); openInstall();
 }
 /* asked once, after the tour or the "what's new" window, when there is something to remind about */
 function maybeAskRem() {
@@ -2782,7 +3082,31 @@ function pushItems() {
       }
     }
   }
+  if (c.mor) out.push(...morningItems(c.mor, now));
   return out.sort((a, b) => a.at - b.at).slice(0, 500);
+}
+/* "good morning": today's deadlines, exams and classes, for each of the next two weeks (refreshed every time the app opens) */
+function morningItems(at, now) {
+  const [hh, mm] = at.split(":").map(Number), d = V.data, out = [], D = semDates(now), exams = examList();
+  const tasks = d ? d.tasks.filter(x => counted(x) && !isDone(x) && x.due && x.type !== "zoom") : [];
+  const hhmm = ts => { const x = new Date(ts * 1000); return String(x.getHours()).padStart(2, "0") + ":" + String(x.getMinutes()).padStart(2, "0"); };
+  for (let i = 0; i < 14; i++) {
+    const day = new Date(now * 1000); day.setHours(0, 0, 0, 0); day.setDate(day.getDate() + i);
+    const ds = day.getTime() / 1000, de = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1).getTime() / 1000;
+    const fire = new Date(day.getFullYear(), day.getMonth(), day.getDate(), hh, mm).getTime() / 1000;
+    if (fire <= now + 60) continue;
+    const due = tasks.filter(x => x.due >= ds && x.due < de).sort((a, b) => a.due - b.due);
+    const ex = exams.filter(x => x.ts >= ds && x.ts < de);
+    const inSem = !D || (ds >= dayStart(D.s) && ds < D.e);
+    const cls = inSem ? P.tt.filter(x => x.day === day.getDay()).sort((a, b) => hm(a.s) - hm(b.s)) : [];
+    if (!due.length && !ex.length && !cls.length) continue;
+    const parts = [];
+    if (ex.length) parts.push(t("morExam", ex.map(x => courseName(x.cid)).join(", ")));
+    if (due.length) parts.push(t("morDue", due.length, hhmm(due[0].due), due[0].name));
+    if (cls.length) parts.push(t("morCls", cls.length, cls[0].s, isZoom(cls[0])));
+    out.push({ at: fire * 1000, title: t("morHead", dayName(day.getDay())), body: parts.join(" · "), tag: "morning:" + dayKey(day) });
+  }
+  return out;
 }
 const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((s.length + 3) % 4)), c => c.charCodeAt(0));
 function strHash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + ":" + s.length; }
@@ -2824,7 +3148,7 @@ async function pushEnable() {
   if (PS.err) { toast(t("pushFail"), 7000); return false; }
   const n = (LS.get("pushSig", {}) || {}).n || 0;
   try { const sub = await pushSub(); await pushPost("/test", { endpoint: sub.endpoint, title: t("pushTestT"), body: t("pushTestB", n) }); } catch (e) {}
-  toast(t("pushReady", n), 6000); renderRemCard();
+  toast(t("pushReady", n), 6000); renderRemCard(); pingSoon();
   return true;
 }
 /* a test notification from the server in 10 seconds, so the app can be closed meanwhile */
@@ -2851,6 +3175,7 @@ function remModeUI(how) {
   $("#remGo").textContent = t(push && cal ? "remGoBoth" : push ? "remGoPush" : "remGo");
   $("#remHowTxt").textContent = push && cal ? t("remHowPushTxt") + " " + t("remHowBothTxt") : t(push ? "remHowPushTxt" : "remHow");
   $("#remIntro").textContent = t(push ? "remIntroPush" : "remIntro");
+  $("#remMorG").hidden = !(push && pushAvail());
   $("#remStop").hidden = $("#remTest").hidden = !(push && pushOn());
   const calUsed = !!(LS.get("remDone", { tasks: [] }).tasks || []).length || !!LS.get("remDone", {}).cls;
   $("#remCalDel").hidden = $("#remCalDelHint").hidden = !calUsed;
@@ -2979,6 +3304,8 @@ function showMain() {
   document.body.classList.add("app"); $("#tabbar").hidden = false; setView(V.view);
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
   render(); refresh(); useHit("open"); navInit();
+  if (!showMain.counted) { showMain.counted = true; LS.set("opens", LS.get("opens", 0) + 1); }
+  $("#bInst").hidden = isStandalone();
   // the tour opens once, after the app first opens (not in automated test browsers, where it would cover everything)
   if (!LS.get("tourDone", false) && !navigator.webdriver) setTimeout(() => { if (!LS.get("tourDone", false) && $("#tour").hidden) openTour(); }, 700);
   else if (!navigator.webdriver) setTimeout(() => { if ($("#tour").hidden) whatsNew(); }, 900);
@@ -3074,19 +3401,26 @@ $("#remGo").onclick = () => {
   const pick = g => $$("#rem_" + g + " .rchip.on").map(b => b.dataset.k), cls = ($("#remCls .rchip.on") || {}).dataset;
   const on = k => !!$("#remHowC [data-how=" + k + "].on");
   const how = !pushAvail() ? "cal" : on("push") && on("cal") ? "both" : on("cal") ? "cal" : "push";
-  remSave({ task: pick("task"), exam: pick("exam"), cls: cls ? cls.cls : "zoom", clsMin: Number($("#remMin").value) || 10, on: true, asked: true, how });
+  remSave({ task: pick("task"), exam: pick("exam"), cls: cls ? cls.cls : "zoom", clsMin: Number($("#remMin").value) || 10, on: true, asked: true, how, mor: how === "cal" ? "" : $("#remMor").value });
   $("#remSheet").hidden = true;
   if (how !== "cal") { LS.set("pushSig", null); pushEnable(); }       // asks for permission right inside the tap
-  if (how !== "push") remExport(false);
+  if (how !== "push") openCal();
 };
 $("#remStop").onclick = () => { $("#remSheet").hidden = true; pushDisable(); };
+$("#instGo").onclick = async () => { const ev = INST.ev; if (!ev) return; INST.ev = null; ev.prompt(); try { const r = await ev.userChoice; useHit(r && r.outcome === "accepted" ? "installYes" : "installNo"); } catch (e) {} $("#instSheet").hidden = true; };
+$("#instLater").onclick = () => { $("#instSheet").hidden = true; };
+$("#bMineAdd").onclick = () => openMine(null);
+$("#mineSave").onclick = saveMine; $("#mineDel").onclick = deleteMine; $("#mineClose").onclick = () => { $("#mineSheet").hidden = true; };
+$("#mineName").addEventListener("keydown", e => { if (e.key === "Enter") saveMine(); });
+$("#mineSheet").addEventListener("click", e => { if (e.target.id === "mineSheet") $("#mineSheet").hidden = true; });
+$("#bInst").onclick = openInstall;
 $("#remCalDel").onclick = () => { $("#remSheet").hidden = true; remRemoveCal(); };
 $("#remTest").onclick = () => { $("#remSheet").hidden = true; pushTest(); };
 $("#remLater").onclick = () => { remSave({ asked: true }); $("#remSheet").hidden = true; };
 $("#remClose").onclick = () => { if (!$("#remLater").hidden) remSave({ asked: true }); $("#remSheet").hidden = true; };
 $("#bRem").onclick = () => openRem(false);
 $("#dash").addEventListener("click", e => { const r = e.target.closest("[data-rem]"); if (!r) return; const a = r.dataset.rem;
-  if (a === "add") remExport(true); else if (a === "cal") remExport(false); else if (a === "push") pushEnable(); else if (a === "test") pushTest(); else openRem(false); });
+  if (a === "add") remExport(true); else if (a === "cal" || a === "feed") openCal(); else if (a === "push") pushEnable(); else if (a === "test") pushTest(); else openRem(false); });
 $("#bWn").onclick = () => { $("#sheet").hidden = true; whatsNew(true); };
 // the reminders button was right there, so closing "what's new" does not bring up a second window about them
 const wnDone = () => { $("#wnSheet").hidden = true; if (WN.auto && !(P.rem && P.rem.asked)) remSave({ asked: true }); WN.auto = false; };
@@ -3157,6 +3491,7 @@ $("#list").addEventListener("click", e => {
     return;
   }
   if (e.target.closest("[data-showhid]")) { V.showHid = !V.showHid; render(); return; }
+  { const me = e.target.closest("[data-mine]"); if (me) { openMine(me.dataset.mine); return; } }
   const dn = e.target.closest("[data-done]");
   if (dn) { const k = dn.dataset.done; P.manual = P.manual.includes(k) ? P.manual.filter(y => y !== k) : [...P.manual, k]; savePrefs(); render(); return; }
   const g = e.target.closest("[data-g]");
@@ -3173,6 +3508,7 @@ function openSemSettings() { renderSheet(); $("#sheet").hidden = false; setTimeo
 $("#dash").addEventListener("click", e => {
   if (e.target.closest("[data-semedit]")) return openSemSettings();
   if (e.target.closest("[data-ttadd]")) return openTT();
+  if (e.target.closest("[data-ttlev]")) { useHit("ttFromDash"); return openLevnet(); }
   if (e.target.closest("[data-ttgo]")) return goTT();
   if (e.target.closest("[data-exall]")) { V.exAll = !V.exAll; return render(); }
   if (e.target.closest("[data-exedit]")) return openExams();

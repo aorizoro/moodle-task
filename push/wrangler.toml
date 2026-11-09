@@ -12,6 +12,14 @@ class_name = "Device"
 name = "KEYS"
 class_name = "Keys"
 
+[[durable_objects.bindings]]
+name = "FEEDS"
+class_name = "Feed"
+
 [[migrations]]
 tag = "v1"
 new_sqlite_classes = ["Device", "Keys"]
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["Feed"]
