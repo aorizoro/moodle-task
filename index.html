@@ -1780,7 +1780,8 @@ async function syncNow(manual) {
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
 const APP_VERSION = "2026.11.09";
-const FEEDBACK = { url: "", f: { kind: "", msg: "", contact: "", meta: "", name: "", courses: "" } };   // filled in once the form exists
+const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
+  f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
 function deviceId() { let id = LS.get("iid", ""); if (!/^[a-z0-9]{12}$/.test(id)) { id = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => "abcdefghijklmnopqrstuvwxyz0123456789"[b % 36]).join(""); LS.set("iid", id); } return id; }
 function techMeta(extra) {
@@ -1796,6 +1797,8 @@ function senderInfo() {
   return { name: String(d.user || "").slice(0, 80), courses: cs.slice(0, 25).join("; ") };
 }
 async function fbPost(kind, msg, contact, meta, who) {
+  let host = ""; try { host = new URL(M.url || DEFAULT_SITE).hostname; } catch (e) {}
+  if (/^(localhost|127\.)/.test(host) && /docs\.google\.com/.test(FEEDBACK.url)) return;     // a local test Moodle never writes into the real form
   const body = new URLSearchParams(), F = FEEDBACK.f;
   if (who && !(F.name && F.courses)) { const m = JSON.parse(meta); if (!F.name) m.name = who.name; if (!F.courses) m.courses = who.courses; meta = JSON.stringify(m); }
   body.append("entry." + F.kind, kind); body.append("entry." + F.msg, msg); body.append("entry." + F.meta, meta);
