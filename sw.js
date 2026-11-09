@@ -2,10 +2,11 @@
 // הבקשות ל-Moodle לא עוברות כאן ולא נשמרות במטמון.
 // the beta (…/beta/) and the regular app share one site: each keeps and cleans only its own cache
 const CH = /\/beta\/$/.test(self.registration.scope) ? "beta-" : "";
-const CACHE = "moodle-tasks-" + CH + "v25";
+const CACHE = "moodle-tasks-" + CH + "v29";
 const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "icon-any-192.png", "icon-any-512.png", "apple-touch-icon.png", "favicon-64.png", "badge-96.png", "logo.svg"];
 self.addEventListener("install", e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // "reload": straight from the site, not from the browser's own 10-minute cache (else a new version could install an old page)
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, { cache: "reload" })))).then(() => self.skipWaiting()));
 });
 self.addEventListener("activate", e => {
   const mine = k => CH ? k.startsWith("moodle-tasks-beta-") : !k.startsWith("moodle-tasks-beta-");
@@ -15,9 +16,22 @@ self.addEventListener("fetch", e => {
   const u = new URL(e.request.url);
   if (e.request.method !== "GET" || u.origin !== self.location.origin) return;
   if (/\.mp4$/.test(u.pathname)) return;      // videos go straight to the network (phones ask for them in byte ranges)
+  const doc = e.request.mode === "navigate" || /\/(index\.html)?$/.test(u.pathname);
+  const fresh = e.request.cache === "reload" || e.request.cache === "no-store";      // "check for a new version": the network's answer, kept
   e.respondWith(caches.open(CACHE).then(async c => {
     const hit = await c.match(e.request, { ignoreSearch: true });
-    const net = fetch(e.request).then(r => { if (r.ok) c.put(e.request, r.clone()); return r; }).catch(() => hit);
+    // fetched again every time (checked with the site, cheap when unchanged) and kept for the next open
+    const net = fetch(e.request.url, { cache: "no-cache", credentials: "same-origin" }).then(async r => {
+      if (r.ok) {
+        if (doc && hit && !fresh) {                    // the page itself changed: tell the open app a new version is ready
+          const [a, b] = await Promise.all([c.match(e.request, { ignoreSearch: true }).then(x => x ? x.text() : ""), r.clone().text()]);
+          if (a && a !== b) self.clients.matchAll({ type: "window" }).then(cs => cs.forEach(w => w.postMessage({ type: "updated" })));
+        }
+        await c.put(e.request, r.clone());
+      }
+      return r;
+    }).catch(() => hit);
+    if (fresh) return net.then(r => r || hit);
     return hit || net;
   }));
 });

@@ -46,4 +46,6 @@ jobs:
           after=$(curl -sS "$url/feed/$k.ics" | tr -d '\r' | grep -c 'SUMMARY:smoke')
           echo "::notice title=Calendar feed check::upload=$up | head=$h | events served=$body | stop=$stop | after stop=$after"
           sleep 90; beta=$(curl -sS https://aorizoro.github.io/moodle-task/beta/ | grep -o 'APP_VERSION = "[^"]*"' | head -1)
+          root=$(curl -sS https://aorizoro.github.io/moodle-task/ | grep -o 'APP_VERSION = "[^"]*"' | head -1)
           echo "::notice title=Beta page::$beta"
+          echo "::notice title=Main page::$root"
