@@ -1785,7 +1785,9 @@ const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OW
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
 function deviceId() { let id = LS.get("iid", ""); if (!/^[a-z0-9]{12}$/.test(id)) { id = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => "abcdefghijklmnopqrstuvwxyz0123456789"[b % 36]).join(""); LS.set("iid", id); } return id; }
 function techMeta(extra) {
-  const ua = navigator.userAgent, os = /Android/i.test(ua) ? "android" : /iPhone|iPad|iPod/i.test(ua) ? "ios" : /Windows/i.test(ua) ? "windows" : /Mac/i.test(ua) ? "mac" : /Linux/i.test(ua) ? "linux" : "other";
+  // tablets in "desktop site" mode report Linux (Android) or Mac (iPad): a touch screen tells them apart
+  const ua = navigator.userAgent, touch = (navigator.maxTouchPoints || 0) > 1;
+  const os = /Android/i.test(ua) || (/Linux/i.test(ua) && touch) ? "android" : /iPhone|iPad|iPod/i.test(ua) || (/Mac/i.test(ua) && touch) ? "ios" : /Windows/i.test(ua) ? "windows" : /Mac/i.test(ua) ? "mac" : /Linux/i.test(ua) ? "linux" : "other";
   let host = ""; try { host = new URL(M.url || DEFAULT_SITE).hostname; } catch (e) {}
   const pwa = (window.matchMedia && matchMedia("(display-mode: standalone)").matches) || navigator.standalone === true;
   return JSON.stringify(Object.assign({ id: deviceId(), v: APP_VERSION, lang: LANG, os, pwa, w: innerWidth, site: host, sync: syncOnNow() ? (LS.get("syncStore", "files")) : "off" }, extra || {}));
