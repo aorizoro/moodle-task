@@ -115,6 +115,10 @@ select{width:auto}
 .brand img{width:56px;height:56px;border-radius:15px;box-shadow:0 6px 18px #2a186840}
 .brand .wm{font-size:26px;display:block;line-height:1.1}
 .brand .hint{margin-top:2px}
+.hint.by{font-weight:600;letter-spacing:.01em;opacity:.85}
+.byset{text-align:center;margin-top:14px}
+/* the login screen already says it in its own brand block, so the header's copy steps aside there */
+body:has(#setup:not([hidden])) .top .by{display:none}
 .top .ttl .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ic{width:42px;height:42px;padding:0;font-size:19px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px}
 .ic.spin{animation:s 1s linear infinite}
@@ -576,7 +580,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 <body>
 <header class="top">
   <img class="logo" src="icon-any-192.png" alt="" width="34" height="34">
-  <div class="ttl"><span><b class="wm" dir="ltr">Moodle<span>Pro</span></b> <span class="betatag" id="betaTag" hidden>BETA</span></span><span class="hint" id="upd"></span></div>
+  <div class="ttl"><span><b class="wm" dir="ltr">Moodle<span>Pro</span></b> <span class="betatag" id="betaTag" hidden>BETA</span></span><span class="hint by" data-i18n="byHii"></span><span class="hint" id="upd"></span></div>
   <button class="ic" id="bRefresh" data-i18n-aria="refresh" aria-label="רענן" hidden>⟳</button>
   <button class="ic" id="bSet" data-i18n-aria="settings" aria-label="הגדרות" hidden>⚙</button>
 </header>
@@ -585,7 +589,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 <section id="setup" hidden>
   <div class="card">
     <div class="langrow"><span aria-hidden="true">🌐</span><select class="langSel" aria-label="Language"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
-    <div class="brand"><img src="icon-any-192.png" alt="" width="56" height="56"><div><b class="wm" dir="ltr">Moodle<span>Pro</span></b><div class="hint" data-i18n="brandTag"></div></div></div>
+    <div class="brand"><img src="icon-any-192.png" alt="" width="56" height="56"><div><b class="wm" dir="ltr">Moodle<span>Pro</span></b><div class="hint by" data-i18n="byHii"></div><div class="hint" data-i18n="brandTag"></div></div></div>
     <h2 data-i18n="setupTitle"></h2>
     <div class="hint" data-i18n="setupHint"></div>
     <div class="gvid" id="gVid">
@@ -759,6 +763,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <button id="bFb" style="width:100%;margin-top:6px" data-i18n="fbOpen"></button>
     </div>
     <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
+    <div class="byset hint by" data-i18n="byHii"></div>
     <div class="srow"><span class="hint" id="verLine"></span><button class="link" id="bWn" data-i18n="wnTitle"></button></div>
     <button id="bUpd" style="width:100%;margin-top:6px" data-i18n="updCheck"></button>
     <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
@@ -963,7 +968,7 @@ function toastUndo(m, undo) {
 /* ---------- languages ---------- */
 const I18N = {
   he: {
-    locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
+    locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "האפליקציה של Hii 😉", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
     remTitle: "🔔 תזכורות", remAskTitle: "🔔 רוצה תזכורות?", remIntro: "האפליקציה יכולה להזכיר לך לפני הגשות, מבחנים ושיעורי זום. בחר מתי, והתזכורות ייכנסו ליומן של הטלפון.",
     remTasks: "מטלות ובחנים: כמה זמן לפני ההגשה", remExams: "מבחנים: כמה זמן לפני", remClasses: "שיעורים", remClsZoom: "רק שיעורי זום", remClsAll: "כל השיעורים", remClsNone: "בלי",
@@ -1131,7 +1136,7 @@ const I18N = {
     syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
   en: {
-    locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
+    locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "Hii’s app 😉", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
     remTitle: "🔔 Reminders", remAskTitle: "🔔 Want reminders?", remIntro: "The app can remind you before deadlines, exams and Zoom classes. Choose when, and the reminders go into your phone’s calendar.",
     remTasks: "Assignments and quizzes: how long before the deadline", remExams: "Exams: how long before", remClasses: "Classes", remClsZoom: "Zoom classes only", remClsAll: "All classes", remClsNone: "None",
@@ -1299,7 +1304,7 @@ const I18N = {
     syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
   fr: {
-    locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
+    locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "L’appli de Hii 😉", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     remTitle: "🔔 Rappels", remAskTitle: "🔔 Envie de rappels ?", remIntro: "L’application peut vous rappeler les échéances, examens et cours Zoom. Choisissez quand, et les rappels vont dans le calendrier du téléphone.",
     remTasks: "Devoirs et tests : combien de temps avant l’échéance", remExams: "Examens : combien de temps avant", remClasses: "Cours", remClsZoom: "Cours Zoom seulement", remClsAll: "Tous les cours", remClsNone: "Aucun",
@@ -2502,7 +2507,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.3.1-beta.1";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2685,7 +2690,7 @@ function renderSheet() {
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
   $("#who").innerHTML = d ? (d.user ? "<bdi>" + esc(d.user) + "</bdi> · " : "") + "<bdi>" + esc(M.url.replace(/^https?:\/\//, "")) + "</bdi>" : esc(M.url);
   renderSyncStatus();
-  $("#fbSet").hidden = !fbReady(); $("#verLine").textContent = t("version", APP_VERSION) + (CHANNEL === "beta" ? " · beta" : "");
+  $("#fbSet").hidden = !fbReady(); $("#verLine").textContent = t("version", "\u2066" + APP_VERSION + "\u2069") + (CHANNEL === "beta" ? " · beta" : "");     // the number is kept left-to-right inside Hebrew text
   const D = semDates(nowS()), sv = D ? { s: D.s, e: addD(D.e, -1), xs: D.xs, xe: D.xe && addD(D.xe, -1) } : {};
   $$("[data-sem]").forEach(i => i.value = sv[i.dataset.sem] ? ymd(sv[i.dataset.sem]) : "");
   $("#semSrc").textContent = D ? t(D.src) : "";
