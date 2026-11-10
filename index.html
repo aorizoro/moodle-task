@@ -115,6 +115,10 @@ select{width:auto}
 .brand img{width:56px;height:56px;border-radius:15px;box-shadow:0 6px 18px #2a186840}
 .brand .wm{font-size:26px;display:block;line-height:1.1}
 .brand .hint{margin-top:2px}
+.hint.by{font-weight:600;letter-spacing:.01em;opacity:.85}
+.byset{text-align:center;margin-top:14px}
+/* the login screen already says it in its own brand block, so the header's copy steps aside there */
+body:has(#setup:not([hidden])) .top .by{display:none}
 .top .ttl .hint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ic{width:42px;height:42px;padding:0;font-size:19px;display:inline-flex;align-items:center;justify-content:center;border-radius:12px}
 .ic.spin{animation:s 1s linear infinite}
@@ -141,8 +145,8 @@ body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
   body.app #dash,body.app #ttv{display:contents!important}
   body.app #tasks{display:block!important}
   #app{display:grid;gap:14px;align-items:start;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
-    grid-template-areas:"hero stats" "exams today" "sem sem" "tt tt" "tasks week" "tasks month" "tasks news" "tasks load" "tasks ics" "tasks .";
-    grid-template-rows:auto auto auto auto auto auto auto auto auto 1fr}
+    grid-template-areas:"hero stats" "exams today" "sem sem" "tt tt" "acad acad" "tasks week" "tasks month" "tasks news" "tasks load" "tasks ics" "tasks .";
+    grid-template-rows:auto auto auto auto auto auto auto auto auto auto 1fr}
   #app .dcard,#app .stats{margin:0}
   #hero{grid-area:hero} #stats{grid-area:stats} #todayCard{grid-area:today} #examCard{grid-area:exams} #semCard{grid-area:sem} #ttCard{grid-area:tt}
   #weekCard{grid-area:week} #monthCard{grid-area:month} #newsCard{grid-area:news} #loadCard{grid-area:load} #icsCard{grid-area:ics} #tasks{grid-area:tasks}
@@ -152,8 +156,8 @@ body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
 }
 @media (min-width:1100px){
   #app{gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));
-    grid-template-areas:"hero stats exams" "sem sem sem" "today tt tt" "week tt tt" "month tasks tasks" "news tasks tasks" "load tasks tasks" "ics tasks tasks" ". tasks tasks";
-    grid-template-rows:auto auto auto auto auto auto auto auto 1fr}
+    grid-template-areas:"hero stats exams" "sem sem sem" "today tt tt" "week tt tt" "acad acad acad" "month tasks tasks" "news tasks tasks" "load tasks tasks" "ics tasks tasks" ". tasks tasks";
+    grid-template-rows:auto auto auto auto auto auto auto auto auto 1fr}
   #todayCard{align-self:start}
 }
 
@@ -169,7 +173,12 @@ details{margin:10px 0}
 summary{cursor:pointer;padding:4px 0;font-weight:600}
 /* versions + reminders */
 .betatag{font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--warn);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:3px}
-.wnv{margin:8px 0}
+.wnv{margin:8px 0 14px}
+.wnh{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
+.wnh small{color:var(--muted);font-size:12.5px;margin-inline-start:auto}
+.wnq,.wnnew{font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--row);color:var(--muted)}
+.wnnew{background:var(--accent-soft);color:var(--accent-t)}
+.wnfrom{margin:2px 0 8px}
 .calbtns{display:flex;flex-direction:column;gap:8px;margin:10px 0}
 .calbtns.busy{opacity:.5;pointer-events:none}
 #updBar{position:fixed;inset-inline:12px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:60;display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--accent);color:var(--on-accent,#fff);border-radius:14px;padding:10px 12px 10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-weight:600;max-width:520px;margin:0 auto}
@@ -446,6 +455,21 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .exnote{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.45}
 .xsug.lvrow{color:var(--warn);justify-content:space-between}
 .exempty button{margin-top:8px;width:100%}
+.er.q .eb small .qk{font-weight:700;color:var(--accent-t)}
+.xqbox{background:var(--row);border-radius:14px;padding:10px 12px;margin:10px 0 14px}
+.xqbox .stitle{margin-top:0}
+.xqform{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.xqrow{display:flex;gap:8px}
+.xqrow > *{flex:1;min-width:0}
+.xqrow label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--muted)}
+.xqrow label input{width:100%;min-width:0}
+.xqi{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.xqi:last-child{border-bottom:0}
+.xqi i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.xqi .xqt{flex:1;min-width:0;display:flex;flex-direction:column}
+.xqi .xqt small{color:var(--muted);font-size:12.5px}
+.xqi.past{opacity:.5}
+.xqi button{padding:4px 8px}
 .xrow{border-bottom:1px solid var(--line);padding:10px 0}
 .xrow:last-child{border-bottom:0}
 .xrow .xn{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:6px}
@@ -566,6 +590,103 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .sheet h3{margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
 .srow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
 .srow:last-child{border-bottom:0}
+/* ---------- לו"ז: academic calendar ---------- */
+.lzseg{display:flex;width:100%;margin:0 0 10px}
+body.app:not([data-lz=acad]) #acadCard{display:none}
+body.app[data-lz=acad] #ttCard{display:none}
+.acad{--ac-s:color-mix(in srgb,var(--accent) 9%,var(--card));--ac-x:color-mix(in srgb,var(--accent) 34%,var(--card));--ac-b:color-mix(in srgb,var(--ok) 32%,var(--card));
+  --ac-h:color-mix(in srgb,#ec4899 28%,var(--card));--ac-l:color-mix(in srgb,var(--muted) 30%,var(--card));--ac-e:color-mix(in srgb,#8b5cf6 26%,var(--card));
+  --ac-n:var(--card);--ac-w:color-mix(in srgb,var(--warn) 13%,var(--card));--ac-m:var(--accent);
+  --acs-s:color-mix(in srgb,var(--accent) 30%,var(--card));--acs-x:var(--accent);--acs-b:var(--ok);--acs-h:#ec4899;--acs-l:var(--muted);--acs-e:#8b5cf6;--acs-n:var(--line);--acs-w:var(--warn);--acs-m:var(--accent)}
+.acad .acmode{flex:0 0 auto}
+.acad .acmode button{padding:5px 12px;font-size:13px}
+.c-s{background:var(--ac-s)}.c-x{background:var(--ac-x)}.c-b{background:var(--ac-b)}.c-h{background:var(--ac-h)}.c-l{background:var(--ac-l)}.c-e{background:var(--ac-e)}
+.c-n{background:var(--ac-n);box-shadow:inset 0 0 0 1px var(--line)}.c-w{background:var(--ac-w)}.c-m{background:var(--ac-s)}
+.k-s{--k:var(--acs-s)}.k-x{--k:var(--acs-x)}.k-b{--k:var(--acs-b)}.k-h{--k:var(--acs-h)}.k-l{--k:var(--acs-l)}.k-e{--k:var(--acs-e)}.k-n{--k:var(--acs-n)}.k-w{--k:var(--acs-w)}.k-m{--k:var(--acs-m)}
+.acnow{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.acnow .today{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px}
+.acpill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 10px;font-size:13px;font-weight:600}
+.acpill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--k)}
+.acsoon{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.acsoon::-webkit-scrollbar{display:none}
+.acsoon button{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:1px;text-align:start;border-radius:12px;padding:7px 11px;border:1px solid var(--line);border-inline-start:4px solid var(--k);max-width:230px}
+.acsoon b{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.acsoon small{font-size:12px;color:var(--muted)}
+.acnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 8px}
+.acnav .mt{font-weight:700;font-size:15.5px;line-height:1.25}
+.acnav .mt small{display:block;font-weight:400;font-size:12.5px;color:var(--muted)}
+.acgrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px}
+.acgrid .wh{font-size:11px;color:var(--muted);text-align:center;padding-bottom:2px}
+.ad{border:0;border-radius:9px;min-height:62px;padding:4px 3px;display:flex;flex-direction:column;align-items:stretch;gap:1px;text-align:start;color:var(--text);position:relative;overflow:hidden}
+.ad .g{display:flex;justify-content:space-between;align-items:baseline;gap:2px}
+.ad .g b{font-size:13.5px;font-weight:700}
+.ad .g i{font-style:normal;font-size:10px;color:var(--muted);white-space:nowrap}
+.ad .lb{font-size:9.5px;line-height:1.15;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;font-weight:600;margin-top:1px}
+.ad.out{visibility:hidden}
+.ad.past{opacity:.55}
+.ad.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.ad.today .g b{color:var(--accent-t)}
+.ad.sel{outline:2px solid var(--text);outline-offset:-2px}
+.ad.nod{background:none;opacity:.35}
+.acday{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--row);display:flex;flex-direction:column;gap:6px}
+.acday .dt{font-weight:700;font-size:14.5px}
+.acday .dt small{font-weight:400;color:var(--muted);margin-inline-start:6px}
+.acday .ds{font-size:13px;color:var(--muted);line-height:1.4}
+.acev{display:flex;flex-direction:column;gap:2px;margin-top:10px}
+.acev h4{margin:6px 0 4px;font-size:13.5px;color:var(--muted);font-weight:600}
+.acev .er{display:flex;align-items:center;gap:10px;padding:7px 4px;border-bottom:1px solid var(--line);font-size:14px;border-radius:0;border-inline:0;border-top:0;background:none;text-align:start;width:100%}
+.acev .er:last-child{border-bottom:0}
+.acev .er::before{content:"";flex:none;width:4px;align-self:stretch;border-radius:4px;background:var(--k)}
+.acev .er .en{flex:1;min-width:0}
+.acev .er .ew{font-size:12.5px;color:var(--muted);white-space:nowrap;text-align:end}
+.acev .er.done{opacity:.5}
+.acev .er .ew > span{display:block}
+.aclegend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:12px;font-size:12px;color:var(--muted)}
+.aclegend span{display:inline-flex;align-items:center;gap:5px}
+.aclegend span::before{content:"";width:12px;height:12px;border-radius:4px;background:var(--c);box-shadow:inset 0 0 0 1px var(--line)}
+.acline{position:relative;margin:4px 0 22px}
+.acline .bar{display:flex;height:22px;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--line)}
+.acline .bar i{display:block;height:100%;background:var(--k)}
+.acline .bar i.k-n{background:repeating-linear-gradient(45deg,var(--card),var(--card) 3px,var(--line) 3px,var(--line) 5px)}
+.acline .mk{position:absolute;top:-4px;bottom:-4px;width:3px;border-radius:2px;background:var(--text);box-shadow:0 0 0 2px var(--card)}
+.acline .ms{display:flex;margin-top:4px;font-size:10.5px;color:var(--muted)}
+.acline .ms span{white-space:nowrap;text-align:center;font-size:9.5px;min-width:0}
+.acper{display:grid;grid-template-columns:auto 1fr auto;gap:0 10px;align-items:center;font-size:13.5px;margin-bottom:6px}
+.acper > *{padding:7px 0;border-bottom:1px solid var(--line)}
+.acper .pd{width:10px;height:10px;border-radius:3px;background:var(--k);padding:0;border:0;align-self:center}
+.acper .pw{color:var(--muted);font-size:12.5px;text-align:end;white-space:nowrap}
+.acper .cur{font-weight:700}
+.acyear{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-top:6px}
+.acym{border:1px solid var(--line);border-radius:12px;padding:8px;background:var(--card);text-align:start;display:flex;flex-direction:column;gap:5px}
+.acym.now{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.acym .yt{font-weight:700;font-size:13px;display:flex;justify-content:space-between;gap:4px}
+.acym .yt small{font-weight:400;color:var(--muted);font-size:11px}
+.acym .yg{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px}
+.acym .yg i{font-style:normal;font-size:9px;text-align:center;border-radius:3px;line-height:15px;color:var(--text)}
+.acym .yg i.o{visibility:hidden}
+.acym .yg i.t{box-shadow:inset 0 0 0 1.5px var(--accent);font-weight:700}
+.acym .yh{font-size:10.5px;color:var(--muted);line-height:1.3;min-height:14px}
+.acnote{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.5}
+@media (min-width:760px){ .lzseg{display:none} body.app #ttCard,body.app #acadCard{display:block!important} #acadCard{grid-area:acad} .ad{min-height:74px} .ad .lb{font-size:10.5px} }
+.sheet h3 .sh{display:flex;align-items:center;gap:6px;min-width:0}
+.sback{font-size:20px;line-height:1;padding:2px 8px}
+.mgroup{background:var(--bg);border:1px solid var(--line);border-radius:14px;margin:0 0 14px;overflow:hidden}
+.mrow{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:none;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:12px 14px}
+.mrow:last-child{border-bottom:0}
+.mrow:active{background:var(--accent-soft)}
+.mrow .mi{font-size:19px;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:var(--accent-soft);flex:none}
+.mrow .mt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.mrow .mt small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow::after{content:"\2039";color:var(--muted);font-size:22px;line-height:1}
+[dir=ltr] .mrow::after{content:"\203A"}
+.prow{display:block;width:100%;margin-top:8px;text-align:start}
+.stitle{margin-top:16px;font-weight:700}
+.spage>.hint{margin:4px 0 6px}
+.kwadd{display:flex;gap:8px;margin-top:6px}.kwadd input{flex:1;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.kwchip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line);background:var(--accent-soft);color:var(--text);border-radius:999px;padding:3px 6px 3px 10px;font-size:13px}
+.kwchip button{border:0;background:none;padding:0 6px;font-size:16px;line-height:1;color:var(--muted)}
+.kwchip.add{background:none;padding:3px 10px;color:var(--accent-t);cursor:pointer}
 .srow input[type=color]{width:38px;height:30px;border:0;padding:0;background:none}
 .srow .cn{display:flex;align-items:center;gap:8px;min-width:0}
 .srow .cn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -576,7 +697,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 <body>
 <header class="top">
   <img class="logo" src="icon-any-192.png" alt="" width="34" height="34">
-  <div class="ttl"><span><b class="wm" dir="ltr">Moodle<span>Pro</span></b> <span class="betatag" id="betaTag" hidden>BETA</span></span><span class="hint" id="upd"></span></div>
+  <div class="ttl"><span><b class="wm" dir="ltr">Moodle<span>Pro</span></b> <span class="betatag" id="betaTag" hidden>BETA</span></span><span class="hint by" data-i18n="byHii"></span><span class="hint" id="upd"></span></div>
   <button class="ic" id="bRefresh" data-i18n-aria="refresh" aria-label="רענן" hidden>⟳</button>
   <button class="ic" id="bSet" data-i18n-aria="settings" aria-label="הגדרות" hidden>⚙</button>
 </header>
@@ -585,7 +706,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 <section id="setup" hidden>
   <div class="card">
     <div class="langrow"><span aria-hidden="true">🌐</span><select class="langSel" aria-label="Language"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
-    <div class="brand"><img src="icon-any-192.png" alt="" width="56" height="56"><div><b class="wm" dir="ltr">Moodle<span>Pro</span></b><div class="hint" data-i18n="brandTag"></div></div></div>
+    <div class="brand"><img src="icon-any-192.png" alt="" width="56" height="56"><div><b class="wm" dir="ltr">Moodle<span>Pro</span></b><div class="hint by" data-i18n="byHii"></div><div class="hint" data-i18n="brandTag"></div></div></div>
     <h2 data-i18n="setupTitle"></h2>
     <div class="hint" data-i18n="setupHint"></div>
     <div class="gvid" id="gVid">
@@ -648,12 +769,12 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
       <div id="today"></div>
     </div>
     <div id="examCard" class="dcard exams">
-      <div class="ch"><span data-i18n="examsTitle"></span><button class="link" id="bExEdit" data-i18n="edit"></button></div>
+      <div class="ch"><span data-i18n="examsTitle"></span><span><button class="link" id="bExAdd" data-i18n="xqAddShort"></button><button class="link" id="bExEdit" data-i18n="edit"></button></span></div>
       <div id="exams"></div>
     </div>
     <div id="stats" class="stats"></div>
     <div id="semCard" class="dcard sem">
-      <div class="ch"><span data-i18n="semTitle"></span><button class="link" id="bSemEdit" data-i18n="edit"></button></div>
+      <div class="ch"><span data-i18n="semTitle"></span><span><button class="link" id="bAcadGo" data-i18n="acGo" hidden></button><button class="link" id="bSemEdit" data-i18n="edit"></button></span></div>
       <div id="sem"></div>
     </div>
     <div id="weekCard" class="dcard">
@@ -680,11 +801,16 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
   </section>
 
   <section id="ttv">
+    <div class="seg lzseg" id="lzSeg"><button data-lz="tt" data-i18n="lzTT"></button><button data-lz="acad" data-i18n="lzAcad"></button></div>
     <div id="ttCard" class="dcard tt">
       <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtFile" data-i18n="ttImport"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
       <div id="tt"></div>
       <div class="ttfoot" id="ttFoot"><span><button class="link" id="bTtShare" data-i18n="ttShare"></button><button class="link" id="bTtScan" data-i18n="ttScan"></button></span><button class="link" id="bTtClear" style="color:var(--err)" data-i18n="ttClear"></button></div>
       <input type="file" id="ttFile" hidden>
+    </div>
+    <div id="acadCard" class="dcard acad">
+      <div class="ch"><span id="acTitle"></span><span class="seg acmode" id="acMode"><button data-acm="month" data-i18n="acMonth"></button><button data-acm="year" data-i18n="acYear"></button></span></div>
+      <div id="acad"></div>
     </div>
   </section>
 
@@ -729,40 +855,91 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 
 <div class="sheet" id="sheet" hidden>
   <div class="box">
-    <h3><span data-i18n="settings"></span> <button class="link" id="bClose" data-i18n="close"></button></h3>
-    <div class="srow"><span data-i18n="language"></span><select class="langSel"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
-    <div class="srow"><span data-i18n="oldLabel"></span><select id="old"></select></div>
-    <div class="srow"><span><span data-i18n="showHidden"></span> (<span id="hidn">0</span>)</span><input type="checkbox" id="showHid"></div>
-    <div style="margin-top:14px;font-weight:700" data-i18n="coursesColors"></div>
-    <div class="hint" data-i18n="coursesHint"></div>
-    <div id="clist"></div>
-    <div style="margin-top:14px;font-weight:700" id="semSet" data-i18n="semDates"></div>
-    <div class="hint" data-i18n="semHint"></div>
-    <div class="srow"><span data-i18n="semStart"></span><input type="date" data-sem="s"></div>
-    <div class="srow"><span data-i18n="semEnd"></span><input type="date" data-sem="e"></div>
-    <div class="srow"><span data-i18n="exStart"></span><input type="date" data-sem="xs"></div>
-    <div class="srow"><span data-i18n="exEnd"></span><input type="date" data-sem="xe"></div>
-    <div class="hint" id="semSrc"></div>
-    <button class="link" id="bSemAuto" data-i18n="semAuto"></button>
-    <div style="margin-top:14px;font-weight:700" id="syncSet" data-i18n="syncTitle"></div>
-    <div class="srow"><span data-i18n="syncOnLbl"></span><input type="checkbox" id="syncOn"></div>
-    <div class="hint" data-i18n="syncHint"></div>
-    <div class="srow"><span class="hint" id="syncStatus"></span><button class="link" id="bSyncNow" data-i18n="syncNowBtn"></button></div>
-    <button id="bRem" style="width:100%;margin-top:14px" data-i18n="remTitle"></button>
-    <button id="bTheme" style="width:100%;margin-top:8px"><span data-i18n="thTitle"></span> · <span class="thcur"></span></button>
-    <button id="bDashArr" style="width:100%;margin-top:8px" data-i18n="daTitle"></button>
-    <button id="bCal" style="width:100%;margin-top:8px" data-i18n="calBtn"></button>
-    <button id="bTour" style="width:100%;margin-top:8px" data-i18n="tourOpen"></button>
-    <button id="bInst" style="width:100%;margin-top:8px" hidden data-i18n="instTitle"></button>
-    <div id="fbSet" hidden>
-      <div style="margin-top:14px;font-weight:700" data-i18n="fbTitle"></div>
-      <button id="bFb" style="width:100%;margin-top:6px" data-i18n="fbOpen"></button>
+    <h3><span class="sh"><button class="link sback" id="sBack" hidden data-i18n-aria="back"></button><span id="sTitle"></span></span> <button class="link" id="bClose" data-i18n="close"></button></h3>
+    <div id="sMenu">
+      <div class="mgroup">
+        <button class="mrow" data-go="notif"><span class="mi">🔔</span><span class="mt"><b data-i18n="sNotif"></b><small id="sumNotif"></small></span></button>
+        <button class="mrow" data-go="look"><span class="mi">🎨</span><span class="mt"><b data-i18n="sLook"></b><small id="sumLook"></small></span></button>
+        <button class="mrow" data-go="filter"><span class="mi">🔎</span><span class="mt"><b data-i18n="sFilter"></b><small id="sumFilter"></small></span></button>
+        <button class="mrow" data-go="courses"><span class="mi">📚</span><span class="mt"><b data-i18n="sCourses"></b><small id="sumCourses"></small></span></button>
+        <button class="mrow" data-go="sem"><span class="mi">📅</span><span class="mt"><b data-i18n="sSem"></b><small id="sumSem"></small></span></button>
+      </div>
+      <div class="mgroup">
+        <button class="mrow" data-go="acct"><span class="mi">☁️</span><span class="mt"><b data-i18n="sAcct"></b><small id="sumAcct"></small></span></button>
+        <button class="mrow" data-go="help"><span class="mi">💡</span><span class="mt"><b data-i18n="sHelp"></b><small id="sumHelp"></small></span></button>
+      </div>
+      <div class="byset hint by" data-i18n="byHii"></div>
+      <div class="hint" id="verLine" style="text-align:center"></div>
     </div>
-    <div class="srow" style="margin-top:8px"><span class="hint" id="who"></span></div>
-    <div class="srow"><span class="hint" id="verLine"></span><button class="link" id="bWn" data-i18n="wnTitle"></button></div>
-    <button id="bUpd" style="width:100%;margin-top:6px" data-i18n="updCheck"></button>
-    <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
-    <button id="bLogout" style="width:100%;margin-top:8px;color:var(--err)" data-i18n="logout"></button>
+
+    <div class="spage" data-page="notif" hidden>
+      <div class="hint" data-i18n="sNotifHint"></div>
+      <button id="bRem" class="prow" data-i18n="remTitle"></button>
+      <button id="bCal" class="prow" data-i18n="calBtn"></button>
+    </div>
+
+    <div class="spage" data-page="look" hidden>
+      <div class="srow"><span data-i18n="language"></span><select class="langSel"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
+      <button id="bTheme" class="prow"><span data-i18n="thTitle"></span> · <span class="thcur"></span></button>
+      <button id="bDashArr" class="prow" data-i18n="daTitle"></button>
+      <div class="srow"><span data-i18n="cdxLbl"></span><input type="checkbox" id="cdx"></div>
+      <div class="hint" data-i18n="cdxHint"></div>
+    </div>
+
+    <div class="spage" data-page="filter" hidden>
+      <div class="hint" data-i18n="filterHint"></div>
+      <div class="stitle" data-i18n="oldTitle"></div>
+      <div class="srow"><span data-i18n="oldLabel"></span><select id="old"></select></div>
+      <div class="srow"><span data-i18n="oldHideLbl"></span><input type="checkbox" id="oldHide"></div>
+      <div class="stitle" data-i18n="zlTitle"></div>
+      <div class="hint" data-i18n="zlHint"></div>
+      <div class="srow"><select id="zl" style="width:100%"></select></div>
+      <div class="stitle" data-i18n="campusTitle"></div>
+      <div class="hint" data-i18n="campusHint"></div>
+      <div class="srow"><select id="campus" style="width:100%"></select></div>
+      <div class="stitle" data-i18n="kwTitle"></div>
+      <div class="hint" data-i18n="kwHint"></div>
+      <div class="kwadd"><input type="text" id="kwIn" maxlength="40" autocomplete="off" data-i18n-ph="kwPh"><button class="primary" id="kwAdd" data-i18n="kwAdd"></button></div>
+      <div class="chips" id="kwList"></div>
+      <div class="hint" id="kwSug"></div>
+      <div class="stitle" data-i18n="hidTitle"></div>
+      <div class="srow"><span><span data-i18n="showHidden"></span> (<span id="hidn">0</span>)</span><input type="checkbox" id="showHid"></div>
+      <div class="hint" id="ruleInfo"></div>
+    </div>
+
+    <div class="spage" data-page="courses" hidden>
+      <div class="hint" data-i18n="coursesHint"></div>
+      <div id="clist"></div>
+    </div>
+
+    <div class="spage" data-page="sem" hidden>
+      <div class="hint" data-i18n="semHint"></div>
+      <div class="srow"><span data-i18n="semStart"></span><input type="date" data-sem="s"></div>
+      <div class="srow"><span data-i18n="semEnd"></span><input type="date" data-sem="e"></div>
+      <div class="srow"><span data-i18n="exStart"></span><input type="date" data-sem="xs"></div>
+      <div class="srow"><span data-i18n="exEnd"></span><input type="date" data-sem="xe"></div>
+      <div class="hint" id="semSrc"></div>
+      <button class="link" id="bSemAuto" data-i18n="semAuto"></button>
+    </div>
+
+    <div class="spage" data-page="acct" hidden>
+      <div class="stitle" id="syncSet" data-i18n="syncTitle"></div>
+      <div class="srow"><span data-i18n="syncOnLbl"></span><input type="checkbox" id="syncOn"></div>
+      <div class="hint" data-i18n="syncHint"></div>
+      <div class="srow"><span class="hint" id="syncStatus"></span><button class="link" id="bSyncNow" data-i18n="syncNowBtn"></button></div>
+      <div class="stitle" data-i18n="acctTitle"></div>
+      <div class="srow"><span class="hint" id="who"></span></div>
+      <button id="bLogout" class="prow" style="color:var(--err)" data-i18n="logout"></button>
+    </div>
+
+    <div class="spage" data-page="help" hidden>
+      <button id="bTour" class="prow" data-i18n="tourOpen"></button>
+      <button id="bInst" class="prow" hidden data-i18n="instTitle"></button>
+      <div id="fbSet" hidden><button id="bFb" class="prow" data-i18n="fbOpen"></button></div>
+      <button id="bWn" class="prow" data-i18n="wnAllBtn"></button>
+      <button id="bUpd" class="prow" data-i18n="updCheck"></button>
+      <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
+    </div>
   </div>
 </div>
 <div class="sheet" id="ttSheet" hidden>
@@ -790,6 +967,20 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
   <div class="box">
     <h3><span data-i18n="exSheetTitle"></span> <button class="link" id="exClose" data-i18n="close"></button></h3>
     <div class="hint" data-i18n="exHint"></div>
+    <div class="xqbox" id="xqBox">
+      <div class="stitle" data-i18n="xqTitle"></div>
+      <div class="hint" data-i18n="xqHint"></div>
+      <div id="xqList"></div>
+      <div class="xqform" id="xqForm">
+        <div class="xqrow"><select id="xqCourse" aria-label="course"></select><select id="xqKind" aria-label="kind"></select></div>
+        <input type="text" id="xqName" maxlength="60" hidden data-i18n-ph="xqNamePh">
+        <div class="xqrow"><label><span data-i18n="xqDate"></span><input type="date" id="xqDate"></label><label><span data-i18n="xqTime"></span><input type="time" id="xqTime"></label></div>
+        <input type="text" id="xqNote" maxlength="80" data-i18n-ph="xqNotePh">
+        <div class="xqrow"><button class="primary" id="xqSave" data-i18n="xqAdd"></button><button id="xqCancel" data-i18n="xqCancel" hidden></button></div>
+        <div class="hint" id="xqMsg"></div>
+      </div>
+    </div>
+    <div class="stitle" data-i18n="xqMoedTitle"></div>
     <button id="bExScan" style="width:100%;margin:10px 0 4px" data-i18n="exScan"></button>
     <div class="hint" id="exScanMsg"></div>
     <div id="exList"></div>
@@ -810,8 +1001,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
     <label><span data-i18n="fbKind"></span><select id="fbKind"></select></label>
     <label><span data-i18n="fbMsg"></span><textarea id="fbMsg" rows="5" maxlength="2000"></textarea></label>
     <label><span data-i18n="fbPhone"></span><input type="tel" id="fbContact" maxlength="30" inputmode="tel" autocomplete="tel" dir="ltr"></label>
-    <label class="chk"><input type="checkbox" id="fbWho" checked><span id="fbWhoLbl"></span></label>
-    <label class="chk"><input type="checkbox" id="fbTech" checked><span data-i18n="fbTech"></span></label>
+    <div class="hint" id="fbAuto" data-i18n="fbAuto"></div>
     <div class="err" id="fbErr"></div>
     <button class="primary" id="fbSend" style="width:100%" data-i18n="fbSend"></button>
   </div>
@@ -928,10 +1118,10 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 </div>
 <div class="sheet" id="wnSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="wnTitle"></span> <button class="link" id="wnClose" data-i18n="close"></button></h3>
+    <h3><span id="wnHead" data-i18n="wnTitle"></span> <button class="link" id="wnClose" data-i18n="close"></button></h3>
     <div id="wnList"></div>
     <div class="wnx" id="wnRemBox"><b data-i18n="wnRemT"></b><span class="hint" data-i18n="wnRemD"></span><button class="primary" id="wnRem" data-i18n="wnRemBtn"></button></div>
-    <div class="wnx"><b data-i18n="wnThT"></b><span class="hint" data-i18n="wnThD"></span><div class="thgrid sm" id="wnThemes"></div><button class="link" id="wnThAll" data-i18n="wnThAll"></button></div>
+    <div class="wnx" id="wnThBox"><b data-i18n="wnThT"></b><span class="hint" data-i18n="wnThD"></span><div class="thgrid sm" id="wnThemes"></div><button class="link" id="wnThAll" data-i18n="wnThAll"></button></div>
     <button id="wnOk" style="width:100%;margin-top:12px" data-i18n="wnOk"></button>
   </div>
 </div>
@@ -963,7 +1153,37 @@ function toastUndo(m, undo) {
 /* ---------- languages ---------- */
 const I18N = {
   he: {
-    locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
+        back: "חזרה", sNotif: "התראות ויומן", sLook: "מראה ותצוגה", sFilter: "סינון מטלות", sCourses: "קורסים וצבעים", sSem: "סמסטר ומבחנים", sAcct: "סנכרון וחשבון", sHelp: "עזרה ועדכונים",
+    sNotifHint: "תזכורות למטלות, למבחנים ולשיעורים — בהתראות ובלוח השנה שלך.",
+    sumRemOn: "תזכורות פועלות", sumRemOff: "תזכורות כבויות", sumCalOn: "יומן מחובר", sumCalOff: "יומן לא מחובר", sumNone: "לא הוגדר", sumSyncOn: "סנכרון פעיל", sumSyncOff: "סנכרון כבוי",
+    sumRules: n => n ? (n === 1 ? "כלל אחד פעיל" : n + " כללים פעילים") : "ללא סינון", sumCourses: (a, b) => a + " מתוך " + b + " קורסים מוצגים",
+    cdxLbl: "ספירה לאחור מדויקת (דקות ושניות)", cdxHint: "כבוי: הזמן שנשאר להגשה מוצג בימים ובשעות בלבד.",
+    filterHint: "בחר אילו מטלות יוצגו. הכללים חלים על הרשימה, על המסך הראשי, על התזכורות ועל היומן.",
+    oldTitle: "מטלות ישנות", oldHideLbl: "הסתר לגמרי מטלות ישנות שלא הוגשו",
+    zlTitle: "קישורי זום שמופיעים כמטלה", zlHint: "חלק מהמרצים מעלים קישור לשיעור כמטלה במודל, ואז זה נראה כמו משהו להגיש.",
+    zlZoom: "הצג כשיעור זום (לא כמטלה)", zlShow: "הצג כמטלה רגילה", zlHide: "הסתר לגמרי",
+    campusTitle: "המכון שלי", campusHint: "מסתיר מטלות של המכון השני לפי שם הקורס. שימושי אם מופיעים כאן קורסים של מכון אחר.",
+    campusAny: "לא משנה — הצג הכל", campusLev: "מכון לב (מסתיר טל ותבונה)", campusTal: "מכון טל (מסתיר לב)",
+    kwTitle: "הסתרה לפי מילים", kwHint: "מטלה שבשמה או בשם הקורס שלה מופיעה אחת המילים (כמילה שלמה) לא תוצג. למשל ״קבוצה ב״ או שם של מרצה.",
+    kwPh: "מילה או ביטוי", kwAdd: "הוסף", kwSug: "הצעות:", kwRemove: "הסר", hidTitle: "מה שהסתרתי ידנית", acctTitle: "החשבון שלי",
+    ruleInfo: n => n ? n + " מטלות מוסתרות כרגע לפי הכללים" : "אף מטלה לא מוסתרת כרגע לפי הכללים", ruleBar: n => n + " מטלות מוסתרות לפי כללי הסינון", ruleEdit: "שינוי",
+        lzTT: "🕘 מערכת שעות", lzAcad: "📅 לוח אקדמי", acTitle: "📅 לוח זמנים אקדמי · תשפ״ז", acMonth: "חודש", acYear: "שנה", acGo: "לוח אקדמי ←",
+    acTodayIs: "היום:", acNowOn: "עכשיו", acTomorrow: "מחר", acIn: n => "בעוד " + n + " ימים", acWeeks: n => n === 1 ? "שבוע" : n + " שבועות",
+    ac_s: "לימודים", ac_x: "בחינות", ac_b: "מועדי ב׳ + לימודים", ac_h: "חופשה / חג", ac_l: "רק לימודי קודש בלב", ac_e: "סמסטר אלול", ac_n: "חופשת קיץ", ac_w: "שבת",
+    acd_s: "לימודים אקדמיים, סמסטר א׳ / ב׳.", acd_x: "תקופת בחינות: לא מתקיימים לימודים אקדמיים ולימודי קודש.", acd_b: "בחינות מועדי ב׳ – באותו יום מתקיימים לימודים אקדמיים כרגיל.",
+    acd_h: "חופשה / חג – אין לימודים.", acd_l: "רק במכון לב מתקיימים לימודי קודש עד 13:00. אין לימודים אקדמיים, ואין לימודי קודש בשאר המכונים.",
+    acd_e: "סמסטר אלול: לימודי קודש בלבד.", acd_n: "חופשת קיץ / סמסטר אלול.", acd_w: "",
+    acMonthEv: "מה יש החודש", acNoEv: "אין אירועים מיוחדים החודש – לימודים כרגיל.", acPeriods: "סמסטרים ובחינות", acHolidays: "חגים וחופשות",
+    semA: "סמסטר א׳", semB: "סמסטר ב׳", exA1: "מועדי א׳ סמסטר א׳", exA2: "מועדי ב׳ סמסטר א׳ (ועוד ימי שישי במרץ)", exB1: "מועדי א׳ סמסטר ב׳", exB2: "מועדי ב׳ סמסטר ב׳",
+    acSrc: "מקור: לוח הזמנים האקדמי המעודכן של מכון לב לשנה״ל תשפ״ז (2026–2027), עדכון 4.6.26.",
+    acNote: "בנוסף ללוח הזה יש באתר לב-נט ״לו״ז ימי היערכות לשנה א׳ ותחילת לימודים לשנים א׳-ד׳ בקמפוסים השונים״ ו״לו״ז אקדמי עם הערות״, והם חלק בלתי נפרד מהלו״ז האקדמי.",
+    acOther: "הלוח האקדמי זמין כרגע רק למכון לב (moodle.jct.ac.il).", semSrcKnownB: "מקור: לוח השנה של מכון לב, סמסטר ב׳ תשפ״ז",
+        xqAddShort: "＋ בוחן", xqTitle: "📝 בחנים ומבחנים שלי", xqHint: "בוחן, מבחן אמצע או מבחן שהמועד שלו שונה בין הקבוצות – מוסיפים כאן, והוא יופיע בלוח המבחנים, בלו״ז, בתזכורות וביומן.",
+    xqNamePh: "שם הקורס", xqDate: "תאריך", xqTime: "שעה (לא חובה)", xqNotePh: "הערה (חומר, חדר…) – ב״אחר״ זה השם", xqAdd: "➕ הוסף ללוח", xqSaveEdit: "💾 שמור שינויים", xqCancel: "ביטול",
+    xqMoedTitle: "מועדי א׳ / ב׳ לפי קורס", xqPickCourse: "בחר קורס…", xqOtherCourse: "אחר (לכתוב שם)", xq_quiz: "בוחן", xq_mid: "מבחן אמצע", xq_exam: "מבחן", xq_other: "אחר",
+    xqNeedCourse: "בחר קורס (או ״אחר״ וכתוב שם)", xqNeedDate: "בחר תאריך", xqAdded: "נוסף ללוח המבחנים ✓", xqSaved: "נשמר ✓", acMine: "שלי",
+        wnAllTitle: "📜 כל העדכונים", wnAllBtn: "📜 כל העדכונים – מה נוסף ומתי", wnFix: "תיקונים", wnYours: "הגרסה שלך", wnFromTo: (a, b) => "עודכנת מגרסה " + a + " לגרסה " + b + ". זה כל מה שהשתנה בדרך:",
+    locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "האפליקציה של Hii 😉", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
     remTitle: "🔔 תזכורות", remAskTitle: "🔔 רוצה תזכורות?", remIntro: "האפליקציה יכולה להזכיר לך לפני הגשות, מבחנים ושיעורי זום. בחר מתי, והתזכורות ייכנסו ליומן של הטלפון.",
     remTasks: "מטלות ובחנים: כמה זמן לפני ההגשה", remExams: "מבחנים: כמה זמן לפני", remClasses: "שיעורים", remClsZoom: "רק שיעורי זום", remClsAll: "כל השיעורים", remClsNone: "בלי",
@@ -1085,7 +1305,7 @@ const I18N = {
     icsAll: "📅 הוסף את כל המטלות ליומן", icsHint: "קובץ יומן עם תזכורת יום לפני ושעתיים לפני כל הגשה. נפתח ביומן של הטלפון או המחשב.", icsNone: "אין מטלות עם מועד להוספה", icsDone: n => n + " מטלות נוספו לקובץ היומן",
     toCal: "📅 ליומן", markDone: "✓ סמן כבוצע", unmarkDone: "↩ בטל סימון", related: n => "📚 חומרים מאותו נושא (" + n + ")",
     focusDay: x => "מסונן: " + x, focusCourse: x => "מסונן: " + x, focusGroup: x => "מסונן: " + x, clearFocus: "✕ נקה", dayEmpty: "אין משימות ביום הזה", calDue: "מועד הגשה",
-    viewTT: "מערכת", ttTitle: "מערכת שעות שבועית", ttAdd: "+ הוסף", ttShare: "🔗 שתף", ttOpen: "למערכת ←", edit: "עריכה",
+    viewTT: "לו״ז", ttTitle: "מערכת שעות שבועית", ttAdd: "+ הוסף", ttShare: "🔗 שתף", ttOpen: "למערכת ←", edit: "עריכה",
     ttEmpty: "עדיין אין מערכת שעות. הכי פשוט: מורידים את קובץ המערכת מהלב נט הישן ומייבאים אותו כאן (הכפתור למטה מסביר איך). אפשר גם להוסיף שיעורים ידנית (״+ הוסף״).",
     ttNewTitle: "שיעור חדש", ttEditTitle: "עריכת שיעור", ttCourse: "קורס", ttOtherCourse: "אחר (לא מ-Moodle)", ttName: "שם להצגה", ttKind: "סוג", ttDay: "יום",
     ttFrom: "משעה", ttTo: "עד שעה", ttPlace: "מקום / חדר", save: "שמור", del: "מחק", delConfirm: "למחוק את השיעור הזה מהמערכת?",
@@ -1126,12 +1346,42 @@ const I18N = {
     syncOtherUser: "המכשיר מחובר עכשיו למשתמש אחר, הסנכרון כובה", syncBlocked: "Moodle באתר הזה לא מאפשר לשמור את נתוני הסנכרון",
     fbTitle: "💬 פידבק", fbOpen: "💬 יש לך רעיון, בקשה או באג? ספר לנו", fbHint: "ההודעה מגיעה ישירות למפתח האפליקציה.",
     fbKind: "סוג", fbIdea: "💡 הצעה לשיפור", fbBug: "🐞 משהו לא עובד", fbQuestion: "❓ שאלה", fbPraise: "❤️ מחמאה", fbMsg: "מה תרצה לספר?",
-    fbContact: "", fbPhone: "📞 טלפון, אם תרצה שיחזרו אליך (לא חובה)", fbWho: n => "צרף את השם שלי מ-Moodle (" + n + ") ואת רשימת הקורסים שלי, כדי שיהיה קל לעזור לי", fbBadPhone: "מספר הטלפון לא נראה תקין", fbTech: "צרף פרטים טכניים (גרסה, סוג מכשיר, שפה) כדי שיהיה קל לתקן", fbSend: "שלח",
+    fbContact: "", fbPhone: "📞 טלפון, אם תרצה שיחזרו אליך (לא חובה)",  fbBadPhone: "מספר הטלפון לא נראה תקין", fbAuto: "📎 השם, רשימת הקורסים ופרטי המכשיר (גרסה, סוג מכשיר, שפה) מצורפים אוטומטית, כדי שיהיה קל לעזור לך", fbSend: "שלח",
     fbEmpty: "כתוב כמה מילים לפני השליחה", fbThanks: "תודה! ההודעה נשלחה 🙏", fbQueued: "אין חיבור עכשיו. ההודעה תישלח אוטומטית כשיחזור החיבור.", syncViaCal: "נשמר כאירוע פרטי ביומן שלך ב-Moodle (בתאריך 1.1.2001, כדי שלא יפריע)", syncViaFiles: "נשמר ב״הקבצים הפרטיים שלי״ ב-Moodle", updSynced: "☁️ מסונכרן", updSyncErr: "⚠️ סנכרון",
     syncFirst: "הסנכרון הופעל. אם זה המכשיר הראשון, הנתונים שלו נשמרים ב-Moodle; במכשירים הבאים הם נטענים משם.", exLevReplaced: "(הוחלף במה שהזנת)", exHideLev: "לא רלוונטי לי", exShowLev: "הצג שוב",
   },
   en: {
-    locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
+        back: "Back", sNotif: "Reminders & calendar", sLook: "Look & display", sFilter: "Task filters", sCourses: "Courses & colours", sSem: "Semester & exams", sAcct: "Sync & account", sHelp: "Help & updates",
+    sNotifHint: "Reminders for tasks, exams and classes — as notifications and in your calendar.",
+    sumRemOn: "Reminders on", sumRemOff: "Reminders off", sumCalOn: "Calendar connected", sumCalOff: "Calendar not connected", sumNone: "Not set", sumSyncOn: "Sync on", sumSyncOff: "Sync off",
+    sumRules: n => n ? (n === 1 ? "1 rule active" : n + " rules active") : "No filters", sumCourses: (a, b) => a + " of " + b + " courses shown",
+    cdxLbl: "Exact countdown (minutes and seconds)", cdxHint: "Off: the time left is shown in days and hours only.",
+    filterHint: "Choose which tasks to show. The rules apply to the list, the home screen, reminders and the calendar.",
+    oldTitle: "Old tasks", oldHideLbl: "Hide old unsubmitted tasks completely",
+    zlTitle: "Zoom links posted as tasks", zlHint: "Some lecturers post a class link as an assignment in Moodle, so it looks like something to submit.",
+    zlZoom: "Show as a Zoom class (not a task)", zlShow: "Show as a normal task", zlHide: "Hide completely",
+    campusTitle: "My campus", campusHint: "Hides the other campus’s tasks by course name. Handy if you see courses from another campus.",
+    campusAny: "Doesn’t matter — show all", campusLev: "Machon Lev (hides Tal and Tavuna)", campusTal: "Machon Tal (hides Lev)",
+    kwTitle: "Hide by words", kwHint: "A task whose name or course name contains one of these words (as a whole word) is not shown. For example “Group B” or a lecturer’s name.",
+    kwPh: "Word or phrase", kwAdd: "Add", kwSug: "Suggestions:", kwRemove: "Remove", hidTitle: "What I hid by hand", acctTitle: "My account",
+    ruleInfo: n => n ? n + " tasks are hidden by the rules right now" : "No task is hidden by the rules right now", ruleBar: n => n + " tasks hidden by your filters", ruleEdit: "Change",
+        lzTT: "🕘 Timetable", lzAcad: "📅 Academic calendar", acTitle: "📅 Academic calendar · 5787", acMonth: "Month", acYear: "Year", acGo: "Academic calendar →",
+    acTodayIs: "Today:", acNowOn: "now", acTomorrow: "tomorrow", acIn: n => "in " + n + " days", acWeeks: n => n === 1 ? "1 week" : n + " weeks",
+    ac_s: "Classes", ac_x: "Exams", ac_b: "Resits + classes", ac_h: "Holiday / break", ac_l: "Lev Torah studies only", ac_e: "Elul semester", ac_n: "Summer break", ac_w: "Shabbat",
+    acd_s: "Academic classes, semester A / B.", acd_x: "Exam period: no academic classes and no Torah studies.", acd_b: "Resit exams – academic classes are held as usual that day.",
+    acd_h: "Holiday / break – no classes.", acd_l: "Only Machon Lev holds Torah studies, until 13:00. No academic classes, and no Torah studies on the other campuses.",
+    acd_e: "Elul semester: Torah studies only.", acd_n: "Summer break / Elul semester.", acd_w: "",
+    acMonthEv: "This month", acNoEv: "Nothing special this month – classes as usual.", acPeriods: "Semesters and exams", acHolidays: "Holidays and breaks",
+    semA: "Semester A", semB: "Semester B", exA1: "Semester A exams, 1st sitting", exA2: "Semester A resits (plus Fridays in March)", exB1: "Semester B exams, 1st sitting", exB2: "Semester B resits",
+    acSrc: "Source: Machon Lev’s updated academic calendar for 5787 (2026–2027), updated 4.6.26.",
+    acNote: "Levnet also has the schedule of first-year preparation days and the start of classes for years 1–4 on each campus, and an annotated academic calendar; they are an integral part of it.",
+    acOther: "The academic calendar is currently available only for Machon Lev (moodle.jct.ac.il).", semSrcKnownB: "Source: Machon Lev academic calendar, semester B 5787",
+        xqAddShort: "＋ Quiz", xqTitle: "📝 My quizzes & tests", xqHint: "A quiz, midterm or exam whose date differs between groups – add it here and it shows on the exam board, the schedule, reminders and your calendar.",
+    xqNamePh: "Course name", xqDate: "Date", xqTime: "Time (optional)", xqNotePh: "Note (material, room…) – for “Other” this is the name", xqAdd: "➕ Add to the board", xqSaveEdit: "💾 Save changes", xqCancel: "Cancel",
+    xqMoedTitle: "1st / 2nd sittings by course", xqPickCourse: "Choose a course…", xqOtherCourse: "Other (type a name)", xq_quiz: "Quiz", xq_mid: "Midterm", xq_exam: "Exam", xq_other: "Other",
+    xqNeedCourse: "Choose a course (or “Other” and type a name)", xqNeedDate: "Choose a date", xqAdded: "Added to the exam board ✓", xqSaved: "Saved ✓", acMine: "mine",
+        wnAllTitle: "📜 All updates", wnAllBtn: "📜 All updates – what was added when", wnFix: "fixes", wnYours: "your version", wnFromTo: (a, b) => "You were updated from version " + a + " to " + b + ". Here’s everything that changed:",
+    locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "Hii’s app 😉", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
     remTitle: "🔔 Reminders", remAskTitle: "🔔 Want reminders?", remIntro: "The app can remind you before deadlines, exams and Zoom classes. Choose when, and the reminders go into your phone’s calendar.",
     remTasks: "Assignments and quizzes: how long before the deadline", remExams: "Exams: how long before", remClasses: "Classes", remClsZoom: "Zoom classes only", remClsAll: "All classes", remClsNone: "None",
@@ -1253,7 +1503,7 @@ const I18N = {
     icsAll: "📅 Add all tasks to my calendar", icsHint: "A calendar file with reminders 1 day and 2 hours before each deadline. Opens in your phone or PC calendar.", icsNone: "No dated tasks to add", icsDone: n => n + " tasks added to the calendar file",
     toCal: "📅 Calendar", markDone: "✓ Mark done", unmarkDone: "↩ Unmark", related: n => "📚 Materials from the same topic (" + n + ")",
     focusDay: x => "Filtered: " + x, focusCourse: x => "Filtered: " + x, focusGroup: x => "Filtered: " + x, clearFocus: "✕ Clear", dayEmpty: "No tasks on this day", calDue: "Due",
-    viewTT: "Timetable", ttTitle: "Weekly timetable", ttAdd: "+ Add", ttShare: "🔗 Share", ttOpen: "Timetable →", edit: "Edit",
+    viewTT: "Schedule", ttTitle: "Weekly timetable", ttAdd: "+ Add", ttShare: "🔗 Share", ttOpen: "Timetable →", edit: "Edit",
     ttEmpty: "No timetable yet. Easiest: download your timetable file from the old Levnet and import it here (the button below shows how). You can also add classes manually (“+ Add”).",
     ttNewTitle: "New class", ttEditTitle: "Edit class", ttCourse: "Course", ttOtherCourse: "Other (not on Moodle)", ttName: "Display name", ttKind: "Type", ttDay: "Day",
     ttFrom: "From", ttTo: "To", ttPlace: "Place / room", save: "Save", del: "Delete", delConfirm: "Delete this class from the timetable?",
@@ -1294,12 +1544,42 @@ const I18N = {
     syncOtherUser: "This device is now signed in as another user; sync was turned off", syncBlocked: "Moodle on this site doesn’t allow saving the sync data",
     fbTitle: "💬 Feedback", fbOpen: "💬 Got an idea, a request or a bug? Tell us", fbHint: "Your message goes straight to the app’s developer.",
     fbKind: "Type", fbIdea: "💡 Idea", fbBug: "🐞 Something doesn’t work", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "What would you like to say?",
-    fbContact: "", fbPhone: "📞 Phone, if you’d like a call back (optional)", fbWho: n => "Attach my Moodle name (" + n + ") and my course list, so it’s easier to help me", fbBadPhone: "That phone number doesn’t look right", fbTech: "Attach technical details (version, device type, language) to make fixing easier", fbSend: "Send",
+    fbContact: "", fbPhone: "📞 Phone, if you’d like a call back (optional)",  fbBadPhone: "That phone number doesn’t look right", fbAuto: "📎 Your name, course list and device details (version, device type, language) are attached automatically, so it’s easier to help you", fbSend: "Send",
     fbEmpty: "Write a few words before sending", fbThanks: "Thanks! Your message was sent 🙏", fbQueued: "No connection right now. It will be sent automatically when you’re back online.", syncViaCal: "Kept as a private event in your Moodle calendar (dated 1.1.2001, out of the way)", syncViaFiles: "Kept in your Moodle “Private files”", updSynced: "☁️ Synced", updSyncErr: "⚠️ Sync",
     syncFirst: "Sync is on. On the first device its data is saved to Moodle; the next devices load it from there.", exLevReplaced: "(replaced by what you entered)", exHideLev: "Not relevant to me", exShowLev: "Show again",
   },
   fr: {
-    locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
+        back: "Retour", sNotif: "Rappels et agenda", sLook: "Apparence et affichage", sFilter: "Filtres de devoirs", sCourses: "Cours et couleurs", sSem: "Semestre et examens", sAcct: "Synchro et compte", sHelp: "Aide et mises à jour",
+    sNotifHint: "Rappels pour les devoirs, examens et cours — en notifications et dans votre agenda.",
+    sumRemOn: "Rappels activés", sumRemOff: "Rappels désactivés", sumCalOn: "Agenda connecté", sumCalOff: "Agenda non connecté", sumNone: "Non défini", sumSyncOn: "Synchro activée", sumSyncOff: "Synchro désactivée",
+    sumRules: n => n ? (n === 1 ? "1 règle active" : n + " règles actives") : "Aucun filtre", sumCourses: (a, b) => a + " cours sur " + b + " affichés",
+    cdxLbl: "Compte à rebours précis (minutes et secondes)", cdxHint: "Désactivé : le temps restant s’affiche en jours et en heures seulement.",
+    filterHint: "Choisissez les devoirs à afficher. Les règles s’appliquent à la liste, à l’accueil, aux rappels et à l’agenda.",
+    oldTitle: "Anciens devoirs", oldHideLbl: "Masquer complètement les anciens devoirs non rendus",
+    zlTitle: "Liens Zoom publiés comme devoirs", zlHint: "Certains enseignants publient un lien de cours comme devoir dans Moodle, ce qui ressemble à quelque chose à rendre.",
+    zlZoom: "Afficher comme cours Zoom (pas un devoir)", zlShow: "Afficher comme un devoir normal", zlHide: "Masquer complètement",
+    campusTitle: "Mon campus", campusHint: "Masque les devoirs de l’autre campus d’après le nom du cours. Utile si vous voyez des cours d’un autre campus.",
+    campusAny: "Peu importe — tout afficher", campusLev: "Machon Lev (masque Tal et Tavuna)", campusTal: "Machon Tal (masque Lev)",
+    kwTitle: "Masquer par mots", kwHint: "Un devoir dont le nom ou le cours contient l’un de ces mots (mot entier) n’est pas affiché. Par exemple « Groupe B » ou le nom d’un enseignant.",
+    kwPh: "Mot ou expression", kwAdd: "Ajouter", kwSug: "Suggestions :", kwRemove: "Retirer", hidTitle: "Ce que j’ai masqué à la main", acctTitle: "Mon compte",
+    ruleInfo: n => n ? n + " devoirs masqués par les règles en ce moment" : "Aucun devoir masqué par les règles en ce moment", ruleBar: n => n + " devoirs masqués par vos filtres", ruleEdit: "Modifier",
+        lzTT: "🕘 Emploi du temps", lzAcad: "📅 Calendrier académique", acTitle: "📅 Calendrier académique · 5787", acMonth: "Mois", acYear: "Année", acGo: "Calendrier académique →",
+    acTodayIs: "Aujourd’hui :", acNowOn: "en ce moment", acTomorrow: "demain", acIn: n => "dans " + n + " jours", acWeeks: n => n === 1 ? "1 semaine" : n + " semaines",
+    ac_s: "Cours", ac_x: "Examens", ac_b: "Rattrapages + cours", ac_h: "Fête / vacances", ac_l: "Kodesh à Lev seulement", ac_e: "Semestre d’Eloul", ac_n: "Vacances d’été", ac_w: "Chabbat",
+    acd_s: "Cours académiques, semestre A / B.", acd_x: "Période d’examens : ni cours académiques ni études de kodesh.", acd_b: "Rattrapages – les cours académiques ont lieu normalement ce jour-là.",
+    acd_h: "Fête / vacances – pas de cours.", acd_l: "Seul Machon Lev a des études de kodesh, jusqu’à 13 h. Pas de cours académiques, ni de kodesh dans les autres campus.",
+    acd_e: "Semestre d’Eloul : études de kodesh seulement.", acd_n: "Vacances d’été / semestre d’Eloul.", acd_w: "",
+    acMonthEv: "Ce mois-ci", acNoEv: "Rien de particulier ce mois-ci – cours normaux.", acPeriods: "Semestres et examens", acHolidays: "Fêtes et vacances",
+    semA: "Semestre A", semB: "Semestre B", exA1: "Examens du semestre A, 1re session", exA2: "Rattrapages du semestre A (et vendredis de mars)", exB1: "Examens du semestre B, 1re session", exB2: "Rattrapages du semestre B",
+    acSrc: "Source : calendrier académique mis à jour de Machon Lev pour 5787 (2026–2027), mis à jour le 4.6.26.",
+    acNote: "Levnet propose aussi le calendrier des journées de préparation de 1re année et de la rentrée des années 1 à 4 par campus, ainsi qu’un calendrier annoté ; ils en font partie intégrante.",
+    acOther: "Le calendrier académique n’est disponible pour l’instant que pour Machon Lev (moodle.jct.ac.il).", semSrcKnownB: "Source : calendrier de Machon Lev, semestre B 5787",
+        xqAddShort: "＋ Quiz", xqTitle: "📝 Mes quiz et contrôles", xqHint: "Un quiz, partiel ou examen dont la date varie selon les groupes – ajoutez-le ici : il apparaît dans les examens, l’agenda, les rappels et votre calendrier.",
+    xqNamePh: "Nom du cours", xqDate: "Date", xqTime: "Heure (facultatif)", xqNotePh: "Note (matière, salle…) – pour « Autre », c’est le nom", xqAdd: "➕ Ajouter", xqSaveEdit: "💾 Enregistrer", xqCancel: "Annuler",
+    xqMoedTitle: "1re / 2e session par cours", xqPickCourse: "Choisir un cours…", xqOtherCourse: "Autre (saisir un nom)", xq_quiz: "Quiz", xq_mid: "Partiel", xq_exam: "Examen", xq_other: "Autre",
+    xqNeedCourse: "Choisissez un cours (ou « Autre » avec un nom)", xqNeedDate: "Choisissez une date", xqAdded: "Ajouté aux examens ✓", xqSaved: "Enregistré ✓", acMine: "à moi",
+        wnAllTitle: "📜 Toutes les mises à jour", wnAllBtn: "📜 Toutes les mises à jour – quoi et quand", wnFix: "correctifs", wnYours: "votre version", wnFromTo: (a, b) => "Mise à jour de la version " + a + " à la " + b + ". Voici tout ce qui a changé :",
+    locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "L’appli de Hii 😉", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     remTitle: "🔔 Rappels", remAskTitle: "🔔 Envie de rappels ?", remIntro: "L’application peut vous rappeler les échéances, examens et cours Zoom. Choisissez quand, et les rappels vont dans le calendrier du téléphone.",
     remTasks: "Devoirs et tests : combien de temps avant l’échéance", remExams: "Examens : combien de temps avant", remClasses: "Cours", remClsZoom: "Cours Zoom seulement", remClsAll: "Tous les cours", remClsNone: "Aucun",
@@ -1421,7 +1701,7 @@ const I18N = {
     icsAll: "📅 Ajouter tous les devoirs à mon calendrier", icsHint: "Un fichier calendrier avec rappels 1 jour et 2 heures avant chaque échéance. S’ouvre dans le calendrier du téléphone ou du PC.", icsNone: "Aucun devoir daté à ajouter", icsDone: n => n + " devoirs ajoutés au fichier calendrier",
     toCal: "📅 Calendrier", markDone: "✓ Marquer fait", unmarkDone: "↩ Annuler", related: n => "📚 Supports du même thème (" + n + ")",
     focusDay: x => "Filtré : " + x, focusCourse: x => "Filtré : " + x, focusGroup: x => "Filtré : " + x, clearFocus: "✕ Effacer", dayEmpty: "Aucun devoir ce jour-là", calDue: "Échéance",
-    viewTT: "Emploi du temps", ttTitle: "Emploi du temps hebdomadaire", ttAdd: "+ Ajouter", ttShare: "🔗 Partager", ttOpen: "Emploi du temps →", edit: "Modifier",
+    viewTT: "Agenda", ttTitle: "Emploi du temps hebdomadaire", ttAdd: "+ Ajouter", ttShare: "🔗 Partager", ttOpen: "Emploi du temps →", edit: "Modifier",
     ttEmpty: "Pas encore d’emploi du temps. Le plus simple : téléchargez le fichier depuis l’ancien Levnet et importez-le ici (le bouton ci-dessous explique comment). Vous pouvez aussi ajouter des cours à la main (« + Ajouter »).",
     ttNewTitle: "Nouveau cours", ttEditTitle: "Modifier le cours", ttCourse: "Matière", ttOtherCourse: "Autre (hors Moodle)", ttName: "Nom affiché", ttKind: "Type", ttDay: "Jour",
     ttFrom: "De", ttTo: "À", ttPlace: "Lieu / salle", save: "Enregistrer", del: "Supprimer", delConfirm: "Supprimer ce cours de l’emploi du temps ?",
@@ -1462,7 +1742,7 @@ const I18N = {
     syncOtherUser: "Cet appareil est connecté à un autre utilisateur ; synchronisation désactivée", syncBlocked: "Moodle sur ce site ne permet pas d’enregistrer les données de synchronisation",
     fbTitle: "💬 Avis", fbOpen: "💬 Une idée, une demande ou un bug ? Dites-le-nous", fbHint: "Votre message va directement au développeur de l’application.",
     fbKind: "Type", fbIdea: "💡 Idée", fbBug: "🐞 Quelque chose ne marche pas", fbQuestion: "❓ Question", fbPraise: "❤️ Compliment", fbMsg: "Que voulez-vous nous dire ?",
-    fbContact: "", fbPhone: "📞 Téléphone, si vous voulez être rappelé (facultatif)", fbWho: n => "Joindre mon nom Moodle (" + n + ") et ma liste de cours, pour qu’on puisse mieux m’aider", fbBadPhone: "Ce numéro de téléphone ne semble pas valide", fbTech: "Joindre les détails techniques (version, type d’appareil, langue) pour faciliter la correction", fbSend: "Envoyer",
+    fbContact: "", fbPhone: "📞 Téléphone, si vous voulez être rappelé (facultatif)",  fbBadPhone: "Ce numéro de téléphone ne semble pas valide", fbAuto: "📎 Votre nom, votre liste de cours et les détails de l’appareil (version, type, langue) sont joints automatiquement, pour mieux vous aider", fbSend: "Envoyer",
     fbEmpty: "Écrivez quelques mots avant d’envoyer", fbThanks: "Merci ! Votre message a été envoyé 🙏", fbQueued: "Pas de connexion. Il sera envoyé automatiquement au retour du réseau.", syncViaCal: "Gardé comme événement privé dans votre calendrier Moodle (daté du 1.1.2001, hors de vue)", syncViaFiles: "Gardé dans vos « Fichiers personnels » Moodle", updSynced: "☁️ Synchronisé", updSyncErr: "⚠️ Synchro",
     syncFirst: "Synchronisation activée. Sur le premier appareil, ses données sont enregistrées sur Moodle ; les appareils suivants les chargent depuis là.", exLevReplaced: "(remplacée par votre saisie)", exHideLev: "Pas pour moi", exShowLev: "Réafficher",
   },
@@ -1488,7 +1768,7 @@ function applyLang(l) {
   $("#old").innerHTML = [7, 14, 30, 60, 90].map(n => '<option value="' + n + '">' + esc(t("days", n)) + "</option>").join("") + '<option value="0">' + esc(t("never")) + "</option>";
   $("#old").value = String(P.old_days);
   if (!$("#app").hidden) render();
-  if (!$("#sheet").hidden) renderSheet();
+  if (!$("#sheet").hidden) { renderSheet(); setPage(V.spage || ""); }
   if (!$("#setup").hidden) renderGuide();
   if (!$("#tour").hidden) renderTour();
   if (!$("#thSheet").hidden) renderThemes();
@@ -1621,7 +1901,7 @@ async function fetchAll() {
       due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "",
       intro: stripHtml(e.description), links: introLinks(e.description), files: [], url: e.url || act.url || "" });
   }
-  LS.set("uid", info.userid);
+  LS.set("uid", info.userid); applyZl(tasks, now);
   return { tasks, diag: [...diag], courses, user: info.fullname || "", userid: info.userid, at: now, contents: (V.data && V.data.contents) || {}, news: (V.data && V.data.news) || null };
 }
 /* announcements: the "news" forum of every current course (the one teachers post to) */
@@ -1677,7 +1957,7 @@ async function fetchContents(d) {
 /* ---------- state ---------- */
 const DAY = 86400;
 const WAS_CONN = (() => { try { return !!JSON.parse(localStorage.getItem(PFX + "token") || '""'); } catch (e) { return false; } })();
-const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [] }, LS.get("prefs", {}));
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [], kw: [], campus: "", zl: "zoom", cdx: false, old_hide: false, xq: [] }, LS.get("prefs", {}));
 if (!Array.isArray(P.manual)) P.manual = [];
 if (!Array.isArray(P.mine)) P.mine = [];
 if (!Array.isArray(P.tt)) P.tt = [];
@@ -1686,7 +1966,7 @@ P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed"];
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -1753,15 +2033,19 @@ function rel(ts, now) {
   else x = t("years", Math.floor(days / 365));
   return d >= 0 ? t("fut", x) : t("past", x);
 }
-/* countdown with minutes and seconds; beyond 30 days stays coarse ("4 months ago") */
+/* countdown: days and hours (exact with minutes and seconds if chosen); beyond 30 days stays coarse ("4 months ago") */
 function cdHTML(ts, now) {
   const d = ts - now, a = Math.abs(d);
   if (a >= 30 * 86400) return esc(rel(ts, now));
   const days = Math.floor(a / 86400), h = Math.floor(a % 86400 / 3600), m = Math.floor(a % 3600 / 60), sec = Math.floor(a % 60);
   const parts = [];
-  if (days) parts.push(t("days", days));
-  if (days || h) parts.push(t("cdH", h));
-  parts.push(t("cdM", m), t("cdS", sec));
+  if (P.cdx) {                                    // exact: down to the second
+    if (days) parts.push(t("days", days));
+    if (days || h) parts.push(t("cdH", h));
+    parts.push(t("cdM", m), t("cdS", sec));
+  } else if (days) parts.push(t("days", days), t("cdH", h));      // simple: days and hours, then hours, then minutes
+  else if (h) parts.push(t("cdH", h));
+  else parts.push(t("cdM", m));
   return esc(d >= 0 ? t("left", parts.join(", ")) : t("overdueBy", parts.join(", ")));
 }
 const cdState = (el, ts, now) => { el.classList.toggle("late", ts < now); el.classList.toggle("soon", ts >= now && ts - now < 86400); };
@@ -1789,7 +2073,36 @@ const GROUPS = [["late", "gLate"], ["today", "gToday"], ["week", "gWeek"], ["lat
 const G_OPEN = { late: true, today: true, week: true, later: true, nodue: false, old: false, done: false };
 const TYPE = { assign: "tAssign", quiz: "tQuiz", event: "tEvent", zoom: "tZoom", mine: "tMine" };
 const dueKey = x => x.due || 9e12;
-const counted = x => !isOff(x.cid) && !P.hidden.includes(x.key);
+/* filtering rules: hidden words (+ "my campus"), zoom links posted as assignments, old overdue tasks */
+const CAMPUS_WORDS = { lev: ["טל", "תבונה"], tal: ["לב"] };
+const ruleWords = () => [...new Set((P.kw || []).concat(CAMPUS_WORDS[P.campus] || []))];
+const isLetter = ch => !!ch && /[\p{L}\p{N}]/u.test(ch);
+function hasWord(hay, w) {                       // whole word / phrase, so "טל" does not match "מטלה"
+  hay = hay.toLowerCase(); w = w.toLowerCase(); let i = -1;
+  while ((i = hay.indexOf(w, i + 1)) >= 0) if (!isLetter(hay[i - 1]) && !isLetter(hay[i + w.length])) return true;
+  return false;
+}
+const ZL_Z = /zoom|זום/i, ZL_L = /קישור|לינק|link|שיעור|הרצאה|מפגש|lecture|session|meeting|class/i;
+const zlIs = x => { const o = x.zlo || x; return o.type === "assign" && ZL_Z.test(x.name || "") && (o.via === "none" || o.status === "na" || ZL_L.test(x.name || "")); };
+function applyZl(tasks, now) {                   // a "zoom link" assignment shows as a class link, not as something to submit (reversible)
+  for (const x of tasks || []) {
+    if (!zlIs(x)) continue;
+    if (P.zl === "zoom") {
+      if (!x.zlo) x.zlo = { type: x.type, via: x.via, status: x.status, pdf: x.pdf };
+      x.type = "zoom"; x.via = "other"; x.pdf = false; x.status = x.zlo.status === "submitted" ? "submitted" : (x.due && x.due < now ? "na" : "unknown");
+    } else if (x.zlo) { Object.assign(x, x.zlo); delete x.zlo; }
+  }
+}
+function ruleHidden(x, now) {
+  if (x.type === "mine") return false;
+  if (P.zl === "hide" && zlIs(x)) return true;
+  if (P.old_hide && groupOf(x, now) === "old") return true;
+  const w = ruleWords(); if (!w.length) return false;
+  const hay = (x.name || "") + " " + (x.course || "");
+  return w.some(k => hasWord(hay, k));
+}
+const ruleCount = () => { const now = nowS(); return V.data ? V.data.tasks.filter(x => !isOff(x.cid) && !P.hidden.includes(x.key) && ruleHidden(x, now)).length : 0; };
+const counted = x => !isOff(x.cid) && !P.hidden.includes(x.key) && !ruleHidden(x, nowS());
 /* sorted by what you actually do: upload a file (scan → PDF) or answer inside Moodle (quizzes, online text, other activities) */
 const viaOf = x => x.type === "mine" ? "mine" : x.via || (x.type === "assign" ? "file" : x.type === "quiz" ? "online" : x.type === "zoom" ? "other" : "online");
 const catOf = x => { const v = viaOf(x); return v === "none" ? "other" : v; };
@@ -1799,7 +2112,7 @@ function mineTasks() {
   return (P.mine || []).map(m => ({ key: "mine:" + m.id, type: "mine", mine: m.id, cid: m.cid || 0, cmid: 0, course: m.cid ? courseName(m.cid) : t("mineCourse"), name: m.title,
     due: m.due, extended: false, from: 0, cutoff: 0, status: "none", grade: "", intro: m.note || "", links: [], files: [], url: "" }));
 }
-function withMine() { if (V.data && Array.isArray(V.data.tasks)) V.data.tasks = V.data.tasks.filter(x => x.type !== "mine").concat(mineTasks()); }            // tasks of courses you follow and did not hide
+function withMine() { if (V.data && Array.isArray(V.data.tasks)) { V.data.tasks = V.data.tasks.filter(x => x.type !== "mine").concat(mineTasks()); applyZl(V.data.tasks, nowS()); } }            // tasks of courses you follow and did not hide
 function inFocus(x, now) {
   const f = V.focus; if (!f) return true;
   if (f.kind === "day") return !!x.due && dueDay(x) === f.d;
@@ -1810,6 +2123,7 @@ function inFocus(x, now) {
 function visible(x, now) {
   if (isOff(x.cid)) return false;
   if (P.hidden.includes(x.key) && !V.showHid) return false;
+  if (ruleHidden(x, now)) return false;
   if (!inFocus(x, now)) return false;
   if (V.cat !== "all" && catOf(x) !== V.cat) return false;
   if (!V.focus || V.focus.kind === "course") {
@@ -1897,7 +2211,7 @@ function renderDash(d, now) {
   // next 7 days
   const base = new Date(now * 1000); base.setHours(0, 0, 0, 0); let wk = "";
   const exByDay = {}; for (const x of examList()) (exByDay[dayKey(new Date(x.ts * 1000))] = exByDay[dayKey(new Date(x.ts * 1000))] || []).push(x);
-  const exTitle = x => courseName(x.cid) + " · " + t(x.m === "a" ? "moedA" : "moedB");
+  const exTitle = x => exName(x) + " · " + exLbl(x);
   for (let i = 0; i < 7; i++) {
     const day = new Date(base); day.setDate(base.getDate() + i); const k = dayKey(day);
     const items = rl.filter(x => x.due && dueDay(x) === k).sort((a, b) => isDone(a) - isDone(b) || a.due - b.due);
@@ -1952,7 +2266,8 @@ const daysBetween = (a, b) => Math.round((dayStart(b) - dayStart(a)) / DAY);
 function shortDate(ts) { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric" }); } catch (e) { return ymd(ts); } }
 /* academic calendars that a user confirmed (no guessing): semester start, last day of classes, exam period. Used only for that Moodle site. */
 const KNOWN_SEMS = {
-  "moodle.jct.ac.il": [{ s: "2026-10-11", e: "2027-01-14", xs: "2027-01-17", xe: "2027-02-13", src: "semSrcKnown", xl: "examsLblA" }],
+  "moodle.jct.ac.il": [{ s: "2026-10-11", e: "2027-01-14", xs: "2027-01-17", xe: "2027-02-13", src: "semSrcKnown", xl: "examsLblA" },
+                       { s: "2027-02-28", e: "2027-06-24", xs: "2027-06-27", xe: "2027-07-23", src: "semSrcKnownB", xl: "examsLblA" }],
 };
 function knownSem(now) {
   let host = ""; try { host = new URL(M.url || DEFAULT_SITE).hostname; } catch (e) {}
@@ -2251,9 +2566,16 @@ function levnetFor(c) {
   const [date, note] = Array.isArray(v) ? v : [v, ""];
   return { m: L.moed, ts: parseYmd(date), note, published: L.published, draft: L.draft };
 }
+/* quizzes, midterms and other exams the student adds (they differ between groups, so each one enters their own) */
+const XQ_KINDS = ["quiz", "mid", "exam", "other"];
+const xqTs = q => parseDT(q.at) || parseYmd(q.at);
+const exLbl = x => x.m === "q" ? (x.k === "other" && x.note ? x.note : t("xq_" + x.k)) : t(x.m === "a" ? "moedA" : "moedB");
+const exName = x => x.n || courseName(x.cid);
+const exMk = x => x.m === "q" ? "q" + x.id : x.m;
 function examList() {
   const out = [], now = nowS();
   for (const [cid, e] of Object.entries(P.exams)) for (const m of ["a", "b"]) { const ts = parseDT(e && e[m]); if (ts) out.push({ cid: Number(cid), m, ts }); }
+  for (const q of P.xq || []) { const ts = xqTs(q); if (ts) out.push({ cid: q.cid || 0, n: q.cid ? "" : q.n, m: "q", k: q.k, id: q.id, note: q.note || "", ts, allDay: !parseDT(q.at) }); }
   for (const c of (V.data && V.data.courses) || []) {
     const lv = levnetFor(c), e = P.exams[c.id] || {};
     if (!lv || e[lv.m] || e.noLev || (c.end && c.end < now - 30 * DAY)) continue;
@@ -2271,8 +2593,8 @@ function renderExams(now) {
     const right = x.allDay ? (days >= 2 ? '<span class="en">' + days + '</span><span class="eu">' + esc(t("daysU", days)) + "</span>" : '<span class="en" style="font-size:15px">' + esc(t(days === 1 ? "exTomorrow" : "exToday")) + "</span>")
       : x.ts <= now || days === 0 ? '<span class="en" style="font-size:15px">' + esc(t("exToday")) + "</span>" + (x.ts > now ? cdSpan(x.ts, now) : "")
       : days >= 2 ? '<span class="en">' + days + '</span><span class="eu">' + esc(t("daysU", days)) + "</span>" : cdSpan(x.ts, now);
-    return '<button class="er ' + x.m + (x.ts - now < 3 * DAY ? " soon" : "") + '" data-exedit style="--c:' + colorOf(x.cid) + '"><span class="eb"><b><bdi>' + esc(courseName(x.cid)) +
-      "</bdi></b><small>" + esc(t(x.m === "a" ? "moedA" : "moedB") + " · " + (x.allDay ? dayDate(x.ts) : when(x.ts)) + (x.lev && x.lev.note ? " · " + x.lev.note : "")) +
+    return '<button class="er ' + x.m + (x.ts - now < 3 * DAY ? " soon" : "") + '" ' + (x.m === "q" ? 'data-xqedit="' + x.id + '"' : "data-exedit") + ' style="--c:' + (x.cid ? colorOf(x.cid) : "var(--muted)") + '"><span class="eb"><b><bdi>' + esc(exName(x)) +
+      "</bdi></b><small>" + (x.m === "q" ? '<span class="qk">' + esc(exLbl(x)) + "</span>" + esc(" · " + (x.allDay ? dayDate(x.ts) : when(x.ts)) + (x.k !== "other" && x.note ? " · " + x.note : "")) : esc(exLbl(x) + " · " + (x.allDay ? dayDate(x.ts) : when(x.ts)) + (x.lev && x.lev.note ? " · " + x.lev.note : ""))) +
       (x.lev ? ' <span class="lv">' + esc(t(x.lev.draft ? "exLev" : "exLevFinal")) + "</span>" : "") + '</small></span><span class="ec">' + right + "</span></button>";
   }).join("") + (L.length > N ? '<button class="link" data-exall>' + esc(V.exAll ? t("newsLess") : t("exMore", L.length - N)) + "</button>" : "") +
     (shown.some(x => x.lev && x.lev.draft) ? '<div class="exnote">ⓘ ' + esc(t("exLevNote", new Date(parseYmd(shown.find(x => x.lev).lev.published) * 1000).toLocaleDateString(t("locale"), { day: "numeric", month: "numeric", year: "numeric" }))) + "</div>" : "");
@@ -2288,6 +2610,37 @@ function renderExSheet() {
       sug.map(x => '<div class="xsug">' + esc(t("exFromMoodle")) + " <bdi>" + esc(x.name) + "</bdi> · " + esc(when(x.ts)) + ' <button data-exuse="' + c.id + "|" + x.m + "|" + fmtDT(x.ts) + '">' +
         esc(t("exUse") + " (" + t(x.m === "a" ? "moedA" : "moedB") + ")") + "</button></div>").join("") + "</div></div>";
   }).join("") : '<div class="hint">' + esc(t("noCourses")) + "</div>";
+}
+function renderXq() {
+  const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id)), now = nowS();
+  const cur = $("#xqCourse").value;
+  $("#xqCourse").innerHTML = '<option value="">' + esc(t("xqPickCourse")) + "</option>" + cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + '<option value="0">' + esc(t("xqOtherCourse")) + "</option>";
+  if (cur && [...$("#xqCourse").options].some(o => o.value === cur)) $("#xqCourse").value = cur;
+  const kc = $("#xqKind").value || "quiz";
+  $("#xqKind").innerHTML = XQ_KINDS.map(k => '<option value="' + k + '">' + esc(t("xq_" + k)) + "</option>").join(""); $("#xqKind").value = kc;
+  $("#xqName").hidden = $("#xqCourse").value !== "0";
+  const L = (P.xq || []).map(q => ({ q, ts: xqTs(q) })).sort((a, b) => (a.ts < now - DAY) - (b.ts < now - DAY) || a.ts - b.ts);
+  $("#xqList").innerHTML = L.map(({ q, ts }) => {
+    const x = { cid: q.cid, n: q.cid ? "" : q.n, m: "q", k: q.k, note: q.note };
+    return '<div class="xqi' + (ts < now - DAY ? " past" : "") + '" style="--c:' + (q.cid ? colorOf(q.cid) : "var(--muted)") + '"><i></i><span class="xqt"><b><bdi>' + esc(exName(x)) + "</bdi> · " + esc(exLbl(x)) + "</b><small>" +
+      esc((parseDT(q.at) ? when(ts) : dayDate(ts)) + (q.k !== "other" && q.note ? " · " + q.note : "")) + '</small></span><button class="link" data-xqe="' + q.id + '">' + esc(t("edit")) + '</button><button class="link" data-xqd="' + q.id + '" aria-label="' + esc(t("kwRemove")) + '">🗑</button></div>';
+  }).join("");
+  $("#xqSave").textContent = t(V.xqEdit ? "xqSaveEdit" : "xqAdd"); $("#xqCancel").hidden = !V.xqEdit;
+}
+function xqFill(q) {
+  V.xqEdit = q ? q.id : ""; renderXq();
+  $("#xqCourse").value = q ? String(q.cid || 0) : ""; $("#xqKind").value = q ? q.k : "quiz"; $("#xqName").value = q ? q.n || "" : ""; $("#xqName").hidden = !(q && !q.cid);
+  $("#xqDate").value = q ? q.at.slice(0, 10) : ""; $("#xqTime").value = q && q.at.length > 10 ? q.at.slice(11, 16) : ""; $("#xqNote").value = q ? q.note || "" : ""; $("#xqMsg").textContent = "";
+  $("#xqSave").textContent = t(V.xqEdit ? "xqSaveEdit" : "xqAdd"); $("#xqCancel").hidden = !V.xqEdit;
+}
+function xqSave() {
+  const cv = $("#xqCourse").value, cid = Number(cv) || 0, n = $("#xqName").value.trim(), d = $("#xqDate").value, tm = $("#xqTime").value;
+  if (cv === "" || (cv === "0" && !n)) { $("#xqMsg").textContent = t("xqNeedCourse"); return; }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d)) { $("#xqMsg").textContent = t("xqNeedDate"); return; }
+  const c = ((V.data && V.data.courses) || []).find(y => y.id === cid);
+  const q = { id: V.xqEdit || Date.now().toString(36) + Math.random().toString(36).slice(2, 5), cid, n: cid ? (c ? shortName(c.name) : "") : n.slice(0, 60), k: $("#xqKind").value, at: d + (/^\d{2}:\d{2}$/.test(tm) ? "T" + tm : ""), note: $("#xqNote").value.trim().slice(0, 80) };
+  P.xq = (P.xq || []).filter(x => x.id !== q.id).concat(q); savePrefs(); useHit("xqAdd");
+  toast(t(V.xqEdit ? "xqSaved" : "xqAdded")); xqFill(null); render();
 }
 function setExam(cid, m, v) {
   const c = ((V.data && V.data.courses) || []).find(y => y.id === cid), e = Object.assign({}, P.exams[cid]);
@@ -2365,6 +2718,12 @@ function cleanKey(k, v) {
       const order = Array.isArray(v.order) ? v.order.filter((x, i, a) => ids.includes(x) && a.indexOf(x) === i) : [];
       return { order: order.concat(ids.filter(x => !order.includes(x))), off: Array.isArray(v.off) ? v.off.filter(x => ids.includes(x) && x !== "hero") : [] }; }
     case "off": return Array.isArray(v) ? v.filter(Number.isInteger).slice(0, 500) : [];
+    case "xq": return Array.isArray(v) ? v.filter(q => obj(q) && typeof q.id === "string" && /^[\w-]{1,16}$/.test(q.id) && XQ_KINDS.includes(q.k) && (parseDT(q.at) || /^\d{4}-\d{2}-\d{2}$/.test(q.at || "")))
+      .map(q => ({ id: q.id, cid: Number.isInteger(q.cid) && q.cid > 0 ? q.cid : 0, n: typeof q.n === "string" ? q.n.slice(0, 60) : "", k: q.k, at: q.at, note: typeof q.note === "string" ? q.note.slice(0, 80) : "" })).slice(0, 150) : [];
+    case "kw": return Array.isArray(v) ? [...new Set(v.filter(x => typeof x === "string").map(x => x.trim().slice(0, 40)).filter(Boolean))].slice(0, 40) : [];
+    case "campus": return ["lev", "tal"].includes(v) ? v : "";
+    case "zl": return ["zoom", "show", "hide"].includes(v) ? v : "zoom";
+    case "cdx": case "old_hide": return v === true;
     case "old_days": return Number.isFinite(v) ? Math.max(0, Math.min(365, Math.round(v))) : 14;
     case "sort": return ["urgency", "course", "date"].includes(v) ? v : "urgency";
     case "theme": { if (!obj(v)) return null; if (v.id === "custom") { const c = {}; if (obj(v.c)) for (const f of TH_FIELDS) if (/^#[0-9a-f]{6}$/i.test(v.c[f])) c[f] = v.c[f];
@@ -2502,7 +2861,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.3.0";
+const APP_VERSION = "1.4.0";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2553,7 +2912,8 @@ function usageStats() {
     push: pushOn() ? "on" : pushPerm(), mor: on ? (r.mor || "") : "", mine: (P.mine || []).length, cal: !!(P.feed && P.feed.on), dash: P.dash ? 1 : 0,
     tt: P.tt.filter(x => !x.priv).length, priv: P.tt.filter(x => x.priv).length, att: P.tt.filter(x => x.att).length,
     exams: Object.keys(P.exams || {}).length, sem: !!(P.sem && P.sem.s), hidden: P.hidden.length, off: P.off.length, manual: P.manual.length,
-    colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days, tour: LS.get("tourDone", false) === true,
+    colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days,
+    xq: (P.xq || []).length, kw: (P.kw || []).length, campus: P.campus || "", zl: P.zl, cdx: P.cdx ? 1 : 0, oldHide: P.old_hide ? 1 : 0, tour: LS.get("tourDone", false) === true,
     n: LS.get("useCnt", {}),
   };
 }
@@ -2569,7 +2929,6 @@ const FB_KINDS = [["idea", "fbIdea"], ["bug", "fbBug"], ["question", "fbQuestion
 function openFb() {
   useHit("fb");
   $("#fbKind").innerHTML = FB_KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join("");
-  const w = senderInfo(); $("#fbWhoLbl").textContent = t("fbWho", w.name || "—"); $("#fbWho").closest("label").hidden = !w.name && !w.courses;
   $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; $("#fbMsg").focus();
 }
 async function sendFb() {
@@ -2577,8 +2936,8 @@ async function sendFb() {
   if (msg.length < 3) return $("#fbErr").textContent = t("fbEmpty");
   const phone = $("#fbContact").value.trim();
   if (phone && !/^[+\d][\d\s\-()]{6,20}$/.test(phone)) return $("#fbErr").textContent = t("fbBadPhone");
-  const x = { kind: $("#fbKind").value, msg, contact: phone, meta: $("#fbTech").checked ? techMeta() : JSON.stringify({ id: deviceId(), v: APP_VERSION }),
-    who: $("#fbWho").checked ? senderInfo() : null };
+  const x = { kind: $("#fbKind").value, msg, contact: phone, meta: techMeta(),
+    who: senderInfo() };
   $("#fbSend").disabled = true;
   try { await fbPost(x.kind, x.msg, x.contact, x.meta, x.who); toast(t("fbThanks"), 4000); }
   catch (e) { LS.set("fbQueue", LS.get("fbQueue", []).concat([x]).slice(-20)); toast(t("fbQueued"), 5000); }
@@ -2622,7 +2981,7 @@ function render() {
   if (V.err) { bn.hidden = false; bn.className = "banner err"; bn.textContent = V.err + (d ? t("lastData") : ""); }
   else bn.hidden = true;
   themeSync();
-  { const now = nowS(); renderTT(now); renderToday(now); renderSem(d, now); renderExams(now); renderRemCard(); $("#bFb2").hidden = !fbReady(); }
+  { const now = nowS(); renderTT(now); renderAcad(now); renderToday(now); renderSem(d, now); renderExams(now); renderRemCard(); $("#bFb2").hidden = !fbReady(); }
   if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">' + esc(t("loadingTasks")) + "</div>" : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
   const now = nowS();
   renderDash(d, now); renderNews(d);
@@ -2639,7 +2998,7 @@ function render() {
   const withTasks = new Set(d.tasks.map(x => x.cid));
   const cs = d.courses.filter(c => withTasks.has(c.id));
   $("#chips").innerHTML = cs.map(c => {
-    const n = d.tasks.filter(x => x.cid === c.id && !isDone(x) && x.due && groupOf(x, now) !== "old" && !P.hidden.includes(x.key)).length;
+    const n = d.tasks.filter(x => x.cid === c.id && !isDone(x) && x.due && groupOf(x, now) !== "old" && !P.hidden.includes(x.key) && !ruleHidden(x, now)).length;
     return '<span class="chip' + (isOff(c.id) ? "" : " on") + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
   }).join("");
   $$("#seg button").forEach(b => b.classList.toggle("on", b.dataset.f === P.filter));
@@ -2666,7 +3025,8 @@ function render() {
     if (b.open) h += b.items.map(x => card(x, now, groupOf(x, now))).join("");
   }
   $("#list").innerHTML = (h || '<div class="empty">' + esc(V.focus && V.focus.kind === "day" ? t("dayEmpty") : d.tasks.length ? t("noMatch") : t("noTasks")) + "</div>") +
-    (P.hidden.length ? '<div class="hidbar"><button class="link" data-showhid>' + esc(t(V.showHid ? "hidHide" : "hidShow", P.hidden.length)) + "</button></div>" : "");
+    (P.hidden.length ? '<div class="hidbar"><button class="link" data-showhid>' + esc(t(V.showHid ? "hidHide" : "hidShow", P.hidden.length)) + "</button></div>" : "") +
+    (ruleCount() ? '<div class="hidbar"><span class="hint">' + esc(t("ruleBar", ruleCount())) + '</span> <button class="link" data-rules>' + esc(t("ruleEdit")) + "</button></div>" : "");
   { const open = d.tasks.filter(x => counted(x) && !isDone(x)), n = c => open.filter(x => c === "all" || catOf(x) === c).length;
     for (const c of ["all", "file", "online", "other", "mine"]) { const el = $("#catN_" + c); if (el) el.textContent = n(c) ? "(" + n(c) + ")" : ""; }
     $$("#cats [data-cat]").forEach(b => { b.classList.toggle("on", b.dataset.cat === V.cat); b.setAttribute("aria-pressed", b.dataset.cat === V.cat); });
@@ -2681,17 +3041,279 @@ function render() {
   try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
   $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>" + esc(t("diag", d.diag.length)) + "</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
 }
+const SET_PAGES = { notif: "sNotif", look: "sLook", filter: "sFilter", courses: "sCourses", sem: "sSem", acct: "sAcct", help: "sHelp" };
+function setPage(p) {                         // "" = the menu, a name = that page, "all" = every page at once (for tests)
+  V.spage = p || ""; const all = p === "all";
+  $("#sMenu").hidden = !!p; $$(".spage").forEach(el => el.hidden = !(all || el.dataset.page === p));
+  $("#sBack").hidden = !p || all; $("#sBack").textContent = t("dir") === "rtl" ? "→" : "←";
+  $("#sTitle").textContent = p && !all ? t(SET_PAGES[p]) : t("settings");
+  $("#sheet .box").scrollTop = 0;
+}
+function renderKw() {
+  $("#kwList").innerHTML = (P.kw || []).map((w, i) => '<span class="kwchip"><bdi>' + esc(w) + '</bdi><button data-kwdel="' + i + '" aria-label="' + esc(t("kwRemove")) + '">×</button></span>').join("");
+  const sug = ["טל", "תבונה", "לב"].filter(w => !(P.kw || []).includes(w));
+  $("#kwSug").innerHTML = sug.length ? esc(t("kwSug")) + " " + sug.map(w => '<button class="kwchip add" data-kwsug="' + esc(w) + '">+ ' + esc(w) + "</button>").join(" ") : "";
+}
 function renderSheet() {
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
+  $("#oldHide").checked = !!P.old_hide; $("#cdx").checked = !!P.cdx;
+  $("#zl").innerHTML = [["zoom", "zlZoom"], ["show", "zlShow"], ["hide", "zlHide"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#zl").value = P.zl;
+  $("#campus").innerHTML = [["", "campusAny"], ["lev", "campusLev"], ["tal", "campusTal"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#campus").value = P.campus;
+  renderKw(); $("#ruleInfo").textContent = t("ruleInfo", ruleCount());
   $("#who").innerHTML = d ? (d.user ? "<bdi>" + esc(d.user) + "</bdi> · " : "") + "<bdi>" + esc(M.url.replace(/^https?:\/\//, "")) + "</bdi>" : esc(M.url);
   renderSyncStatus();
-  $("#fbSet").hidden = !fbReady(); $("#verLine").textContent = t("version", APP_VERSION) + (CHANNEL === "beta" ? " · beta" : "");
+  $("#fbSet").hidden = !fbReady(); $("#verLine").textContent = t("version", "\u2066" + APP_VERSION + "\u2069") + (CHANNEL === "beta" ? " · beta" : "");     // the number is kept left-to-right inside Hebrew text
   const D = semDates(nowS()), sv = D ? { s: D.s, e: addD(D.e, -1), xs: D.xs, xe: D.xe && addD(D.xe, -1) } : {};
   $$("[data-sem]").forEach(i => i.value = sv[i.dataset.sem] ? ymd(sv[i.dataset.sem]) : "");
   $("#semSrc").textContent = D ? t(D.src) : "";
   $("#bSemAuto").hidden = !["s", "e", "xs", "xe"].some(k => P.sem[k]);
   $("#clist").innerHTML = d ? d.courses.map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span><bdi>" + esc(shortName(c.name)) + "</bdi></span></label>" +
     '<input type="color" data-cc="' + c.id + '" value="' + colorOf(c.id) + '"></div>').join("") : "";
+  /* one-line summaries on the menu */
+  const on = P.rem && P.rem.on, cal = P.feed && P.feed.on, so = syncOnNow();
+  $("#sumNotif").textContent = t(on ? "sumRemOn" : "sumRemOff") + " · " + t(cal ? "sumCalOn" : "sumCalOff");
+  $("#sumLook").textContent = ({ he: "עברית", en: "English", fr: "Français" })[LANG] + " · " + ($(".thcur") ? $(".thcur").textContent : "");
+  $("#sumFilter").textContent = t("sumRules", (P.old_hide ? 1 : 0) + (P.zl === "hide" ? 1 : 0) + (P.campus ? 1 : 0) + (P.kw || []).length);
+  $("#sumCourses").textContent = d ? t("sumCourses", d.courses.filter(c => !isOff(c.id)).length, d.courses.length) : "";
+  $("#sumSem").textContent = D ? shortDate(D.s) + "–" + shortDate(addD(D.e, -1)) : t("sumNone");
+  $("#sumAcct").textContent = t(so ? "sumSyncOn" : "sumSyncOff") + (d && d.user ? " · " + d.user : "");
+  $("#sumHelp").textContent = t("version", "\u2066" + APP_VERSION + "\u2069");
+}
+
+/* ---------- לו"ז: the academic calendar (Machon Lev, 5787), from the official PDF (updated 4.6.26) ----------
+   cats: one letter per day from "from": s classes, x exams (no classes), b resits (classes as usual), h holiday/break,
+   l only Lev campus Torah studies until 13:00, e Elul semester (Torah studies only), n summer break, w Shabbat */
+const ACAD = {
+  host: "moodle.jct.ac.il", from: "2026-07-15", year0: "2026-09", year1: "2027-08",
+  cats: "xxxwxxxxhnwnnnnnnwnnxxxxwxxxxxeweeeeeeweeeeeeweeeeeeweeeeehhhhllllwhhhhhhhhhhhhhhhhhxxxwsssssbwsssssbwsssssbwsxsssswsssssswsssssswsssssswsssssswssshhhwsssssswlssssswsssssswsssssswsssssswxxxxxxwxxxxxxwxxxxxxwxxxxxxwhhhxxxwxxxxxxwsssssbwsssssbwsssssbwhlhhsswsssssswsssssswsssssswhhhhhhhhhhhhhwsssssswsslhsswsssssswsssssswsssslhwsssshhwslsssswhssssswxxxxxxwxxxxxxwxxxxxxwxxxxhxwnnnnnnwxxxxxxwxxxxhxwnnnnnnwnnnnnnwnnnnn",
+  ev: [
+    ["2026-07-15", "2026-07-22", "x", "מועדי א׳ סמסטר ב׳ (תשפ״ו)", "Semester B exams, 1st sitting (5786)", "Examens du semestre B, 1re session (5786)"],
+    ["2026-07-23", "2026-07-23", "h", "צום ט׳ באב", "Fast of Tisha B’Av", "Jeûne de Tisha BeAv"],
+    ["2026-07-24", "2026-08-03", "n", "חופשת קיץ", "Summer break", "Vacances d’été"],
+    ["2026-08-04", "2026-08-13", "x", "מועדי ב׳ סמסטר ב׳ (תשפ״ו)", "Semester B resits (5786)", "Rattrapages du semestre B (5786)"],
+    ["2026-08-14", "2026-09-10", "e", "סמסטר אלול – לימודי קודש בלבד", "Elul semester – Torah studies only", "Semestre d’Eloul – études de kodesh seulement"],
+    ["2026-09-11", "2026-09-11", "h", "ערב ראש השנה", "Rosh Hashanah eve", "Veille de Roch Hachana"],
+    ["2026-09-12", "2026-09-13", "h", "ראש השנה", "Rosh Hashanah", "Roch Hachana"],
+    ["2026-09-14", "2026-09-14", "h", "צום גדליה", "Fast of Gedaliah", "Jeûne de Guedalia"],
+    ["2026-09-15", "2026-09-18", "x", "מועדי א׳ סמסטר אלול", "Elul semester exams", "Examens du semestre d’Eloul"],
+    ["2026-09-20", "2026-09-21", "h", "יום הכיפורים", "Yom Kippur", "Yom Kippour"],
+    ["2026-09-22", "2026-10-06", "h", "חופשת סוכות", "Sukkot break", "Vacances de Souccot"],
+    ["2026-10-04", "2026-10-04", "h", "איסרו חג", "Isru Chag", "Issrou ’Hag"],
+    ["2026-10-07", "2026-10-09", "x", "מועדי א׳ סמסטר אלול", "Elul semester exams", "Examens du semestre d’Eloul"],
+    ["2026-10-11", "2026-10-11", "m", "תחילת סמסטר א׳", "Semester A begins", "Début du semestre A"],
+    ["2026-10-16", "2026-10-16", "b", "מועדי ב׳ סמסטר אלול", "Elul semester resits", "Rattrapages du semestre d’Eloul"],
+    ["2026-10-23", "2026-10-23", "b", "מועדי ב׳ סמסטר אלול", "Elul semester resits", "Rattrapages du semestre d’Eloul"],
+    ["2026-10-30", "2026-10-30", "b", "מועדי ב׳ סמסטר אלול", "Elul semester resits", "Rattrapages du semestre d’Eloul"],
+    ["2026-11-02", "2026-11-02", "x", "מועדי ב׳ סמסטר אלול", "Elul semester resits", "Rattrapages du semestre d’Eloul"],
+    ["2026-12-04", "2026-12-11", "h", "חנוכה", "Hanukkah", "Hanoucca"],
+    ["2026-12-06", "2026-12-08", "m", "לימודים בזום", "Classes on Zoom", "Cours sur Zoom"],
+    ["2026-12-07", "2026-12-09", "m", "האקתון גברים", "Men’s hackathon", "Hackathon (hommes)"],
+    ["2026-12-20", "2026-12-20", "l", "צום י׳ בטבת", "Fast of 10 Tevet", "Jeûne du 10 Tevet"],
+    ["2027-01-15", "2027-01-15", "m", "סוף סמסטר א׳", "Semester A ends", "Fin du semestre A"],
+    ["2027-01-17", "2027-02-12", "x", "מועדי א׳ סמסטר א׳", "Semester A exams, 1st sitting", "Examens du semestre A, 1re session"],
+    ["2027-02-14", "2027-02-16", "h", "חופשת סמסטר", "Semester break", "Vacances inter-semestre"],
+    ["2027-02-17", "2027-02-26", "x", "מועדי ב׳ סמסטר א׳", "Semester A resits", "Rattrapages du semestre A"],
+    ["2027-02-28", "2027-02-28", "m", "תחילת סמסטר ב׳", "Semester B begins", "Début du semestre B"],
+    ["2027-03-05", "2027-03-05", "b", "מועדי ב׳ סמסטר א׳", "Semester A resits", "Rattrapages du semestre A"],
+    ["2027-03-12", "2027-03-12", "b", "מועדי ב׳ סמסטר א׳", "Semester A resits", "Rattrapages du semestre A"],
+    ["2027-03-19", "2027-03-19", "b", "מועדי ב׳ סמסטר א׳", "Semester A resits", "Rattrapages du semestre A"],
+    ["2027-03-21", "2027-03-21", "h", "גשר", "Bridge day", "Jour de pont"],
+    ["2027-03-22", "2027-03-22", "l", "תענית אסתר", "Fast of Esther", "Jeûne d’Esther"],
+    ["2027-03-23", "2027-03-23", "h", "פורים", "Purim", "Pourim"],
+    ["2027-03-24", "2027-03-24", "h", "שושן פורים", "Shushan Purim", "Pourim de Suse"],
+    ["2027-04-18", "2027-04-30", "h", "חופשת פסח", "Passover break", "Vacances de Pessa’h"],
+    ["2027-05-04", "2027-05-04", "m", "יום השואה", "Holocaust Remembrance Day", "Jour de la Shoah"],
+    ["2027-05-10", "2027-05-10", "m", "ערב יום הזיכרון", "Memorial Day eve", "Veille du Jour du souvenir"],
+    ["2027-05-11", "2027-05-11", "l", "יום הזיכרון", "Memorial Day", "Jour du souvenir"],
+    ["2027-05-12", "2027-05-12", "h", "יום העצמאות", "Independence Day", "Jour de l’Indépendance"],
+    ["2027-05-25", "2027-05-25", "m", "ל״ג בעומר", "Lag BaOmer", "Lag BaOmer"],
+    ["2027-05-26", "2027-05-28", "m", "האקתון נשים", "Women’s hackathon", "Hackathon (femmes)"],
+    ["2027-06-03", "2027-06-04", "h", "יום הסטודנט / יום ירושלים", "Student Day / Jerusalem Day", "Journée de l’étudiant / Jour de Jérusalem"],
+    ["2027-06-10", "2027-06-11", "h", "שבועות", "Shavuot", "Chavouot"],
+    ["2027-06-14", "2027-06-14", "l", "הצגת פרויקטי גמר", "Final projects showcase", "Présentation des projets de fin d’études"],
+    ["2027-06-20", "2027-06-20", "h", "יום השלמה", "Make-up day", "Journée de rattrapage"],
+    ["2027-06-25", "2027-06-25", "m", "סוף סמסטר ב׳", "Semester B ends", "Fin du semestre B"],
+    ["2027-06-27", "2027-07-23", "x", "מועדי א׳ סמסטר ב׳", "Semester B exams, 1st sitting", "Examens du semestre B, 1re session"],
+    ["2027-07-22", "2027-07-22", "h", "צום י״ז בתמוז", "Fast of 17 Tammuz", "Jeûne du 17 Tamouz"],
+    ["2027-07-25", "2027-07-30", "n", "חופשת קיץ", "Summer break", "Vacances d’été"],
+    ["2027-08-01", "2027-08-13", "x", "מועדי ב׳ סמסטר ב׳", "Semester B resits", "Rattrapages du semestre B"],
+    ["2027-08-12", "2027-08-12", "h", "צום ט׳ באב", "Fast of Tisha B’Av", "Jeûne de Tisha BeAv"],
+    ["2027-08-15", "2027-09-02", "n", "חופשת קיץ", "Summer break", "Vacances d’été"]
+  ],
+  per: [["2026-10-11", "2027-01-15", "s", "semA"], ["2027-01-17", "2027-02-12", "x", "exA1"], ["2027-02-17", "2027-02-26", "x", "exA2"],
+        ["2027-02-28", "2027-06-25", "s", "semB"], ["2027-06-27", "2027-07-23", "x", "exB1"], ["2027-08-01", "2027-08-13", "x", "exB2"]],
+};
+const AC_KINDS = ["s", "x", "b", "h", "l", "e", "n", "w"];
+const acOn = () => { let host = ""; try { host = new URL(M.url || DEFAULT_SITE).hostname; } catch (e) {} return host === ACAD.host; };
+const acT0 = () => parseYmd(ACAD.from);
+const acIdx = ymdS => daysBetween(acT0(), parseYmd(ymdS));
+const acCat = ymdS => { const i = acIdx(ymdS); return i >= 0 && i < ACAD.cats.length ? ACAD.cats[i] : ""; };
+const acEvs = ymdS => ACAD.ev.filter(e => e[0] <= ymdS && ymdS <= e[1]);
+const acName = e => LANG === "en" ? e[4] : LANG === "fr" ? e[5] : e[3];
+const acLast = () => ymd(addD(acT0(), ACAD.cats.length - 1));
+/* Hebrew dates: the browser's Hebrew calendar, day and year written in Hebrew letters */
+function gem(n) {
+  const H = [[400, "ת"], [300, "ש"], [200, "ר"], [100, "ק"], [90, "צ"], [80, "פ"], [70, "ע"], [60, "ס"], [50, "נ"], [40, "מ"], [30, "ל"], [20, "כ"], [10, "י"], [9, "ט"], [8, "ח"], [7, "ז"], [6, "ו"], [5, "ה"], [4, "ד"], [3, "ג"], [2, "ב"], [1, "א"]];
+  let out = ""; n = n % 1000;
+  while (n > 0) { if (n === 15) { out += "טו"; break; } if (n === 16) { out += "טז"; break; } const [v, c] = H.find(h => h[0] <= n); out += c; n -= v; }
+  return out.length > 1 ? out.slice(0, -1) + "״" + out.slice(-1) : out + "׳";
+}
+const HEB_FMT = {};
+function hebParts(ts) {
+  try {
+    const loc = LANG === "he" ? "he" : LANG;
+    const f = HEB_FMT[loc] || (HEB_FMT[loc] = new Intl.DateTimeFormat(loc + "-u-ca-hebrew", { day: "numeric", month: "long", year: "numeric" }));
+    const p = {}; for (const x of f.formatToParts(new Date(ts * 1000 + 12 * 3600e3))) p[x.type] = x.value;
+    const d = parseInt(p.day, 10), y = parseInt(p.year, 10);
+    if (!d) return null;
+    return { d, m: (p.month || "").replace(/^ב/, ""), y, dl: LANG === "he" ? gem(d) : String(d), yl: LANG === "he" ? gem(y) : String(y) };
+  } catch (e) { return null; }
+}
+const hebFull = ts => { const h = hebParts(ts); return !h ? "" : LANG === "he" ? h.dl + " ב" + h.m + " " + h.yl : h.d + " " + h.m + " " + h.y; };
+const acRange = (a, b) => { const A = parseYmd(a), B = parseYmd(b); return A === B ? shortDate(A) : shortDate(A) + "–" + shortDate(B); };
+const acWd = ts => { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { weekday: "short" }); } catch (e) { return ""; } };
+function acWhen(a, b, now) {
+  const A = parseYmd(a), B = addD(parseYmd(b), 1), today = dayStart(now);
+  if (today >= A && today < B) return t("acNowOn");
+  if (today >= B) return "";
+  const n = daysBetween(today, A); return n === 1 ? t("acTomorrow") : t("acIn", n);
+}
+function acMonthOf(now) {
+  const lo = ACAD.from.slice(0, 7), hi = acLast().slice(0, 7), cur = ymd(now).slice(0, 7);
+  return cur < lo ? lo : cur > hi ? hi : cur;
+}
+const acYM = (ym, k) => { const [y, m] = ym.split("-").map(Number); const d = new Date(y, m - 1 + k, 1); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0"); };
+function acTitleMonth(ym) {
+  const [y, m] = ym.split("-").map(Number), a = new Date(y, m - 1, 1).getTime() / 1000, b = new Date(y, m, 0).getTime() / 1000;
+  let g = ""; try { g = new Date(a * 1000).toLocaleDateString(t("locale"), { month: "long", year: "numeric" }); } catch (e) { g = ym; }
+  const ha = hebParts(a), hb = hebParts(b);
+  const heb = !ha ? "" : ha.m === hb.m ? ha.m + " " + hb.yl : ha.m + (ha.y !== hb.y ? " " + ha.yl : "") + "–" + hb.m + " " + hb.yl;
+  return { g, heb, hs: !ha ? "" : ha.m === hb.m ? ha.m : ha.m + "–" + hb.m };
+}
+/* the short label shown inside a day cell: what starts that day (or continues into a new week) */
+function acCellLabel(k, dow) {
+  const ev = acEvs(k).filter(e => e[0] === k || dow === 0);
+  return ev.map(acName).join(" · ");
+}
+function acSoon(now) {
+  const today = ymd(now);
+  return ACAD.ev.filter(e => e[1] >= today && e[2] !== "n").sort((a, b) => a[0] < b[0] ? -1 : 1).slice(0, 6);
+}
+function acCurPer(now) { const k = ymd(now); return ACAD.per.find(p => p[0] <= k && k <= p[1]) || null; }
+function acNowHTML(now) {
+  const k = ymd(now), c = acCat(k), per = acCurPer(now);
+  let h = '<div class="acnow">';
+  if (c) {
+    const evs = acEvs(k).map(acName);
+    h += '<div class="today"><span class="hint">' + esc(t("acTodayIs")) + '</span><span class="acpill c-' + c + " k-" + c + '">' + esc(t("ac_" + c)) + "</span>" +
+      (per ? '<span class="hint">· ' + esc(t(per[3])) + "</span>" : "") + (evs.length ? '<span class="hint">· ' + esc(evs.join(" · ")) + "</span>" : "") + "</div>";
+  }
+  const soon = acSoon(now);
+  if (soon.length) h += '<div class="acsoon">' + soon.map(e => '<button class="k-' + e[2] + '" data-acgo="' + e[0] + '"><b>' + esc(acName(e)) + "</b><small><bdi dir=\"ltr\">" + esc(acRange(e[0], e[1])) + "</bdi> · " + esc(acWhen(e[0], e[1], now)) + "</small></button>").join("") + "</div>";
+  return h + "</div>";
+}
+function acLegendHTML(kinds) {
+  return '<div class="aclegend">' + kinds.map(k => '<span style="--c:var(--ac-' + k + ')">' + esc(t("ac_" + k)) + "</span>").join("") + "</div>";
+}
+function acEvRow(e, now) {
+  const done = e[1] < ymd(now);
+  return '<button class="er k-' + e[2] + (done ? " done" : "") + '" data-acgo="' + e[0] + '"><span class="en">' + esc(acName(e)) + '</span><span class="ew"><span>' + esc(acWd(parseYmd(e[0]))) + ' <bdi dir="ltr">' + esc(acRange(e[0], e[1])) + "</bdi></span>" +
+    (done ? "" : "<small>" + esc(acWhen(e[0], e[1], now)) + "</small>") + "</span></button>";
+}
+function renderAcadMonth(now) {
+  const ym = V.acM || acMonthOf(now), [y, m] = ym.split("-").map(Number), first = new Date(y, m - 1, 1), days = new Date(y, m, 0).getDate();
+  const T = acTitleMonth(ym), today = ymd(now), sel = V.acSel && V.acSel.slice(0, 7) === ym ? V.acSel : (today.slice(0, 7) === ym ? today : "");
+  const lo = ACAD.from.slice(0, 7), hi = acLast().slice(0, 7);
+  const exDay = {}; for (const x of examList()) { const k = ymd(x.ts); (exDay[k] = exDay[k] || []).push(x); }
+  let h = acNowHTML(now);
+  h += '<div class="acnav"><button id="acPrev"' + (ym <= lo ? " disabled" : "") + ' data-i18n-aria="prevMonth" aria-label="' + esc(t("prevMonth")) + '">‹</button><div class="mt">' + esc(T.g) + "<small>" + esc(T.heb) + "</small></div>" +
+    '<span class="mnav"><button id="acToday">' + esc(t("todayBtn")) + '</button><button id="acNext"' + (ym >= hi ? " disabled" : "") + ' aria-label="' + esc(t("nextMonth")) + '">›</button></span></div>';
+  h += '<div class="acgrid">';
+  for (let i = 0; i < 7; i++) { const wd = new Date(2026, 10, 1 + i); let n = ""; try { n = wd.toLocaleDateString(t("locale"), { weekday: "short" }); } catch (e) {} h += '<div class="wh">' + esc(n) + "</div>"; }
+  for (let i = 0; i < first.getDay(); i++) h += '<div class="ad out"></div>';
+  for (let d = 1; d <= days; d++) {
+    const dt = new Date(y, m - 1, d), k = dayKey(dt), ts = dt.getTime() / 1000, c = acCat(k), hp = hebParts(ts);
+    const mine = (exDay[k] || []).map(x => "📝 " + exName(x)), lb = [...mine, c ? acCellLabel(k, dt.getDay()) : ""].filter(Boolean).join(" · ");
+    h += '<button class="ad ' + (c ? "c-" + c : "nod") + (k < today ? " past" : "") + (k === today ? " today" : "") + (k === sel ? " sel" : "") + '" data-acd="' + k + '"><span class="g"><b>' + d + "</b><i>" + esc(hp ? hp.dl : "") + "</i></span>" +
+      (lb ? '<span class="lb">' + esc(lb) + "</span>" : "") + "</button>";
+  }
+  h += "</div>";
+  if (sel) {
+    const ts = parseYmd(sel), c = acCat(sel), evs = acEvs(sel);
+    let full = ""; try { full = new Date(ts * 1000).toLocaleDateString(t("locale"), { weekday: "long", day: "numeric", month: "long" }); } catch (e) {}
+    h += '<div class="acday"><div class="dt">' + esc(full) + "<small>" + esc(hebFull(ts)) + "</small></div>" +
+      (c ? '<div><span class="acpill c-' + c + " k-" + c + '">' + esc(t("ac_" + c)) + "</span></div>" : "") +
+      (evs.length ? "<div>" + evs.map(e => "<b>" + esc(acName(e)) + '</b> <span class="hint"><bdi dir="ltr">' + esc(acRange(e[0], e[1])) + "</bdi></span>").join("<br>") + "</div>" : "") +
+      ((exDay[sel] || []).length ? "<div>" + exDay[sel].map(x => "📝 <b>" + esc(exName(x)) + "</b> · " + esc(exLbl(x) + (x.allDay ? "" : " · " + clockTxt(x.ts)))).join("<br>") + "</div>" : "") +
+      (c && t("acd_" + c) ? '<div class="ds">' + esc(t("acd_" + c)) + "</div>" : "") + "</div>";
+  }
+  const a = ym + "-01", b = ym + "-" + String(days).padStart(2, "0");
+  const list = ACAD.ev.filter(e => e[0] <= b && e[1] >= a).sort((p, q) => p[0] < q[0] ? -1 : 1);
+  h += '<div class="acev"><h4>' + esc(t("acMonthEv")) + "</h4>" + (list.length ? list.map(e => acEvRow(e, now)).join("") : '<div class="hint">' + esc(t("acNoEv")) + "</div>") + "</div>";
+  h += acLegendHTML(["s", "x", "b", "h", "l", "e", "n"]);
+  return h;
+}
+function renderAcadYear(now) {
+  const today = ymd(now), y0 = ACAD.year0, y1 = ACAD.year1;
+  const a = y0 + "-01", bD = new Date(+y1.slice(0, 4), +y1.slice(5, 7), 0), b = dayKey(bD);
+  let h = acNowHTML(now);
+  /* the whole year on one strip: classes, exams, holidays (Shabbat joins the days around it) */
+  const runs = []; let total = 0;
+  for (let ts = parseYmd(a); ts <= parseYmd(b); ts = addD(ts, 1)) {
+    let c = acCat(ymd(ts)) || "n"; if (c === "w") c = runs.length ? runs[runs.length - 1].c : "s";
+    if (c === "l") c = runs.length ? runs[runs.length - 1].c : "s";
+    if (runs.length && runs[runs.length - 1].c === c) runs[runs.length - 1].n++; else runs.push({ c, n: 1 });
+    total++;
+  }
+  const pos = daysBetween(parseYmd(a), dayStart(now)), inYear = pos >= 0 && pos < total;
+  h += '<div class="acline"><div class="bar">' + runs.map(r => '<i class="k-' + r.c + '" style="flex:' + r.n + '"></i>').join("") + "</div>" +
+    (inYear ? '<span class="mk" style="inset-inline-start:calc(' + (100 * (pos + 0.5) / total).toFixed(2) + '% - 1.5px)" title="' + esc(t("todayBtn")) + '"></span>' : "") + '<div class="ms">';
+  for (let ym = y0; ym <= y1; ym = acYM(ym, 1)) {
+    const [yy, mm] = ym.split("-").map(Number), n = new Date(yy, mm, 0).getDate(); let lbl = "";
+    try { lbl = new Date(yy, mm - 1, 1).toLocaleDateString(t("locale"), { month: "short" }); } catch (e) {}
+    h += '<span style="flex:' + n + '">' + esc(lbl) + "</span>";
+  }
+  h += "</div></div>";
+  /* semesters and exam periods */
+  h += '<div class="acev"><h4>' + esc(t("acPeriods")) + '</h4></div><div class="acper">' + ACAD.per.map(p => {
+    const cur = p[0] <= today && today <= p[1], wk = Math.ceil((daysBetween(parseYmd(p[0]), parseYmd(p[1])) + 1) / 7);
+    return '<i class="pd k-' + p[2] + '"></i><span class="' + (cur ? "cur" : "") + '">' + esc(t(p[3])) + (cur ? " · " + esc(t("acNowOn")) : "") + '</span><span class="pw"><bdi dir="ltr">' + esc(acRange(p[0], p[1])) + "</bdi> · " + esc(t("acWeeks", wk)) + "</span>";
+  }).join("") + "</div>";
+  /* every month at a glance */
+  h += '<div class="acyear">';
+  for (let ym = y0; ym <= y1; ym = acYM(ym, 1)) {
+    const [yy, mm] = ym.split("-").map(Number), first = new Date(yy, mm - 1, 1), n = new Date(yy, mm, 0).getDate(), T = acTitleMonth(ym);
+    let g = ""; try { g = first.toLocaleDateString(t("locale"), { month: "long" }); } catch (e) {}
+    const hol = ACAD.ev.filter(e => (e[2] === "h" || e[2] === "n") && e[0].slice(0, 7) === ym).map(acName);
+    h += '<button class="acym' + (today.slice(0, 7) === ym ? " now" : "") + '" data-acym="' + ym + '"><span class="yt">' + esc(g) + " " + yy + "<small>" + esc(T.hs) + '</small></span><span class="yg">';
+    for (let i = 0; i < first.getDay(); i++) h += '<i class="o"></i>';
+    for (let d = 1; d <= n; d++) { const k = dayKey(new Date(yy, mm - 1, d)), c = acCat(k); h += '<i class="' + (c ? "c-" + c : "") + (k === today ? " t" : "") + '">' + d + "</i>"; }
+    h += '</span><span class="yh">' + esc(hol.slice(0, 3).join(" · ")) + "</span></button>";
+  }
+  h += "</div>";
+  /* holidays and breaks */
+  const hols = ACAD.ev.filter(e => (e[2] === "h" || e[2] === "n") && e[1] >= a && e[0] <= b);
+  h += '<div class="acev"><h4>' + esc(t("acHolidays")) + "</h4>" + hols.map(e => acEvRow(e, now)).join("") + "</div>";
+  h += acLegendHTML(["s", "x", "b", "h", "l", "e", "n"]);
+  return h;
+}
+function renderAcad(now) {
+  const on = acOn();
+  $("#bAcadGo").hidden = !on;
+  $("#acTitle").textContent = t("acTitle");
+  $$("#lzSeg [data-lz]").forEach(b => b.classList.toggle("on", b.dataset.lz === V.lz));
+  document.body.dataset.lz = V.lz;
+  if (!on) { $("#acMode").hidden = true; $("#acad").innerHTML = '<div class="hint">' + esc(t("acOther")) + "</div>"; return; }
+  $("#acMode").hidden = false;
+  $$("#acMode [data-acm]").forEach(b => b.classList.toggle("on", b.dataset.acm === V.acMode));
+  if (V.lz !== "acad" && !wide()) return;            // drawn only when on screen
+  $("#acad").innerHTML = (V.acMode === "year" ? renderAcadYear(now) : renderAcadMonth(now)) +
+    '<div class="acnote">' + esc(t("acSrc")) + "<br>" + esc(t("acNote")) + "</div>";
+}
+function goAcad(ymdS) {
+  V.lz = "acad"; LS.set("lz", "acad"); useHit("acad");
+  if (ymdS) { V.acMode = "month"; V.acM = ymdS.slice(0, 7); V.acSel = ymdS; }
+  if (wide()) { render(); $("#acadCard").scrollIntoView({ block: "start", behavior: "smooth" }); } else { setView("tt"); render(); window.scrollTo(0, 0); }
 }
 
 /* ---------- actions ---------- */
@@ -2765,33 +3387,62 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
-  { v: "1.3.0", date: "2026-11-09", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד, עם עיגול בצבע של הקורס", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📄 המטלות מסודרות לפי מה שעושים: הגשת קובץ (סריקה ו-PDF) או מענה בתוך Moodle", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה", "🔄 המידע מתרענן בכל חזרה לאפליקציה, וכשיש גרסה חדשה מופיע כפתור ״עדכון עכשיו״ (ואפשר לבדוק גם בהגדרות)"],
+  { v: "1.4.0", at: "2026-11-10 14:43", he: ["📅 לשונית ״לו״ז״: מערכת השעות וגם הלוח האקדמי של תשפ״ז – תצוגה חודשית ושנתית עם כל החגים, החופשות, הבחינות והתאריכים העבריים", "📝 אפשר להוסיף ללוח המבחנים בחנים, מבחני אמצע ומבחנים שהמועד שלהם שונה בין הקבוצות (״＋ בוחן״) – עם תזכורות, ביומן ובלו״ז", "⚙️ הגדרות מסודרות בקטגוריות: התראות ויומן, מראה, סינון מטלות, קורסים, סמסטר, חשבון ועזרה", "🔎 סינון מטלות: להסתיר לפי מכון (לב / טל), לפי מילים (למשל ״קבוצה ב״ או שם מרצה), וקישורי זום שמופיעים כמטלה", "🧹 אפשר להסתיר לגמרי מטלות ישנות שלא הוגשו", "⏱ הזמן שנשאר להגשה מוצג בימים ובשעות (ספירה מדויקת עם דקות ושניות — בהגדרות)", "💬 בפידבק, השם, הקורסים ופרטי המכשיר מצורפים תמיד כדי שיהיה קל לעזור"],
+    en: ["📅 “Schedule” tab: your timetable plus the 5787 academic calendar – month and year views with every holiday, break, exam period and Hebrew date", "📝 Add your own quizzes, midterms and group-specific exams to the exam board (“＋ Quiz”) – with reminders, in your calendar and in the schedule", "⚙️ Settings organised into categories: reminders & calendar, look, task filters, courses, semester, account and help", "🔎 Task filters: hide by campus (Lev / Tal), by words (e.g. “Group B” or a lecturer’s name), and Zoom links posted as tasks", "🧹 You can hide old unsubmitted tasks completely", "⏱ Time left is shown in days and hours (exact countdown with minutes and seconds is in settings)", "💬 Feedback always includes your name, courses and device details so it’s easier to help"],
+    fr: ["📅 Onglet « Agenda » : l’emploi du temps et le calendrier académique 5787 – vues mois et année avec fêtes, vacances, examens et dates hébraïques", "📝 Ajoutez vos quiz, partiels et examens propres à votre groupe (« ＋ Quiz ») – avec rappels, dans votre calendrier et l’agenda", "⚙️ Réglages classés par catégories : rappels et agenda, apparence, filtres, cours, semestre, compte et aide", "🔎 Filtres de devoirs : masquer par campus (Lev / Tal), par mots (p. ex. « Groupe B » ou un enseignant) et les liens Zoom publiés comme devoirs", "🧹 Vous pouvez masquer complètement les anciens devoirs non rendus", "⏱ Le temps restant s’affiche en jours et en heures (compte à rebours précis dans les réglages)", "💬 Les avis incluent toujours votre nom, vos cours et les détails de l’appareil pour mieux vous aider"] },
+  { v: "1.3.0", at: "2026-11-09 23:31", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד, עם עיגול בצבע של הקורס", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📄 המטלות מסודרות לפי מה שעושים: הגשת קובץ (סריקה ו-PDF) או מענה בתוך Moodle", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה", "🔄 המידע מתרענן בכל חזרה לאפליקציה, וכשיש גרסה חדשה מופיע כפתור ״עדכון עכשיו״ (ואפשר לבדוק גם בהגדרות)"],
     en: ["📄 Tasks sorted by what you do: upload a file (scan → PDF) or answer inside Moodle", "➕ Your own tasks: add a task with a date and it behaves like a Moodle one (countdown, notifications, calendar)", "📅 A calendar that updates itself: add it once to Google Calendar or your iPhone and new assignments come in by themselves, each with a circle in its course’s colour", "☀️ Morning summary: one notification in the morning with today’s deadlines, exams and classes", "🧩 Arrange the overview: what’s shown and in what order (in settings)", "📲 An offer to install on the home screen, and a quick way to import your timetable from the overview", "🔄 Data refreshes every time you come back to the app, and when there’s a new version an “Update now” button shows (you can also check in settings)"],
     fr: ["📄 Tâches classées selon ce qu’il faut faire : déposer un fichier (scan → PDF) ou répondre sur Moodle", "➕ Vos propres tâches : ajoutez une tâche avec une date, elle se comporte comme un devoir Moodle (compte à rebours, notifications, calendrier)", "📅 Un calendrier qui se met à jour seul : ajoutez-le une fois à Google Agenda ou à l’iPhone, les nouveaux devoirs arrivent seuls, avec un rond de la couleur du cours", "☀️ Résumé du matin : une notification le matin avec les échéances, examens et cours du jour", "🧩 Organiser l’aperçu : ce qui s’affiche et dans quel ordre (dans les paramètres)", "📲 Une proposition d’installer sur l’écran d’accueil, et un accès rapide à l’import de l’emploi du temps depuis l’aperçu", "🔄 Les données se rafraîchissent à chaque retour dans l’application, et un bouton « Mettre à jour » apparaît quand une nouvelle version existe (vérifiable aussi dans les paramètres)"] },
-  { v: "1.2.0", date: "2026-11-09", he: ["✨ שם חדש ולוגו חדש: MoodlePro", "🗂 בלשונית המשימות: כרטיסיות למטלות, לבחנים ולאירועים", "↩ אפשר לבטל הסתרה של פריט מיד, והמוסתרים מופיעים בסוף הרשימה", "⬅️ כפתור ״חזור״ בטלפון חוזר למסך הקודם וסוגר חלונות, במקום לצאת מהאפליקציה", "📅 ניקוי סינון של יום מהסקירה מחזיר לסקירה", "🗑 אפשר להסיר מהיומן את מה שהאפליקציה הוסיפה"],
+  { v: "1.2.1", at: "2026-11-09 19:23", quiet: true,
+    he: ["📄 בטלפון אפשר לבחור את קובץ הלב נט (.xls) – קודם הוא הופיע באפור", "🔔📅 תזכורות: אפשר גם התראות מהאפליקציה וגם יומן, יחד"],
+    en: ["📄 On phones the Levnet file (.xls) can be chosen – it used to be greyed out", "🔔📅 Reminders: notifications from the app and the calendar can be on together"],
+    fr: ["📄 Sur téléphone, le fichier Levnet (.xls) peut être choisi – il était grisé", "🔔📅 Rappels : notifications de l’app et calendrier ensemble"] },
+  { v: "1.2.0", at: "2026-11-09 18:44", he: ["✨ שם חדש ולוגו חדש: MoodlePro", "🗂 בלשונית המשימות: כרטיסיות למטלות, לבחנים ולאירועים", "↩ אפשר לבטל הסתרה של פריט מיד, והמוסתרים מופיעים בסוף הרשימה", "⬅️ כפתור ״חזור״ בטלפון חוזר למסך הקודם וסוגר חלונות, במקום לצאת מהאפליקציה", "📅 ניקוי סינון של יום מהסקירה מחזיר לסקירה", "🗑 אפשר להסיר מהיומן את מה שהאפליקציה הוסיפה"],
     en: ["✨ New name and logo: MoodlePro", "🗂 Tasks tab: tabs for assignments, quizzes and events", "↩ Hiding an item can be undone right away, and hidden items are listed at the end", "⬅️ The phone’s Back button goes to the previous screen and closes windows instead of leaving the app", "📅 Clearing a day picked on the overview takes you back to the overview", "🗑 You can remove from your calendar what the app added"],
     fr: ["✨ Nouveau nom et nouveau logo : MoodlePro", "🗂 Onglet devoirs : onglets pour devoirs, tests et événements", "↩ Masquer un élément peut être annulé tout de suite, et les éléments masqués sont listés à la fin", "⬅️ Le bouton Retour revient à l’écran précédent et ferme les fenêtres au lieu de quitter l’app", "📅 Effacer un jour choisi dans l’aperçu ramène à l’aperçu", "🗑 Vous pouvez retirer du calendrier ce que l’app a ajouté"] },
-  { v: "1.1.0", date: "2026-11-09", he: ["🔔 התראות: האפליקציה שולחת התראה לפני הגשות, מבחנים ושיעורי זום, לפי הזמנים שבוחרים, גם כשהיא סגורה (או ליומן של הטלפון)", "🎨 ערכות צבעים: 22 מראות בהירים וכהים, מפסטל עדין ועד מרקר וניאון, וגם בנייה של מראה משלך", "📹 שיעורי זום מסומנים במערכת ובשיעורי היום", "🏷 מספר גרסה ו״מה חדש״ בהגדרות"],
+  { v: "1.1.2", at: "2026-11-09 18:04", quiet: true,
+    he: ["🎬 סרטון קצר במסך ההתחברות שמראה איך משיגים את הטוקן"],
+    en: ["🎬 A short video on the login screen showing how to get the token"],
+    fr: ["🎬 Une courte vidéo sur l’écran de connexion montre comment obtenir le jeton"] },
+  { v: "1.1.1", at: "2026-11-09 17:27", quiet: true,
+    he: ["📄 מדריך צעד אחר צעד להורדת המערכת מהלב נט", "עדכונים עם תיקונים בלבד כבר לא מקפיצים חלון"],
+    en: ["📄 A step-by-step guide to downloading your timetable from Levnet", "Fix-only updates no longer pop up a window"],
+    fr: ["📄 Un guide pas à pas pour télécharger l’emploi du temps depuis Levnet", "Les mises à jour de correctifs n’ouvrent plus de fenêtre"] },
+  { v: "1.1.0", at: "2026-11-09 16:23", he: ["🔔 התראות: האפליקציה שולחת התראה לפני הגשות, מבחנים ושיעורי זום, לפי הזמנים שבוחרים, גם כשהיא סגורה (או ליומן של הטלפון)", "🎨 ערכות צבעים: 22 מראות בהירים וכהים, מפסטל עדין ועד מרקר וניאון, וגם בנייה של מראה משלך", "📹 שיעורי זום מסומנים במערכת ובשיעורי היום", "🏷 מספר גרסה ו״מה חדש״ בהגדרות"],
     en: ["🔔 Notifications: the app notifies you before deadlines, exams and Zoom classes at the times you choose, even when closed (or into your phone’s calendar)", "🎨 Colour themes: 22 light and dark looks, from soft pastel to highlighter and neon, plus building your own", "📹 Zoom classes are marked in the timetable and today’s classes", "🏷 Version number and “What’s new” in settings"],
     fr: ["🔔 Notifications : l’app vous prévient avant les échéances, examens et cours Zoom aux moments choisis, même fermée (ou dans le calendrier du téléphone)", "🎨 Thèmes : 22 apparences claires et sombres, du pastel doux au surligneur et au néon, et la vôtre sur mesure", "📹 Les cours Zoom sont signalés dans l’emploi du temps et les cours du jour", "🏷 Numéro de version et « Nouveautés » dans les paramètres"] },
-  { v: "1.0.0", date: "2026-11-09", he: ["כל המטלות והבחנים מכל הקורסים במקום אחד, עם ספירה לאחור", "מערכת שעות מקובץ הלבנט, מועדי מבחנים מהלבנט ומד התקדמות לסמסטר", "סנכרון בין הטלפון למחשב, פידבק ומדריך קצר"],
+  { v: "1.0.0", at: "2026-11-09 11:34", he: ["כל המטלות והבחנים מכל הקורסים במקום אחד, עם ספירה לאחור", "מערכת שעות מקובץ הלבנט, מועדי מבחנים מהלבנט ומד התקדמות לסמסטר", "סנכרון בין הטלפון למחשב, פידבק ומדריך קצר"],
     en: ["All assignments and quizzes from every course in one place, with countdowns", "Timetable from the Levnet file, exam dates from Levnet and a semester progress bar", "Sync between phone and computer, feedback and a short guide"],
     fr: ["Tous les devoirs et tests de tous les cours au même endroit, avec comptes à rebours", "Emploi du temps depuis le fichier Levnet, dates d’examen Levnet et barre du semestre", "Synchronisation téléphone/ordinateur, avis et petit guide"] },
 ];
 const verNum = v => String(v || "0").replace(/-.*/, "").split(".").map(Number).reduce((a, n) => a * 1000 + (n || 0), 0);
 const seenNum = v => /^\d{4}\./.test(String(v || "")) ? verNum("1.0.0") : verNum(v || "1.0.0");   // 1.0.0 went out numbered by date ("2026.11.09")
 const WN = { auto: false };
+function wnWhen(c) {
+  if (!c.at) return "";
+  const [d, tm] = c.at.split(" "), ts = parseYmd(d); let s = d;
+  try { s = new Date(ts * 1000).toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", year: "numeric" }); } catch (e) {}
+  return s + (tm ? " · " + tm : "");
+}
 function whatsNew(force) {
   const seen = LS.get("seenVer", null);
   if (!force) {
     if (!WAS_CONN) { LS.set("seenVer", APP_VERSION); return false; }      // someone connecting just now gets the tour, not a changelog
     if (seen === APP_VERSION) return false;
   }
-  // only versions listed in CHANGES are announced: an update with fixes only (not listed) opens nothing
-  const from = force ? verNum(APP_VERSION) - 1000 : seenNum(seen);
-  const list = CHANGES.filter(c => verNum(c.v) > from && verNum(c.v) <= verNum(APP_VERSION));
-  if (!list.length) { if (!force) LS.set("seenVer", APP_VERSION); return false; }
-  $("#wnList").innerHTML = list.map(c => '<div class="wnv"><b>' + esc(t("version", c.v)) + "</b><ul>" + (c[LANG] || c.he).map(x => "<li>" + esc(x) + "</li>").join("") + "</ul></div>").join("");
+  // opened by itself: everything since the version this device last saw (an update with fixes only opens nothing);
+  // from settings: the whole history, every version with its date and time
+  const cur = verNum(APP_VERSION), from = seenNum(seen);
+  const list = force ? CHANGES.filter(c => verNum(c.v) <= cur) : CHANGES.filter(c => verNum(c.v) > from && verNum(c.v) <= cur);
+  if (!force && !list.some(c => !c.quiet)) { LS.set("seenVer", APP_VERSION); return false; }
+  const vIso = v => "\u2066" + v + "\u2069";
+  const prev = seen && !/^\d{4}\./.test(String(seen)) ? String(seen).replace(/-.*/, "") : "1.0.0";
+  $("#wnHead").textContent = t(force ? "wnAllTitle" : "wnTitle");
+  $("#wnList").innerHTML = (!force && list.length > 1 ? '<div class="hint wnfrom">' + esc(t("wnFromTo", vIso(prev), vIso(APP_VERSION.replace(/-.*/, "")))) + "</div>" : "") +
+    list.map(c => '<div class="wnv"><div class="wnh"><b>' + esc(t("version", vIso(c.v))) + "</b>" + (c.quiet ? '<span class="wnq">' + esc(t("wnFix")) + "</span>" : "") +
+      (force && verNum(c.v) === cur ? '<span class="wnnew">' + esc(t("wnYours")) + "</span>" : "") + "<small>" + esc(wnWhen(c)) + "</small></div><ul>" +
+      (c[LANG] || c.he).map(x => "<li>" + esc(x) + "</li>").join("") + "</ul></div>").join("");
+  $("#wnRemBox").hidden = force; $("#wnThBox").hidden = force;
   $("#wnRem").textContent = t(P.rem && P.rem.on ? "wnRemBtn2" : "wnRemBtn");
   $("#wnThemes").innerHTML = TH_FEATURED.map(id => thSwatch(THEMES.find(p => p.id === id), id === thCur())).join("");
   WN.auto = !force; $("#wnSheet").hidden = false; LS.set("seenVer", APP_VERSION);
@@ -2859,10 +3510,10 @@ function remItems(fresh, cf) {
       desc: t("calDue") + ": " + when(x.due) + "\n" + (x.url || ""), url: x.url, alarms: zoom ? ["-PT" + c.clsMin + "M"] : c.task.map(k => REM_OFF[k]) });
   }
   if (c.exam.length) for (const x of examList()) {
-    const key = x.cid + ":" + x.m + ":" + x.ts;
+    const key = x.cid + ":" + exMk(x) + ":" + x.ts;
     if (x.ts + DAY < now || (fresh && done.exams.includes(key))) continue;
-    out.exams.push({ uid: "exam-" + x.cid + "-" + x.m, key, ts: x.ts, allDay: !!x.allDay, dur: 3 * 3600, title: calDot(x.cid) + "📝 " + courseName(x.cid) + " · " + t(x.m === "a" ? "moedA" : "moedB"),
-      desc: x.lev ? t("exLev") : "", alarms: c.exam.map(k => x.allDay ? REM_DAYOFF[k] : REM_OFF[k]) });
+    out.exams.push({ uid: "exam-" + x.cid + "-" + exMk(x), key, ts: x.ts, allDay: !!x.allDay, dur: x.m === "q" ? 2 * 3600 : 3 * 3600, title: (x.cid ? calDot(x.cid) : "") + "📝 " + exName(x) + " · " + exLbl(x),
+      desc: x.lev ? t("exLev") : x.note || "", alarms: c.exam.map(k => x.allDay ? REM_DAYOFF[k] : REM_OFF[k]) });
   }
   if (c.cls !== "none") {
     const D = semDates(now), until = D ? D.e : addD(dayStart(now), 15 * 7), base = D && D.s > now ? D.s : dayStart(now);
@@ -3125,7 +3776,7 @@ function pushItems() {
   }
   for (const x of examList()) for (const k of c.exam) {
     const at = x.allDay ? dayStart(x.ts) - OFF_S[k] + 9 * 3600 : x.ts - OFF_S[k];      // an all-day exam: at 09:00 that many days before
-    add(at, "📝 " + courseName(x.cid) + " · " + t(x.m === "a" ? "moedA" : "moedB"), t("pushExam", t("off_" + k), x.allDay ? dayDate(x.ts) : clockTxt(x.ts)) + (x.lev ? " · " + t("exLev") : ""), "e:" + x.cid + ":" + x.m + ":" + k);
+    add(at, "📝 " + exName(x) + " · " + exLbl(x), t("pushExam", t("off_" + k), x.allDay ? dayDate(x.ts) : clockTxt(x.ts)) + (x.lev ? " · " + t("exLev") : ""), "e:" + x.cid + ":" + exMk(x) + ":" + k);
   }
   if (c.cls !== "none") {
     const D = semDates(now), until = D ? D.e : addD(now, 15 * 7), list = P.tt.filter(x => c.cls === "all" || isZoom(x));
@@ -3159,7 +3810,7 @@ function morningItems(at, now) {
     const cls = inSem ? P.tt.filter(x => x.day === day.getDay()).sort((a, b) => hm(a.s) - hm(b.s)) : [];
     if (!due.length && !ex.length && !cls.length) continue;
     const parts = [];
-    if (ex.length) parts.push(t("morExam", ex.map(x => courseName(x.cid)).join(", ")));
+    if (ex.length) parts.push(t("morExam", ex.map(x => exName(x) + (x.m === "q" ? " (" + exLbl(x) + ")" : "")).join(", ")));
     if (due.length) parts.push(t("morDue", due.length, hhmm(due[0].due), due[0].name));
     if (cls.length) parts.push(t("morCls", cls.length, cls[0].s, isZoom(cls[0])));
     out.push({ at: fire * 1000, title: t("morHead", dayName(day.getDay())), body: parts.join(" · "), tag: "morning:" + dayKey(day) });
@@ -3516,7 +4167,31 @@ document.addEventListener("keydown", e => {
   }); }
 $$(".gtabs [data-plat]").forEach(b => b.addEventListener("click", () => { PLAT = b.dataset.plat; renderGuide(); }));
 $("#bRefresh").onclick = () => { useHit("refresh"); refresh(true); };
-$("#bSet").onclick = () => { renderSheet(); $("#sheet").hidden = false; };
+V.lz = LS.get("lz", "tt") === "acad" ? "acad" : "tt"; V.acMode = LS.get("acMode", "month") === "year" ? "year" : "month";
+$("#lzSeg").addEventListener("click", e => { const b = e.target.closest("[data-lz]"); if (!b) return; V.lz = b.dataset.lz; LS.set("lz", V.lz); if (V.lz === "acad") useHit("acad"); render(); });
+$("#acMode").addEventListener("click", e => { const b = e.target.closest("[data-acm]"); if (!b) return; V.acMode = b.dataset.acm; LS.set("acMode", V.acMode); if (V.acMode === "year") useHit("acadYear"); render(); });
+$("#acad").addEventListener("click", e => {
+  const now = nowS();
+  if (e.target.closest("#acPrev")) { V.acM = acYM(V.acM || acMonthOf(now), -1); V.acSel = ""; render(); return; }
+  if (e.target.closest("#acNext")) { V.acM = acYM(V.acM || acMonthOf(now), 1); V.acSel = ""; render(); return; }
+  if (e.target.closest("#acToday")) { V.acM = acMonthOf(now); V.acSel = ""; render(); return; }
+  const d = e.target.closest("[data-acd]"); if (d) { V.acSel = V.acSel === d.dataset.acd ? "" : d.dataset.acd; render(); return; }
+  const g = e.target.closest("[data-acgo]"); if (g) { V.acMode = "month"; LS.set("acMode", "month"); V.acM = g.dataset.acgo.slice(0, 7); V.acSel = g.dataset.acgo; render(); if (!wide()) window.scrollTo(0, 0); else $("#acadCard").scrollIntoView({ block: "start" }); return; }
+  const ym = e.target.closest("[data-acym]"); if (ym) { V.acMode = "month"; LS.set("acMode", "month"); V.acM = ym.dataset.acym; V.acSel = ""; render(); if (!wide()) window.scrollTo(0, 0); else $("#acadCard").scrollIntoView({ block: "start" }); }
+});
+$("#bAcadGo").onclick = () => goAcad();
+$("#bSet").onclick = () => { renderSheet(); setPage(""); $("#sheet").hidden = false; };
+$("#sMenu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) setPage(b.dataset.go); });
+$("#sBack").onclick = () => setPage("");
+$("#oldHide").onchange = e => { P.old_hide = e.target.checked; savePrefs(); render(); renderSheet(); };
+$("#cdx").onchange = e => { P.cdx = e.target.checked; savePrefs(); render(); };
+$("#zl").onchange = e => { P.zl = e.target.value; savePrefs(); if (V.data) applyZl(V.data.tasks, nowS()); render(); renderSheet(); };
+$("#campus").onchange = e => { P.campus = e.target.value; savePrefs(); render(); renderSheet(); };
+function kwAdd(w) { w = (w || "").trim().slice(0, 40); if (!w) return; if (!P.kw.some(x => x.toLowerCase() === w.toLowerCase())) { P.kw = [...P.kw, w].slice(0, 40); savePrefs(); render(); } renderSheet(); }
+$("#kwAdd").onclick = () => { kwAdd($("#kwIn").value); $("#kwIn").value = ""; };
+$("#kwIn").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("#kwAdd").click(); } });
+$("#kwList").addEventListener("click", e => { const b = e.target.closest("[data-kwdel]"); if (b) { P.kw = P.kw.filter((_, i) => i !== Number(b.dataset.kwdel)); savePrefs(); render(); renderSheet(); } });
+$("#kwSug").addEventListener("click", e => { const b = e.target.closest("[data-kwsug]"); if (b) kwAdd(b.dataset.kwsug); });
 $("#bClose").onclick = () => $("#sheet").hidden = true;
 $("#sheet").addEventListener("click", e => { if (e.target.id === "sheet") $("#sheet").hidden = true; });
 $("#old").onchange = e => { P.old_days = Number(e.target.value); savePrefs(); render(); };
@@ -3549,6 +4224,7 @@ $("#list").addEventListener("click", e => {
     return;
   }
   if (e.target.closest("[data-showhid]")) { V.showHid = !V.showHid; render(); return; }
+  if (e.target.closest("[data-rules]")) { renderSheet(); setPage("filter"); $("#sheet").hidden = false; return; }
   { const me = e.target.closest("[data-mine]"); if (me) { openMine(me.dataset.mine); return; } }
   const dn = e.target.closest("[data-done]");
   if (dn) { const k = dn.dataset.done; P.manual = P.manual.includes(k) ? P.manual.filter(y => y !== k) : [...P.manual, k]; savePrefs(); render(); return; }
@@ -3561,8 +4237,8 @@ $("#dash").addEventListener("click", e => {
   const fc = e.target.closest("[data-fc]"); if (fc) return goTasks({ kind: "course", cid: Number(fc.dataset.fc) });
   const go = e.target.closest("[data-goto]"); if (go) return gotoTask(go.dataset.goto);
 });
-function goTT() { if (wide()) $("#ttCard").scrollIntoView({ block: "start", behavior: "smooth" }); else { setView("tt"); render(); window.scrollTo(0, 0); } }
-function openSemSettings() { renderSheet(); $("#sheet").hidden = false; setTimeout(() => $("#semSet").scrollIntoView({ block: "start" }), 30); }
+function goTT() { V.lz = "tt"; LS.set("lz", "tt"); if (wide()) $("#ttCard").scrollIntoView({ block: "start", behavior: "smooth" }); else { setView("tt"); render(); window.scrollTo(0, 0); } }
+function openSemSettings() { renderSheet(); setPage("sem"); $("#sheet").hidden = false; }
 $("#dash").addEventListener("click", e => {
   if (e.target.closest("[data-semedit]")) return openSemSettings();
   if (e.target.closest("[data-ttadd]")) return openTT();
@@ -3570,6 +4246,7 @@ $("#dash").addEventListener("click", e => {
   if (e.target.closest("[data-ttgo]")) return goTT();
   if (e.target.closest("[data-exall]")) { V.exAll = !V.exAll; return render(); }
   if (e.target.closest("[data-exedit]")) return openExams();
+  const xe = e.target.closest("[data-xqedit]"); if (xe) { openExams(); xqFill((P.xq || []).find(q => q.id === xe.dataset.xqedit)); return; }
   if (e.target.closest("#bNewsMore")) { V.newsAll = !V.newsAll; return render(); }
   const s = e.target.closest(".ni summary");
   if (s) {
@@ -3604,8 +4281,16 @@ $("#scAdd").onclick = () => {
   const pick = $$("#scList [data-sc]:checked").map(i => V.scan[Number(i.dataset.sc)]).filter(Boolean);
   P.tt = P.tt.concat(cleanTT(pick)); savePrefs(); $("#scSheet").hidden = true; render(); toast(t("importDone"));
 };
-function openExams() { V.exSug = []; $("#exScanMsg").textContent = ""; renderExSheet(); $("#exSheet").hidden = false; }
-$("#bExEdit").onclick = openExams;
+function openExams(add) { V.exSug = []; $("#exScanMsg").textContent = ""; renderExSheet(); xqFill(null); $("#exSheet").hidden = false; $("#exSheet .box").scrollTop = 0; if (add) setTimeout(() => $("#xqCourse").focus(), 50); }
+$("#bExEdit").onclick = () => openExams();
+$("#bExAdd").onclick = () => openExams(true);
+$("#xqCourse").onchange = () => { $("#xqName").hidden = $("#xqCourse").value !== "0"; $("#xqMsg").textContent = ""; };
+$("#xqSave").onclick = xqSave;
+$("#xqCancel").onclick = () => xqFill(null);
+$("#xqList").addEventListener("click", e => {
+  const ed = e.target.closest("[data-xqe]"); if (ed) { xqFill((P.xq || []).find(q => q.id === ed.dataset.xqe)); $("#xqForm").scrollIntoView({ block: "nearest" }); return; }
+  const dl = e.target.closest("[data-xqd]"); if (dl) { P.xq = (P.xq || []).filter(q => q.id !== dl.dataset.xqd); if (V.xqEdit === dl.dataset.xqd) V.xqEdit = ""; savePrefs(); render(); renderXq(); }
+});
 $("#bExScan").onclick = scanExams;
 $("#exClose").onclick = () => $("#exSheet").hidden = true;
 $("#exSheet").addEventListener("click", e => { if (e.target.id === "exSheet") $("#exSheet").hidden = true; });

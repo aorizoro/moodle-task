@@ -173,7 +173,12 @@ details{margin:10px 0}
 summary{cursor:pointer;padding:4px 0;font-weight:600}
 /* versions + reminders */
 .betatag{font-size:10.5px;font-weight:800;letter-spacing:.06em;background:var(--warn);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:3px}
-.wnv{margin:8px 0}
+.wnv{margin:8px 0 14px}
+.wnh{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}
+.wnh small{color:var(--muted);font-size:12.5px;margin-inline-start:auto}
+.wnq,.wnnew{font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--row);color:var(--muted)}
+.wnnew{background:var(--accent-soft);color:var(--accent-t)}
+.wnfrom{margin:2px 0 8px}
 .calbtns{display:flex;flex-direction:column;gap:8px;margin:10px 0}
 .calbtns.busy{opacity:.5;pointer-events:none}
 #updBar{position:fixed;inset-inline:12px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:60;display:flex;align-items:center;gap:10px;justify-content:space-between;background:var(--accent);color:var(--on-accent,#fff);border-radius:14px;padding:10px 12px 10px 14px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-weight:600;max-width:520px;margin:0 auto}
@@ -931,7 +936,7 @@ body.app[data-lz=acad] #ttCard{display:none}
       <button id="bTour" class="prow" data-i18n="tourOpen"></button>
       <button id="bInst" class="prow" hidden data-i18n="instTitle"></button>
       <div id="fbSet" hidden><button id="bFb" class="prow" data-i18n="fbOpen"></button></div>
-      <button id="bWn" class="prow" data-i18n="wnTitle"></button>
+      <button id="bWn" class="prow" data-i18n="wnAllBtn"></button>
       <button id="bUpd" class="prow" data-i18n="updCheck"></button>
       <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
     </div>
@@ -1113,10 +1118,10 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="wnSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="wnTitle"></span> <button class="link" id="wnClose" data-i18n="close"></button></h3>
+    <h3><span id="wnHead" data-i18n="wnTitle"></span> <button class="link" id="wnClose" data-i18n="close"></button></h3>
     <div id="wnList"></div>
     <div class="wnx" id="wnRemBox"><b data-i18n="wnRemT"></b><span class="hint" data-i18n="wnRemD"></span><button class="primary" id="wnRem" data-i18n="wnRemBtn"></button></div>
-    <div class="wnx"><b data-i18n="wnThT"></b><span class="hint" data-i18n="wnThD"></span><div class="thgrid sm" id="wnThemes"></div><button class="link" id="wnThAll" data-i18n="wnThAll"></button></div>
+    <div class="wnx" id="wnThBox"><b data-i18n="wnThT"></b><span class="hint" data-i18n="wnThD"></span><div class="thgrid sm" id="wnThemes"></div><button class="link" id="wnThAll" data-i18n="wnThAll"></button></div>
     <button id="wnOk" style="width:100%;margin-top:12px" data-i18n="wnOk"></button>
   </div>
 </div>
@@ -1177,6 +1182,7 @@ const I18N = {
     xqNamePh: "שם הקורס", xqDate: "תאריך", xqTime: "שעה (לא חובה)", xqNotePh: "הערה (חומר, חדר…) – ב״אחר״ זה השם", xqAdd: "➕ הוסף ללוח", xqSaveEdit: "💾 שמור שינויים", xqCancel: "ביטול",
     xqMoedTitle: "מועדי א׳ / ב׳ לפי קורס", xqPickCourse: "בחר קורס…", xqOtherCourse: "אחר (לכתוב שם)", xq_quiz: "בוחן", xq_mid: "מבחן אמצע", xq_exam: "מבחן", xq_other: "אחר",
     xqNeedCourse: "בחר קורס (או ״אחר״ וכתוב שם)", xqNeedDate: "בחר תאריך", xqAdded: "נוסף ללוח המבחנים ✓", xqSaved: "נשמר ✓", acMine: "שלי",
+        wnAllTitle: "📜 כל העדכונים", wnAllBtn: "📜 כל העדכונים – מה נוסף ומתי", wnFix: "תיקונים", wnYours: "הגרסה שלך", wnFromTo: (a, b) => "עודכנת מגרסה " + a + " לגרסה " + b + ". זה כל מה שהשתנה בדרך:",
     locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "האפליקציה של Hii 😉", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
     remTitle: "🔔 תזכורות", remAskTitle: "🔔 רוצה תזכורות?", remIntro: "האפליקציה יכולה להזכיר לך לפני הגשות, מבחנים ושיעורי זום. בחר מתי, והתזכורות ייכנסו ליומן של הטלפון.",
@@ -1374,6 +1380,7 @@ const I18N = {
     xqNamePh: "Course name", xqDate: "Date", xqTime: "Time (optional)", xqNotePh: "Note (material, room…) – for “Other” this is the name", xqAdd: "➕ Add to the board", xqSaveEdit: "💾 Save changes", xqCancel: "Cancel",
     xqMoedTitle: "1st / 2nd sittings by course", xqPickCourse: "Choose a course…", xqOtherCourse: "Other (type a name)", xq_quiz: "Quiz", xq_mid: "Midterm", xq_exam: "Exam", xq_other: "Other",
     xqNeedCourse: "Choose a course (or “Other” and type a name)", xqNeedDate: "Choose a date", xqAdded: "Added to the exam board ✓", xqSaved: "Saved ✓", acMine: "mine",
+        wnAllTitle: "📜 All updates", wnAllBtn: "📜 All updates – what was added when", wnFix: "fixes", wnYours: "your version", wnFromTo: (a, b) => "You were updated from version " + a + " to " + b + ". Here’s everything that changed:",
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "Hii’s app 😉", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
     remTitle: "🔔 Reminders", remAskTitle: "🔔 Want reminders?", remIntro: "The app can remind you before deadlines, exams and Zoom classes. Choose when, and the reminders go into your phone’s calendar.",
@@ -1571,6 +1578,7 @@ const I18N = {
     xqNamePh: "Nom du cours", xqDate: "Date", xqTime: "Heure (facultatif)", xqNotePh: "Note (matière, salle…) – pour « Autre », c’est le nom", xqAdd: "➕ Ajouter", xqSaveEdit: "💾 Enregistrer", xqCancel: "Annuler",
     xqMoedTitle: "1re / 2e session par cours", xqPickCourse: "Choisir un cours…", xqOtherCourse: "Autre (saisir un nom)", xq_quiz: "Quiz", xq_mid: "Partiel", xq_exam: "Examen", xq_other: "Autre",
     xqNeedCourse: "Choisissez un cours (ou « Autre » avec un nom)", xqNeedDate: "Choisissez une date", xqAdded: "Ajouté aux examens ✓", xqSaved: "Enregistré ✓", acMine: "à moi",
+        wnAllTitle: "📜 Toutes les mises à jour", wnAllBtn: "📜 Toutes les mises à jour – quoi et quand", wnFix: "correctifs", wnYours: "votre version", wnFromTo: (a, b) => "Mise à jour de la version " + a + " à la " + b + ". Voici tout ce qui a changé :",
     locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "L’appli de Hii 😉", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     remTitle: "🔔 Rappels", remAskTitle: "🔔 Envie de rappels ?", remIntro: "L’application peut vous rappeler les échéances, examens et cours Zoom. Choisissez quand, et les rappels vont dans le calendrier du téléphone.",
@@ -2853,7 +2861,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.4.0-beta.3";
+const APP_VERSION = "1.4.0";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -3379,36 +3387,62 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
-  { v: "1.4.0", date: "2026-11-10", he: ["📅 לשונית ״לו״ז״: מערכת השעות וגם הלוח האקדמי של תשפ״ז – תצוגה חודשית ושנתית עם כל החגים, החופשות, הבחינות והתאריכים העבריים", "📝 אפשר להוסיף ללוח המבחנים בחנים, מבחני אמצע ומבחנים שהמועד שלהם שונה בין הקבוצות (״＋ בוחן״) – עם תזכורות, ביומן ובלו״ז", "⚙️ הגדרות מסודרות בקטגוריות: התראות ויומן, מראה, סינון מטלות, קורסים, סמסטר, חשבון ועזרה", "🔎 סינון מטלות: להסתיר לפי מכון (לב / טל), לפי מילים (למשל ״קבוצה ב״ או שם מרצה), וקישורי זום שמופיעים כמטלה", "🧹 אפשר להסתיר לגמרי מטלות ישנות שלא הוגשו", "⏱ הזמן שנשאר להגשה מוצג בימים ובשעות (ספירה מדויקת עם דקות ושניות — בהגדרות)", "💬 בפידבק, השם, הקורסים ופרטי המכשיר מצורפים תמיד כדי שיהיה קל לעזור"],
+  { v: "1.4.0", at: "2026-11-10 14:43", he: ["📅 לשונית ״לו״ז״: מערכת השעות וגם הלוח האקדמי של תשפ״ז – תצוגה חודשית ושנתית עם כל החגים, החופשות, הבחינות והתאריכים העבריים", "📝 אפשר להוסיף ללוח המבחנים בחנים, מבחני אמצע ומבחנים שהמועד שלהם שונה בין הקבוצות (״＋ בוחן״) – עם תזכורות, ביומן ובלו״ז", "⚙️ הגדרות מסודרות בקטגוריות: התראות ויומן, מראה, סינון מטלות, קורסים, סמסטר, חשבון ועזרה", "🔎 סינון מטלות: להסתיר לפי מכון (לב / טל), לפי מילים (למשל ״קבוצה ב״ או שם מרצה), וקישורי זום שמופיעים כמטלה", "🧹 אפשר להסתיר לגמרי מטלות ישנות שלא הוגשו", "⏱ הזמן שנשאר להגשה מוצג בימים ובשעות (ספירה מדויקת עם דקות ושניות — בהגדרות)", "💬 בפידבק, השם, הקורסים ופרטי המכשיר מצורפים תמיד כדי שיהיה קל לעזור"],
     en: ["📅 “Schedule” tab: your timetable plus the 5787 academic calendar – month and year views with every holiday, break, exam period and Hebrew date", "📝 Add your own quizzes, midterms and group-specific exams to the exam board (“＋ Quiz”) – with reminders, in your calendar and in the schedule", "⚙️ Settings organised into categories: reminders & calendar, look, task filters, courses, semester, account and help", "🔎 Task filters: hide by campus (Lev / Tal), by words (e.g. “Group B” or a lecturer’s name), and Zoom links posted as tasks", "🧹 You can hide old unsubmitted tasks completely", "⏱ Time left is shown in days and hours (exact countdown with minutes and seconds is in settings)", "💬 Feedback always includes your name, courses and device details so it’s easier to help"],
     fr: ["📅 Onglet « Agenda » : l’emploi du temps et le calendrier académique 5787 – vues mois et année avec fêtes, vacances, examens et dates hébraïques", "📝 Ajoutez vos quiz, partiels et examens propres à votre groupe (« ＋ Quiz ») – avec rappels, dans votre calendrier et l’agenda", "⚙️ Réglages classés par catégories : rappels et agenda, apparence, filtres, cours, semestre, compte et aide", "🔎 Filtres de devoirs : masquer par campus (Lev / Tal), par mots (p. ex. « Groupe B » ou un enseignant) et les liens Zoom publiés comme devoirs", "🧹 Vous pouvez masquer complètement les anciens devoirs non rendus", "⏱ Le temps restant s’affiche en jours et en heures (compte à rebours précis dans les réglages)", "💬 Les avis incluent toujours votre nom, vos cours et les détails de l’appareil pour mieux vous aider"] },
-  { v: "1.3.0", date: "2026-11-09", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד, עם עיגול בצבע של הקורס", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📄 המטלות מסודרות לפי מה שעושים: הגשת קובץ (סריקה ו-PDF) או מענה בתוך Moodle", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה", "🔄 המידע מתרענן בכל חזרה לאפליקציה, וכשיש גרסה חדשה מופיע כפתור ״עדכון עכשיו״ (ואפשר לבדוק גם בהגדרות)"],
+  { v: "1.3.0", at: "2026-11-09 23:31", he: ["➕ משימות משלך: מוסיפים משימה עם תאריך, והיא מתנהגת כמו מטלה מ-Moodle (ספירה לאחור, התראות, יומן)", "📅 יומן שמתעדכן לבד: מוסיפים פעם אחת ל-Google Calendar או לאייפון, ומטלות חדשות נכנסות לבד, עם עיגול בצבע של הקורס", "☀️ סיכום בוקר: התראה אחת בבוקר עם ההגשות, המבחנים והשיעורים של היום", "🧩 סידור הסקירה: מה מוצג ובאיזה סדר (בהגדרות)", "📄 המטלות מסודרות לפי מה שעושים: הגשת קובץ (סריקה ו-PDF) או מענה בתוך Moodle", "📲 הצעה להתקין למסך הבית, ודרך קצרה לייבא את המערכת מהסקירה", "🔄 המידע מתרענן בכל חזרה לאפליקציה, וכשיש גרסה חדשה מופיע כפתור ״עדכון עכשיו״ (ואפשר לבדוק גם בהגדרות)"],
     en: ["📄 Tasks sorted by what you do: upload a file (scan → PDF) or answer inside Moodle", "➕ Your own tasks: add a task with a date and it behaves like a Moodle one (countdown, notifications, calendar)", "📅 A calendar that updates itself: add it once to Google Calendar or your iPhone and new assignments come in by themselves, each with a circle in its course’s colour", "☀️ Morning summary: one notification in the morning with today’s deadlines, exams and classes", "🧩 Arrange the overview: what’s shown and in what order (in settings)", "📲 An offer to install on the home screen, and a quick way to import your timetable from the overview", "🔄 Data refreshes every time you come back to the app, and when there’s a new version an “Update now” button shows (you can also check in settings)"],
     fr: ["📄 Tâches classées selon ce qu’il faut faire : déposer un fichier (scan → PDF) ou répondre sur Moodle", "➕ Vos propres tâches : ajoutez une tâche avec une date, elle se comporte comme un devoir Moodle (compte à rebours, notifications, calendrier)", "📅 Un calendrier qui se met à jour seul : ajoutez-le une fois à Google Agenda ou à l’iPhone, les nouveaux devoirs arrivent seuls, avec un rond de la couleur du cours", "☀️ Résumé du matin : une notification le matin avec les échéances, examens et cours du jour", "🧩 Organiser l’aperçu : ce qui s’affiche et dans quel ordre (dans les paramètres)", "📲 Une proposition d’installer sur l’écran d’accueil, et un accès rapide à l’import de l’emploi du temps depuis l’aperçu", "🔄 Les données se rafraîchissent à chaque retour dans l’application, et un bouton « Mettre à jour » apparaît quand une nouvelle version existe (vérifiable aussi dans les paramètres)"] },
-  { v: "1.2.0", date: "2026-11-09", he: ["✨ שם חדש ולוגו חדש: MoodlePro", "🗂 בלשונית המשימות: כרטיסיות למטלות, לבחנים ולאירועים", "↩ אפשר לבטל הסתרה של פריט מיד, והמוסתרים מופיעים בסוף הרשימה", "⬅️ כפתור ״חזור״ בטלפון חוזר למסך הקודם וסוגר חלונות, במקום לצאת מהאפליקציה", "📅 ניקוי סינון של יום מהסקירה מחזיר לסקירה", "🗑 אפשר להסיר מהיומן את מה שהאפליקציה הוסיפה"],
+  { v: "1.2.1", at: "2026-11-09 19:23", quiet: true,
+    he: ["📄 בטלפון אפשר לבחור את קובץ הלב נט (.xls) – קודם הוא הופיע באפור", "🔔📅 תזכורות: אפשר גם התראות מהאפליקציה וגם יומן, יחד"],
+    en: ["📄 On phones the Levnet file (.xls) can be chosen – it used to be greyed out", "🔔📅 Reminders: notifications from the app and the calendar can be on together"],
+    fr: ["📄 Sur téléphone, le fichier Levnet (.xls) peut être choisi – il était grisé", "🔔📅 Rappels : notifications de l’app et calendrier ensemble"] },
+  { v: "1.2.0", at: "2026-11-09 18:44", he: ["✨ שם חדש ולוגו חדש: MoodlePro", "🗂 בלשונית המשימות: כרטיסיות למטלות, לבחנים ולאירועים", "↩ אפשר לבטל הסתרה של פריט מיד, והמוסתרים מופיעים בסוף הרשימה", "⬅️ כפתור ״חזור״ בטלפון חוזר למסך הקודם וסוגר חלונות, במקום לצאת מהאפליקציה", "📅 ניקוי סינון של יום מהסקירה מחזיר לסקירה", "🗑 אפשר להסיר מהיומן את מה שהאפליקציה הוסיפה"],
     en: ["✨ New name and logo: MoodlePro", "🗂 Tasks tab: tabs for assignments, quizzes and events", "↩ Hiding an item can be undone right away, and hidden items are listed at the end", "⬅️ The phone’s Back button goes to the previous screen and closes windows instead of leaving the app", "📅 Clearing a day picked on the overview takes you back to the overview", "🗑 You can remove from your calendar what the app added"],
     fr: ["✨ Nouveau nom et nouveau logo : MoodlePro", "🗂 Onglet devoirs : onglets pour devoirs, tests et événements", "↩ Masquer un élément peut être annulé tout de suite, et les éléments masqués sont listés à la fin", "⬅️ Le bouton Retour revient à l’écran précédent et ferme les fenêtres au lieu de quitter l’app", "📅 Effacer un jour choisi dans l’aperçu ramène à l’aperçu", "🗑 Vous pouvez retirer du calendrier ce que l’app a ajouté"] },
-  { v: "1.1.0", date: "2026-11-09", he: ["🔔 התראות: האפליקציה שולחת התראה לפני הגשות, מבחנים ושיעורי זום, לפי הזמנים שבוחרים, גם כשהיא סגורה (או ליומן של הטלפון)", "🎨 ערכות צבעים: 22 מראות בהירים וכהים, מפסטל עדין ועד מרקר וניאון, וגם בנייה של מראה משלך", "📹 שיעורי זום מסומנים במערכת ובשיעורי היום", "🏷 מספר גרסה ו״מה חדש״ בהגדרות"],
+  { v: "1.1.2", at: "2026-11-09 18:04", quiet: true,
+    he: ["🎬 סרטון קצר במסך ההתחברות שמראה איך משיגים את הטוקן"],
+    en: ["🎬 A short video on the login screen showing how to get the token"],
+    fr: ["🎬 Une courte vidéo sur l’écran de connexion montre comment obtenir le jeton"] },
+  { v: "1.1.1", at: "2026-11-09 17:27", quiet: true,
+    he: ["📄 מדריך צעד אחר צעד להורדת המערכת מהלב נט", "עדכונים עם תיקונים בלבד כבר לא מקפיצים חלון"],
+    en: ["📄 A step-by-step guide to downloading your timetable from Levnet", "Fix-only updates no longer pop up a window"],
+    fr: ["📄 Un guide pas à pas pour télécharger l’emploi du temps depuis Levnet", "Les mises à jour de correctifs n’ouvrent plus de fenêtre"] },
+  { v: "1.1.0", at: "2026-11-09 16:23", he: ["🔔 התראות: האפליקציה שולחת התראה לפני הגשות, מבחנים ושיעורי זום, לפי הזמנים שבוחרים, גם כשהיא סגורה (או ליומן של הטלפון)", "🎨 ערכות צבעים: 22 מראות בהירים וכהים, מפסטל עדין ועד מרקר וניאון, וגם בנייה של מראה משלך", "📹 שיעורי זום מסומנים במערכת ובשיעורי היום", "🏷 מספר גרסה ו״מה חדש״ בהגדרות"],
     en: ["🔔 Notifications: the app notifies you before deadlines, exams and Zoom classes at the times you choose, even when closed (or into your phone’s calendar)", "🎨 Colour themes: 22 light and dark looks, from soft pastel to highlighter and neon, plus building your own", "📹 Zoom classes are marked in the timetable and today’s classes", "🏷 Version number and “What’s new” in settings"],
     fr: ["🔔 Notifications : l’app vous prévient avant les échéances, examens et cours Zoom aux moments choisis, même fermée (ou dans le calendrier du téléphone)", "🎨 Thèmes : 22 apparences claires et sombres, du pastel doux au surligneur et au néon, et la vôtre sur mesure", "📹 Les cours Zoom sont signalés dans l’emploi du temps et les cours du jour", "🏷 Numéro de version et « Nouveautés » dans les paramètres"] },
-  { v: "1.0.0", date: "2026-11-09", he: ["כל המטלות והבחנים מכל הקורסים במקום אחד, עם ספירה לאחור", "מערכת שעות מקובץ הלבנט, מועדי מבחנים מהלבנט ומד התקדמות לסמסטר", "סנכרון בין הטלפון למחשב, פידבק ומדריך קצר"],
+  { v: "1.0.0", at: "2026-11-09 11:34", he: ["כל המטלות והבחנים מכל הקורסים במקום אחד, עם ספירה לאחור", "מערכת שעות מקובץ הלבנט, מועדי מבחנים מהלבנט ומד התקדמות לסמסטר", "סנכרון בין הטלפון למחשב, פידבק ומדריך קצר"],
     en: ["All assignments and quizzes from every course in one place, with countdowns", "Timetable from the Levnet file, exam dates from Levnet and a semester progress bar", "Sync between phone and computer, feedback and a short guide"],
     fr: ["Tous les devoirs et tests de tous les cours au même endroit, avec comptes à rebours", "Emploi du temps depuis le fichier Levnet, dates d’examen Levnet et barre du semestre", "Synchronisation téléphone/ordinateur, avis et petit guide"] },
 ];
 const verNum = v => String(v || "0").replace(/-.*/, "").split(".").map(Number).reduce((a, n) => a * 1000 + (n || 0), 0);
 const seenNum = v => /^\d{4}\./.test(String(v || "")) ? verNum("1.0.0") : verNum(v || "1.0.0");   // 1.0.0 went out numbered by date ("2026.11.09")
 const WN = { auto: false };
+function wnWhen(c) {
+  if (!c.at) return "";
+  const [d, tm] = c.at.split(" "), ts = parseYmd(d); let s = d;
+  try { s = new Date(ts * 1000).toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", year: "numeric" }); } catch (e) {}
+  return s + (tm ? " · " + tm : "");
+}
 function whatsNew(force) {
   const seen = LS.get("seenVer", null);
   if (!force) {
     if (!WAS_CONN) { LS.set("seenVer", APP_VERSION); return false; }      // someone connecting just now gets the tour, not a changelog
     if (seen === APP_VERSION) return false;
   }
-  // only versions listed in CHANGES are announced: an update with fixes only (not listed) opens nothing
-  const from = force ? verNum(APP_VERSION) - 1000 : seenNum(seen);
-  const list = CHANGES.filter(c => verNum(c.v) > from && verNum(c.v) <= verNum(APP_VERSION));
-  if (!list.length) { if (!force) LS.set("seenVer", APP_VERSION); return false; }
-  $("#wnList").innerHTML = list.map(c => '<div class="wnv"><b>' + esc(t("version", c.v)) + "</b><ul>" + (c[LANG] || c.he).map(x => "<li>" + esc(x) + "</li>").join("") + "</ul></div>").join("");
+  // opened by itself: everything since the version this device last saw (an update with fixes only opens nothing);
+  // from settings: the whole history, every version with its date and time
+  const cur = verNum(APP_VERSION), from = seenNum(seen);
+  const list = force ? CHANGES.filter(c => verNum(c.v) <= cur) : CHANGES.filter(c => verNum(c.v) > from && verNum(c.v) <= cur);
+  if (!force && !list.some(c => !c.quiet)) { LS.set("seenVer", APP_VERSION); return false; }
+  const vIso = v => "\u2066" + v + "\u2069";
+  const prev = seen && !/^\d{4}\./.test(String(seen)) ? String(seen).replace(/-.*/, "") : "1.0.0";
+  $("#wnHead").textContent = t(force ? "wnAllTitle" : "wnTitle");
+  $("#wnList").innerHTML = (!force && list.length > 1 ? '<div class="hint wnfrom">' + esc(t("wnFromTo", vIso(prev), vIso(APP_VERSION.replace(/-.*/, "")))) + "</div>" : "") +
+    list.map(c => '<div class="wnv"><div class="wnh"><b>' + esc(t("version", vIso(c.v))) + "</b>" + (c.quiet ? '<span class="wnq">' + esc(t("wnFix")) + "</span>" : "") +
+      (force && verNum(c.v) === cur ? '<span class="wnnew">' + esc(t("wnYours")) + "</span>" : "") + "<small>" + esc(wnWhen(c)) + "</small></div><ul>" +
+      (c[LANG] || c.he).map(x => "<li>" + esc(x) + "</li>").join("") + "</ul></div>").join("");
+  $("#wnRemBox").hidden = force; $("#wnThBox").hidden = force;
   $("#wnRem").textContent = t(P.rem && P.rem.on ? "wnRemBtn2" : "wnRemBtn");
   $("#wnThemes").innerHTML = TH_FEATURED.map(id => thSwatch(THEMES.find(p => p.id === id), id === thCur())).join("");
   WN.auto = !force; $("#wnSheet").hidden = false; LS.set("seenVer", APP_VERSION);
