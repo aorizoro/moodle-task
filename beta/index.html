@@ -155,10 +155,8 @@ body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
   .sech{display:flex;align-items:baseline;gap:10px;font-size:22px;font-weight:800;margin:6px 2px 12px;letter-spacing:-.01em}
   .sech .hint{font-weight:400;font-size:13.5px}
   /* the overview: its cards on a grid, in the order the student arranged them */
-  #dash{display:grid;gap:14px;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row dense;align-items:start}
-  #dash > .dcard,#dash > .stats{margin:0}
-  #dash > #weekCard,#dash > #semCard{grid-column:1/-1}
-  #hero,#stats{align-self:stretch}
+  #dash{display:grid;column-gap:14px;row-gap:0;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row dense;grid-auto-rows:6px;align-items:start}
+  #dash > .dcard,#dash > .stats{margin:0 0 14px;align-self:start}
   #stats{grid-template-columns:repeat(2,minmax(0,1fr))}
   /* tasks: two columns of cards */
   #list{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:0 12px;align-items:start}
@@ -167,7 +165,6 @@ body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
 @media (min-width:1200px){
   #dash{grid-template-columns:repeat(3,minmax(0,1fr))}
   #dash > #hero{grid-column:span 2}
-  #dash > #semCard{grid-column:auto}
   #dash > #weekCard{grid-column:span 2}
 }
 @media (min-width:1000px){
@@ -572,6 +569,9 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .chips::-webkit-scrollbar{display:none}
 .chip{--c:#888;flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:14px;opacity:.55;user-select:none;cursor:pointer}
 .chip.on{opacity:1;border-color:var(--c);background:color-mix(in srgb,var(--c) 13%,var(--card))}
+.chip.sel{background:var(--c);color:#fff;border-color:var(--c)}
+.chip.sel i{background:#fff}
+.chip.sel .n{color:#fffc}
 .chip i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
 .chip .n{font-size:12px;color:var(--muted)}
 .ctl{display:flex;gap:8px;align-items:center;margin-bottom:8px}
@@ -787,11 +787,35 @@ body[data-density=compact] .task .files,body[data-density=compact] .task details
 body[data-density=compact] .task .act{margin-top:4px;gap:2px 12px}
 body[data-density=compact] .task .act a,body[data-density=compact] .task .act button{font-size:13px;padding:3px 0}
 body[data-density=compact] .grp{margin:10px 2px 5px}
-body[data-density=compact] .hero .nm{font-size:20px}
+body[data-density=compact] .hero{padding:12px 14px}
+body[data-density=compact] .hero .nm{font-size:17px;margin:0 0 2px}
+body[data-density=compact] .hero .lbl{margin-top:4px}
+body[data-density=compact] .hero .big{font-size:18px;margin-top:4px}
+body[data-density=compact] .hero button{margin-top:8px;padding:6px 12px}
+body[data-density=compact] .er,body[data-density=compact] .tr{padding:5px 9px;margin-bottom:4px;border-radius:10px}
+body[data-density=compact] .er .ec .en{font-size:18px}
+body[data-density=compact] .er .eb small .lv{display:none}
+body[data-density=compact] .ni summary{padding:6px 9px}
+body[data-density=compact] .ni{margin-bottom:4px}
+body[data-density=compact] .wd{min-height:96px}
+body[data-density=compact] .wd .bar{height:10px}
+body[data-density=compact] .md{min-height:40px}
+body[data-density=compact] .sem .big{font-size:18px}
+body[data-density=compact] .sem .sub{margin-bottom:8px}
+body[data-density=compact] .load .lr{padding:3px 4px}
+body[data-density=compact] .exnote,body[data-density=compact] .sem .guess,body[data-density=compact] .dcard .ch .hint{display:none}
 body[data-density=clean] .task{border-inline-start-width:1px;box-shadow:0 1px 2px #1018280a;padding:14px 16px}
 body[data-density=clean] .task::before{content:"";position:absolute;inset-block:14px;inset-inline-start:0;width:3px;border-radius:3px;background:var(--c)}
 body[data-density=clean] .task .files,body[data-density=clean] .task details,body[data-density=clean] .task .sub,body[data-density=clean] .task .st.none,body[data-density=clean] .task .st.unknown,body[data-density=clean] .task .st.na{display:none}
-body[data-density=clean] #loadCard,body[data-density=clean] #icsCard,body[data-density=clean] .exnote{display:none!important}
+body[data-density=clean] #loadCard,body[data-density=clean] #icsCard,body[data-density=clean] #monthCard,body[data-density=clean] .exnote,body[data-density=clean] .sem .guess,body[data-density=clean] .dcard .ch .hint,body[data-density=clean] .er .eb small .lv{display:none!important}
+body[data-density=clean] .tile{min-height:0;padding:12px 14px}
+body[data-density=clean] .er,body[data-density=clean] .tr,body[data-density=clean] .ni{background:none;border-inline-start-width:3px;border-radius:0 10px 10px 0;padding-block:7px}
+[dir=rtl] body[data-density=clean] .er,[dir=rtl] body[data-density=clean] .tr,[dir=rtl] body[data-density=clean] .ni{border-radius:10px 0 0 10px}
+body[data-density=clean] .hero{background:color-mix(in srgb,var(--c) 14%,var(--card));color:var(--text)}
+body[data-density=clean] .hero .big{color:var(--text)!important}
+body[data-density=clean] .hero .crs{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--text)}
+body[data-density=clean] .hero button{background:var(--card);border-color:var(--line);color:var(--accent-t)}
+body[data-density=clean] .hero.done{background:color-mix(in srgb,var(--ok) 14%,var(--card))}
 body[data-density=clean] .dcard,body[data-density=clean] .tile{border-color:transparent}
 body[data-density=clean] .chips{display:none}
 body[data-density=clean] .task .tc{background:none;padding:0;color:var(--muted);font-weight:500}
@@ -3022,7 +3046,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.5.0-beta.1";
+const APP_VERSION = "1.5.0-beta.2";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -3135,6 +3159,14 @@ function setView(v, fromHistory) {
 }
 const wide = () => false;          // every screen size now moves between tabs (phone: bottom bar, tablet: floating bar, computer: side bar)
 const bigScreen = () => window.matchMedia("(min-width:760px)").matches;
+/* wide screens: the overview is a masonry of cards (like Google Keep) — every card takes rows by its own height */
+const MASON_ROW = 6, MASON_GAP = 14;
+function masonOne(el) {
+  if (!bigScreen() || !el.offsetParent) { el.style.gridRowEnd = ""; return; }
+  el.style.gridRowEnd = "span " + Math.max(1, Math.ceil((el.getBoundingClientRect().height + MASON_GAP) / MASON_ROW));
+}
+const masonRO = "ResizeObserver" in window ? new ResizeObserver(es => { for (const e of es) masonOne(e.target); }) : null;
+function masonInit() { const box = $("#dash"); if (!box) return; for (const el of box.children) { if (masonRO) masonRO.observe(el); masonOne(el); } }
 const applyDensity = () => { document.body.dataset.density = P.density || "detailed"; $$("#dens [data-dn]").forEach(b => b.classList.toggle("on", b.dataset.dn === (P.density || "detailed"))); };
 /* a course counts as current if it hasn't ended, or (no end date in Moodle) had a deadline in the last 4 months or has one coming */
 function courseCurrent(c, now) {
@@ -3165,10 +3197,11 @@ function render() {
   } else fb.hidden = true;
   // course chips: courses that have tasks, in enrolment order
   const withTasks = new Set(d.tasks.map(x => x.cid));
-  const cs = d.courses.filter(c => withTasks.has(c.id));
+  const cs = d.courses.filter(c => withTasks.has(c.id) && !isOff(c.id)), fc = V.focus && V.focus.kind === "course" ? V.focus.cid : null;
+  $("#chips").hidden = cs.length < 2;
   $("#chips").innerHTML = cs.map(c => {
     const n = d.tasks.filter(x => x.cid === c.id && !isDone(x) && x.due && groupOf(x, now) !== "old" && !P.hidden.includes(x.key) && !ruleHidden(x, now)).length;
-    return '<span class="chip' + (isOff(c.id) ? "" : " on") + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
+    return '<span class="chip' + (fc === null || fc === c.id ? " on" : "") + (fc === c.id ? " sel" : "") + '" role="button" aria-pressed="' + (fc === c.id) + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
   }).join("");
   $$("#seg button").forEach(b => b.classList.toggle("on", b.dataset.f === P.filter));
   $("#sort").value = P.sort;
@@ -3562,9 +3595,9 @@ function launchUrl(site) {
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
   { v: "1.5.0", at: "2026-11-10 16:09",
-    he: ["✨ עיצוב חדש ונקי בהשראת אפליקציות המערכת: אייקונים מקצועיים, כפתורים ובוררים בסגנון iOS, וכותרת שקופה", "🧭 טאבים בכל מסך: בטאבלט סרגל צף, ובמחשב סרגל צד – כל דבר במקום שלו במקום עמוד אחד ארוך", "🪟 צפיפות תצוגה בהגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה", "📚 קורסים: ״הצג הכל״, ״הסתר הכל״ או ״רק קורסים פעילים״ בלחיצה אחת, וחיפוש כשיש הרבה", "🔢 ״נותרו 1 יום״ במקום ״נותרו יום״, ושמות הכרטיסיות במשימות לא נחתכים יותר"],
-    en: ["✨ A new, cleaner design inspired by system apps: professional icons, iOS-style buttons and pickers, a translucent toolbar", "🧭 Tabs on every screen: a floating bar on tablets and a side bar on computers – instead of one long page", "🪟 Display density in Settings → Look & display: detailed, compact or clean", "📚 Courses: “Show all”, “Hide all” or “Current courses only” in one tap, plus search when there are many", "🔢 Clearer countdowns (“1 day”), and task category labels are never cut"],
-    fr: ["✨ Un design plus épuré inspiré des apps système : icônes professionnelles, boutons et sélecteurs façon iOS, barre translucide", "🧭 Des onglets sur tous les écrans : barre flottante sur tablette, barre latérale sur ordinateur – au lieu d’une longue page", "🪟 Densité d’affichage dans Réglages → Apparence : détaillée, compacte ou épurée", "📚 Cours : « Tout afficher », « Tout masquer » ou « Cours actuels » en un geste, et une recherche", "🔢 Comptes à rebours plus clairs (« 1 jour »), et les libellés des catégories ne sont plus coupés"] },
+    he: ["✨ עיצוב חדש ונקי בהשראת אפליקציות המערכת: אייקונים מקצועיים, כפתורים ובוררים בסגנון iOS, וכותרת שקופה", "🧭 טאבים בכל מסך: בטאבלט סרגל צף, ובמחשב סרגל צד – כל דבר במקום שלו במקום עמוד אחד ארוך", "🪟 צפיפות תצוגה בהגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה", "📚 קורסים: ״הצג הכל״, ״הסתר הכל״ או ״רק קורסים פעילים״ בלחיצה אחת, וחיפוש כשיש הרבה", "🔢 ״נותרו 1 יום״ במקום ״נותרו יום״, ושמות הכרטיסיות במשימות לא נחתכים יותר", "🎯 בטאב המשימות מופיעים רק הקורסים שלך (מה שכיבית בהגדרות לא מופיע), ולחיצה על קורס מציגה רק אותו"],
+    en: ["✨ A new, cleaner design inspired by system apps: professional icons, iOS-style buttons and pickers, a translucent toolbar", "🧭 Tabs on every screen: a floating bar on tablets and a side bar on computers – instead of one long page", "🪟 Display density in Settings → Look & display: detailed, compact or clean", "📚 Courses: “Show all”, “Hide all” or “Current courses only” in one tap, plus search when there are many", "🔢 Clearer countdowns (“1 day”), and task category labels are never cut", "🎯 The tasks tab shows only your courses (the ones switched off in settings are gone), and tapping one shows just it"],
+    fr: ["✨ Un design plus épuré inspiré des apps système : icônes professionnelles, boutons et sélecteurs façon iOS, barre translucide", "🧭 Des onglets sur tous les écrans : barre flottante sur tablette, barre latérale sur ordinateur – au lieu d’une longue page", "🪟 Densité d’affichage dans Réglages → Apparence : détaillée, compacte ou épurée", "📚 Cours : « Tout afficher », « Tout masquer » ou « Cours actuels » en un geste, et une recherche", "🔢 Comptes à rebours plus clairs (« 1 jour »), et les libellés des catégories ne sont plus coupés", "🎯 L’onglet Devoirs n’affiche que vos cours (ceux désactivés dans les réglages disparaissent), et toucher un cours n’affiche que lui"] },
   { v: "1.4.0", at: "2026-11-10 14:43", he: ["📅 לשונית ״לו״ז״: מערכת השעות וגם הלוח האקדמי של תשפ״ז – תצוגה חודשית ושנתית עם כל החגים, החופשות, הבחינות והתאריכים העבריים", "📝 אפשר להוסיף ללוח המבחנים בחנים, מבחני אמצע ומבחנים שהמועד שלהם שונה בין הקבוצות (״＋ בוחן״) – עם תזכורות, ביומן ובלו״ז", "⚙️ הגדרות מסודרות בקטגוריות: התראות ויומן, מראה, סינון מטלות, קורסים, סמסטר, חשבון ועזרה", "🔎 סינון מטלות: להסתיר לפי מכון (לב / טל), לפי מילים (למשל ״קבוצה ב״ או שם מרצה), וקישורי זום שמופיעים כמטלה", "🧹 אפשר להסתיר לגמרי מטלות ישנות שלא הוגשו", "⏱ הזמן שנשאר להגשה מוצג בימים ובשעות (ספירה מדויקת עם דקות ושניות — בהגדרות)", "💬 בפידבק, השם, הקורסים ופרטי המכשיר מצורפים תמיד כדי שיהיה קל לעזור"],
     en: ["📅 “Schedule” tab: your timetable plus the 5787 academic calendar – month and year views with every holiday, break, exam period and Hebrew date", "📝 Add your own quizzes, midterms and group-specific exams to the exam board (“＋ Quiz”) – with reminders, in your calendar and in the schedule", "⚙️ Settings organised into categories: reminders & calendar, look, task filters, courses, semester, account and help", "🔎 Task filters: hide by campus (Lev / Tal), by words (e.g. “Group B” or a lecturer’s name), and Zoom links posted as tasks", "🧹 You can hide old unsubmitted tasks completely", "⏱ Time left is shown in days and hours (exact countdown with minutes and seconds is in settings)", "💬 Feedback always includes your name, courses and device details so it’s easier to help"],
     fr: ["📅 Onglet « Agenda » : l’emploi du temps et le calendrier académique 5787 – vues mois et année avec fêtes, vacances, examens et dates hébraïques", "📝 Ajoutez vos quiz, partiels et examens propres à votre groupe (« ＋ Quiz ») – avec rappels, dans votre calendrier et l’agenda", "⚙️ Réglages classés par catégories : rappels et agenda, apparence, filtres, cours, semestre, compte et aide", "🔎 Filtres de devoirs : masquer par campus (Lev / Tal), par mots (p. ex. « Groupe B » ou un enseignant) et les liens Zoom publiés comme devoirs", "🧹 Vous pouvez masquer complètement les anciens devoirs non rendus", "⏱ Le temps restant s’affiche en jours et en heures (compte à rebours précis dans les réglages)", "💬 Les avis incluent toujours votre nom, vos cours et les détails de l’appareil pour mieux vous aider"] },
@@ -4190,7 +4223,7 @@ function showMain() {
   M.url = LS.get("site", DEFAULT_SITE); M.token = LS.get("token", "");
   document.body.classList.add("app"); $("#tabbar").hidden = false; setView(V.view);
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
-  render(); refresh(); useHit("open"); navInit();
+  render(); refresh(); useHit("open"); navInit(); masonInit();
   if (!showMain.counted) { showMain.counted = true; LS.set("opens", LS.get("opens", 0) + 1); }
   $("#bInst").hidden = isStandalone();
   // the tour opens once, after the app first opens (not in automated test browsers, where it would cover everything)
@@ -4394,7 +4427,7 @@ $("#bLogout").onclick = () => {
 };
 $("#chips").addEventListener("click", e => {
   const c = e.target.closest("[data-c]"); if (!c) return;
-  const id = Number(c.dataset.c); P.off = isOff(id) ? P.off.filter(x => x !== id) : [...P.off, id]; savePrefs(); render();
+  const id = Number(c.dataset.c); V.focus = V.focus && V.focus.kind === "course" && V.focus.cid === id ? null : { kind: "course", cid: id }; V.hl = null; render();
 });
 $("#cats").addEventListener("click", e => { const b = e.target.closest("[data-cat]"); if (b) { V.cat = b.dataset.cat; LS.set("cat", V.cat); useHit("cat_" + V.cat); render(); } });
 $("#seg").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { P.filter = b.dataset.f; savePrefs(); render(); } });
@@ -4524,6 +4557,7 @@ $("#bFocusClear").onclick = () => {
   if (back) { if (history.state && history.state.v === "tasks") history.back(); else { setView("dash"); render(); window.scrollTo(0, 0); } } else render();
 };
 $("#bNavSet").onclick = () => $("#bSet").click();
+window.addEventListener("resize", () => { const b = $("#dash"); if (b) for (const el of b.children) masonOne(el); });
 $("#tabbar").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !M.token) return;
