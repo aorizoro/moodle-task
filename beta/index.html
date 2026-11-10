@@ -842,6 +842,85 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 .cbulk .i{width:15px;height:15px}
 #cq{margin:4px 0 2px}
 .srow .cn .act1{font-size:11px;color:var(--ok);font-weight:700;margin-inline-start:6px}
+
+/* ---------- 1.5 · round 2 (Mendi's suggestions) ---------- */
+/* phone: the overview is the home tab, in the middle, raised */
+@media (max-width:599px){
+  .tabbar{overflow:visible}
+  .tabbar .home .ti{width:54px;height:54px;margin-top:-20px;border-radius:50%;background:var(--accent)!important;color:var(--on-accent);
+    box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 40%,transparent),0 0 0 5px var(--card)}
+  .tabbar .home .ti .i{width:25px;height:25px}
+  .tabbar .home{color:var(--muted)}
+  .tabbar .home.on{color:var(--accent-t)}
+  .tabbar .home:not(.on) .ti{background:color-mix(in srgb,var(--accent) 82%,var(--card))!important}
+}
+@media (min-width:1000px){ body.app .tabbar .sbrand{order:0} body.app .tabbar .home{order:1} body.app .tabbar [data-v=tasks]{order:2} body.app .tabbar [data-v=tt]{order:3} body.app .tabbar .sbset{order:9} }
+/* X instead of "סגירה" */
+.xbtn{width:32px;height:32px;border-radius:50%;border:0;background:var(--row);color:var(--muted);display:grid;place-items:center;padding:0;flex:none}
+.xbtn .i{width:18px;height:18px;stroke-width:2.4}
+.xbtn:hover{color:var(--text)}
+/* every window: a fixed size that scrolls inside, the title row and the X stay on top */
+.sheet .box{max-height:88vh;max-height:88dvh;overscroll-behavior:contain}
+.sheet .box:has(> h3:first-child){padding-top:0}
+.sheet .box > h3:first-child{position:sticky;top:0;z-index:3;background:var(--card);margin:0 -16px 10px;padding:16px 16px 10px}
+#sheet .box{height:min(88vh,760px);height:min(88dvh,760px)}
+.tbox{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto}
+/* windows slide up from below (iOS sheet); on a computer they appear in the middle */
+@media (prefers-reduced-motion:no-preference){
+  .sheet:not([hidden]),.tour:not([hidden]){animation:shFade .24s ease}
+  .sheet:not([hidden]) > .box{animation:shUp .36s cubic-bezier(.2,.9,.25,1)}
+  .tour:not([hidden]) .tbox{animation:shPop .3s cubic-bezier(.2,.9,.25,1)}
+  body.intro #dash > *,body.intro #list > *,body.intro #ttv > *{animation:tin .5s cubic-bezier(.2,.8,.2,1) both}
+  body.intro #dash > :nth-child(2),body.intro #list > :nth-child(2){animation-delay:.04s}
+  body.intro #dash > :nth-child(3),body.intro #list > :nth-child(3){animation-delay:.08s}
+  body.intro #dash > :nth-child(4),body.intro #list > :nth-child(4){animation-delay:.12s}
+  body.intro #dash > :nth-child(5),body.intro #list > :nth-child(5){animation-delay:.16s}
+  body.intro #dash > :nth-child(6),body.intro #list > :nth-child(6){animation-delay:.2s}
+  body.intro #dash > :nth-child(n+7),body.intro #list > :nth-child(n+7){animation-delay:.24s}
+}
+@media (prefers-reduced-motion:no-preference) and (min-width:760px){ .sheet:not([hidden]) > .box{animation:shPop .26s cubic-bezier(.2,.9,.25,1)} }
+@keyframes shFade{from{background:#0000}}
+@keyframes shUp{from{transform:translateY(100%)}}
+@keyframes shPop{from{opacity:0;transform:translateY(14px) scale(.97)}}
+/* big banners: a quiet gradient, darker at the top right, a touch lighter at the bottom left */
+.hero{background:linear-gradient(to bottom left,color-mix(in srgb,var(--c) 70%,#000),color-mix(in srgb,var(--c) 84%,#000))}
+.hero.done{background:linear-gradient(to bottom left,#21733a,#2b8a52)}
+/* refresh: only the icon turns */
+.ic.spin{animation:none}
+.ic.spin .i{animation:s 1s linear infinite}
+/* the tasks toolbar: search + one filter button */
+.tbar{display:flex;gap:8px;margin:8px 0 4px;align-items:stretch}
+.tbar #q{flex:1;min-width:0;margin:0}
+.fbtn{position:relative;display:inline-flex;align-items:center;gap:6px;border-radius:12px;padding:0 14px;font-weight:600;background:var(--card);border:1px solid var(--line)}
+.fbtn.act{border-color:var(--accent);color:var(--accent-t);background:var(--accent-soft)}
+.fbtn .badge{position:absolute;top:-6px;inset-inline-end:-6px;min-width:18px;height:18px;line-height:18px;padding:0 5px;border-radius:99px;background:var(--accent);color:var(--on-accent);font-size:11px;font-weight:700;font-style:normal;text-align:center}
+#fSheet .seg{display:flex;width:100%}
+#fSheet .seg button{flex:1}
+#fSheet #sort{width:100%;margin-top:4px}
+#fSheet .chips{margin-top:8px}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px}
+.frow .primary{flex:1;max-width:220px}
+/* suggestions + red dots */
+.sugw .stitle{margin:0 2px 6px}
+.sugr{display:flex;align-items:center;border-bottom:1px solid var(--line)}
+.sugr:last-child{border-bottom:0}
+.sugr .mrow{border-bottom:0;flex:1;min-width:0}
+.sugr .mrow::after{content:none}
+.sugx{border:0;background:none;color:var(--muted);padding:10px 12px;flex:none}
+.sugx .i{width:16px;height:16px}
+.rdot{width:9px;height:9px;border-radius:50%;background:var(--err);flex:none}
+.has-dot{position:relative}
+.has-dot::after{content:"";position:absolute;top:5px;inset-inline-end:5px;width:9px;height:9px;border-radius:50%;background:var(--err);box-shadow:0 0 0 2px var(--card)}
+body.app .tabbar .sbset.has-dot::after{top:12px;inset-inline-end:12px}
+.sugmoved{display:none!important}
+.dfoot{text-align:center;margin:6px 0 4px}
+body.app:not([data-view=dash]) .dfoot{display:none}
+/* squircle corners where the browser can draw them (Chrome / Android now; Safari keeps normal rounded corners) */
+@supports (corner-shape: squircle){
+  .dcard,.tile,.task,.sheet .box,.prow,.mgroup,.mrow .mi,.seg,.seg button,.er,.tr,.ni,.md,.ad,.acym,.dens button,.xqbox,.tbox,.hero,.ic,.fbtn,.tbar #q,button.primary,.acday,.acsoon button,.top .logo,.sbrand img{corner-shape:squircle}
+  .dcard,.task,.hero{border-radius:24px}
+  .mrow .mi{border-radius:11px}
+}
 </style>
 </head>
 <body>
@@ -948,9 +1027,9 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
     <div id="icsCard" class="dcard dact">
       <div class="ch"><span data-i18n="remTitle" data-ic="bell"></span></div>
       <div id="remCardBody" class="remcard"></div>
-      <button class="link" id="bFb2" data-i18n="fbOpen" hidden></button>
     </div>
   </section>
+  <div class="dfoot"><button class="link" id="bFb2" data-i18n="fbOpen" hidden></button></div>
 
   <section id="ttv">
     <div class="seg lzseg" id="lzSeg"><button data-lz="tt" data-i18n="lzTT" data-ic="clock"></button><button data-lz="acad" data-i18n="lzAcad" data-ic="calendar-days"></button></div>
@@ -978,21 +1057,8 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
       <button data-cat="other"><span data-i18n="catOther" data-ic="ellipsis"></span> <i id="catN_other"></i></button>
       <button data-cat="mine"><span data-i18n="catMine" data-ic="user"></span> <i id="catN_mine"></i></button>
     </div>
+    <div class="tbar"><input type="search" id="q" autocomplete="off" data-i18n-ph="searchPh"><button id="bFilter" class="fbtn"><svg class="i"><use href="#i-sliders-horizontal"/></svg><span data-i18n="filterBtn"></span><i class="badge" id="fN" hidden></i></button></div>
     <button id="bMineAdd" class="mineadd" data-i18n="mineAdd" data-ic="plus"></button>
-    <div class="chips" id="chips"></div>
-    <div class="ctl">
-      <div class="seg" id="seg">
-        <button data-f="open" class="on" data-i18n="fOpen"></button>
-        <button data-f="all" data-i18n="fAll"></button>
-        <button data-f="done" data-i18n="fDone"></button>
-      </div>
-      <select id="sort" data-i18n-aria="sort">
-        <option value="urgency" data-i18n="sUrgency"></option>
-        <option value="course" data-i18n="sCourse"></option>
-        <option value="date" data-i18n="sDate"></option>
-      </select>
-    </div>
-    <input type="search" id="q" autocomplete="off" data-i18n-ph="searchPh">
     <div id="list"></div>
     <div class="diag" id="diag"></div>
   </section>
@@ -1001,16 +1067,17 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 
 <nav class="tabbar" id="tabbar" hidden>
   <div class="sbrand"><img src="icon-any-192.png" alt="" width="34" height="34"><div><b class="wm" dir="ltr">Moodle<span>Pro</span></b><span class="hint by" data-i18n="byHii"></span></div></div>
-  <button data-v="dash" class="b"><span class="ti"><svg class="i"><use href="#i-layout-dashboard"/></svg></span><b data-i18n="viewDash"></b></button>
   <button data-v="tasks" class="b"><span class="ti"><svg class="i"><use href="#i-list-checks"/></svg><i class="badge" id="tabBadge" hidden></i></span><b data-i18n="viewTasks"></b></button>
+  <button data-v="dash" class="b home"><span class="ti"><svg class="i"><use href="#i-layout-dashboard"/></svg></span><b data-i18n="viewDash"></b></button>
   <button data-v="tt" class="b"><span class="ti"><svg class="i"><use href="#i-calendar-days"/></svg></span><b data-i18n="viewTT"></b></button>
   <button class="b sbset" id="bNavSet"><span class="ti"><svg class="i"><use href="#i-settings"/></svg></span><b data-i18n="settings"></b></button>
 </nav>
 
 <div class="sheet" id="sheet" hidden>
   <div class="box">
-    <h3><span class="sh"><button class="link sback" id="sBack" hidden data-i18n-aria="back"></button><span id="sTitle"></span></span> <button class="link" id="bClose" data-i18n="close"></button></h3>
+    <h3><span class="sh"><button class="link sback" id="sBack" hidden data-i18n-aria="back"></button><span id="sTitle"></span></span> <button class="xbtn" id="bClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div id="sMenu">
+      <div class="sugw" id="sugW" hidden><div class="stitle" data-i18n="sugTitle"></div><div class="mgroup" id="sugList"></div></div>
       <div class="mgroup">
         <button class="mrow" data-go="notif"><span class="mi" style="--mc:#ff9500"><svg class="i"><use href="#i-bell"/></svg></span><span class="mt"><b data-i18n="sNotif"></b><small id="sumNotif"></small></span></button>
         <button class="mrow" data-go="look"><span class="mi" style="--mc:#af52de"><svg class="i"><use href="#i-palette"/></svg></span><span class="mt"><b data-i18n="sLook"></b><small id="sumLook"></small></span></button>
@@ -1105,9 +1172,28 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
     </div>
   </div>
 </div>
+<div class="sheet" id="fSheet" hidden>
+  <div class="box">
+    <h3><span data-i18n="filterTitle"></span> <button class="xbtn" id="fClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
+    <div class="stitle" data-i18n="fShow"></div>
+    <div class="seg" id="seg">
+      <button data-f="open" class="on" data-i18n="fOpen"></button>
+      <button data-f="all" data-i18n="fAll"></button>
+      <button data-f="done" data-i18n="fDone"></button>
+    </div>
+    <div class="stitle" data-i18n="fSortT"></div>
+    <select id="sort" data-i18n-aria="sort">
+      <option value="urgency" data-i18n="sUrgency"></option>
+      <option value="course" data-i18n="sCourse"></option>
+      <option value="date" data-i18n="sDate"></option>
+    </select>
+    <div id="fCourses"><div class="stitle" data-i18n="fCourseT"></div><div class="hint" data-i18n="fCourseHint"></div><div class="chips" id="chips"></div></div>
+    <div class="frow"><button class="link" id="fReset" data-i18n="fReset"></button><button class="primary" id="fDone" data-i18n="fDoneBtn"></button></div>
+  </div>
+</div>
 <div class="sheet" id="ttSheet" hidden>
   <div class="box form">
-    <h3><span id="ttFormTitle"></span> <button class="link" id="ttClose" data-i18n="close"></button></h3>
+    <h3><span id="ttFormTitle"></span> <button class="xbtn" id="ttClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <label><span data-i18n="ttCourse"></span><select id="fCourse"></select></label>
     <label><span data-i18n="ttName"></span><input type="text" id="fTitle" maxlength="60" autocomplete="off"></label>
     <div class="two">
@@ -1128,7 +1214,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="exSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="exSheetTitle"></span> <button class="link" id="exClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="exSheetTitle"></span> <button class="xbtn" id="exClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div class="hint" data-i18n="exHint"></div>
     <div class="xqbox" id="xqBox">
       <div class="stitle" data-i18n="xqTitle"></div>
@@ -1151,7 +1237,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="scSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="ttScanTitle"></span> <button class="link" id="scClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="ttScanTitle"></span> <button class="xbtn" id="scClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div class="hint" id="scMsg"></div>
     <div id="scList" class="scl"></div>
     <button class="primary" id="scAdd" style="width:100%;margin-top:12px" hidden></button>
@@ -1159,7 +1245,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="fbSheet" hidden>
   <div class="box form">
-    <h3><span data-i18n="fbTitle"></span> <button class="link" id="fbClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="fbTitle"></span> <button class="xbtn" id="fbClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div class="hint" data-i18n="fbHint"></div>
     <label><span data-i18n="fbKind"></span><select id="fbKind"></select></label>
     <label><span data-i18n="fbMsg"></span><textarea id="fbMsg" rows="5" maxlength="2000"></textarea></label>
@@ -1183,7 +1269,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="remSheet" hidden>
   <div class="box form">
-    <h3><span id="remTitle"></span> <button class="link" id="remClose" data-i18n="close"></button></h3>
+    <h3><span id="remTitle"></span> <button class="xbtn" id="remClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" id="remIntro"></p>
     <div class="rgrp"><b data-i18n="remTasks"></b><div class="rchips" id="rem_task"></div></div>
     <div class="rgrp"><b data-i18n="remExams"></b><div class="rchips" id="rem_exam"></div></div>
@@ -1209,7 +1295,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="calSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="calTitle"></span> <button class="link" id="calClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="calTitle"></span> <button class="xbtn" id="calClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="calIntro"></p>
     <div class="calbtns" id="calBtns">
       <button class="primary" id="calGoogle" data-i18n="calGoogle"></button>
@@ -1230,7 +1316,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="daSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="daTitle"></span> <button class="link" id="daClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="daTitle"></span> <button class="xbtn" id="daClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="daIntro"></p>
     <div id="daList" class="dalist"></div>
     <button class="link" id="daReset" style="width:100%;margin-top:8px" data-i18n="daReset"></button>
@@ -1238,7 +1324,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="mineSheet" hidden>
   <div class="box">
-    <h3><span id="mineTitle"></span> <button class="link" id="mineClose" data-i18n="close"></button></h3>
+    <h3><span id="mineTitle"></span> <button class="xbtn" id="mineClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <label class="fld"><span data-i18n="mineName"></span><input id="mineName" maxlength="200" autocomplete="off" data-i18n-ph="mineNamePh"></label>
     <div class="fld2"><label class="fld"><span data-i18n="mineDate"></span><input type="date" id="mineDate"></label><label class="fld"><span data-i18n="mineTime"></span><input type="time" id="mineTime" value="23:59"></label></div>
     <label class="fld"><span data-i18n="mineCid"></span><select id="mineCid"></select></label>
@@ -1258,7 +1344,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="lvSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="lvTitle"></span> <button class="link" id="lvClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="lvTitle"></span> <button class="xbtn" id="lvClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="lvIntro"></p>
     <ol class="lvsteps" id="lvSteps"></ol>
     <p class="hint" data-i18n="lvNote"></p>
@@ -1267,7 +1353,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="thSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="thTitle"></span> <button class="link" id="thClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="thTitle"></span> <button class="xbtn" id="thClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="thIntro"></p>
     <div class="thgrp" data-i18n="thg_base"></div><div class="thgrid" id="th_base"></div>
     <div class="thgrp" data-i18n="thg_pastel"></div><div class="thgrid" id="th_pastel"></div>
@@ -1281,7 +1367,7 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 </div>
 <div class="sheet" id="wnSheet" hidden>
   <div class="box">
-    <h3><span id="wnHead" data-i18n="wnTitle"></span> <button class="link" id="wnClose" data-i18n="close"></button></h3>
+    <h3><span id="wnHead" data-i18n="wnTitle"></span> <button class="xbtn" id="wnClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div id="wnList"></div>
     <div class="wnx" id="wnRemBox"><b data-i18n="wnRemT"></b><span class="hint" data-i18n="wnRemD"></span><button class="primary" id="wnRem" data-i18n="wnRemBtn"></button></div>
     <div class="wnx" id="wnThBox"><b data-i18n="wnThT"></b><span class="hint" data-i18n="wnThD"></span><div class="thgrid sm" id="wnThemes"></div><button class="link" id="wnThAll" data-i18n="wnThAll"></button></div>
@@ -1351,6 +1437,10 @@ const I18N = {
     dens_detailed: "מפורטת", dens_compact: "קומפקטית", dens_clean: "נקייה",
     cbAll: "הצג הכל", cbNone: "הסתר הכל", cbCur: "רק קורסים פעילים", cqPh: "חיפוש קורס…", cbNow: "פעיל",
     cbInfo: (a, b) => a + " מתוך " + b + " קורסים מוצגים",
+        filterBtn: "סינון", filterTitle: "סינון ומיון", fShow: "הצג", fSortT: "מיון", fCourseT: "קורס", fCourseHint: "לחיצה על קורס מציגה רק את המשימות שלו", fReset: "איפוס", fDoneBtn: "סיום",
+    sugTitle: "הצעות", sugNew: "חדש", sugHide: "לא מעוניין", sugRem: "הפעלת תזכורות", sugRemD: "תזכורת לפני הגשות ומבחנים – בהתראות או ביומן",
+    sugPush: "הפעלת התראות במכשיר הזה", sugPushD: "התזכורות מוגדרות, אבל ההתראות עוד לא הופעלו כאן", sugInst: "התקנה במסך הבית", sugInstD: "נפתחת כמו אפליקציה, מהר ובלי שורת כתובת",
+    sugTT: "הוספת מערכת השעות", sugTTD: "מהלב נט או ידנית – והשיעורים מופיעים בלו״ז ובסקירה", sugEx: "הוספת מועדי מבחנים", sugExD: "ספירה לאחור ותזכורת לפני כל מבחן",
     locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "האפליקציה של Hii 😉", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
     remTitle: "🔔 תזכורות", remAskTitle: "🔔 רוצה תזכורות?", remIntro: "האפליקציה יכולה להזכיר לך לפני הגשות, מבחנים ושיעורי זום. בחר מתי, והתזכורות ייכנסו ליומן של הטלפון.",
@@ -1554,6 +1644,10 @@ const I18N = {
     dens_detailed: "detailed", dens_compact: "compact", dens_clean: "clean",
     cbAll: "Show all", cbNone: "Hide all", cbCur: "Current courses only", cqPh: "Search courses…", cbNow: "current",
     cbInfo: (a, b) => a + " of " + b + " courses shown",
+        filterBtn: "Filter", filterTitle: "Filter & sort", fShow: "Show", fSortT: "Sort", fCourseT: "Course", fCourseHint: "Tap a course to see only its tasks", fReset: "Reset", fDoneBtn: "Done",
+    sugTitle: "Suggestions", sugNew: "new", sugHide: "Not interested", sugRem: "Turn on reminders", sugRemD: "A reminder before deadlines and exams – as notifications or in your calendar",
+    sugPush: "Turn on notifications on this device", sugPushD: "Reminders are set, but notifications aren’t on here yet", sugInst: "Add to the home screen", sugInstD: "Opens like an app – faster, no address bar",
+    sugTT: "Add your timetable", sugTTD: "From Levnet or by hand – classes then show in the schedule and overview", sugEx: "Add exam dates", sugExD: "A countdown and a reminder before each exam",
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "Hii’s app 😉", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
     remTitle: "🔔 Reminders", remAskTitle: "🔔 Want reminders?", remIntro: "The app can remind you before deadlines, exams and Zoom classes. Choose when, and the reminders go into your phone’s calendar.",
@@ -1757,6 +1851,10 @@ const I18N = {
     dens_detailed: "détaillée", dens_compact: "compacte", dens_clean: "épurée",
     cbAll: "Tout afficher", cbNone: "Tout masquer", cbCur: "Cours actuels seulement", cqPh: "Chercher un cours…", cbNow: "actuel",
     cbInfo: (a, b) => a + " cours sur " + b + " affichés",
+        filterBtn: "Filtrer", filterTitle: "Filtrer et trier", fShow: "Afficher", fSortT: "Trier", fCourseT: "Cours", fCourseHint: "Touchez un cours pour ne voir que ses devoirs", fReset: "Réinitialiser", fDoneBtn: "OK",
+    sugTitle: "Suggestions", sugNew: "nouveau", sugHide: "Pas intéressé", sugRem: "Activer les rappels", sugRemD: "Un rappel avant les échéances et examens – en notification ou dans l’agenda",
+    sugPush: "Activer les notifications ici", sugPushD: "Les rappels sont réglés, mais les notifications ne sont pas encore activées ici", sugInst: "Ajouter à l’écran d’accueil", sugInstD: "S’ouvre comme une app – plus rapide, sans barre d’adresse",
+    sugTT: "Ajouter l’emploi du temps", sugTTD: "Depuis Levnet ou à la main – les cours apparaissent dans l’agenda et l’accueil", sugEx: "Ajouter les dates d’examen", sugExD: "Un compte à rebours et un rappel avant chaque examen",
     locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "L’appli de Hii 😉", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     remTitle: "🔔 Rappels", remAskTitle: "🔔 Envie de rappels ?", remIntro: "L’application peut vous rappeler les échéances, examens et cours Zoom. Choisissez quand, et les rappels vont dans le calendrier du téléphone.",
@@ -3046,7 +3144,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.5.0-beta.2";
+const APP_VERSION = "1.5.0-beta.3";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -3174,7 +3272,7 @@ function courseCurrent(c, now) {
   return ((V.data && V.data.tasks) || []).some(x => x.cid === c.id && x.due && x.due > now - 120 * DAY);
 }
 function render() {
-  withMine(); applyDash(); applyDensity();
+  withMine(); applyDash(); applyDensity(); renderSug();
   const d = V.data;
   $("#bRefresh").classList.toggle("spin", V.loading);
   $("#upd").textContent = (V.loading && !d ? t("loading") : d ? (V.loading ? t("refreshing") + " · " : "") + t("updated", ago(d.at)) : "") + syncBadge();
@@ -3198,13 +3296,15 @@ function render() {
   // course chips: courses that have tasks, in enrolment order
   const withTasks = new Set(d.tasks.map(x => x.cid));
   const cs = d.courses.filter(c => withTasks.has(c.id) && !isOff(c.id)), fc = V.focus && V.focus.kind === "course" ? V.focus.cid : null;
-  $("#chips").hidden = cs.length < 2;
   $("#chips").innerHTML = cs.map(c => {
     const n = d.tasks.filter(x => x.cid === c.id && !isDone(x) && x.due && groupOf(x, now) !== "old" && !P.hidden.includes(x.key) && !ruleHidden(x, now)).length;
     return '<span class="chip' + (fc === null || fc === c.id ? " on" : "") + (fc === c.id ? " sel" : "") + '" role="button" aria-pressed="' + (fc === c.id) + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
   }).join("");
   $$("#seg button").forEach(b => b.classList.toggle("on", b.dataset.f === P.filter));
   $("#sort").value = P.sort;
+  const nf = (P.filter !== "open" ? 1 : 0) + (P.sort !== "urgency" ? 1 : 0) + (V.focus && V.focus.kind === "course" ? 1 : 0);
+  $("#fN").hidden = !nf; $("#fN").textContent = nf; $("#bFilter").classList.toggle("act", !!nf);
+  $("#fCourses").hidden = cs.length < 2;
 
   const shown = d.tasks.filter(x => visible(x, now)), buckets = [];
   const isOpen = (k, def) => (V.focus ? true : V.openG[k] !== undefined ? V.openG[k] : (P.filter === "done" && k === "u:done") ? true : def);
@@ -3595,9 +3695,9 @@ function launchUrl(site) {
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
   { v: "1.5.0", at: "2026-11-10 16:09",
-    he: ["✨ עיצוב חדש ונקי בהשראת אפליקציות המערכת: אייקונים מקצועיים, כפתורים ובוררים בסגנון iOS, וכותרת שקופה", "🧭 טאבים בכל מסך: בטאבלט סרגל צף, ובמחשב סרגל צד – כל דבר במקום שלו במקום עמוד אחד ארוך", "🪟 צפיפות תצוגה בהגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה", "📚 קורסים: ״הצג הכל״, ״הסתר הכל״ או ״רק קורסים פעילים״ בלחיצה אחת, וחיפוש כשיש הרבה", "🔢 ״נותרו 1 יום״ במקום ״נותרו יום״, ושמות הכרטיסיות במשימות לא נחתכים יותר", "🎯 בטאב המשימות מופיעים רק הקורסים שלך (מה שכיבית בהגדרות לא מופיע), ולחיצה על קורס מציגה רק אותו"],
-    en: ["✨ A new, cleaner design inspired by system apps: professional icons, iOS-style buttons and pickers, a translucent toolbar", "🧭 Tabs on every screen: a floating bar on tablets and a side bar on computers – instead of one long page", "🪟 Display density in Settings → Look & display: detailed, compact or clean", "📚 Courses: “Show all”, “Hide all” or “Current courses only” in one tap, plus search when there are many", "🔢 Clearer countdowns (“1 day”), and task category labels are never cut", "🎯 The tasks tab shows only your courses (the ones switched off in settings are gone), and tapping one shows just it"],
-    fr: ["✨ Un design plus épuré inspiré des apps système : icônes professionnelles, boutons et sélecteurs façon iOS, barre translucide", "🧭 Des onglets sur tous les écrans : barre flottante sur tablette, barre latérale sur ordinateur – au lieu d’une longue page", "🪟 Densité d’affichage dans Réglages → Apparence : détaillée, compacte ou épurée", "📚 Cours : « Tout afficher », « Tout masquer » ou « Cours actuels » en un geste, et une recherche", "🔢 Comptes à rebours plus clairs (« 1 jour »), et les libellés des catégories ne sont plus coupés", "🎯 L’onglet Devoirs n’affiche que vos cours (ceux désactivés dans les réglages disparaissent), et toucher un cours n’affiche que lui"] },
+    he: ["✨ עיצוב חדש ונקי בהשראת אפליקציות המערכת: אייקונים מקצועיים, כפתורים ובוררים בסגנון iOS, וכותרת שקופה", "🧭 טאבים בכל מסך: בטאבלט סרגל צף, ובמחשב סרגל צד – כל דבר במקום שלו במקום עמוד אחד ארוך", "🪟 צפיפות תצוגה בהגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה", "📚 קורסים: ״הצג הכל״, ״הסתר הכל״ או ״רק קורסים פעילים״ בלחיצה אחת, וחיפוש כשיש הרבה", "🔢 ״נותרו 1 יום״ במקום ״נותרו יום״, ושמות הכרטיסיות במשימות לא נחתכים יותר", "🎯 בטאב המשימות מופיעים רק הקורסים שלך (מה שכיבית בהגדרות לא מופיע), ולחיצה על קורס מציגה רק אותו", "🏠 הסקירה באמצע התפריט התחתון, וכפתור ״סינון״ אחד במשימות לסטטוס, מיון וקורס", "🔴 הצעות (תזכורות, התקנה, מבחנים) עברו להגדרות עם נקודה אדומה, וחלונות שעולים מלמטה עם X"],
+    en: ["✨ A new, cleaner design inspired by system apps: professional icons, iOS-style buttons and pickers, a translucent toolbar", "🧭 Tabs on every screen: a floating bar on tablets and a side bar on computers – instead of one long page", "🪟 Display density in Settings → Look & display: detailed, compact or clean", "📚 Courses: “Show all”, “Hide all” or “Current courses only” in one tap, plus search when there are many", "🔢 Clearer countdowns (“1 day”), and task category labels are never cut", "🎯 The tasks tab shows only your courses (the ones switched off in settings are gone), and tapping one shows just it", "🏠 The overview sits in the middle of the bottom bar, and one “Filter” button in tasks holds status, sort and course", "🔴 Suggestions (reminders, install, exams) moved into settings with a red dot; windows slide up and close with an X"],
+    fr: ["✨ Un design plus épuré inspiré des apps système : icônes professionnelles, boutons et sélecteurs façon iOS, barre translucide", "🧭 Des onglets sur tous les écrans : barre flottante sur tablette, barre latérale sur ordinateur – au lieu d’une longue page", "🪟 Densité d’affichage dans Réglages → Apparence : détaillée, compacte ou épurée", "📚 Cours : « Tout afficher », « Tout masquer » ou « Cours actuels » en un geste, et une recherche", "🔢 Comptes à rebours plus clairs (« 1 jour »), et les libellés des catégories ne sont plus coupés", "🎯 L’onglet Devoirs n’affiche que vos cours (ceux désactivés dans les réglages disparaissent), et toucher un cours n’affiche que lui", "🏠 L’accueil est au centre de la barre du bas, et un seul bouton « Filtrer » dans Devoirs", "🔴 Les suggestions (rappels, installation, examens) sont dans les réglages avec un point rouge ; les fenêtres montent du bas et se ferment avec un X"] },
   { v: "1.4.0", at: "2026-11-10 14:43", he: ["📅 לשונית ״לו״ז״: מערכת השעות וגם הלוח האקדמי של תשפ״ז – תצוגה חודשית ושנתית עם כל החגים, החופשות, הבחינות והתאריכים העבריים", "📝 אפשר להוסיף ללוח המבחנים בחנים, מבחני אמצע ומבחנים שהמועד שלהם שונה בין הקבוצות (״＋ בוחן״) – עם תזכורות, ביומן ובלו״ז", "⚙️ הגדרות מסודרות בקטגוריות: התראות ויומן, מראה, סינון מטלות, קורסים, סמסטר, חשבון ועזרה", "🔎 סינון מטלות: להסתיר לפי מכון (לב / טל), לפי מילים (למשל ״קבוצה ב״ או שם מרצה), וקישורי זום שמופיעים כמטלה", "🧹 אפשר להסתיר לגמרי מטלות ישנות שלא הוגשו", "⏱ הזמן שנשאר להגשה מוצג בימים ובשעות (ספירה מדויקת עם דקות ושניות — בהגדרות)", "💬 בפידבק, השם, הקורסים ופרטי המכשיר מצורפים תמיד כדי שיהיה קל לעזור"],
     en: ["📅 “Schedule” tab: your timetable plus the 5787 academic calendar – month and year views with every holiday, break, exam period and Hebrew date", "📝 Add your own quizzes, midterms and group-specific exams to the exam board (“＋ Quiz”) – with reminders, in your calendar and in the schedule", "⚙️ Settings organised into categories: reminders & calendar, look, task filters, courses, semester, account and help", "🔎 Task filters: hide by campus (Lev / Tal), by words (e.g. “Group B” or a lecturer’s name), and Zoom links posted as tasks", "🧹 You can hide old unsubmitted tasks completely", "⏱ Time left is shown in days and hours (exact countdown with minutes and seconds is in settings)", "💬 Feedback always includes your name, courses and device details so it’s easier to help"],
     fr: ["📅 Onglet « Agenda » : l’emploi du temps et le calendrier académique 5787 – vues mois et année avec fêtes, vacances, examens et dates hébraïques", "📝 Ajoutez vos quiz, partiels et examens propres à votre groupe (« ＋ Quiz ») – avec rappels, dans votre calendrier et l’agenda", "⚙️ Réglages classés par catégories : rappels et agenda, apparence, filtres, cours, semestre, compte et aide", "🔎 Filtres de devoirs : masquer par campus (Lev / Tal), par mots (p. ex. « Groupe B » ou un enseignant) et les liens Zoom publiés comme devoirs", "🧹 Vous pouvez masquer complètement les anciens devoirs non rendus", "⏱ Le temps restant s’affiche en jours et en heures (compte à rebours précis dans les réglages)", "💬 Les avis incluent toujours votre nom, vos cours et les détails de l’appareil pour mieux vous aider"] },
@@ -3830,9 +3930,28 @@ function openRem(ask) {
   $("#remLater").hidden = !ask; $("#sheet").hidden = true; $("#remSheet").hidden = false;
 }
 function remSave(patch) { P.rem = Object.assign(remCfg(), patch); savePrefs(); }
+/* suggestions live in settings (a red dot on the gear until each one has been opened) instead of cards on the overview */
+function suggestions() {
+  const out = [], on = P.rem && P.rem.on, off = LS.get("sugOff", []);
+  if (!on) out.push({ id: "rem", ic: "bell", c: "#ff3b30", k: "sugRem", d: "sugRemD", go: () => openRem(false) });
+  else if (usePush() && !pushOn() && !pushNeedsInstall() && pushPerm() !== "denied") out.push({ id: "push", ic: "bell", c: "#ff3b30", k: "sugPush", d: "sugPushD", go: () => pushEnable() });
+  if (!isStandalone()) out.push({ id: "inst", ic: "download", c: "#007aff", k: "sugInst", d: "sugInstD", go: () => openInstall() });
+  if (V.data && !(P.tt || []).length) out.push({ id: "tt", ic: "clock", c: "#34c759", k: "sugTT", d: "sugTTD", go: () => goTT() });
+  if (V.data && !examList().length) out.push({ id: "ex", ic: "graduation-cap", c: "#af52de", k: "sugEx", d: "sugExD", go: () => openExams() });
+  return out.filter(x => !off.includes(x.id));
+}
+function renderSug() {
+  let L = []; try { L = suggestions(); } catch (e) {}
+  const seen = LS.get("sugSeen", []), unread = L.some(x => !seen.includes(x.id));
+  $("#bSet").classList.toggle("has-dot", unread); $("#bNavSet").classList.toggle("has-dot", unread);
+  $("#sugW").hidden = !L.length;
+  $("#sugList").innerHTML = L.map(x => '<div class="sugr"><button class="mrow" data-sug="' + x.id + '"><span class="mi" style="--mc:' + x.c + '">' + ic(x.ic) + '</span><span class="mt"><b>' + esc(t(x.k)) + "</b><small>" + esc(t(x.d)) + "</small></span>" +
+    (seen.includes(x.id) ? "" : '<i class="rdot" aria-label="' + esc(t("sugNew")) + '"></i>') + '</button><button class="sugx" data-sugx="' + x.id + '" aria-label="' + esc(t("sugHide")) + '" title="' + esc(t("sugHide")) + '">' + ic("x") + "</button></div>").join("");
+}
 function renderRemCard() {
   const el = $("#remCardBody"); if (!el) return;
   const on = P.rem && P.rem.on;
+  $("#icsCard").classList.toggle("sugmoved", !on);
   if (feedOn()) feedSoon();
   const calLine = () => { if (feedOn()) return '<div class="hint">📅 ' + esc(t("calLive")) + "</div>"; if (!useCal()) return ""; const n = remPending();
     return n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button data-rem="add">' + esc(t("remUpdateBtn")) + "</button>" : '<div class="hint">📅 ' + esc(t("remCardOk")) + "</div>"; };
@@ -4224,6 +4343,7 @@ function showMain() {
   document.body.classList.add("app"); $("#tabbar").hidden = false; setView(V.view);
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
   render(); refresh(); useHit("open"); navInit(); masonInit();
+  document.body.classList.add("intro"); setTimeout(() => document.body.classList.remove("intro"), 1400);
   if (!showMain.counted) { showMain.counted = true; LS.set("opens", LS.get("opens", 0) + 1); }
   $("#bInst").hidden = isStandalone();
   // the tour opens once, after the app first opens (not in automated test browsers, where it would cover everything)
@@ -4392,7 +4512,11 @@ $("#acad").addEventListener("click", e => {
 });
 $("#bAcadGo").onclick = () => goAcad();
 $("#bSet").onclick = () => { renderSheet(); setPage(""); $("#sheet").hidden = false; };
-$("#sMenu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) setPage(b.dataset.go); });
+$("#sMenu").addEventListener("click", e => {
+  const x = e.target.closest("[data-sugx]"); if (x) { LS.set("sugOff", [...new Set(LS.get("sugOff", []).concat(x.dataset.sugx))]); useHit("sugOff_" + x.dataset.sugx); renderSug(); return; }
+  const g = e.target.closest("[data-sug]");
+  if (g) { const id = g.dataset.sug, s = suggestions().find(y => y.id === id); LS.set("sugSeen", [...new Set(LS.get("sugSeen", []).concat(id))]); useHit("sug_" + id); renderSug(); if (s) { $("#sheet").hidden = true; s.go(); } return; }
+  const b = e.target.closest("[data-go]"); if (b) setPage(b.dataset.go); });
 $("#sBack").onclick = () => setPage("");
 $("#oldHide").onchange = e => { P.old_hide = e.target.checked; savePrefs(); render(); renderSheet(); };
 $("#cdx").onchange = e => { P.cdx = e.target.checked; savePrefs(); render(); };
@@ -4425,6 +4549,10 @@ $("#bLogout").onclick = () => {
   try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
   showSetup();
 };
+$("#bFilter").onclick = () => { useHit("filter"); render(); $("#fSheet").hidden = false; };
+$("#fClose").onclick = $("#fDone").onclick = () => { $("#fSheet").hidden = true; };
+$("#fSheet").addEventListener("click", e => { if (e.target.id === "fSheet") $("#fSheet").hidden = true; });
+$("#fReset").onclick = () => { P.filter = "open"; P.sort = "urgency"; if (V.focus && V.focus.kind === "course") V.focus = null; savePrefs(); render(); };
 $("#chips").addEventListener("click", e => {
   const c = e.target.closest("[data-c]"); if (!c) return;
   const id = Number(c.dataset.c); V.focus = V.focus && V.focus.kind === "course" && V.focus.cid === id ? null : { kind: "course", cid: id }; V.hl = null; render();
