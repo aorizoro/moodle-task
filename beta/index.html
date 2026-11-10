@@ -883,8 +883,8 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 @keyframes shUp{from{transform:translateY(100%)}}
 @keyframes shPop{from{opacity:0;transform:translateY(14px) scale(.97)}}
 /* big banners: a quiet gradient, darker at the top right, a touch lighter at the bottom left */
-.hero{background:linear-gradient(to bottom left,color-mix(in srgb,var(--c) 70%,#000),color-mix(in srgb,var(--c) 84%,#000))}
-.hero.done{background:linear-gradient(to bottom left,#21733a,#2b8a52)}
+.hero{background:linear-gradient(to bottom left,color-mix(in srgb,var(--c) 60%,#000),color-mix(in srgb,var(--c) 96%,#000))}
+.hero.done{background:linear-gradient(to bottom left,#1a5c30,#2f9a5c)}
 /* refresh: only the icon turns */
 .ic.spin{animation:none}
 .ic.spin .i{animation:s 1s linear infinite}
@@ -3144,7 +3144,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.5.0-beta.3";
+const APP_VERSION = "1.5.0-beta.4";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
