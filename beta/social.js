@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.6.0-beta.1";
+const SOC_V = "1.6.0-beta.2";
 const MIN_N = 3;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 const RANKS = [[0, "🌱", "rk0"], [20, "📝", "rk1"], [60, "🧠", "rk2"], [150, "⚡", "rk3"], [300, "👑", "rk4"], [600, "🏆", "rk5"]];
@@ -38,7 +38,14 @@ Object.assign(I18N.he, {
   lgAdd: (f, r) => f + " הוסיף אצלו את ״" + r + "״", lgTime: r => "דיווח זמן על ״" + r + "״", lgWa: "קישור לקבוצת הוואטסאפ", lgSomeone: "מישהו",
   socMute: "השתק משתמש זה 🔇", socUnmute: "בטל השתקה", socMuted: n => n + " הושתק. לא תראה יותר את מה שהוא משתף.", socUnmuted: "ההשתקה בוטלה",
   socOnLbl: "הקהילה פעילה", socOnHint: "כשכבוי – אין שום חיבור לשרת הקהילה ושום דבר מזה לא מוצג.", socProfT: "הפרופיל שלי", socWaT: "קבוצות וואטסאפ לפי קורס",
-  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס"],
+  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
+  shT: "נוסף ללוח שלך ✓", shBig: "שתף עם כל הסטודנטים בקורס", shBigSub: "כולם יוכלו להוסיף לעצמם בלחיצה אחת · \u2066+3\u2069 נק׳ על כל מי שמוסיף", shAuto: "לשתף אוטומטית כל בוחן ומשימה שאוסיף לקורס",
+  shAutoOn: "שיתוף אוטומטי פעיל ✓", shLater: "לא עכשיו", shBtn: "שתף", shShared: "משותף", shUnshare: "הסר שיתוף", shNoCourse: "אפשר לשתף רק פריט ששייך לקורס",
+  shTaskT: "המשימה נשמרה ✓", shMineArea: "שיתוף עם הקורס", shAutoT: "שיתוף אוטומטי",
+  chatBtn: "דיון", chatCourse: "הצ'אט של הקורס", chatT: "💬 דיון", chatTC: "💬 הצ'אט של הקורס", chatPh: "כתוב הודעה…", chatEmpty: "עוד אין כאן הודעות. שאלה, טיפ או תשובה – תהיה הראשון!",
+  chatDel: "ההודעה נמחקה", chatReply: "הגב", chatReplyTo: n => "תגובה ל" + n, chatStar: "מועיל", chatStarT: "סמן כתשובה מועילה (\u2066+2\u2069 לכותב)", chatStarred: "סימנת כמועיל ⭐", chatDelQ: "למחוק את ההודעה?",
+  chatReact: "הוסף תגובה", chatsT: "💬 צ'אטים ודיונים", chatsBtn: "צ'אטים", chatsNone: "עוד אין דיונים בקורסים שלך", chatMsgs: n => n + " הודעות", chatYou: "את/ה",
+  lgStar: (f, r) => f + " סימן את התשובה שלך כמועילה" + (r ? " ב״" + r + "״" : ""),
   socNet: "אין חיבור לשרת הקהילה כרגע", socLoading: "טוען…", socRanksT: "הדרגות", socJoinBtn: "הצטרפות לקהילה",
 });
 Object.assign(I18N.en, {
@@ -68,7 +75,14 @@ Object.assign(I18N.en, {
   lgAdd: (f, r) => f + " added “" + r + "” to theirs", lgTime: r => "Time report on “" + r + "”", lgWa: "WhatsApp group link", lgSomeone: "Someone",
   socMute: "Mute this user 🔇", socUnmute: "Unmute", socMuted: n => n + " is muted. You won’t see what they share.", socUnmuted: "Unmuted",
   socOnLbl: "Community on", socOnHint: "When off, nothing connects to the community server and none of this is shown.", socProfT: "My profile", socWaT: "WhatsApp groups by course",
-  socMuteT: "Muted users", socMuteNone: "None", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link"],
+  socMuteT: "Muted users", socMuteNone: "None", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
+  shT: "Added to your board ✓", shBig: "Share with everyone in the course", shBigSub: "They can add it in one tap · +3 pts for each one who does", shAuto: "Share every quiz and task I add to a course automatically",
+  shAutoOn: "Auto-share is on ✓", shLater: "Not now", shBtn: "Share", shShared: "Shared", shUnshare: "Stop sharing", shNoCourse: "Only items that belong to a course can be shared",
+  shTaskT: "Task saved ✓", shMineArea: "Share with the course", shAutoT: "Auto-share",
+  chatBtn: "Discuss", chatCourse: "Course chat", chatT: "💬 Discussion", chatTC: "💬 Course chat", chatPh: "Write a message…", chatEmpty: "No messages yet. A question, a tip or an answer – be the first!",
+  chatDel: "Message deleted", chatReply: "Reply", chatReplyTo: n => "Replying to " + n, chatStar: "Helpful", chatStarT: "Mark as a helpful answer (+2 to the writer)", chatStarred: "Marked helpful ⭐", chatDelQ: "Delete this message?",
+  chatReact: "React", chatsT: "💬 Chats & discussions", chatsBtn: "Chats", chatsNone: "No discussions in your courses yet", chatMsgs: n => n + " messages", chatYou: "you",
+  lgStar: (f, r) => f + " marked your answer helpful" + (r ? " in “" + r + "”" : ""),
   socNet: "Can’t reach the community server right now", socLoading: "Loading…", socRanksT: "Ranks", socJoinBtn: "Join the community",
 });
 Object.assign(I18N.fr, {
@@ -98,7 +112,14 @@ Object.assign(I18N.fr, {
   lgAdd: (f, r) => f + " a ajouté « " + r + " » chez lui", lgTime: r => "Durée indiquée pour « " + r + " »", lgWa: "Lien du groupe WhatsApp", lgSomeone: "Quelqu’un",
   socMute: "Masquer cet utilisateur 🔇", socUnmute: "Ne plus masquer", socMuted: n => n + " est masqué. Vous ne verrez plus ses partages.", socUnmuted: "Plus masqué",
   socOnLbl: "Communauté activée", socOnHint: "Désactivée : aucune connexion au serveur de la communauté, et rien de tout cela n’est affiché.", socProfT: "Mon profil", socWaT: "Groupes WhatsApp par cours",
-  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours"],
+  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
+  shT: "Ajouté à votre tableau ✓", shBig: "Partager avec tout le cours", shBigSub: "Chacun peut l’ajouter en un geste · +3 pts par ajout", shAuto: "Partager automatiquement chaque quiz et devoir que j’ajoute à un cours",
+  shAutoOn: "Partage automatique activé ✓", shLater: "Pas maintenant", shBtn: "Partager", shShared: "Partagé", shUnshare: "Ne plus partager", shNoCourse: "Seuls les éléments liés à un cours peuvent être partagés",
+  shTaskT: "Devoir enregistré ✓", shMineArea: "Partager avec le cours", shAutoT: "Partage automatique",
+  chatBtn: "Discuter", chatCourse: "Chat du cours", chatT: "💬 Discussion", chatTC: "💬 Chat du cours", chatPh: "Écrire un message…", chatEmpty: "Pas encore de messages. Une question, une astuce, une réponse – lancez-vous !",
+  chatDel: "Message supprimé", chatReply: "Répondre", chatReplyTo: n => "En réponse à " + n, chatStar: "Utile", chatStarT: "Marquer comme réponse utile (+2 pour l’auteur)", chatStarred: "Marqué utile ⭐", chatDelQ: "Supprimer ce message ?",
+  chatReact: "Réagir", chatsT: "💬 Chats et discussions", chatsBtn: "Chats", chatsNone: "Pas encore de discussions dans vos cours", chatMsgs: n => n + " messages", chatYou: "vous",
+  lgStar: (f, r) => f + " a marqué votre réponse comme utile" + (r ? " dans « " + r + " »" : ""),
   socNet: "Serveur de la communauté injoignable pour l’instant", socLoading: "Chargement…", socRanksT: "Rangs", socJoinBtn: "Rejoindre la communauté",
 });
 
@@ -206,27 +227,58 @@ function addShared(id) {
   api("add", { id }).then(() => overview(true)).catch(() => {});
 }
 function ignoreShared(id) { P.soc_ign = (P.soc_ign || []).concat(id).slice(-500); savePrefs(); render(); }
-// the "share with the course" box in the quiz / my-task forms
-function formShare(kind, item) {
-  const row = $(kind === "xq" ? "#xqShareRow" : "#mineShareRow"), box = $(kind === "xq" ? "#xqShare" : "#mineShare"), sel = $(kind === "xq" ? "#xqCourse" : "#mineCid");
-  const upd = () => { row.hidden = !(Number(sel.value) > 0); };
-  if (!sel.dataset.soc) { sel.dataset.soc = "1"; sel.addEventListener("change", () => { if (socOn()) upd(); }); }
-  box.checked = !!(item && item.sid); upd();
+// sharing: after adding a quiz / task to a course, a big "share with the course" button (or automatically, if chosen)
+const findItem = (kind, id) => (kind === "xq" ? P.xq || [] : P.mine || []).find(x => x.id === id);
+const courseOf = cid => ((V.data && V.data.courses) || []).find(x => x.id === cid);
+function shareBody(kind, item) {
+  const c = courseOf(item.cid), cname = c ? shortName(c.name) : "";
+  const b = kind === "xq"
+    ? { cid: item.cid, cname, kind: "xq", at: xqTs(item), d: { n: t("xq_" + item.k) + (item.note ? " · " + item.note : ""), k: item.k, note: item.note || "", s: item.at, allDay: !parseDT(item.at) } }
+    : { cid: item.cid, cname, kind: "task", at: item.due, d: { n: item.title, note: (item.note || "").slice(0, 200) } };
+  if (item.sid) b.id = item.sid;
+  return b;
 }
-async function afterSave(kind, item) {
-  const row = $(kind === "xq" ? "#xqShareRow" : "#mineShareRow"), want = !row.hidden && $(kind === "xq" ? "#xqShare" : "#mineShare").checked && item.cid > 0;
-  const c = myCourses().find(x => x.id === item.cid) || ((V.data && V.data.courses) || []).find(x => x.id === item.cid);
-  if (!want) { if (item.sid) { unshare(item); delete item.sid; savePrefs(); toast(t("socShareOff")); } return; }
-  const body = kind === "xq"
-    ? { cid: item.cid, cname: c ? shortName(c.name) : "", kind: "xq", at: xqTs(item), d: { n: t("xq_" + item.k) + (item.note ? " · " + item.note : ""), k: item.k, note: item.note || "", s: item.at, allDay: !parseDT(item.at) } }
-    : { cid: item.cid, cname: c ? shortName(c.name) : "", kind: "task", at: item.due, d: { n: item.title, note: (item.note || "").slice(0, 200) } };
-  if (item.sid) body.id = item.sid;
+async function shareItem(kind, id, quiet) {
+  const item = findItem(kind, id); if (!item) return;
+  if (!(item.cid > 0)) { toast(t("shNoCourse")); return; }
   try {
-    const r = await api("share", body);
-    const live = (kind === "xq" ? P.xq : P.mine).find(x => x.id === item.id);
+    const r = await api("share", shareBody(kind, item)), live = findItem(kind, id);
     if (live && r.id) { live.sid = r.id; savePrefs(); }
-    toast(t("socShareOn")); overview(true);
+    if (!quiet) toast(t("socShareOn")); overview(true); refreshForms();
   } catch (e) { toast(t("socNet")); }
+}
+function stopSharing(kind, id) { const item = findItem(kind, id); if (!item || !item.sid) return; unshare(item); delete item.sid; savePrefs(); toast(t("socShareOff")); refreshForms(); }
+function refreshForms() { if (!$("#exSheet").hidden && typeof renderXq === "function") renderXq(); if (!$("#mineSheet").hidden && ST.mineOpen) $("#mineSoc").innerHTML = mineShare(findItem("mine", ST.mineOpen)); render(); }
+async function afterSave(kind, item, isNew) {
+  if (!(item.cid > 0)) return;
+  if (item.sid) return shareItem(kind, item.id, true);              // an edit of something shared: everyone gets the change
+  if (!isNew) return;
+  if (P.soc_auto) return shareItem(kind, item.id);
+  askShare(kind, item);
+}
+function askShare(kind, item) {
+  const c = courseOf(item.cid), when_ = kind === "xq" ? (parseDT(item.at) ? when(xqTs(item)) : dayDate(xqTs(item))) : when(item.due);
+  const what = kind === "xq" ? t("xq_" + item.k) + (item.note ? " · " + item.note : "") : item.title;
+  sheet("socShare", "<h3><span>" + esc(t(kind === "xq" ? "shT" : "shTaskT")) + "</span>" + xbtn() + "</h3>" +
+    '<div class="shitem" style="--c:' + colorOf(item.cid) + '"><i></i><div><b><bdi>' + esc(what) + '</bdi></b><small><bdi>' + esc(c ? shortName(c.name) : "") + "</bdi> · " + esc(when_) + "</small></div></div>" +
+    '<button class="shbig" data-socsh="' + kind + "|" + esc(item.id) + '">' + ic("megaphone") + '<span><b>' + esc(t("shBig")) + "</b><small>" + esc(t("shBigSub")) + "</small></span></button>" +
+    '<label class="socchk"><input type="checkbox" id="socAutoBox"' + (P.soc_auto ? " checked" : "") + "><span>" + esc(t("shAuto")) + "</span></label>" +
+    '<button class="link" data-socx style="width:100%;margin-top:4px">' + esc(t("shLater")) + "</button>");
+  $("#socAutoBox").onchange = e => setAuto(e.target.checked);
+}
+function setAuto(on) { P.soc_auto = !!on; savePrefs(); if (on) toast(t("shAutoOn")); if (V.spage === "soc") page(); }
+// in the quiz list: shared / share
+function xqShareBtn(q) {
+  if (!(q.cid > 0) || q.from) return "";
+  return q.sid ? '<button class="sshtag on" data-socunsh="xq|' + esc(q.id) + '" title="' + esc(t("shUnshare")) + '">' + ic("megaphone") + "<span>" + esc(t("shShared")) + "</span></button>"
+    : '<button class="sshtag" data-socsh="xq|' + esc(q.id) + '">' + ic("megaphone") + "<span>" + esc(t("shBtn")) + "</span></button>";
+}
+// in the my-task form (editing an existing task)
+function mineShare(m) {
+  ST.mineOpen = m ? m.id : null;
+  if (!m || !(m.cid > 0) || m.from) return "";
+  return m.sid ? '<div class="shrow"><span class="sshtag on">' + ic("megaphone") + "<span>" + esc(t("shShared")) + '</span></span><button class="link" data-socunsh="mine|' + esc(m.id) + '">' + esc(t("shUnshare")) + "</button></div>"
+    : '<button class="shbig sm" data-socsh="mine|' + esc(m.id) + '">' + ic("megaphone") + "<span><b>" + esc(t("shBig")) + "</b></span></button>";
 }
 function unshare(item) { if (item && item.sid) api("unshare", { id: item.sid }).then(() => overview(true)).catch(() => {}); }
 
@@ -256,7 +308,107 @@ async function saveWa(cid, del) {
 function renderTop(now) {
   const el = $("#socTop"); if (!el) return;
   const L = offers("task", now), f = V.focus && V.focus.kind === "course" ? V.focus.cid : null;
-  el.innerHTML = (f ? waBar(f) : "") + (L.length ? '<div class="soffers">' + L.map(offerHTML).join("") + "</div>" : "");
+  el.innerHTML = (f ? '<div class="sfocus">' + chatBtnCourse(f) + waBar(f) + "</div>" : "") + (L.length ? '<div class="soffers">' + L.map(offerHTML).join("") + "</div>" : "");
+}
+
+/* ---------- chat: a discussion for every task, and a chat for every course ---------- */
+const seenK = (cid, tk) => cid + "|" + tk;
+const thInfo = (cid, tk) => { const c = cdata(cid), v = c && c.th && c.th[tk]; return v ? { n: v[0], last: v[1], ref: v[2] } : { n: 0, last: 0, ref: "" }; };
+function unread(cid, tk) { const seen = LS.get("socSeen", {}), k = seenK(cid, tk), n = thInfo(cid, tk).n; return k in seen ? Math.max(0, n - seen[k]) : tk === "c" ? n : 0; }
+function markSeen(cid, tk, n) { const seen = LS.get("socSeen", {}); seen[seenK(cid, tk)] = n; const ks = Object.keys(seen); if (ks.length > 400) delete seen[ks[0]]; LS.set("socSeen", seen); }
+const chattable = x => x && x.cid > 0 && !x.mine;
+function taskAct(x) {
+  if (!chattable(x)) return "";
+  const n = thInfo(x.cid, x.key).n, u = unread(x.cid, x.key);
+  return '<button data-socchat="' + x.cid + "|" + esc(x.key) + '">' + ic("message-square") + '<span class="at">' + esc(t("chatBtn")) + "</span>" + (n ? '<span class="scnt' + (u ? " new" : "") + '">' + n + "</span>" : "") + "</button>";
+}
+function chatBtnCourse(cid) {
+  const n = thInfo(cid, "c").n, u = unread(cid, "c");
+  return '<button class="schatc" data-socchat="' + cid + '|c">' + ic("message-square") + "<span>" + esc(t("chatCourse")) + "</span>" + (n ? '<span class="scnt' + (u ? " new" : "") + '">' + (u || n) + "</span>" : "") + "</button>";
+}
+function totalUnread() { let n = 0; for (const c of myCourses()) { const cd = cdata(c.id); if (!cd || !cd.th) continue; for (const tk in cd.th) n += unread(c.id, tk); } return n; }
+function chatTitle(cid, tk) {
+  if (tk === "c") { const c = courseOf(cid); return c ? shortName(c.name) : ""; }
+  const x = V.data && V.data.tasks.find(y => y.key === tk); return x ? x.name : thInfo(cid, tk).ref;
+}
+function openChat(cid, tk) {
+  const c = courseOf(cid), title = chatTitle(cid, tk);
+  if (ST.chat && ST.chat.timer) clearInterval(ST.chat.timer);
+  ST.chat = { cid, tk, title, ver: null, msgs: [], reply: 0 };
+  const el = sheet("socChat", "<h3><span>" + esc(t(tk === "c" ? "chatTC" : "chatT")) + "</span>" + xbtn() + '</h3><div class="schsub" style="--c:' + colorOf(cid) + '"><i></i><bdi>' + esc(title) + "</bdi>" +
+    (tk !== "c" && c ? ' · <bdi>' + esc(shortName(c.name)) + "</bdi>" : "") + '</div><div class="schl" id="socChL"><div class="hint">' + esc(t("socLoading")) + "</div></div>" +
+    '<div class="schc"><div class="schrep" id="socRep" hidden></div><div class="schin"><textarea id="socTx" rows="1" maxlength="2000" placeholder="' + esc(t("chatPh")) + '"></textarea>' +
+    '<button class="primary" data-socsend aria-label="send">' + ic("send") + "</button></div></div>");
+  el.classList.add("chat");
+  const tx = $("#socTx");
+  tx.oninput = () => { tx.style.height = "auto"; tx.style.height = Math.min(tx.scrollHeight, 120) + "px"; };
+  tx.onkeydown = e => { if (e.key === "Enter" && !e.shiftKey && matchMedia("(pointer: fine)").matches) { e.preventDefault(); sendMsg(); } };
+  loadChat(true);
+  ST.chat.timer = setInterval(() => { if (!ST.chat || el.hidden) { clearInterval(ST.chat && ST.chat.timer); return; } if (!document.hidden) loadChat(false); }, 6000);
+  useHit("socChat");
+}
+async function loadChat(force) {
+  const ch = ST.chat; if (!ch) return;
+  let r; try { r = await api("thread", Object.assign({ cid: ch.cid, tk: ch.tk }, force || ch.ver === null ? {} : { ver: ch.ver })); }
+  catch (e) { if (force) $("#socChL").innerHTML = '<div class="hint">' + esc(t("socNet")) + "</div>"; return; }
+  if (ST.chat !== ch || r.same) return;
+  ch.ver = r.ver; ch.msgs = r.msgs; drawChat();
+  const n = r.msgs.filter(m => !m.del).length; markSeen(ch.cid, ch.tk, n);
+  const cd = cdata(ch.cid); if (cd) { cd.th = cd.th || {}; if (n) cd.th[ch.tk] = [n, Date.now(), (cd.th[ch.tk] || [])[2] || ch.title]; }
+}
+const linkify = h => h.replace(/(https?:\/\/[^\s<]+)/g, u => '<a href="' + u + '" target="_blank" rel="noopener noreferrer" dir="ltr">' + u + "</a>");
+function msgTime(ms) { const d = new Date(ms), now = new Date(); const hm = d.toLocaleTimeString(t("locale"), { hour: "2-digit", minute: "2-digit" });
+  return d.toDateString() === now.toDateString() ? hm : d.toLocaleDateString(t("locale"), { day: "numeric", month: "numeric" }) + " " + hm; }
+function drawChat() {
+  const ch = ST.chat, el = $("#socChL"); if (!el) return;
+  const atEnd = el.scrollHeight - el.scrollTop - el.clientHeight < 80 || !el.dataset.drawn;
+  const byId = Object.fromEntries(ch.msgs.map(m => [m.id, m]));
+  const L = ch.msgs.filter(m => !muted(m.uid));
+  el.innerHTML = L.length ? L.map(m => {
+    const mine = isMe(m.uid), rp = m.reply && byId[m.reply];
+    return '<div class="sm' + (mine ? " me" : "") + '" id="sm' + m.id + '"><div class="smh">' + (mine ? "<b>" + esc(t("chatYou")) + "</b>" : nameBtn(m.uid, m.name)) + rankTag(m.total) + '<small>' + esc(msgTime(m.at)) + "</small></div>" +
+      (rp ? '<div class="sq"><b><bdi>' + esc(rp.name) + "</bdi></b> " + esc(rp.del ? t("chatDel") : rp.body.slice(0, 90)) + "</div>" : "") +
+      '<div class="smb' + (m.del ? " del" : "") + '">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body))) + "</div>" +
+      (m.del ? "" : '<div class="smf">' + m.re.map(r => '<button class="sre' + (r[2] ? " on" : "") + '" data-socemo="' + m.id + "|" + r[0] + '">' + r[0] + " " + r[1] + "</button>").join("") +
+        (mine ? (m.stars ? '<span class="sstar on">' + ic("star") + m.stars + "</span>" : "") : '<button class="sstar' + (m.starred ? " on" : "") + '" data-socstar="' + m.id + '" title="' + esc(t("chatStarT")) + '">' + ic("star") + "<span>" + esc(t("chatStar")) + "</span>" + (m.stars ? " " + m.stars : "") + "</button>") +
+        '<button class="sic" data-socpick="' + m.id + '" aria-label="' + esc(t("chatReact")) + '">' + ic("smile-plus") + '</button><button class="sic" data-socrep="' + m.id + '" aria-label="' + esc(t("chatReply")) + '">' + ic("reply") + "</button>" +
+        (mine ? '<button class="sic" data-socmdel="' + m.id + '" aria-label="delete">' + ic("trash-2") + "</button>" : "") + "</div>") + "</div>";
+  }).join("") : '<div class="hint schempty">' + esc(t("chatEmpty")) + "</div>";
+  el.dataset.drawn = "1";
+  if (atEnd) el.scrollTop = el.scrollHeight;
+}
+function setReply(id) {
+  const ch = ST.chat, m = ch && ch.msgs.find(x => x.id === id), el = $("#socRep"); if (!el) return;
+  ch.reply = m ? id : 0; el.hidden = !m;
+  el.innerHTML = m ? "<span>" + esc(t("chatReplyTo", m.name || t("lgSomeone"))) + ": <i>" + esc(m.body.slice(0, 60)) + '</i></span><button class="sic" data-socrepx aria-label="x">' + ic("x") + "</button>" : "";
+  if (m) $("#socTx").focus();
+}
+async function sendMsg() {
+  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch || !body) return;
+  const btn = $("[data-socsend]"); btn.disabled = true;
+  try { await api("post", { cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") });
+    tx.value = ""; tx.style.height = "auto"; setReply(0); $("#socChL").dataset.drawn = ""; await loadChat(true); }
+  catch (e) { toast(t("socNet")); } finally { btn.disabled = false; }
+}
+async function chatAct(op, body) { try { await api(op, body); if (op === "star") toast(t("chatStarred")); await loadChat(true); } catch (e) { toast(t("socNet")); } }
+function pickEmoji(id) {
+  const old = $(".spick"); if (old) { const same = old.dataset.mid === String(id); old.remove(); if (same) return; }
+  const row = document.createElement("div"); row.className = "spick"; row.dataset.mid = id;
+  row.innerHTML = ["👍", "❤️", "🔥", "😂", "🙏"].map(e => '<button data-socemo="' + id + "|" + e + '">' + e + "</button>").join("");
+  const m = $("#sm" + id); if (m) m.appendChild(row);
+}
+function openChats() {
+  const rows = [];
+  for (const c of myCourses()) {
+    const cd = cdata(c.id) || {}, th = cd.th || {}, ts = Object.keys(th).filter(k => k !== "c").sort((a, b) => th[b][1] - th[a][1]).slice(0, 8);
+    rows.push('<div class="schg" style="--c:' + colorOf(c.id) + '"><div class="schgh"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi></div>" +
+      chatRow(c.id, "c", t("chatCourse")) + ts.map(k => chatRow(c.id, k, chatTitle(c.id, k))).join("") + "</div>");
+  }
+  sheet("socChats", "<h3><span>" + esc(t("chatsT")) + "</span>" + xbtn() + "</h3>" + (rows.join("") || '<div class="hint">' + esc(t("chatsNone")) + "</div>"));
+}
+function chatRow(cid, tk, title) {
+  const i = thInfo(cid, tk), u = unread(cid, tk);
+  return '<button class="schr" data-socchat="' + cid + "|" + esc(tk) + '">' + ic(tk === "c" ? "users" : "message-square") + '<span class="sw"><bdi>' + esc(title) + "</bdi><small>" + esc(i.n ? t("chatMsgs", i.n) : t("chatEmpty").split(".")[0]) + "</small></span>" + (u ? '<span class="scnt new">' + u + "</span>" : "") + "</button>";
 }
 
 /* ---------- people: profile + points log, mute ---------- */
@@ -264,7 +416,7 @@ async function openUser(uid) {
   sheet("socUser", "<h3><span>" + esc(t("socLoading")) + "</span>" + xbtn() + "</h3>");
   let r; try { r = await api("user", { who: uid }); } catch (e) { $("#socUser .box").innerHTML = "<h3><span></span>" + xbtn() + '</h3><div class="hint">' + esc(t("socNet")) + "</div>"; return; }
   const u = r.u, me = isMe(u.uid), rk = rankOf(u.all);
-  const desc = l => l.kind === "add" ? t("lgAdd", l.fname || t("lgSomeone"), l.ref) : l.kind === "time" ? t("lgTime", l.ref) : l.kind === "wa" ? t("lgWa") : l.kind;
+  const desc = l => l.kind === "add" ? t("lgAdd", l.fname || t("lgSomeone"), l.ref) : l.kind === "time" ? t("lgTime", l.ref) : l.kind === "wa" ? t("lgWa") : l.kind === "star" ? t("lgStar", l.fname || t("lgSomeone"), l.ref) : l.kind;
   const day = ms => { try { return new Date(ms).toLocaleString(t("locale"), { day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return ""; } };
   $("#socUser .box").innerHTML = "<h3><span><bdi>" + esc(u.name) + "</bdi>" + (me ? " (" + esc(t("socYou")) + ")" : "") + "</span>" + xbtn() + "</h3>" +
     '<div class="sprofcard"><div class="sav">' + esc((u.name || "?").trim().charAt(0)) + '</div><div><div class="hint">' + esc(profLine(u.deg, u.yr)) + "</div>" + rankTag(u.all) +
@@ -319,7 +471,7 @@ function card() {
   const pts = (ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0), n = myName(), pr = prof();
   el.innerHTML = '<div class="sprofcard top"><div class="sav">' + esc((n || "?").charAt(0)) + '</div><div class="sw"><b><bdi>' + esc(n) + '</bdi></b><div class="hint">' + esc(profLine(pr.deg, pr.yr)) + "</div>" +
     rankTag(pts) + ' <span class="spts">' + esc(t("socPts", pts)) + "</span>" + progress(pts) +
-    '<div class="sbtns"><button data-socboard>' + ic("trophy") + "<span>" + esc(t("socBoards")) + '</span></button><button data-socme>' + ic("award") + "<span>" + esc(t("socMyPts")) + "</span></button></div></div></div>";
+    '<div class="sbtns"><button data-socboard>' + ic("trophy") + "<span>" + esc(t("socBoards")) + '</span></button><button data-socme>' + ic("award") + "<span>" + esc(t("socMyPts")) + '</span></button><button data-socchats>' + ic("message-square") + "<span>" + esc(t("chatsBtn")) + "</span>" + (totalUnread() ? '<span class="scnt new">' + totalUnread() + "</span>" : "") + "</button></div></div></div>";
 }
 function degOptions(cur, any) {
   const o = (v, l) => '<option value="' + esc(v) + '"' + (v === cur ? " selected" : "") + ">" + esc(l) + "</option>";
@@ -347,7 +499,8 @@ function page() {
   const el = $("#socPage"); if (!el) return;
   const on = socOn(), cs = myCourses();
   el.innerHTML = '<label class="sswitch"><span><b>' + esc(t("socOnLbl")) + '</b><small class="hint">' + esc(t("socOnHint")) + '</small></span><input type="checkbox" id="socOnBox"' + (on ? " checked" : "") + "></label>" +
-    (on ? '<div class="stitle">' + esc(t("socProfT")) + "</div>" + profFields("socP") +
+    (on ? '<label class="sswitch" style="margin-top:8px"><span><b>' + esc(t("shAutoT")) + '</b><small class="hint">' + esc(t("shAuto")) + '</small></span><input type="checkbox" id="socAutoPg"' + (P.soc_auto ? " checked" : "") + "></label>" +
+      '<div class="stitle">' + esc(t("socProfT")) + "</div>" + profFields("socP") +
       '<div class="stitle">' + esc(t("socWaT")) + '</div><div class="swalist">' + (cs.map(c => { const cd = cdata(c.id) || {};
         return '<div class="swarow" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (cd.wa ? '<a class="swa sm" href="' + esc(cd.wa) + '" target="_blank" rel="noopener noreferrer">' + ic("message-circle") + "</a>" : '<small class="hint">' + esc(t("waNone")) + "</small>") +
           '<button class="link" data-socwa="' + c.id + '">' + esc(t(cd.wa ? "waEdit" : "waAdd")) + "</button></div>"; }).join("") || '<div class="hint">' + esc(t("noCourses")) + "</div>") + "</div>" +
@@ -357,6 +510,7 @@ function page() {
       (ST.err ? '<div class="hint">' + esc(t("socNet")) + "</div>" : "") + '<div class="hint" style="margin-top:10px">' + esc(t("socPriv")) + "</div>"
       : '<button class="primary" data-socjoin style="width:100%;margin-top:10px">' + esc(t("socJoinBtn")) + "</button>");
   $("#socOnBox").onchange = e => { if (e.target.checked) { e.target.checked = false; intro(true); } else { P.soc_on = false; savePrefs(); render(); page(); renderSheet(); } };
+  if (on) $("#socAutoPg").onchange = e => setAuto(e.target.checked);
   if (on) wireProf("socP", () => { const p = readProf("socP"); if (p.deg === "" && $("#socPDeg").value === "x") return; P.soc_prof = p; savePrefs(); overview(true); });
 }
 
@@ -404,7 +558,35 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socme]"))) return P.soc_id && openUser(P.soc_id.uid);
   if ((b = g("[data-socjoin]"))) return intro(true);
   if ((b = g("[data-socjoinnow]"))) return join();
+  if ((b = g("[data-socsh]"))) { const [k, id] = b.dataset.socsh.split("|"); close("socShare"); return shareItem(k, id); }
+  if ((b = g("[data-socunsh]"))) { const [k, id] = b.dataset.socunsh.split("|"); return stopSharing(k, id); }
+  if ((b = g("[data-socchat]"))) { e.preventDefault(); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
+  if ((b = g("[data-socchats]"))) return openChats();
+  if ((b = g("[data-socsend]"))) return sendMsg();
+  if ((b = g("[data-socrep]"))) return setReply(Number(b.dataset.socrep));
+  if ((b = g("[data-socrepx]"))) return setReply(0);
+  if ((b = g("[data-socpick]"))) return pickEmoji(Number(b.dataset.socpick));
+  if ((b = g("[data-socemo]"))) { const [id, emo] = b.dataset.socemo.split("|"); const pk = $(".spick"); if (pk) pk.remove(); return chatAct("react", { id: Number(id), emo }); }
+  if ((b = g("[data-socstar]"))) { if (b.classList.contains("on")) return; return chatAct("star", { id: Number(b.dataset.socstar) }); }
+  if ((b = g("[data-socmdel]"))) { if (!confirm(t("chatDelQ"))) return; return chatAct("msgdel", { id: Number(b.dataset.socmdel) }); }
 }, true);
+
+/* ---------- icons this file needs (Lucide, ISC) ---------- */
+{
+  const I = { "message-square": '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
+    send: '<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/>',
+    reply: '<polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/>',
+    star: '<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/>',
+    "smile-plus": '<path d="M22 11v1a10 10 0 1 1-9-10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/><path d="M16 5h6"/><path d="M19 2v6"/>',
+    megaphone: '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+    "trash-2": '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/>' };
+  const defs = document.querySelector("#icons defs") || document.querySelector("#icons");
+  if (defs) for (const [k, v] of Object.entries(I)) if (!document.getElementById("i-" + k)) {
+    const sy = document.createElementNS("http://www.w3.org/2000/svg", "symbol"); sy.id = "i-" + k; sy.setAttribute("viewBox", "0 0 24 24");
+    sy.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' + v + "</svg>";
+    defs.appendChild(sy);
+  }
+}
 
 /* ---------- looks ---------- */
 const css = document.createElement("style");
@@ -474,8 +656,53 @@ css.textContent = `
 .sranks{display:flex;flex-wrap:wrap;gap:4px}
 .sintro{margin:10px 0;padding-inline-start:20px;line-height:1.8;font-size:15px}
 body[data-density=clean] .task .sest span{display:none}
+.shitem{display:flex;gap:10px;align-items:center;padding:12px;border-radius:14px;background:var(--row);margin:6px 0 12px}
+.shitem>i{width:10px;align-self:stretch;border-radius:6px;background:var(--c);flex:none}
+.shitem div{display:flex;flex-direction:column;gap:2px}.shitem small{color:var(--muted)}
+.shbig{display:flex;align-items:center;gap:12px;width:100%;padding:16px;border:0;border-radius:18px;color:#fff;text-align:start;cursor:pointer;
+  background:linear-gradient(135deg,#5856d6,#af52de);box-shadow:0 8px 22px -8px #5856d6aa}
+.shbig .i{width:30px;height:30px;flex:none}
+.shbig span{display:flex;flex-direction:column;gap:3px}.shbig b{font-size:17px}.shbig small{opacity:.9;font-size:13px}
+.shbig.sm{padding:12px 14px;margin:8px 0}.shbig.sm b{font-size:15px}.shbig.sm .i{width:22px;height:22px}
+.shbig:active{transform:scale(.98)}
+.shrow{display:flex;align-items:center;gap:10px;margin:8px 0}
+.sshtag{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:99px;border:0;font-size:12.5px;font-weight:700;background:color-mix(in srgb,#5856d6 12%,var(--card));color:#5856d6;white-space:nowrap}
+.sshtag.on{background:#5856d6;color:#fff}.sshtag .i{width:14px;height:14px}
+.sfocus{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px}.sfocus .swabar{margin:0}
+.schatc{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:12px;border:0;font-weight:700;font-size:14px;background:color-mix(in srgb,var(--accent) 14%,var(--card));color:var(--accent-t)}
+.schatc .i{width:18px;height:18px}
+.scnt{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:99px;font-size:11px;font-weight:800;background:var(--track);color:var(--text);margin-inline-start:4px}
+.scnt.new{background:#ff3b30;color:#fff}
+.sheet.chat .box{height:min(88vh,760px);display:flex;flex-direction:column;overflow:hidden;padding-bottom:0}
+.schsub{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;margin:-4px 0 6px}
+.schsub>i{width:9px;height:9px;border-radius:50%;background:var(--c);flex:none}
+.schl{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:6px 2px 10px;overscroll-behavior:contain}
+.schempty{text-align:center;margin:auto;padding:20px}
+.sm{align-self:flex-start;max-width:86%;padding:8px 12px;border-radius:16px 16px 16px 4px;background:var(--row);position:relative}
+.sm.me{align-self:flex-end;border-radius:16px 16px 4px 16px;background:color-mix(in srgb,var(--accent) 14%,var(--card))}
+html[dir=rtl] .sm{border-radius:16px 16px 4px 16px}html[dir=rtl] .sm.me{border-radius:16px 16px 16px 4px}
+.smh{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px}.smh small{color:var(--muted);font-size:11px}.smh .srk{font-size:10.5px;padding:1px 6px;margin:0}
+.smb{white-space:pre-wrap;word-break:break-word;font-size:15px;line-height:1.45;margin-top:2px}.smb.del{color:var(--muted);font-style:italic}
+.smb a{color:var(--accent-t);word-break:break-all}
+.sq{font-size:12.5px;color:var(--muted);border-inline-start:3px solid var(--accent);padding:2px 8px;margin:4px 0;border-radius:4px;background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.smf{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-top:5px}
+.sre{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:1px 8px;font-size:13px}.sre.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--card))}
+.sstar{display:inline-flex;align-items:center;gap:3px;border:1px solid var(--line);background:var(--card);border-radius:99px;padding:1px 8px;font-size:12px;font-weight:600;color:var(--muted)}
+.sstar .i{width:13px;height:13px}.sstar.on{color:#b7791f;border-color:#f6c34a;background:color-mix(in srgb,#f6c34a 18%,var(--card))}.sstar.on .i{fill:#f6c34a}
+.sic{border:0;background:none;padding:3px;color:var(--muted);display:inline-grid;place-items:center}.sic .i{width:16px;height:16px}
+.spick{display:flex;gap:4px;margin-top:6px}.spick button{border:0;background:var(--card);border-radius:10px;font-size:20px;padding:4px 7px}
+.schc{border-top:1px solid var(--line);padding:8px 0 calc(10px + env(safe-area-inset-bottom));background:inherit}
+.schrep{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--muted);padding:0 4px 6px}
+.schin{display:flex;gap:8px;align-items:flex-end}
+.schin textarea{flex:1;resize:none;min-height:42px;max-height:120px;padding:10px 12px;border-radius:14px;font:inherit;font-size:15px}
+.schin .primary{width:44px;height:44px;border-radius:50%;padding:0;display:grid;place-items:center;flex:none}.schin .primary .i{width:20px;height:20px}
+html[dir=rtl] .schin .primary .i{transform:scaleX(-1)}
+.schg{margin:10px 0}.schgh{display:flex;align-items:center;gap:8px;font-weight:700;margin-bottom:4px}.schgh>i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.schr{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:10px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none}
+.schr .sw{flex:1;min-width:0;display:flex;flex-direction:column}.schr small{color:var(--muted);font-size:12px}.schr .i{width:18px;height:18px;color:var(--accent-t)}
+.task .act .scnt{margin-inline-start:2px}
 `;
 document.head.appendChild(css);
 
-window.SOC = { v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, formShare, afterSave, unshare, card, page, intro, openBoard, openUser, overview };
+window.SOC = { v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
 })();

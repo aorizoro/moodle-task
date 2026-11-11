@@ -162,7 +162,9 @@ const feed = async (env, key) => env.FEEDS.get(env.FEEDS.idFromName(await sha256
    Reads are kept low (the free plan: 5M rows read, 100k rows written a day): totals and averages are stored as they change,
    and each course's public part is cached in memory until something in that course changes. */
 const HOURS = [0.5, 2, 4.5, 8, 12];                       // the five "how long did it take" answers
-const PTS = { add: 3, time: 1, wa: 1 };
+const PTS = { add: 3, time: 1, wa: 1, star: 2 };
+const EMO = ["👍", "❤️", "🔥", "😂", "🙏"];
+const okTk = k => typeof k === "string" && /^(c|[a-z]+:[0-9A-Za-z_.-]{1,40})$/.test(k);   // a thread: "c" = the course chat, or a task key (assign:123)
 const okId = s => typeof s === "string" && /^[a-f0-9]{32}$/.test(s);
 const okSec = s => typeof s === "string" && /^[a-f0-9]{48}$/.test(s);
 const okCid = c => (typeof c === "string" || typeof c === "number") && /^[0-9]{1,12}$/.test(String(c));
@@ -185,7 +187,12 @@ export class Community extends DurableObject {
       CREATE TABLE IF NOT EXISTS agg (cid TEXT, aid TEXT, sum REAL, n INTEGER, PRIMARY KEY (cid, aid));
       CREATE TABLE IF NOT EXISTS shares (id INTEGER PRIMARY KEY AUTOINCREMENT, cid TEXT, uid TEXT, kind TEXT, d TEXT, at INTEGER, made INTEGER, del INTEGER DEFAULT 0, adds INTEGER DEFAULT 0);
       CREATE INDEX IF NOT EXISTS shares_c ON shares (cid, del, at);
-      CREATE TABLE IF NOT EXISTS adds (sid INTEGER, uid TEXT, PRIMARY KEY (sid, uid));`);
+      CREATE TABLE IF NOT EXISTS adds (sid INTEGER, uid TEXT, PRIMARY KEY (sid, uid));
+      CREATE TABLE IF NOT EXISTS msgs (id INTEGER PRIMARY KEY AUTOINCREMENT, cid TEXT, tk TEXT, uid TEXT, body TEXT, reply INTEGER, at INTEGER, del INTEGER DEFAULT 0, stars INTEGER DEFAULT 0);
+      CREATE INDEX IF NOT EXISTS msgs_t ON msgs (cid, tk, id);
+      CREATE TABLE IF NOT EXISTS thr (cid TEXT, tk TEXT, n INTEGER, last INTEGER, ver INTEGER, ref TEXT, PRIMARY KEY (cid, tk));
+      CREATE TABLE IF NOT EXISTS reacts (mid INTEGER, uid TEXT, emo TEXT, PRIMARY KEY (mid, uid, emo));
+      CREATE TABLE IF NOT EXISTS stars (mid INTEGER, uid TEXT, PRIMARY KEY (mid, uid));`);
   }
   q(sql, ...a) { return this.sql.exec(sql, ...a).toArray(); }
   one(sql, ...a) { return this.q(sql, ...a)[0] || null; }
@@ -217,8 +224,9 @@ export class Community extends DurableObject {
     const sh = this.q(`SELECT s.id, s.uid, s.kind, s.d, s.at, s.adds, u.name, u.deg, u.yr FROM shares s LEFT JOIN users u ON u.uid = s.uid
       WHERE s.cid = ? AND s.del = 0 AND s.at > ? ORDER BY s.at LIMIT 40`, cid, Math.floor(Date.now() / 1000) - 86400)
       .map(r => ({ id: r.id, uid: r.uid, kind: r.kind, d: JSON.parse(r.d || "{}"), at: r.at, adds: r.adds, name: r.name || "", deg: r.deg || "", yr: r.yr || "" }));
-    const wb = c.wa_by ? this.one("SELECT name FROM users WHERE uid = ?", c.wa_by) : null;
-    const v = { wa: c.wa || "", waBy: wb ? wb.name : "", t, sh };
+    const wb = c.wa_by ? this.one("SELECT name FROM users WHERE uid = ?", c.wa_by) : null, th = {};
+    for (const r of this.q("SELECT tk, n, last, ref FROM thr WHERE cid = ? AND n > 0", cid)) th[r.tk] = [r.n, r.last, r.ref || ""];
+    const v = { wa: c.wa || "", waBy: wb ? wb.name : "", t, sh, th };
     this.cc.set(cid, v); return v;
   }
   async handle(op, b) {
@@ -282,6 +290,57 @@ export class Community extends DurableObject {
       this.sql.exec("UPDATE shares SET adds = adds + 1 WHERE id = ?", s.id);
       if (s.uid !== me.uid) this.award(s.uid, PTS.add, "add", me.uid, s.cid, JSON.parse(s.d || "{}").n);
       this.cc.delete(s.cid); return [200, { ok: true }];
+    }
+    if (op === "thread") {                                  // the messages of one thread; "ver" lets an open chat ask cheaply whether anything changed
+      const tk = b.tk; if (!cid || !okTk(tk)) return [400, { error: "bad" }];
+      const th = this.one("SELECT ver FROM thr WHERE cid = ? AND tk = ?", cid, tk), ver = th ? th.ver : 0;
+      if (b.ver !== undefined && Number(b.ver) === ver) return [200, { same: true, ver }];
+      const ms = this.q(`SELECT m.id, m.uid, m.body, m.reply, m.at, m.del, m.stars, u.name, u.deg, u.yr, (SELECT pts FROM tot a WHERE a.uid = m.uid AND a.cid = '' AND a.per = 'all') AS total
+        FROM msgs m LEFT JOIN users u ON u.uid = m.uid WHERE m.cid = ? AND m.tk = ? ORDER BY m.id DESC LIMIT 150`, cid, tk).reverse();
+      const ids = ms.map(m => m.id), re = {}, mine = new Set();
+      if (ids.length) {
+        const lo = ids[0], hi = ids[ids.length - 1], here = new Set(ids), agg = {};
+        for (const r of this.q("SELECT mid, emo, uid FROM reacts WHERE mid >= ? AND mid <= ?", lo, hi)) {
+          if (!here.has(r.mid)) continue;
+          const k = r.mid + " " + r.emo, a = agg[k] || (agg[k] = [r.mid, r.emo, 0, 0]); a[2]++; if (r.uid === me.uid) a[3] = 1;
+        }
+        for (const a of Object.values(agg)) (re[a[0]] = re[a[0]] || []).push([a[1], a[2], a[3]]);
+        for (const r of this.q("SELECT mid FROM stars WHERE uid = ? AND mid >= ? AND mid <= ?", me.uid, lo, hi)) mine.add(r.mid);
+      }
+      return [200, { ver, msgs: ms.map(m => ({ id: m.id, uid: m.uid, name: m.name || "", deg: m.deg || "", yr: m.yr || "", total: m.total || 0, body: m.del ? "" : m.body, del: !!m.del,
+        reply: m.reply || 0, at: m.at, stars: m.stars, starred: mine.has(m.id), re: re[m.id] || [] })) }];
+    }
+    if (op === "post") {
+      const tk = b.tk, body = String(b.body || "").trim().slice(0, 2000);
+      if (!cid || !okTk(tk) || !body) return [400, { error: "bad" }];
+      this.course(cid, b.cname);
+      const reply = Number(b.reply) > 0 && this.one("SELECT id FROM msgs WHERE id = ? AND cid = ? AND tk = ?", Number(b.reply), cid, tk) ? Number(b.reply) : 0;
+      this.sql.exec("INSERT INTO msgs (cid, tk, uid, body, reply, at) VALUES (?, ?, ?, ?, ?, ?)", cid, tk, me.uid, body, reply, now);
+      const id = this.one("SELECT last_insert_rowid() AS id").id;
+      this.sql.exec("INSERT INTO thr (cid, tk, n, last, ver, ref) VALUES (?, ?, 1, ?, 1, ?) ON CONFLICT (cid, tk) DO UPDATE SET n = n + 1, last = excluded.last, ver = ver + 1, ref = CASE WHEN excluded.ref != '' THEN excluded.ref ELSE ref END", cid, tk, now, clip(b.ref, 120));
+      this.cc.delete(cid); return [200, { id }];
+    }
+    if (op === "msgdel" || op === "react" || op === "star") {
+      const m = this.one("SELECT id, cid, tk, uid, body FROM msgs WHERE id = ? AND del = 0", Number(b.id)); if (!m) return [404, { error: "gone" }];
+      if (op === "msgdel") {
+        if (m.uid !== me.uid) return [403, { error: "not yours" }];
+        this.sql.exec("UPDATE msgs SET del = 1, body = '' WHERE id = ?", m.id);
+        this.sql.exec("UPDATE thr SET n = n - 1, ver = ver + 1 WHERE cid = ? AND tk = ?", m.cid, m.tk); this.cc.delete(m.cid);
+      } else if (op === "react") {
+        if (!EMO.includes(b.emo)) return [400, { error: "bad" }];
+        if (this.one("SELECT mid FROM reacts WHERE mid = ? AND uid = ? AND emo = ?", m.id, me.uid, b.emo)) this.sql.exec("DELETE FROM reacts WHERE mid = ? AND uid = ? AND emo = ?", m.id, me.uid, b.emo);
+        else this.sql.exec("INSERT INTO reacts (mid, uid, emo) VALUES (?, ?, ?)", m.id, me.uid, b.emo);
+        this.sql.exec("UPDATE thr SET ver = ver + 1 WHERE cid = ? AND tk = ?", m.cid, m.tk);
+      } else {                                              // "helpful answer": once per person, +2 to the writer (not for your own)
+        if (m.uid === me.uid) return [400, { error: "own" }];
+        if (this.one("SELECT mid FROM stars WHERE mid = ? AND uid = ?", m.id, me.uid)) return [200, { ok: true, again: true }];
+        this.sql.exec("INSERT INTO stars (mid, uid) VALUES (?, ?)", m.id, me.uid);
+        this.sql.exec("UPDATE msgs SET stars = stars + 1 WHERE id = ?", m.id);
+        this.sql.exec("UPDATE thr SET ver = ver + 1 WHERE cid = ? AND tk = ?", m.cid, m.tk);
+        const th = this.one("SELECT ref FROM thr WHERE cid = ? AND tk = ?", m.cid, m.tk);
+        this.award(m.uid, PTS.star, "star", me.uid, m.cid, (th && th.ref) || "");
+      }
+      return [200, { ok: true }];
     }
     if (op === "board") {
       const per = b.per === "sem" ? semKey(now) : "all", deg = clip(b.deg, 60);
