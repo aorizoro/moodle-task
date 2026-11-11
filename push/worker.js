@@ -193,6 +193,7 @@ export class Community extends DurableObject {
       CREATE TABLE IF NOT EXISTS thr (cid TEXT, tk TEXT, n INTEGER, last INTEGER, ver INTEGER, ref TEXT, PRIMARY KEY (cid, tk));
       CREATE TABLE IF NOT EXISTS reacts (mid INTEGER, uid TEXT, emo TEXT, PRIMARY KEY (mid, uid, emo));
       CREATE TABLE IF NOT EXISTS stars (mid INTEGER, uid TEXT, PRIMARY KEY (mid, uid));`);
+    for (const col of ["lb TEXT", "lt TEXT"]) try { this.sql.exec("ALTER TABLE thr ADD COLUMN " + col); } catch (e) {}   // the last message of a thread (who, what) for the chats list
   }
   q(sql, ...a) { return this.sql.exec(sql, ...a).toArray(); }
   one(sql, ...a) { return this.q(sql, ...a)[0] || null; }
@@ -225,7 +226,7 @@ export class Community extends DurableObject {
       WHERE s.cid = ? AND s.del = 0 AND s.at > ? ORDER BY s.at LIMIT 40`, cid, Math.floor(Date.now() / 1000) - 86400)
       .map(r => ({ id: r.id, uid: r.uid, kind: r.kind, d: JSON.parse(r.d || "{}"), at: r.at, adds: r.adds, name: r.name || "", deg: r.deg || "", yr: r.yr || "" }));
     const wb = c.wa_by ? this.one("SELECT name FROM users WHERE uid = ?", c.wa_by) : null, th = {};
-    for (const r of this.q("SELECT tk, n, last, ref FROM thr WHERE cid = ? AND n > 0", cid)) th[r.tk] = [r.n, r.last, r.ref || ""];
+    for (const r of this.q("SELECT tk, n, last, ref, lb, lt FROM thr WHERE cid = ? AND n > 0", cid)) th[r.tk] = [r.n, r.last, r.ref || "", r.lb || "", r.lt || ""];
     const v = { wa: c.wa || "", waBy: wb ? wb.name : "", t, sh, th };
     this.cc.set(cid, v); return v;
   }
@@ -317,7 +318,8 @@ export class Community extends DurableObject {
       const reply = Number(b.reply) > 0 && this.one("SELECT id FROM msgs WHERE id = ? AND cid = ? AND tk = ?", Number(b.reply), cid, tk) ? Number(b.reply) : 0;
       this.sql.exec("INSERT INTO msgs (cid, tk, uid, body, reply, at) VALUES (?, ?, ?, ?, ?, ?)", cid, tk, me.uid, body, reply, now);
       const id = this.one("SELECT last_insert_rowid() AS id").id;
-      this.sql.exec("INSERT INTO thr (cid, tk, n, last, ver, ref) VALUES (?, ?, 1, ?, 1, ?) ON CONFLICT (cid, tk) DO UPDATE SET n = n + 1, last = excluded.last, ver = ver + 1, ref = CASE WHEN excluded.ref != '' THEN excluded.ref ELSE ref END", cid, tk, now, clip(b.ref, 120));
+      this.sql.exec("INSERT INTO thr (cid, tk, n, last, ver, ref, lb, lt) VALUES (?, ?, 1, ?, 1, ?, ?, ?) ON CONFLICT (cid, tk) DO UPDATE SET n = n + 1, last = excluded.last, ver = ver + 1, ref = CASE WHEN excluded.ref != '' THEN excluded.ref ELSE ref END, lb = excluded.lb, lt = excluded.lt",
+        cid, tk, now, clip(b.ref, 120), me.name || "", body.replace(/\s+/g, " ").slice(0, 90));
       this.cc.delete(cid); return [200, { id }];
     }
     if (op === "msgdel" || op === "react" || op === "star") {
@@ -325,7 +327,8 @@ export class Community extends DurableObject {
       if (op === "msgdel") {
         if (m.uid !== me.uid) return [403, { error: "not yours" }];
         this.sql.exec("UPDATE msgs SET del = 1, body = '' WHERE id = ?", m.id);
-        this.sql.exec("UPDATE thr SET n = n - 1, ver = ver + 1 WHERE cid = ? AND tk = ?", m.cid, m.tk); this.cc.delete(m.cid);
+        const lm = this.one("SELECT m.body, u.name FROM msgs m LEFT JOIN users u ON u.uid = m.uid WHERE m.cid = ? AND m.tk = ? AND m.del = 0 ORDER BY m.id DESC LIMIT 1", m.cid, m.tk);
+        this.sql.exec("UPDATE thr SET n = n - 1, ver = ver + 1, lb = ?, lt = ? WHERE cid = ? AND tk = ?", lm ? lm.name || "" : "", lm ? lm.body.replace(/\s+/g, " ").slice(0, 90) : "", m.cid, m.tk); this.cc.delete(m.cid);
       } else if (op === "react") {
         if (!EMO.includes(b.emo)) return [400, { error: "bad" }];
         if (this.one("SELECT mid FROM reacts WHERE mid = ? AND uid = ? AND emo = ?", m.id, me.uid, b.emo)) this.sql.exec("DELETE FROM reacts WHERE mid = ? AND uid = ? AND emo = ?", m.id, me.uid, b.emo);

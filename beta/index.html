@@ -131,11 +131,16 @@ body.app main{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
 body.app[data-view=dash] #tasks,body.app[data-view=dash] #ttv{display:none}
 body.app[data-view=tasks] #dash,body.app[data-view=tasks] #ttv{display:none}
 body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
+body.app[data-view=chat] #dash,body.app[data-view=chat] #tasks,body.app[data-view=chat] #ttv{display:none}
+#chatv{display:none}body.app[data-view=chat] #chatv{display:block}
+/* settings live in the tab bar now (phone + tablet) and in the side bar (computer): no gear in the header */
+#bSet{display:none!important}
+.tabbar .sbset{display:flex}
 .sech{display:none}
 .ptitle{display:none}
 .tabbar{position:fixed;inset-inline:0;bottom:0;z-index:12;display:flex;gap:4px;padding:6px 10px max(8px,env(safe-area-inset-bottom));
   background:color-mix(in srgb,var(--card) 86%,transparent);-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);border-top:1px solid var(--line)}
-.tabbar .sbrand,.tabbar .sbset{display:none}
+.tabbar .sbrand{display:none}
 .tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;color:var(--muted);padding:4px 4px 2px;border-radius:14px}
 .tabbar button b{font-weight:600}
 .tabbar .ti{position:relative;display:grid;place-items:center;width:56px;height:30px;border-radius:99px;transition:background .2s}
@@ -145,7 +150,7 @@ body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
 .tabbar button.on b{font-weight:700}
 .tabbar .badge{position:absolute;inset-block-start:-3px;inset-inline-end:6px;min-width:18px;height:18px;line-height:18px;padding:0 5px;border-radius:99px;background:var(--err);color:#fff;font-size:11px;font-weight:700;font-style:normal;text-align:center;box-shadow:0 0 0 2px var(--card)}
 @media (min-width:600px) and (max-width:999px){
-  .tabbar{inset-inline:auto;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));width:min(440px,calc(100% - 32px));border:1px solid var(--line);border-radius:24px;padding:6px;box-shadow:0 10px 30px #0000001f,0 1px 3px #00000014}
+  .tabbar{inset-inline:auto;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));width:min(560px,calc(100% - 32px));border:1px solid var(--line);border-radius:24px;padding:6px;box-shadow:0 10px 30px #0000001f,0 1px 3px #00000014}
   .tabbar button{flex-direction:row;justify-content:center;gap:6px;font-size:14px;padding:8px 6px;border-radius:18px}
   .tabbar .ti{width:auto;height:auto;background:none!important}
   .tabbar button.on{background:var(--accent-soft)}
@@ -411,6 +416,7 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .ch .addpill{display:inline-flex;align-items:center;gap:4px;padding:5px 12px 5px 10px;border:0;border-radius:99px;font-weight:700;font-size:13.5px;
   background:color-mix(in srgb,var(--accent) 14%,var(--card));color:var(--accent-t);cursor:pointer}
 .ch .addpill .i{width:16px;height:16px}
+.chinv{text-align:center;padding:28px 20px}.chinv h2{margin:6px 0}.chinvi{font-size:44px}.chinv .primary{margin-top:10px}
 
 /* semester progress: one dashed piece per week, the current week fills day by day */
 .sem .big{font-size:22px;font-weight:800;line-height:1.2;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px}
@@ -858,7 +864,9 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
   .tabbar .home.on{color:var(--accent-t)}
   .tabbar .home:not(.on) .ti{background:color-mix(in srgb,var(--accent) 82%,var(--card))!important}
 }
-@media (min-width:1000px){ body.app .tabbar .sbrand{order:0} body.app .tabbar .home{order:1} body.app .tabbar [data-v=tasks]{order:2} body.app .tabbar [data-v=tt]{order:3} body.app .tabbar .sbset{order:9} }
+@media (min-width:1000px){ body.app .tabbar .sbrand{order:0} body.app .tabbar .home{order:1} body.app .tabbar [data-v=tasks]{order:2} body.app .tabbar [data-v=chat]{order:3} body.app .tabbar [data-v=tt]{order:4} body.app .tabbar .sbset{order:9} }
+@media (max-width:999px){ .tabbar .sbset.has-dot::after{top:4px;inset-inline-end:calc(50% - 22px)} }
+@media (min-width:600px) and (max-width:999px){ .tabbar button{font-size:13.5px;padding:8px 4px} }
 /* X instead of "סגירה" */
 .xbtn{width:32px;height:32px;border-radius:50%;border:0;background:var(--row);color:var(--muted);display:grid;place-items:center;padding:0;flex:none}
 .xbtn .i{width:18px;height:18px;stroke-width:2.4}
@@ -1049,6 +1057,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     </div>
   </section>
 
+  <section id="chatv"><div id="chatList"></div></section>
   <section id="tasks">
     <div class="sech"><span data-i18n="viewTasks"></span><span class="hint" id="sechN"></span></div>
     <div id="banner" class="banner" hidden></div>
@@ -1073,6 +1082,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
 <nav class="tabbar" id="tabbar" hidden>
   <div class="sbrand"><img src="icon-any-192.png" alt="" width="34" height="34"><div><b class="wm" dir="ltr">Moodle<span>Pro</span></b><span class="hint by" data-i18n="byHii"></span></div></div>
   <button data-v="tasks" class="b"><span class="ti"><svg class="i"><use href="#i-list-checks"/></svg><i class="badge" id="tabBadge" hidden></i></span><b data-i18n="viewTasks"></b></button>
+  <button data-v="chat" class="b"><span class="ti"><svg class="i"><use href="#i-message-circle"/></svg><i class="badge" id="chatBadge" hidden></i></span><b data-i18n="viewChat"></b></button>
   <button data-v="dash" class="b home"><span class="ti"><svg class="i"><use href="#i-layout-dashboard"/></svg></span><b data-i18n="viewDash"></b></button>
   <button data-v="tt" class="b"><span class="ti"><svg class="i"><use href="#i-calendar-days"/></svg></span><b data-i18n="viewTT"></b></button>
   <button class="b sbset" id="bNavSet"><span class="ti"><svg class="i"><use href="#i-settings"/></svg></span><b data-i18n="settings"></b></button>
@@ -1520,6 +1530,7 @@ const I18N = {
     pushTestSent: "התראת בדיקה תגיע בעוד כ-10 שניות. אפשר לסגור את האפליקציה בינתיים.", pushTestFail: e => "הבדיקה נכשלה: " + e,
     pushDue: (o, w) => "ההגשה בעוד " + o + " · " + w, pushExam: (o, w) => "המבחן בעוד " + o + " · " + w, pushClass: m => "מתחיל בעוד " + m + " דקות",
     wnTitle: "✨ מה חדש", wnOk: "מעולה", version: v => "גרסה " + v, tZoom: "זום", zoomBadge: "📹 זום",
+    viewChat: "צ'אטים", chatInvT: "צ'אטים לכל קורס ולכל מטלה", chatInvP: "צ'אט כללי לכל קורס ודיון נפרד לכל מטלה – שאלות, תשובות וטיפים מהסטודנטים בקורס. זה חלק מקהילת MoodlePro.",
     sSoc: "קהילה ושיתוף", socOnSum: "פעילה · דירוג, זמני מטלות, וואטסאפ", socOffSum: "כבויה · הצטרפות", sEst: "זמן משוער (מהקצרה לארוכה)", socShareChk: "שתף עם הסטודנטים בקורס",
     sugSoc: "חדש: קהילת MoodlePro", sugSocD: "זמני מטלות, בחנים משותפים, קבוצות וואטסאפ ודירוג",
     tourSkip: "דלג", tourBack: "חזרה", tourNext: "הבא", tourDone: "יאללה, מתחילים", tourOpen: "📖 מדריך קצר לאפליקציה",
@@ -1729,6 +1740,7 @@ const I18N = {
     pushTestSent: "A test notification will arrive in about 10 seconds. You can close the app meanwhile.", pushTestFail: e => "The test failed: " + e,
     pushDue: (o, w) => "Due in " + o + " · " + w, pushExam: (o, w) => "Exam in " + o + " · " + w, pushClass: m => "Starts in " + m + " minutes",
     wnTitle: "✨ What’s new", wnOk: "Great", version: v => "Version " + v, tZoom: "Zoom", zoomBadge: "📹 Zoom",
+    viewChat: "Chats", chatInvT: "A chat for every course and task", chatInvP: "A general chat for every course and a discussion for every task – questions, answers and tips from the students in the course. Part of the MoodlePro community.",
     sSoc: "Community & sharing", socOnSum: "On · leaderboard, task times, WhatsApp", socOffSum: "Off · join", sEst: "Estimated time (shortest first)", socShareChk: "Share with the students in this course",
     sugSoc: "New: the MoodlePro community", sugSocD: "Task times, shared quizzes, WhatsApp groups and a leaderboard",
     tourSkip: "Skip", tourBack: "Back", tourNext: "Next", tourDone: "Let’s go", tourOpen: "📖 Quick guide to the app",
@@ -1938,6 +1950,7 @@ const I18N = {
     pushTestSent: "Une notification de test arrivera dans environ 10 secondes. Vous pouvez fermer l’app en attendant.", pushTestFail: e => "Le test a échoué : " + e,
     pushDue: (o, w) => "À rendre dans " + o + " · " + w, pushExam: (o, w) => "Examen dans " + o + " · " + w, pushClass: m => "Commence dans " + m + " minutes",
     wnTitle: "✨ Nouveautés", wnOk: "Super", version: v => "Version " + v, tZoom: "Zoom", zoomBadge: "📹 Zoom",
+    viewChat: "Chats", chatInvT: "Un chat par cours et par devoir", chatInvP: "Un chat général par cours et une discussion par devoir – questions, réponses et astuces des étudiants du cours. Fait partie de la communauté MoodlePro.",
     sSoc: "Communauté et partage", socOnSum: "Active · classement, durées, WhatsApp", socOffSum: "Désactivée · rejoindre", sEst: "Durée estimée (la plus courte d’abord)", socShareChk: "Partager avec les étudiants du cours",
     sugSoc: "Nouveau : la communauté MoodlePro", sugSocD: "Durées des devoirs, quiz partagés, groupes WhatsApp et classement",
     tourSkip: "Passer", tourBack: "Retour", tourNext: "Suivant", tourDone: "C’est parti", tourOpen: "📖 Guide rapide de l’application",
@@ -3171,7 +3184,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.6.0-beta.2";
+const APP_VERSION = "1.6.0-beta.3";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -3183,6 +3196,12 @@ function socEnsure(cb) {
   el.onload = () => { const list = socEnsure.q; socEnsure.q = []; for (const f of list) try { if (f) f(); } catch (e) { console.error(e); } };
   el.onerror = () => { socEnsure.q = []; el.remove(); };
   document.head.appendChild(el);
+}
+// the chats tab: the community's chats by course; an invitation while the community is off
+function renderChatv() {
+  if (socOn()) { socEnsure(() => SOC.chatView()); return; }
+  $("#chatList").innerHTML = '<div class="card chinv"><div class="chinvi">💬</div><h2>' + esc(t("chatInvT")) + '</h2><p class="hint">' + esc(t("chatInvP")) + '</p><button class="primary" id="bChatJoin">' + esc(t("sugSoc")) + "</button></div>";
+  $("#bChatJoin").onclick = () => socEnsure(() => SOC.intro(true));
 }
 function maybeSocIntro() {
   if (socOn() || LS.get("socIntro", false) || !M.token || !V.data || navigator.webdriver) return;
@@ -3295,10 +3314,10 @@ function renderNews(d) {
 /* ---------- render: everything ---------- */
 function setView(v, fromHistory) {
   const prev = V.view;
-  V.view = v === "tasks" || v === "tt" ? v : "dash";
+  V.view = v === "tasks" || v === "tt" || v === "chat" ? v : "dash";
   if (!fromHistory && NAV.ready && V.view !== prev) history.pushState({ v: V.view }, ""); LS.set("view", V.view); document.body.dataset.view = V.view; useHit("v_" + V.view);
   $$("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.v === V.view));
-  $("#pTitle").textContent = t(V.view === "tasks" ? "viewTasks" : V.view === "tt" ? "viewTT" : "viewDash");
+  $("#pTitle").textContent = t(V.view === "tasks" ? "viewTasks" : V.view === "tt" ? "viewTT" : V.view === "chat" ? "viewChat" : "viewDash");
 }
 const wide = () => false;          // every screen size now moves between tabs (phone: bottom bar, tablet: floating bar, computer: side bar)
 const bigScreen = () => window.matchMedia("(min-width:760px)").matches;
@@ -3391,7 +3410,8 @@ function render() {
     (next ? '<div class="next">' + esc(t("next")) + " <b><bdi>" + esc(next.name) + "</bdi></b> · " + cdSpan(next.due, now) + "</div>" : "");
   const urgent = dated.filter(x => ["late", "today", "week"].includes(groupOf(x, now))).length;
   try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
-  if (socOn()) S("render", now); else $("#socTop").innerHTML = "";
+  if (socOn()) S("render", now); else { $("#socTop").innerHTML = ""; $("#chatBadge").hidden = true; }
+  if (V.view === "chat") renderChatv();
   $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>" + esc(t("diag", d.diag.length)) + "</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
 }
 const SET_PAGES = { soc: "sSoc", notif: "sNotif", look: "sLook", filter: "sFilter", courses: "sCourses", sem: "sSem", acct: "sAcct", help: "sHelp" };
@@ -3750,9 +3770,9 @@ function launchUrl(site) {
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
   { v: "1.6.0", at: "2026-11-11 08:00",
-    he: ["👥 חדש: קהילת MoodlePro (אופציונלי, מפעילים פעם אחת): סטודנטים עוזרים לסטודנטים", "⏳ כמה זמן לוקחת כל מטלה – לפי דיווחים של סטודנטים אחרים, ומיון לפי הזמן המשוער", "📢 שיתוף בחנים ומשימות עם כל הקורס (כפתור גדול אחרי שמוסיפים, או אוטומטית), ו״הוסף לשלי״ בלחיצה אחת", "💬 דיון לכל מטלה וצ'אט לכל קורס – תגובות, אימוג'ים ו״תשובה מועילה ⭐״", "💬 קבוצת הוואטסאפ של כל קורס במקום אחד", "🏆 נקודות, דרגות, יומן נקודות וטבלאות דירוג – כללית ולכל קורס", "🎓 פרופיל: התואר והשנה שלך"],
-    en: ["👥 New: the MoodlePro community (optional, switch it on once): students helping students", "⏳ How long each task takes – from other students’ reports, and sorting by estimated time", "📢 Share quizzes and tasks with the whole course (a big button after adding, or automatically), and “Add to mine” in one tap", "💬 A discussion for every task and a chat for every course – replies, emoji and “helpful answer ⭐”", "💬 Every course’s WhatsApp group in one place", "🏆 Points, ranks, a points log and leaderboards – overall and per course", "🎓 Profile: your degree and year"],
-    fr: ["👥 Nouveau : la communauté MoodlePro (facultative, à activer une fois) : des étudiants qui s’entraident", "⏳ Le temps que prend chaque devoir – d’après les autres étudiants, et un tri par durée estimée", "📢 Partager quiz et devoirs avec tout le cours (un grand bouton après l’ajout, ou automatiquement), et « Ajouter chez moi » en un geste", "💬 Une discussion par devoir et un chat par cours – réponses, emoji et « réponse utile ⭐ »", "💬 Le groupe WhatsApp de chaque cours au même endroit", "🏆 Points, rangs, journal des points et classements – général et par cours", "🎓 Profil : votre diplôme et votre année"] },
+    he: ["👥 חדש: קהילת MoodlePro (אופציונלי, מפעילים פעם אחת): סטודנטים עוזרים לסטודנטים", "⏳ כמה זמן לוקחת כל מטלה – לפי דיווחים של סטודנטים אחרים, ומיון לפי הזמן המשוער", "📢 שיתוף בחנים ומשימות עם כל הקורס (כפתור גדול אחרי שמוסיפים, או אוטומטית), ו״הוסף לשלי״ בלחיצה אחת", "💬 טאב ״צ'אטים״: צ'אט כללי לכל קורס ודיון לכל מטלה, מסודרים לפי קורס – תגובות, אימוג'ים ו״תשובה מועילה ⭐״", "⚙️ ההגדרות עברו לסרגל הטאבים", "💬 קבוצת הוואטסאפ של כל קורס במקום אחד", "🏆 נקודות, דרגות, יומן נקודות וטבלאות דירוג – כללית ולכל קורס", "🎓 פרופיל: התואר והשנה שלך"],
+    en: ["👥 New: the MoodlePro community (optional, switch it on once): students helping students", "⏳ How long each task takes – from other students’ reports, and sorting by estimated time", "📢 Share quizzes and tasks with the whole course (a big button after adding, or automatically), and “Add to mine” in one tap", "💬 A “Chats” tab: a general chat for every course and a discussion for every task, grouped by course – replies, emoji and “helpful answer ⭐”", "⚙️ Settings moved to the tab bar", "💬 Every course’s WhatsApp group in one place", "🏆 Points, ranks, a points log and leaderboards – overall and per course", "🎓 Profile: your degree and year"],
+    fr: ["👥 Nouveau : la communauté MoodlePro (facultative, à activer une fois) : des étudiants qui s’entraident", "⏳ Le temps que prend chaque devoir – d’après les autres étudiants, et un tri par durée estimée", "📢 Partager quiz et devoirs avec tout le cours (un grand bouton après l’ajout, ou automatiquement), et « Ajouter chez moi » en un geste", "💬 Un onglet « Chats » : un chat général par cours et une discussion par devoir, groupés par cours – réponses, emoji et « réponse utile ⭐ »", "⚙️ Les réglages sont dans la barre d’onglets", "💬 Le groupe WhatsApp de chaque cours au même endroit", "🏆 Points, rangs, journal des points et classements – général et par cours", "🎓 Profil : votre diplôme et votre année"] },
   { v: "1.5.0", at: "2026-11-11 02:29",
     he: ["✨ עיצוב חדש ונקי בהשראת אפליקציות המערכת: אייקונים מקצועיים, כפתורים ובוררים בסגנון iOS, וכותרת שקופה", "🧭 טאבים בכל מסך: בטאבלט סרגל צף, ובמחשב סרגל צד – כל דבר במקום שלו במקום עמוד אחד ארוך", "🪟 צפיפות תצוגה בהגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה", "📚 קורסים: ״הצג הכל״, ״הסתר הכל״ או ״רק קורסים פעילים״ בלחיצה אחת, וחיפוש כשיש הרבה", "🔢 ״נותרו 1 יום״ במקום ״נותרו יום״, ושמות הכרטיסיות במשימות לא נחתכים יותר", "🎯 בטאב המשימות מופיעים רק הקורסים שלך (מה שכיבית בהגדרות לא מופיע), ולחיצה על קורס מציגה רק אותו", "🏠 הסקירה באמצע התפריט התחתון, וכפתור ״סינון״ אחד במשימות לסטטוס, מיון וקורס", "🔴 הצעות (תזכורות, התקנה, מבחנים) עברו להגדרות עם נקודה אדומה, וחלונות שעולים מלמטה עם X"],
     en: ["✨ A new, cleaner design inspired by system apps: professional icons, iOS-style buttons and pickers, a translucent toolbar", "🧭 Tabs on every screen: a floating bar on tablets and a side bar on computers – instead of one long page", "🪟 Display density in Settings → Look & display: detailed, compact or clean", "📚 Courses: “Show all”, “Hide all” or “Current courses only” in one tap, plus search when there are many", "🔢 Clearer countdowns (“1 day”), and task category labels are never cut", "🎯 The tasks tab shows only your courses (the ones switched off in settings are gone), and tapping one shows just it", "🏠 The overview sits in the middle of the bottom bar, and one “Filter” button in tasks holds status, sort and course", "🔴 Suggestions (reminders, install, exams) moved into settings with a red dot; windows slide up and close with an X"],
@@ -4750,7 +4770,7 @@ $("#bFocusClear").onclick = () => {
 };
 $("#bNavSet").onclick = () => $("#bSet").click();
 window.addEventListener("resize", () => { const b = $("#dash"); if (b) for (const el of b.children) masonOne(el); });
-$("#tabbar").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
+$("#tabbar").addEventListener("click", e => { if (e.target.closest("#bNavSet")) return; const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !M.token) return;
   if (!V.data || Date.now() / 1000 - V.data.at > 20) refresh(); else syncSoon(400);      // back in the app: fresh data (unless it was just loaded)
