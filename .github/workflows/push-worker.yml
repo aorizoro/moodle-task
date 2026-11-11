@@ -45,6 +45,12 @@ jobs:
           stop=$(curl -sS -X POST "$url/feed/stop" -H "Origin: https://aorizoro.github.io" -H "Content-Type: application/json" --data "{\"key\":\"$k\"}" || echo FAILED)
           after=$(curl -sS "$url/feed/$k.ics" | tr -d '\r' | grep -c 'SUMMARY:smoke')
           echo "::notice title=Calendar feed check::upload=$up | head=$h | events served=$body | stop=$stop | after stop=$after"
+          # the community: a fixed smoke-test user that never earns points (so it never shows on a board); a wrong secret must be refused
+          su="5e0c0de5e0c0de5e0c0de5e0c0de5e0c"; ss="5ec5ec5ec5ec5ec5ec5ec5ec5ec5ec5ec5ec5ec5ec5ec5ec"
+          ov=$(curl -sS -X POST "$url/social/overview" -H "Origin: https://aorizoro.github.io" -H "Content-Type: application/json" --data "{\"uid\":\"$su\",\"sec\":\"$ss\",\"name\":\"smoke test\",\"courses\":[]}" || echo FAILED)
+          bad=$(curl -sS -o /dev/null -w "%{http_code}" -X POST "$url/social/overview" -H "Origin: https://aorizoro.github.io" -H "Content-Type: application/json" --data "{\"uid\":\"$su\",\"sec\":\"000000000000000000000000000000000000000000000000\",\"courses\":[]}" || echo FAILED)
+          bd=$(curl -sS -X POST "$url/social/board" -H "Origin: https://aorizoro.github.io" -H "Content-Type: application/json" --data "{\"uid\":\"$su\",\"sec\":\"$ss\",\"cid\":\"\",\"per\":\"all\"}" | grep -o '"uid"' | wc -l || echo FAILED)
+          echo "::notice title=Community check::overview=$ov | wrong secret=$bad | board rows=$bd (names are not printed: this log is public)"
           sleep 90; beta=$(curl -sS https://aorizoro.github.io/moodle-task/beta/ | grep -o 'APP_VERSION = "[^"]*"' | head -1)
           root=$(curl -sS https://aorizoro.github.io/moodle-task/ | grep -o 'APP_VERSION = "[^"]*"' | head -1)
           echo "::notice title=Beta page::$beta"
