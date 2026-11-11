@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.6.0-beta.4";
+const SOC_V = "1.6.0-beta.5";
 const MIN_N = 3;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 const RANKS = [[0, "🌱", "rk0"], [20, "📝", "rk1"], [60, "🧠", "rk2"], [150, "⚡", "rk3"], [300, "👑", "rk4"], [600, "🏆", "rk5"]];
@@ -12,6 +12,7 @@ const DEGS = { b: ["opt", "ee", "se", "ie", "cs", "bio", "nur", "nur2", "acc", "
 const YEARS = ["1", "2", "3", "4"];
 
 Object.assign(I18N.he, {
+  socTimeAsk: "כמה זמן לקח?", socTimeT2: "כמה זמן לקח? (אפשר לשנות)",
   crsBoard: "טבלת הקורס", crsChatN: (n, tn) => n + " הודעות בצ'אט הקורס" + (tn ? " · " + tn + " דיונים על מטלות" : ""), crsChatNone: "עוד אין הודעות בצ'אט של הקורס. אפשר לכתוב ראשונים.",
   chvTagCourse: "צ'אט הקורס", chvTagTask: "דיון במטלה", chvFAct: "פעילות", chvFCourse: "קורסים", chvFTask: "מטלות", chvNoAct: "עוד אין שיחות. אפשר לפתוח את הצ'אט של אחד הקורסים ולכתוב ראשונים.", chvStart: "לצ'אטים של הקורסים", chvNoMatch: "לא נמצא צ'אט שמתאים לחיפוש",
   socIntroT: "חדש: קהילת MoodlePro 🎉", socIntroP: "סטודנטים עוזרים לסטודנטים. הכל אופציונלי, ואפשר לכבות בכל רגע בהגדרות.",
@@ -54,6 +55,7 @@ Object.assign(I18N.he, {
   socNet: "אין חיבור לשרת הקהילה כרגע", socLoading: "טוען…", socRanksT: "הדרגות", socJoinBtn: "הצטרפות לקהילה",
 });
 Object.assign(I18N.en, {
+  socTimeAsk: "How long did it take?", socTimeT2: "How long did it take? (you can change it)",
   crsBoard: "Course leaderboard", crsChatN: (n, tn) => n + " messages in the course chat" + (tn ? " · " + tn + " task discussions" : ""), crsChatNone: "No messages in the course chat yet. Be the first to write.",
   chvTagCourse: "Course chat", chvTagTask: "Task discussion", chvFAct: "Active", chvFCourse: "Courses", chvFTask: "Tasks", chvNoAct: "No conversations yet. Open one of your course chats and be the first to write.", chvStart: "Go to course chats", chvNoMatch: "No chat matches the search",
   socIntroT: "New: the MoodlePro community 🎉", socIntroP: "Students helping students. All optional, and you can switch it off any time in settings.",
@@ -96,6 +98,7 @@ Object.assign(I18N.en, {
   socNet: "Can’t reach the community server right now", socLoading: "Loading…", socRanksT: "Ranks", socJoinBtn: "Join the community",
 });
 Object.assign(I18N.fr, {
+  socTimeAsk: "Combien de temps ?", socTimeT2: "Combien de temps ? (modifiable)",
   crsBoard: "Classement du cours", crsChatN: (n, tn) => n + " messages dans le chat du cours" + (tn ? " · " + tn + " discussions de devoirs" : ""), crsChatNone: "Pas encore de message dans le chat du cours. Écrivez en premier.",
   chvTagCourse: "Chat du cours", chvTagTask: "Discussion du devoir", chvFAct: "Actives", chvFCourse: "Cours", chvFTask: "Devoirs", chvNoAct: "Pas encore de conversation. Ouvrez le chat d’un cours et écrivez en premier.", chvStart: "Aux chats des cours", chvNoMatch: "Aucun chat ne correspond",
   socIntroT: "Nouveau : la communauté MoodlePro 🎉", socIntroP: "Des étudiants qui s’entraident. Tout est facultatif, et désactivable à tout moment dans les réglages.",
@@ -139,7 +142,7 @@ Object.assign(I18N.fr, {
 });
 
 /* ---------- state and the server ---------- */
-const ST = { chf: LS.get("socChF", "act"), ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" }, queue: [] };
+const ST = { queue: LS.get("socTQ", []).filter(k => typeof k === "string").slice(-20), chf: LS.get("socChF", "act"), ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" }, queue: [] };
 const hex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(b => b.toString(16).padStart(2, "0")).join("");
 function ensureId() { if (!P.soc_id) { P.soc_id = { uid: hex(16), sec: hex(24) }; savePrefs(); } return P.soc_id; }
 const prof = () => P.soc_prof || { deg: "", yr: "" };
@@ -187,24 +190,47 @@ function badge(x) {
 }
 const asked = k => (P.soc_asked || []).includes(k);
 function markAsked(k) { if (!asked(k)) { P.soc_asked = (P.soc_asked || []).concat(k).slice(-400); savePrefs(); } }
-function askTime(key) {
+/* what I reported for each task (synced): the "how long did it take" button shows it, and it can be changed any time */
+const myRep = k => (P.soc_rep || {})[k];
+const repLbl = h => { const r = HOURS.find(x => x[0] === h); return r ? r[1] + " " + t(r[2]) : ""; };
+/* how: "auto" (Moodle now shows it submitted: asked once), "done" (marked done by hand: asked unless already reported), "me" (the button: always) */
+function askTime(key, how) {
   const x = V.data && V.data.tasks.find(y => y.key === key);
-  if (!timeable(x) || asked(key)) return;
-  sheet("socTime", '<h3><span>' + esc(t("socTimeT")) + "</span>" + xbtn() + '</h3><div class="hint"><bdi>' + esc(x.name) + "</bdi> · <bdi>" + esc(shortName(x.course)) + "</bdi></div>" +
-    '<div class="stime">' + HOURS.map(h => '<button data-soch="' + h[0] + '"><span class="e">' + h[1] + "</span><span>" + esc(t(h[2])) + "</span></button>").join("") + "</div>" +
+  if (!timeable(x)) return false;
+  if (how !== "me" && (myRep(key) !== undefined || (how !== "done" && asked(key)))) return false;
+  const cur = myRep(key);
+  sheet("socTime", '<h3><span>' + esc(t(cur !== undefined ? "socTimeT2" : "socTimeT")) + "</span>" + xbtn() + '</h3><div class="hint"><bdi>' + esc(x.name) + "</bdi> · <bdi>" + esc(shortName(x.course)) + "</bdi></div>" +
+    '<div class="stime">' + HOURS.map(h => '<button data-soch="' + h[0] + '"' + (cur === h[0] ? ' class="on" aria-pressed="true"' : "") + '><span class="e">' + h[1] + "</span><span>" + esc(t(h[2])) + "</span></button>").join("") + "</div>" +
     '<div class="hint" style="text-align:center">' + esc(t("socTimeHint")) + '</div><button class="link" data-socx style="width:100%;margin-top:4px">' + esc(t("socSkip")) + "</button>");
-  ST.timeKey = key; markAsked(key);
+  ST.timeKey = key; markAsked(key); return true;
+}
+/* the button on every submitted task (and on the course page): report, or change what was reported */
+function timeBtn(x) {
+  if (!timeable(x) || !(x.status === "submitted" || isDone(x))) return "";
+  const h = myRep(x.key);
+  return '<button class="stbtn' + (h !== undefined ? " on" : "") + '" data-soctime="' + esc(x.key) + '">' + ic("hourglass") + '<span class="at">' + esc(h !== undefined ? repLbl(h) : t("socTimeAsk")) + "</span></button>";
 }
 async function sendTime(h) {
   const x = V.data && V.data.tasks.find(y => y.key === ST.timeKey); close("socTime"); if (!x) return;
-  try { const r = await api("time", { cid: x.cid, aid: x.key, h, ref: x.name, cname: shortName(x.course) }); useHit("socTimeRep"); toast(t(r.first ? "socThanks" : "socThanks0")); overview(true); }
+  try { const r = await api("time", { cid: x.cid, aid: x.key, h, ref: x.name, cname: shortName(x.course) }); useHit("socTimeRep");
+    P.soc_rep = Object.assign({}, P.soc_rep || {}, { [x.key]: h }); const ks = Object.keys(P.soc_rep); if (ks.length > 400) for (const k of ks.slice(0, ks.length - 400)) delete P.soc_rep[k];
+    savePrefs(); render(); toast(t(r.first ? "socThanks" : "socThanks0")); overview(true); }
   catch (e) { toast(t("socNet")); }
 }
 function afterFetch(d, prevSt) {
   overview();
   if (!prevSt) return;
-  for (const x of d.tasks) if (timeable(x) && x.status === "submitted" && prevSt[x.key] && prevSt[x.key] !== "submitted" && !asked(x.key) && !ST.queue.includes(x.key)) ST.queue.push(x.key);
-  if (ST.queue.length) setTimeout(() => { if ($$(".sheet").some(s => !s.hidden) || !$("#tour").hidden) return; const k = ST.queue.shift(); if (k) askTime(k); }, 1500);
+  for (const x of d.tasks) if (timeable(x) && x.status === "submitted" && prevSt[x.key] && prevSt[x.key] !== "submitted" && !asked(x.key) && myRep(x.key) === undefined && !ST.queue.includes(x.key)) ST.queue.push(x.key);
+  LS.set("socTQ", ST.queue.slice(-20)); timeQueue();
+}
+/* ask about the newly submitted ones one at a time, when nothing else is open (kept across restarts until asked) */
+let tqTimer = 0;
+function timeQueue(delay) {
+  clearTimeout(tqTimer); if (!ST.queue.length) return;
+  tqTimer = setTimeout(() => {
+    if ($$(".sheet").some(s => !s.hidden) || !$("#tour").hidden || !$("#setup").hidden || document.hidden) return timeQueue(3000);
+    while (ST.queue.length) { const k = ST.queue.shift(); LS.set("socTQ", ST.queue); if (askTime(k, "auto")) break; }
+  }, delay || 1500);
 }
 
 /* ---------- shared quizzes and tasks ---------- */
@@ -334,9 +360,10 @@ function unread(cid, tk) { const seen = LS.get("socSeen", {}), k = seenK(cid, tk
 function markSeen(cid, tk, n) { const seen = LS.get("socSeen", {}); seen[seenK(cid, tk)] = n; const ks = Object.keys(seen); if (ks.length > 400) delete seen[ks[0]]; LS.set("socSeen", seen); }
 const chattable = x => x && x.cid > 0 && !x.mine;
 function taskAct(x) {
-  if (!chattable(x)) return "";
+  const tb = timeBtn(x);
+  if (!chattable(x)) return tb;
   const n = thInfo(x.cid, x.key).n, u = unread(x.cid, x.key);
-  return '<button data-socchat="' + x.cid + "|" + esc(x.key) + '">' + ic("message-square") + '<span class="at">' + esc(t("chatBtn")) + "</span>" + (n ? '<span class="scnt' + (u ? " new" : "") + '">' + n + "</span>" : "") + "</button>";
+  return tb + '<button data-socchat="' + x.cid + "|" + esc(x.key) + '">' + ic("message-square") + '<span class="at">' + esc(t("chatBtn")) + "</span>" + (n ? '<span class="scnt' + (u ? " new" : "") + '">' + n + "</span>" : "") + "</button>";
 }
 function chatBtnCourse(cid) {
   const n = thInfo(cid, "c").n, u = unread(cid, "c");
@@ -617,6 +644,7 @@ document.addEventListener("click", e => {
   let b;
   if ((b = g("[data-socx]"))) { const s = b.closest(".sheet"); if (s) s.hidden = true; return; }
   if ((b = g("[data-soch]"))) return sendTime(Number(b.dataset.soch));
+  if ((b = g("[data-soctime]"))) { e.preventDefault(); useHit("socTimeBtn"); $$(".sheet:not([hidden])").forEach(sh => { if (sh.id !== "socTime") sh.hidden = true; }); return askTime(b.dataset.soctime, "me"); }
   if ((b = g("[data-socadd]"))) return addShared(Number(b.dataset.socadd));
   if ((b = g("[data-socign]"))) return ignoreShared(Number(b.dataset.socign));
   if ((b = g("[data-socu]"))) { e.stopPropagation(); return openUser(b.dataset.socu); }
@@ -811,9 +839,11 @@ html[dir=ltr] .chhead{background:linear-gradient(to right,color-mix(in srgb,var(
 .chtag.t{background:var(--row);color:var(--muted)}
 .chl3{display:flex;gap:8px;align-items:center}.chl3 .chpv{flex:1;min-width:0}.chrow2.un .chpv{color:var(--text)}
 .crsoc{display:flex;gap:8px;flex-wrap:wrap}.crsoc .schatc,.crsbtn{flex:1 1 140px}
+.stime button.on{outline:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--card))}
+.stbtn.on{color:var(--accent-t)}
 .chempty{text-align:center;padding:28px 16px;color:var(--muted)}.chempty p{margin:0 0 14px}
 `;
 document.head.appendChild(css);
 
-window.SOC = { crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
+window.SOC = { timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
 })();
