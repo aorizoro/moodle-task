@@ -156,6 +156,157 @@ export class Feed extends DurableObject {
 }
 const feed = async (env, key) => env.FEEDS.get(env.FEEDS.idFromName(await sha256("feed:" + key)));
 
+/* ---------- the community (MoodlePro Community): one SQLite database for everyone ----------
+   Trust-based: a user is a random id + a secret the app made (synced between the user's devices through Moodle).
+   No Moodle token ever reaches this server. Name, degree and courses are what the app says.
+   Reads are kept low (the free plan: 5M rows read, 100k rows written a day): totals and averages are stored as they change,
+   and each course's public part is cached in memory until something in that course changes. */
+const HOURS = [0.5, 2, 4.5, 8, 12];                       // the five "how long did it take" answers
+const PTS = { add: 3, time: 1, wa: 1 };
+const okId = s => typeof s === "string" && /^[a-f0-9]{32}$/.test(s);
+const okSec = s => typeof s === "string" && /^[a-f0-9]{48}$/.test(s);
+const okCid = c => (typeof c === "string" || typeof c === "number") && /^[0-9]{1,12}$/.test(String(c));
+const okWa = u => typeof u === "string" && /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{10,40}$/.test(u);
+// the semester a moment belongs to: Sep–Feb = A (of the year it started), Mar–Aug = B
+function semKey(ms) { const d = new Date(ms), y = d.getUTCFullYear(), m = d.getUTCMonth() + 1; return m >= 9 ? y + "A" : m <= 2 ? (y - 1) + "A" : (y - 1) + "B"; }
+export class Community extends DurableObject {
+  constructor(ctx, env) {
+    super(ctx, env);
+    this.sql = ctx.storage.sql; this.cc = new Map();
+    this.sql.exec(`CREATE TABLE IF NOT EXISTS users (uid TEXT PRIMARY KEY, sech TEXT, name TEXT, deg TEXT, yr TEXT, seen INTEGER);
+      CREATE TABLE IF NOT EXISTS courses (cid TEXT PRIMARY KEY, name TEXT, wa TEXT, wa_by TEXT, wa_at INTEGER);
+      CREATE TABLE IF NOT EXISTS ledger (id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT, pts INTEGER, kind TEXT, from_uid TEXT, cid TEXT, ref TEXT, at INTEGER);
+      CREATE INDEX IF NOT EXISTS ledger_uid ON ledger (uid, at);
+      CREATE INDEX IF NOT EXISTS ledger_kind ON ledger (uid, kind, cid);
+      CREATE TABLE IF NOT EXISTS tot (uid TEXT, cid TEXT, per TEXT, pts INTEGER, PRIMARY KEY (uid, cid, per));
+      CREATE INDEX IF NOT EXISTS tot_board ON tot (cid, per, pts);
+      CREATE TABLE IF NOT EXISTS times (cid TEXT, aid TEXT, uid TEXT, h REAL, at INTEGER, PRIMARY KEY (cid, aid, uid));
+      CREATE INDEX IF NOT EXISTS times_uid ON times (uid);
+      CREATE TABLE IF NOT EXISTS agg (cid TEXT, aid TEXT, sum REAL, n INTEGER, PRIMARY KEY (cid, aid));
+      CREATE TABLE IF NOT EXISTS shares (id INTEGER PRIMARY KEY AUTOINCREMENT, cid TEXT, uid TEXT, kind TEXT, d TEXT, at INTEGER, made INTEGER, del INTEGER DEFAULT 0, adds INTEGER DEFAULT 0);
+      CREATE INDEX IF NOT EXISTS shares_c ON shares (cid, del, at);
+      CREATE TABLE IF NOT EXISTS adds (sid INTEGER, uid TEXT, PRIMARY KEY (sid, uid));`);
+  }
+  q(sql, ...a) { return this.sql.exec(sql, ...a).toArray(); }
+  one(sql, ...a) { return this.q(sql, ...a)[0] || null; }
+  async auth(b) {
+    if (!b || !okId(b.uid) || !okSec(b.sec)) return null;
+    const h = await sha256("soc:" + b.sec), u = this.one("SELECT uid, sech, name, deg, yr FROM users WHERE uid = ?", b.uid);
+    if (u) return u.sech === h ? u : null;
+    const name = clip(b.name, 60).trim(); if (!name) return null;
+    this.sql.exec("INSERT INTO users (uid, sech, name, deg, yr, seen) VALUES (?, ?, ?, ?, ?, ?)", b.uid, h, name, clip(b.deg, 60), clip(b.yr, 20), Date.now());
+    return { uid: b.uid, sech: h, name, deg: clip(b.deg, 60), yr: clip(b.yr, 20) };
+  }
+  course(cid, name) {                                       // remember a course's name (for boards and logs); a write only when it is new or renamed
+    if (!name) return;
+    const c = this.one("SELECT name FROM courses WHERE cid = ?", cid), n = clip(name, 120);
+    if (!c) this.sql.exec("INSERT INTO courses (cid, name) VALUES (?, ?)", cid, n);
+    else if (c.name !== n) this.sql.exec("UPDATE courses SET name = ? WHERE cid = ?", n, cid);
+  }
+  award(uid, pts, kind, from, cid, ref) {
+    const now = Date.now(), sem = semKey(now);
+    this.sql.exec("INSERT INTO ledger (uid, pts, kind, from_uid, cid, ref, at) VALUES (?, ?, ?, ?, ?, ?, ?)", uid, pts, kind, from || "", cid || "", clip(ref, 120), now);
+    for (const [c, p] of [["", "all"], ["", sem], [cid || "", "all"], [cid || "", sem]].filter((x, i) => i < 2 || cid))
+      this.sql.exec("INSERT INTO tot (uid, cid, per, pts) VALUES (?, ?, ?, ?) ON CONFLICT (uid, cid, per) DO UPDATE SET pts = pts + excluded.pts", uid, c, p, pts);
+  }
+  pts(uid) { const r = this.q("SELECT per, pts FROM tot WHERE uid = ? AND cid = ''", uid), sem = semKey(Date.now()); return { all: (r.find(x => x.per === "all") || {}).pts || 0, sem: (r.find(x => x.per === sem) || {}).pts || 0 }; }
+  pub(cid) {                                                // a course's shared part, cached until it changes
+    if (this.cc.has(cid)) return this.cc.get(cid);
+    const c = this.one("SELECT wa, wa_by FROM courses WHERE cid = ?", cid) || {}, t = {};
+    for (const r of this.q("SELECT aid, sum, n FROM agg WHERE cid = ?", cid)) t[r.aid] = [Math.round(r.sum / r.n * 10) / 10, r.n];
+    const sh = this.q(`SELECT s.id, s.uid, s.kind, s.d, s.at, s.adds, u.name, u.deg, u.yr FROM shares s LEFT JOIN users u ON u.uid = s.uid
+      WHERE s.cid = ? AND s.del = 0 AND s.at > ? ORDER BY s.at LIMIT 40`, cid, Math.floor(Date.now() / 1000) - 86400)
+      .map(r => ({ id: r.id, uid: r.uid, kind: r.kind, d: JSON.parse(r.d || "{}"), at: r.at, adds: r.adds, name: r.name || "", deg: r.deg || "", yr: r.yr || "" }));
+    const wb = c.wa_by ? this.one("SELECT name FROM users WHERE uid = ?", c.wa_by) : null;
+    const v = { wa: c.wa || "", waBy: wb ? wb.name : "", t, sh };
+    this.cc.set(cid, v); return v;
+  }
+  async handle(op, b) {
+    const me = await this.auth(b); if (!me) return [403, { error: "auth" }];
+    const now = Date.now();
+    if (op === "overview") {
+      const name = clip(b.name, 60).trim(), deg = b.deg === undefined ? me.deg || "" : clip(b.deg, 60), yr = b.yr === undefined ? me.yr || "" : clip(b.yr, 20);
+      if ((name && name !== me.name) || deg !== (me.deg || "") || yr !== (me.yr || "")) this.sql.exec("UPDATE users SET name = ?, deg = ?, yr = ?, seen = ? WHERE uid = ?", name || me.name, deg, yr, now, me.uid);
+      const cs = (Array.isArray(b.courses) ? b.courses : []).filter(c => c && okCid(c.id)).slice(0, 40), out = {};
+      for (const c of cs) { const cid = String(c.id); this.course(cid, c.name); out[cid] = this.pub(cid); }
+      const mine = {}; for (const r of this.q("SELECT cid, aid, h FROM times WHERE uid = ?", me.uid)) mine[r.cid + ":" + r.aid] = r.h;
+      const added = this.q("SELECT sid FROM adds WHERE uid = ?", me.uid).map(r => r.sid);
+      return [200, { me: { uid: me.uid, ...this.pts(me.uid) }, c: out, mine, added }];
+    }
+    const cid = okCid(b.cid) ? String(b.cid) : "";
+    if (op === "time") {
+      const h = Number(b.h), aid = clip(b.aid, 40);
+      if (!cid || !aid || !HOURS.includes(h)) return [400, { error: "bad" }];
+      this.course(cid, b.cname);
+      const old = this.one("SELECT h FROM times WHERE cid = ? AND aid = ? AND uid = ?", cid, aid, me.uid);
+      if (old && old.h === h) return [200, { ok: true }];
+      this.sql.exec("INSERT INTO times (cid, aid, uid, h, at) VALUES (?, ?, ?, ?, ?) ON CONFLICT (cid, aid, uid) DO UPDATE SET h = excluded.h, at = excluded.at", cid, aid, me.uid, h, now);
+      this.sql.exec("INSERT INTO agg (cid, aid, sum, n) VALUES (?, ?, ?, 1) ON CONFLICT (cid, aid) DO UPDATE SET sum = sum + ?, n = n + ?", cid, aid, h, old ? h - old.h : h, old ? 0 : 1);
+      if (!old) this.award(me.uid, PTS.time, "time", "", cid, b.ref);
+      this.cc.delete(cid); return [200, { ok: true, first: !old }];
+    }
+    if (op === "wa") {
+      const url = String(b.url || "").trim();
+      if (!cid || (url && !okWa(url))) return [400, { error: "bad" }];
+      this.course(cid, b.cname);
+      this.sql.exec("UPDATE courses SET wa = ?, wa_by = ?, wa_at = ? WHERE cid = ?", url, url ? me.uid : "", now, cid);
+      let pts = 0;
+      if (url && !this.one("SELECT id FROM ledger WHERE uid = ? AND kind = 'wa' AND cid = ?", me.uid, cid)) { this.award(me.uid, PTS.wa, "wa", "", cid, b.cname); pts = PTS.wa; }
+      this.cc.delete(cid); return [200, { ok: true, pts }];
+    }
+    if (op === "share") {
+      const kind = b.kind === "task" ? "task" : "xq", at = Math.floor(Number(b.at));
+      if (!cid || !Number.isFinite(at) || at < now / 1000 - 86400 || at > now / 1000 + 400 * 86400) return [400, { error: "bad" }];
+      const d = b.d || {}, dd = JSON.stringify({ n: clip(d.n, 100), k: clip(d.k, 10), note: clip(d.note, 200), s: clip(d.s, 16), allDay: !!d.allDay });
+      this.course(cid, b.cname);
+      if (b.id) {
+        const s = this.one("SELECT uid, cid FROM shares WHERE id = ?", Number(b.id));
+        if (!s || s.uid !== me.uid) return [403, { error: "not yours" }];
+        this.sql.exec("UPDATE shares SET d = ?, at = ?, cid = ?, kind = ? WHERE id = ?", dd, at, cid, kind, Number(b.id));
+        this.cc.delete(s.cid); this.cc.delete(cid); return [200, { id: Number(b.id) }];
+      }
+      this.sql.exec("INSERT INTO shares (cid, uid, kind, d, at, made) VALUES (?, ?, ?, ?, ?, ?)", cid, me.uid, kind, dd, at, now);
+      const id = this.one("SELECT last_insert_rowid() AS id").id;
+      this.cc.delete(cid); return [200, { id }];
+    }
+    if (op === "unshare") {
+      const s = this.one("SELECT uid, cid FROM shares WHERE id = ?", Number(b.id));
+      if (!s || s.uid !== me.uid) return [403, { error: "not yours" }];
+      this.sql.exec("UPDATE shares SET del = 1 WHERE id = ?", Number(b.id)); this.cc.delete(s.cid); return [200, { ok: true }];
+    }
+    if (op === "add") {
+      const s = this.one("SELECT id, uid, cid, d FROM shares WHERE id = ? AND del = 0", Number(b.id));
+      if (!s) return [404, { error: "gone" }];
+      if (this.one("SELECT sid FROM adds WHERE sid = ? AND uid = ?", s.id, me.uid)) return [200, { ok: true, again: true }];
+      this.sql.exec("INSERT INTO adds (sid, uid) VALUES (?, ?)", s.id, me.uid);
+      this.sql.exec("UPDATE shares SET adds = adds + 1 WHERE id = ?", s.id);
+      if (s.uid !== me.uid) this.award(s.uid, PTS.add, "add", me.uid, s.cid, JSON.parse(s.d || "{}").n);
+      this.cc.delete(s.cid); return [200, { ok: true }];
+    }
+    if (op === "board") {
+      const per = b.per === "sem" ? semKey(now) : "all", deg = clip(b.deg, 60);
+      const rows = this.q(`SELECT t.uid, t.pts, u.name, u.deg, u.yr, (SELECT pts FROM tot a WHERE a.uid = t.uid AND a.cid = '' AND a.per = 'all') AS total
+        FROM tot t JOIN users u ON u.uid = t.uid WHERE t.cid = ? AND t.per = ? AND t.pts > 0 ${deg ? "AND u.deg = ?" : ""} ORDER BY t.pts DESC, t.uid LIMIT 20`, cid, per, ...(deg ? [deg] : []));
+      const mine = this.one("SELECT pts FROM tot WHERE uid = ? AND cid = ? AND per = ?", me.uid, cid, per);
+      const pos = mine && mine.pts > 0 ? this.one(`SELECT COUNT(*) AS n FROM tot t ${deg ? "JOIN users u ON u.uid = t.uid" : ""} WHERE t.cid = ? AND t.per = ? AND t.pts > ? ${deg ? "AND u.deg = ?" : ""}`, cid, per, mine.pts, ...(deg ? [deg] : [])).n + 1 : 0;
+      const cn = cid ? this.one("SELECT name FROM courses WHERE cid = ?", cid) : null;
+      return [200, { rows: rows.map(r => ({ uid: r.uid, pts: r.pts, total: r.total || 0, name: r.name, deg: r.deg, yr: r.yr })), me: { pts: mine ? mine.pts : 0, pos }, cname: cn ? cn.name : "" }];
+    }
+    if (op === "user") {
+      const who = okId(b.who) ? b.who : me.uid, u = this.one("SELECT uid, name, deg, yr FROM users WHERE uid = ?", who);
+      if (!u) return [404, { error: "no such user" }];
+      const p = this.pts(who), pos = p.all > 0 ? this.one("SELECT COUNT(*) AS n FROM tot WHERE cid = '' AND per = 'all' AND pts > ?", p.all).n + 1 : 0;
+      const log = this.q(`SELECT l.pts, l.kind, l.ref, l.at, l.cid, f.name AS fname, f.uid AS fuid, c.name AS cname FROM ledger l LEFT JOIN users f ON f.uid = l.from_uid AND l.from_uid != ''
+        LEFT JOIN courses c ON c.cid = l.cid WHERE l.uid = ? ORDER BY l.at DESC LIMIT 100`, who);
+      const by = this.q("SELECT cid, pts FROM tot WHERE uid = ? AND cid != '' AND per = 'all' ORDER BY pts DESC LIMIT 12", who)
+        .map(r => ({ cid: r.cid, pts: r.pts, name: (this.one("SELECT name FROM courses WHERE cid = ?", r.cid) || {}).name || "" }));
+      return [200, { u: { uid: u.uid, name: u.name, deg: u.deg, yr: u.yr, ...p, pos }, log, by }];
+    }
+    return [404, { error: "not found" }];
+  }
+}
+const community = env => env.COMMUNITY.get(env.COMMUNITY.idFromName("main"));
+
 /* ---------- the HTTP side the app talks to ---------- */
 export default {
   async fetch(req, env) {
@@ -185,6 +336,11 @@ export default {
       if (ics.length > MAX_ICS) return out({ error: "too big" }, 413);
       if (!/^BEGIN:VCALENDAR\r?\n/.test(ics) || !/END:VCALENDAR\r?\n?$/.test(ics) || /<\s*(script|html|iframe)/i.test(ics)) return out({ error: "not a calendar" }, 400);
       return out(await f.put(ics));
+    }
+    if (path.startsWith("/social/")) {
+      if (raw.length > 64 * 1024) return out({ error: "too big" }, 413);
+      const [st, o] = await community(env).handle(path.slice(8), b);
+      return out(o, st);
     }
     const ep = b && (b.sub ? b.sub.endpoint : b.endpoint);
     if (typeof ep !== "string" || !okEndpoint(ep, env)) return out({ error: "endpoint" }, 400);
