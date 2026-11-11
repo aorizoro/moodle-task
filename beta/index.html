@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src 'self' data:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https: http://localhost:* http://127.0.0.1:*; img-src 'self' data: blob:; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>MoodlePro</title>
 <link rel="manifest" href="manifest.json">
@@ -276,6 +276,8 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .rchip.on::before{content:"✓ "}
 .rmin{flex-direction:row!important;align-items:center;gap:10px!important;font-weight:400!important}
 .rmin select{width:auto!important}
+.rmin input[type=number]{width:5.5em!important}.rmin input[type=time]{width:auto!important}.rmin input[type=checkbox]{width:auto!important;margin:0}
+.offnew{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap}.offnew input{width:5em}.offnew select{width:auto}
 .remcard{display:grid;gap:8px}
 .remcard .remnew{font-weight:700;color:var(--warn)}
 /* first-run tour */
@@ -602,7 +604,50 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .task.hid{opacity:.45}
 .task.hl{box-shadow:0 0 0 3px var(--accent)}
 .task .x{position:absolute;inset-block-start:4px;inset-inline-end:4px;width:40px;height:40px;padding:0;border:0;background:none;color:var(--muted);font-size:15px}
-.task .tl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-inline-end:34px}
+.task .tl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding-inline-end:34px;padding-inline-start:36px}
+.task .ck{position:absolute;inset-block-start:10px;inset-inline-start:10px;width:28px;height:28px;padding:0;border-radius:50%;border:2px solid var(--muted);background:none;color:transparent;display:grid;place-items:center;cursor:pointer}
+.task .ck .i{width:16px;height:16px}
+body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+
+.task .tc .crsl{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 40%,transparent);text-underline-offset:3px;cursor:pointer}
+.crsrow{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:10px 4px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none}
+.crsrow:last-child{border-bottom:0}.crsrow .dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.crsrow .sw{flex:1;min-width:0;display:flex;flex-direction:column}.crsrow b{font-weight:700;font-size:14.5px}.crsrow small{color:var(--muted);font-size:12.5px}.crsrow small.late{color:var(--err)}
+.crsrow .chev{width:16px;height:16px;color:var(--muted)}
+#crsSheet .box.crs{max-height:92vh;overflow:auto;padding-top:0}
+.crshead{position:sticky;top:0;z-index:2;margin:0 -18px 10px;padding:14px 18px 10px;background:linear-gradient(color-mix(in srgb,var(--c) 18%,var(--card)),var(--card));border-bottom:1px solid var(--line)}
+.crsht{display:flex;align-items:center;gap:10px}.crsht h3{flex:1;margin:0;font-size:20px}.crsht .dot{width:14px;height:14px;border-radius:50%;background:var(--c);flex:none}
+.crstiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 10px}
+.crst{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px;border-radius:14px;border:1px solid var(--line);background:var(--card)}
+.crst b{font-size:22px;font-weight:800}.crst small{color:var(--muted);font-size:12px}.crst.late b{color:var(--err)}
+.crsnext{display:grid;gap:6px;margin:0 0 10px}
+.crsli{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:inherit;text-decoration:none;margin-bottom:6px}
+.crsli>.i{width:18px;height:18px;color:var(--accent-t);flex:none}.crsli .sw{flex:1;min-width:0;display:flex;flex-direction:column}.crsli b{font-weight:650;font-size:14px}.crsli small{color:var(--muted);font-size:12.5px}
+.crss{border-top:1px solid var(--line);padding:4px 0}.crss>summary{display:flex;align-items:center;gap:8px;padding:10px 2px;font-weight:750;font-size:15.5px;cursor:pointer;list-style:none}
+.crss>summary::-webkit-details-marker{display:none}.crss>summary .i{width:18px;height:18px;color:var(--accent-t)}
+.crss>summary::after{content:"▾";margin-inline-start:auto;color:var(--muted)}.crss:not([open])>summary::after{content:"◂"}html[dir=ltr] .crss:not([open])>summary::after{content:"▸"}
+.crsbtns{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 4px}.crsbtns .btn{flex:1 1 140px}
+.crsm{border:1px solid var(--line);border-radius:12px;margin:0 0 8px;padding:0 10px}.crsm>summary{padding:10px 0;font-weight:650;cursor:pointer}.crsm .cnt{color:var(--muted);font-weight:500;font-size:12.5px}
+.crsnote{white-space:pre-wrap;color:var(--muted);font-size:13px;margin:4px 0 8px}
+.crsq{width:100%;margin:2px 0 10px}
+.crsact{border:0;background:none;width:100%;text-align:start;cursor:pointer}
+.crsmoodle{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 0 4px;text-decoration:none}
+
+.excard{display:flex;gap:10px;align-items:flex-start;margin:0 0 12px;padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--accent) 10%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--line))}
+.excard>.i{flex:none;width:20px;height:20px;color:var(--accent-t);margin-top:2px}
+.excard .exb{flex:1;min-width:0}.excard .exb b{display:block;font-size:15px;margin-bottom:2px}.excard .exb p{margin:2px 0 0;font-size:13.5px;line-height:1.45}
+.excard .exok{display:block;margin-top:8px;margin-inline-start:auto;padding:7px 16px;border-radius:10px;border:0;background:var(--accent);color:var(--on-accent,#fff);font-weight:700;font-size:13px}
+#exView{max-width:var(--maxw,1100px);margin-inline:auto}
+.fbshot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:4px 0 2px}.fbshot .btn{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.fbprev{position:relative;display:inline-block}.fbprev img{max-height:72px;max-width:120px;border-radius:10px;border:1px solid var(--line);display:block}
+.fbprev .xbtn{position:absolute;inset-block-start:-10px;inset-inline-end:-10px;width:26px;height:26px;padding:0;border-radius:50%;background:var(--card);border:1px solid var(--line)}
+.lgrid{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
+.lgrid .lg{padding:3px;border-radius:14px;border:2px solid transparent;background:none;line-height:0}
+.lgrid .lg.on{border-color:var(--accent)}
+.lgrid .lg img{border-radius:11px}
+.task .ck.on{background:var(--ok);border-color:var(--ok);color:#fff}
+.task .ck:not(.on):hover{border-color:var(--ok);color:var(--ok)}
+body[data-density=compact] .task .ck{inset-block-start:6px;width:24px;height:24px}
 .task .tname{font-weight:700;font-size:16px;width:100%}
 .task .tc{font-size:12.5px;padding:1px 9px;border-radius:99px;color:var(--ct);background:color-mix(in srgb,var(--c) 13%,transparent);font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .task .due{margin-top:6px;font-size:14px}
@@ -1005,6 +1050,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
 </section>
 
 <div id="app" hidden>
+  <div id="exView" class="exslot"></div>
   <section id="dash">
     <div id="hero" class="dcard hero"></div>
     <div id="todayCard" class="dcard today">
@@ -1031,6 +1077,10 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <div id="newsCard" class="dcard news">
       <div class="ch"><span><span data-i18n="newsTitle" data-ic="megaphone"></span><i class="nb" id="newsBadge" hidden></i></span><button class="link" id="bNewsRead" data-i18n="markAllRead" hidden></button></div>
       <div id="news"></div>
+    </div>
+    <div id="coursesCard" class="dcard crsc">
+      <div class="ch"><span data-i18n="crsTitle" data-ic="book-open"></span></div>
+      <div id="crsList"></div>
     </div>
     <div id="loadCard" class="dcard load">
       <div class="ch"><span data-i18n="loadTitle" data-ic="chart-column"></span></div>
@@ -1061,7 +1111,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
   <section id="tasks">
     <div class="sech"><span data-i18n="viewTasks"></span><span class="hint" id="sechN"></span></div>
     <div id="banner" class="banner" hidden></div>
-    <div id="focus" class="focus" hidden><span id="focusTxt"></span><button id="bFocusClear" data-i18n="clearFocus"></button></div>
+    <div id="focus" class="focus" hidden><span id="focusTxt"></span><button id="bFocusCrs" class="link" hidden data-i18n="crsOpen"></button><button id="bFocusClear" data-i18n="clearFocus"></button></div>
     <div id="socTop"></div>
     <div id="sum"></div>
     <div class="seg cats" id="cats">
@@ -1099,6 +1149,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       </div>
       <div class="mgroup">
         <button class="mrow" data-go="notif"><span class="mi" style="--mc:#ff9500"><svg class="i"><use href="#i-bell"/></svg></span><span class="mt"><b data-i18n="sNotif"></b><small id="sumNotif"></small></span></button>
+        <button class="mrow" id="mThemes"><span class="mi" style="--mc:#ff6b9a"><svg class="i"><use href="#i-sparkles"/></svg></span><span class="mt"><b data-i18n="mThemes"></b><small class="thcur"></small></span></button>
         <button class="mrow" data-go="look"><span class="mi" style="--mc:#af52de"><svg class="i"><use href="#i-palette"/></svg></span><span class="mt"><b data-i18n="sLook"></b><small id="sumLook"></small></span></button>
         <button class="mrow" data-go="filter"><span class="mi" style="--mc:#007aff"><svg class="i"><use href="#i-sliders-horizontal"/></svg></span><span class="mt"><b data-i18n="sFilter"></b><small id="sumFilter"></small></span></button>
         <button class="mrow" data-go="courses"><span class="mi" style="--mc:#34c759"><svg class="i"><use href="#i-book-open"/></svg></span><span class="mt"><b data-i18n="sCourses"></b><small id="sumCourses"></small></span></button>
@@ -1131,6 +1182,10 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       </div>
       <div class="srow"><span data-i18n="cdxLbl"></span><input type="checkbox" id="cdx"></div>
       <div class="hint" data-i18n="cdxHint"></div>
+      <div class="srow"><span data-i18n="calmLbl"></span><input type="checkbox" id="calm"></div>
+      <div class="hint" data-i18n="calmHint"></div>
+      <div class="srow"><span data-i18n="awayLbl"></span><select id="away"></select></div>
+      <div class="hint" data-i18n="awayHint"></div>
     </div>
 
     <div class="spage" data-page="filter" hidden>
@@ -1186,6 +1241,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       <button id="bTour" class="prow" data-i18n="tourOpen" data-ic="compass"></button>
       <button id="bInst" class="prow" hidden data-i18n="instTitle" data-ic="download"></button>
       <div id="fbSet" hidden><button id="bFb" class="prow" data-i18n="fbOpen" data-ic="message-circle"></button></div>
+      <button id="bExReset" class="prow" data-i18n="exReset" data-ic="sparkles"></button>
       <button id="bWn" class="prow" data-i18n="wnAllBtn" data-ic="history"></button>
       <button id="bUpd" class="prow" data-i18n="updCheck" data-ic="refresh-cw"></button>
       <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
@@ -1270,6 +1326,9 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <div class="hint" data-i18n="fbHint"></div>
     <label><span data-i18n="fbKind"></span><select id="fbKind"></select></label>
     <label><span data-i18n="fbMsg"></span><textarea id="fbMsg" rows="5" maxlength="2000"></textarea></label>
+    <div class="fbshot"><label class="btn" id="fbShotBtn"><svg class="i"><use href="#i-image"/></svg> <span data-i18n="fbShot"></span><input type="file" id="fbShot" accept="image/*" hidden></label>
+      <span class="fbprev" id="fbPrev" hidden><img id="fbPrevImg" alt=""><button class="xbtn" id="fbShotX" data-i18n-aria="fbShotDel"><svg class="i"><use href="#i-x"/></svg></button></span></div>
+    <div class="hint" data-i18n="fbShotHint"></div>
     <label><span data-i18n="fbPhone"></span><input type="tel" id="fbContact" maxlength="30" inputmode="tel" autocomplete="tel" dir="ltr"></label>
     <div class="hint" id="fbAuto" data-i18n="fbAuto"></div>
     <div class="err" id="fbErr"></div>
@@ -1296,10 +1355,10 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <div class="rgrp"><b data-i18n="remExams"></b><div class="rchips" id="rem_exam"></div></div>
     <div class="rgrp"><b data-i18n="remClasses"></b>
       <div class="rchips" id="remCls"><button class="rchip" data-cls="zoom" data-i18n="remClsZoom"></button><button class="rchip" data-cls="all" data-i18n="remClsAll"></button><button class="rchip" data-cls="none" data-i18n="remClsNone"></button></div>
-      <label class="rmin"><span data-i18n="remBefore"></span><select id="remMin"></select></label>
+      <label class="rmin"><span data-i18n="remBefore"></span><input type="number" id="remMin" min="1" max="180" step="1" inputmode="numeric"><span data-i18n="remMinUnit"></span></label>
     </div>
     <div class="rgrp" id="remMorG"><b data-i18n="morTitle"></b><span class="hint" data-i18n="morHint"></span>
-      <label class="rmin"><span data-i18n="morAt"></span><select id="remMor"></select></label>
+      <label class="rmin"><input type="checkbox" id="remMorOn"> <span data-i18n="morAt"></span><input type="time" id="remMor" step="300"></label>
     </div>
     <div class="rgrp" id="remHowG"><b data-i18n="remHowLbl"></b>
       <div class="rchips" id="remHowC"><button class="rchip" data-how="push" data-i18n="remHowPush"></button><button class="rchip" data-how="cal" data-i18n="remHowCal"></button></div>
@@ -1343,6 +1402,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <button class="link" id="daReset" style="width:100%;margin-top:8px" data-i18n="daReset"></button>
   </div>
 </div>
+<div class="sheet" id="crsSheet" hidden><div class="box crs" id="crsBox"></div></div>
 <div class="sheet" id="mineSheet" hidden>
   <div class="box">
     <h3><span id="mineTitle"></span> <button class="xbtn" id="mineClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
@@ -1377,6 +1437,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
   <div class="box">
     <h3><span data-i18n="thTitle"></span> <button class="xbtn" id="thClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="thIntro"></p>
+    <div class="thgrp" data-i18n="logoTitle"></div><p class="hint" data-i18n="logoHint"></p><div class="lgrid" id="logoGrid"></div>
     <div class="thgrp" data-i18n="thg_base"></div><div class="thgrid" id="th_base"></div>
     <div class="thgrp" data-i18n="thg_pastel"></div><div class="thgrid" id="th_pastel"></div>
     <div class="thgrp" data-i18n="thg_vivid"></div><div class="thgrid" id="th_vivid"></div>
@@ -1428,6 +1489,10 @@ const I18N = {
     sNotifHint: "תזכורות למטלות, למבחנים ולשיעורים — בהתראות ובלוח השנה שלך.",
     sumRemOn: "תזכורות פועלות", sumRemOff: "תזכורות כבויות", sumCalOn: "יומן מחובר", sumCalOff: "יומן לא מחובר", sumNone: "לא הוגדר", sumSyncOn: "סנכרון פעיל", sumSyncOff: "סנכרון כבוי",
     sumRules: n => n ? (n === 1 ? "כלל אחד פעיל" : n + " כללים פעילים") : "ללא סינון", sumCourses: (a, b) => a + " מתוך " + b + " קורסים מוצגים",
+    calmLbl: "תצוגה רגועה (בלי אנימציות)", calmHint: "מכבה את כל התנועות באפליקציה: כרטיסים שנכנסים, חלונות שמחליקים וההנפשות במדריכים.", awayLbl: "חזרה לסקירה אחרי", awayHint: "כשחוזרים לאפליקציה אחרי זמן ארוך, היא נפתחת מחדש בסקירה (ובודקת אם יש גרסה חדשה).", away_0: "אף פעם", away_30: "חצי שעה", away_60: "שעה", away_180: "3 שעות", mThemes: "ערכות צבעים ולוגו", logoTitle: "לוגו", logoHint: "הלוגו בראש האפליקציה ובלשונית בדפדפן. האייקון במסך הבית נשאר כמו שהותקן.", logoOrig: "הלוגו המקורי",
+    crsTitle: "📘 הקורסים שלי", dcCourses: "הקורסים שלי", crsOpen: "📘 דף הקורס", crsNone: "אין קורסים פעילים כרגע", crsOpenN: n => n + " פתוחות", crsNoOpen: "אין מטלות פתוחות", crsNextShort: d => "הבאה: " + d, crsCode: c => "מספר קורס " + c, crsTOpen: "פתוחות", crsTLate: "באיחור", crsTDone: "הושלמו", crsNextDue: "ההגשה הבאה", crsNextExam: "המבחן הבא", crsNextClass: "השיעור הבא", crsSTasks: n => "משימות" + (n ? " (" + n + ")" : ""), crsAllTasks: "לכל המשימות של הקורס", crsAddMine: "משימה משלי", crsSExams: n => "מבחנים ובחנים" + (n ? " (" + n + ")" : ""), crsNoExams: "אין מבחנים או בחנים שמורים לקורס הזה", crsAddXq: "הוספת בוחן או מבחן", crsExDates: "מועדי מבחנים", crsSTT: n => "במערכת השעות" + (n ? " (" + n + ")" : ""), crsNoTT: "הקורס עוד לא במערכת השעות שלך", crsToTT: "למערכת השעות", crsAddTT: "הוספה למערכת", crsSMoodle: "תוכן הקורס במודל", crsQ: "חיפוש קובץ או נושא בקורס", crsQNone: "לא נמצא בקורס", crsEmpty: "אין עדיין תוכן בקורס הזה", crsLoading: "טוען את תוכן הקורס…", crsErr: "לא הצלחתי לטעון את התוכן עכשיו. מוצג מה שנשמר בפעם הקודמת.", crsAt: a => "עודכן " + a, crsMoodle: "פתיחת הקורס באתר מודל", crsSec: n => "נושא " + n, crsSNews: n => "הודעות מהקורס (" + n + ")", crsSSoc: "קהילה: צ'אט, וואטסאפ ודירוג", crsSocOff: "בקהילה יש צ'אט לכל קורס, דיון לכל מטלה, קישור לקבוצת הוואטסאפ וטבלת דירוג.", crsSocJoin: "להצטרפות לקהילה", crsSSet: "הקורס באפליקציה", crsColor: "צבע הקורס", crsShow: "להציג את הקורס", crsShowHint: "קורס מוסתר לא מופיע במשימות, בסקירה ובתזכורות. אפשר להחזיר אותו מההגדרות ← קורסים וצבעים.", crsShown: "הקורס מוצג", crsHidden: "הקורס הוסתר",
+    exOk: "הבנתי", exReset: "להציג שוב את ההסברים הקצרים", exResetDone: "ההסברים יופיעו שוב בכל מקום", ex_dash: "זו הסקירה\nבמבט אחד: מה באיחור, מה להיום ולשבוע הקרוב, מבחנים, הקורסים שלך והודעות מהמרצים. לחיצה על כל דבר לוקחת אליו.\nאת הכרטיסים אפשר לסדר ולהסתיר: הגדרות ← מראה ותצוגה ← סידור הסקירה.", ex_tasks: "כל המשימות במקום אחד\nמטלות, בחנים ומשימות משלך מכל הקורסים, לפי הדחיפות: היום, עוד השבוע, בשבוע הבא ובהמשך.\n✓ בצד של המשימה מסמן שסיימת (ואפשר לבטל), ✕ בצד השני מסתיר. לחיצה על שם הקורס פותחת את דף הקורס.", ex_tt: "לו״ז: המערכת והלוח האקדמי\nמערכת השעות שלך ותאריכי הסמסטר, החגים והמבחנים. את המערכת אפשר לייבא מהלב נט או לבנות ידנית, ולקבל תזכורת לפני כל שיעור.", ex_chat: "כל השיחות שלך\nלכל קורס יש צ'אט, ולכל מטלה יש דיון משלה. בכל שורה כתוב לאן היא שייכת: ״צ'אט הקורס״, או ״דיון במטלה״ ושם הקורס.\n״פעילות״ מציג רק איפה שכבר כתבו. כדי להתחיל שיחה, עוברים ל״קורסים״ ובוחרים קורס.", ex_settings: "ההגדרות לפי נושא\nהתראות ותזכורות, מראה וצבעים, סינון מטלות, קורסים, תאריכי סמסטר, חשבון וסנכרון, ועזרה. נקודה אדומה מסמנת הצעה שעוד לא ראית.", ex_crs: "דף הקורס\nכל מה שקשור לקורס במקום אחד: מה פתוח ומה הבא בתור, מבחנים ובחנים, השיעורים שלו במערכת, כל הקבצים והנושאים מהמודל (עם חיפוש), הצ'אט והוואטסאפ של הקורס, והצבע שלו באפליקציה.", ex_rem: "מתי להזכיר לך\nבוחרים כמה זמן לפני הגשה, לפני מבחן ולפני שיעור, וסיכום בוקר בשעה שבוחרים. ״+ זמן אחר״ מוסיף כל זמן שרוצים.\nהתזכורות מגיעות כהתראה מהאפליקציה, ביומן של הטלפון, או בשניהם.", ex_themes: "המראה של האפליקציה\nערכות בהירות, פסטל, צבעוניות וכהות, או ערכה שבונים לבד. למעלה בוחרים גם את הלוגו שמופיע בראש האפליקציה.", ex_exams: "מבחנים ובחנים\nמועדי המבחנים של הקורסים (מהלב נט, כשפורסמו), ובחנים ומבחנים שמוסיפים לבד. הם מופיעים בסקירה, בדף הקורס ובתזכורות.", ex_mine: "משימה משלך\nמשהו שלא נמצא במודל: קריאה, הכנה למבחן, כל דבר. הוא מופיע עם שאר המשימות ומקבל תזכורות כמו כל מטלה.", ex_fb: "ספרו לנו\nמה עובד, מה לא ומה חסר. כל הודעה נקראת. עם ההודעה נשלחים גם השם, הקורסים והגרסה, כדי שאפשר יהיה לבדוק מה קרה. אפשר לצרף צילום מסך.", ex_socChat: "שיחה\nכותבים כאן לכל מי שבקורס. אפשר להגיב באימוג'י, לענות להודעה מסוימת, ולסמן ⭐ תשובה שעזרה (זה נותן לכותב נקודות).", ex_board: "טבלת הדירוג\nנקודות מקבלים על עזרה לאחרים: שיתוף בוחן, דיווח כמה זמן לקחה מטלה, הוספת קבוצת וואטסאפ ותשובה שסומנה ⭐. אפשר לראות דירוג כללי או לפי קורס.", ex_daSheet: "סידור הסקירה\nמשנים את סדר הכרטיסים בחצים, ומכבים כרטיסים שלא צריך. אפשר לחזור לסידור המקורי בכל רגע.", ex_cal: "יומן שמתעדכן לבד\nמוסיף ליומן של הטלפון (Google או אייפון) את ההגשות והמבחנים, והוא מתעדכן לבד כשמשהו משתנה במודל.", ex_ttEdit: "שיעור במערכת\nשם, יום, שעות ומקום. אם השיעור בזום, אפשר לקבל תזכורת לפניו. ✋ מסמן שיש בו נוכחות חובה.",
+    fbShot: "צירוף צילום מסך", fbShotHint: "אפשר לצלם את המסך (בטלפון: כפתור הצד + הגברת עוצמה) ולבחור את התמונה מהגלריה.", fbShotDel: "הסרת התמונה", fbShotBad: "לא הצלחתי לקרוא את התמונה. אפשר לנסות תמונה אחרת.", fbShotFail: "התמונה לא נשלחה",
     cdxLbl: "ספירה לאחור מדויקת (דקות ושניות)", cdxHint: "כבוי: הזמן שנשאר להגשה מוצג בימים ובשעות בלבד.",
     filterHint: "בחר אילו מטלות יוצגו. הכללים חלים על הרשימה, על המסך הראשי, על התזכורות ועל היומן.",
     oldTitle: "מטלות ישנות", oldHideLbl: "הסתר לגמרי מטלות ישנות שלא הוגשו",
@@ -1467,7 +1532,7 @@ const I18N = {
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
     remTitle: "🔔 תזכורות", remAskTitle: "🔔 רוצה תזכורות?", remIntro: "האפליקציה יכולה להזכיר לך לפני הגשות, מבחנים ושיעורי זום. בחר מתי, והתזכורות ייכנסו ליומן של הטלפון.",
     remTasks: "מטלות ובחנים: כמה זמן לפני ההגשה", remExams: "מבחנים: כמה זמן לפני", remClasses: "שיעורים", remClsZoom: "רק שיעורי זום", remClsAll: "כל השיעורים", remClsNone: "בלי",
-    remBefore: "כמה זמן לפני השיעור:", remMinOpt: m => m + " דק׳", remGo: "📅 הוסף את התזכורות ליומן", remLater: "לא עכשיו",
+    remBefore: "כמה זמן לפני השיעור:", remMinUnit: "דקות", remMinOpt: m => m + " דק׳", offAny: (n, u) => n + " " + (u === "m" ? "דק׳" : u === "h" ? (n === 1 ? "שעה" : "שעות") : (n === 1 ? "יום" : "ימים")), offAdd: "+ זמן אחר", offNum: "כמה", offUnit: "יחידה", offU_m: "דקות", offU_h: "שעות", offU_d: "ימים", offOk: "הוסף", offBad: "אפשר מ-5 דקות ועד 30 ימים", remGo: "📅 הוסף את התזכורות ליומן", remLater: "לא עכשיו",
     remHow: "התזכורות נשמרות ביומן של הטלפון, ולכן עובדות גם כשהאפליקציה סגורה. כשיתווספו מטלות חדשות, תופיע בסקירה הצעה להוסיף גם אותן. אם הטלפון לא פותח את הקובץ ביומן: Google Calendar במחשב ← הגדרות ← ייבוא.",
     off_7d: "שבוע", off_3d: "3 ימים", off_1d: "יום", off_3h: "3 שעות", off_1h: "שעה", remNothing: "אין כרגע מה להוסיף ליומן",
     remAdded: n => n + " אירועים עם תזכורות מוכנים. פתח את הקובץ שירד כדי להוסיף אותם ליומן.",
@@ -1506,7 +1571,7 @@ const I18N = {
     instAnd1: "לוחצים על <b>⋮</b> בפינה של הדפדפן", instAnd2: "בוחרים <b>״הוספה למסך הבית״</b> או <b>״התקנת אפליקציה״</b>", instAnd3: "מאשרים, ומעכשיו פותחים מהאייקון החדש",
     remGoBoth: "🔔 הפעל התראות ו📅 הוסף ליומן", remHowBothTxt: "בנוסף, התזכורות נכנסות גם ליומן של הטלפון.",
     ttFileOld: "הקובץ נשמר מחדש באקסל בפורמט הישן, ואותו אי אפשר לקרוא כאן. צריך את הקובץ המקורי מהלב נט, או לשמור אותו באקסל כ-xlsx או csv.",
-    catAll: "הכל", catFile: "📄 הגשת קובץ", catOnline: "✍️ מענה במודל", catOther: "אחר", hidDone: "הוסתר", undo: "↩ בטל",
+    catAll: "הכל", catFile: "📄 הגשת קובץ", catOnline: "✍️ מענה במודל", catOther: "אחר", hidDone: "הוסתר", doneToast: "סומן כבוצע ✓", undo: "↩ בטל",
     hidShow: n => "👁 " + n + (n === 1 ? " פריט מוסתר" : " פריטים מוסתרים") + " · הצג", hidHide: n => "הסתר שוב את " + n + " המוסתרים",
     remDelBtn: "🗑 להסיר מהיומן את מה שהאפליקציה הוסיפה", remDelHint: "יורד קובץ שמבטל את האירועים. ביומן של אייפון ושל Outlook הוא מסיר אותם. ב-Google Calendar ייבוא לא מוחק, ולכן הכי פשוט להוסיף מלכתחילה ליומן נפרד (למשל MoodlePro) ולמחוק אותו כשרוצים.",
     remDelDone: "ירד קובץ הסרה. פתח אותו כדי להסיר את האירועים מהיומן.",
@@ -1536,10 +1601,10 @@ const I18N = {
     tourSkip: "דלג", tourBack: "חזרה", tourNext: "הבא", tourDone: "יאללה, מתחילים", tourOpen: "📖 מדריך קצר לאפליקציה",
     tmTask: "תרגיל 3", tmCourse: "חשבון אינפי׳ 1", tmWhen: "יום ג׳, 23:59", tmC1: "אינפי", tmC2: "מבוא", tmC3: "פיזיקה", tmC4: "בדידה",
     t1Title: "כל המטלות שלך, במקום אחד", t1Text: "האפליקציה מושכת לבד את המטלות, הבחנים ומועדי ההגשה מכל הקורסים ב-Moodle, ומתעדכנת בכל פעם שפותחים אותה. למעלה רואים מה הבא בתור וכמה זמן נשאר.",
-    t2Title: "לחיצה על משימה פותחת אותה", t2Text: "בלשונית ״משימות״ יש לכל מטלה ספירה לאחור, הקבצים שלה וחומרים מאותו נושא. סיימת משהו שלא מוגש ב-Moodle? ״סמן כבוצע״. לא רלוונטי? ✕ מסתיר.",
-    t3Title: "מערכת השעות, בלי להקליד", t3Text: "בלשונית ״מערכת״ לוחצים ״📄 מהלבנט״, ושם מוסבר צעד אחר צעד איך מורידים את הקובץ מהלב נט הישן. לחיצה על שיעור מאפשרת לסמן ✋ נוכחות חובה.",
+    t2Title: "כל משימה, עם כל מה שצריך", t2Text: "בלשונית ״משימות״ יש לכל מטלה ספירה לאחור, הקבצים שלה וחומרים מאותו נושא. סיימת? ✓ בצד המשימה. לא רלוונטי? ✕ מסתיר. לחיצה על שם הקורס פותחת דף עם כל מה שקשור לקורס.",
+    t3Title: "מערכת השעות, בלי להקליד", t3Text: "בלשונית ״לו״ז״ לוחצים ״📄 מהלבנט״, ושם מוסבר צעד אחר צעד איך מורידים את הקובץ מהלב נט הישן. לחיצה על שיעור מאפשרת לסמן ✋ נוכחות חובה.",
     t4Title: "מבחנים וסמסטר", t4Text: "מועדי המבחנים שפורסמו בלבנט מופיעים לבד, עם תג ״טרם סופי״. מד הסמסטר מראה באיזה שבוע אנחנו וכמה נשאר עד המבחנים.",
-    t5Title: "עוד שני דברים קטנים", t5Text: "כדאי לשים את האפליקציה על מסך הבית, כדי שתיפתח כמו אפליקציה רגילה. אפשר לחזור למדריך הזה מתי שרוצים ב-⚙️.",
+    t5Title: "עוד שני דברים קטנים", t5Text: "כדאי לשים את האפליקציה על מסך הבית, כדי שתיפתח כמו אפליקציה רגילה. אפשר לחזור למדריך הזה מתי שרוצים: הגדרות ← עזרה ועדכונים.",
     tInstAndroid: "בדפדפן: ⋮ ← ״הוספה למסך הבית״", tInstIos: "בספארי: כפתור השיתוף ⬆️ ← ״הוסף למסך הבית״", tInstPc: "בכרום: סמל ההתקנה בשורת הכתובת",
     t5Sync: "מחובר גם מהמחשב? הכל מסתנכרן לבד", t5Fb: "רעיון או תקלה? ⚙️ ← 💬",
     g1Title: "פתח את Moodle", g1Hint: "אם יבקשו, התחבר עם שם המשתמש והסיסמה של המכון. בסוף ייפתח עמוד קצר עם קישור אחד.",
@@ -1565,7 +1630,7 @@ const I18N = {
     oldLabel: "משימה עוברת ל״ישנות״ אחרי איחור של", never: "אף פעם", showHidden: "הצג משימות שהסתרתי", coursesColors: "קורסים וצבעים",
     coursesHint: "לחיצה על שם הקורס מציגה או מסתירה אותו. לחיצה על הצבע משנה אותו.", logout: "נתק את הטלפון הזה (מוחק את הטוקן ממנו)",
     logoutConfirm: "למחוק את הטוקן מהטלפון הזה? כדי לחזור תצטרך להתחבר שוב.",
-    gLate: "באיחור", gToday: "היום", gWeek: "בשבוע הקרוב", gLater: "בהמשך", gNodue: "ללא מועד הגשה", gOld: "ישנות (באיחור)", gDone: "הוגשו",
+    gLate: "באיחור", gToday: "היום", gWeek: "עוד השבוע", gNext: "בשבוע הבא", gLater: "בהמשך", gNodue: "ללא מועד הגשה", gOld: "ישנות (באיחור)", gDone: "הוגשו",
     tAssign: "מטלה", tQuiz: "בוחן", tEvent: "אירוע", viaFile: "הגשת קובץ", viaPdf: "הגשת PDF", viaOnline: "מענה במודל", viaNone: "בלי הגשה במודל",
     stSubmitted: "הוגש ✓", stManual: "בוצע (סימון שלי) ✓", stDraft: "טיוטה, לא הוגש", stNa: "ללא הגשה אונליין", stUnknown: "סטטוס לא ידוע", stLate: "באיחור", stNone: "לא הוגש", grade: x => "ציון: " + x,
     extended: "הארכה אישית", noDue: "אין מועד הגשה", opens: x => "נפתח להגשה: " + x, cutoff: x => "נעילה סופית: " + x, details: "תוכן המטלה", openSite: "פתח באתר ↗", hide: "הסתר", restore: "החזר",
@@ -1638,6 +1703,10 @@ const I18N = {
     sNotifHint: "Reminders for tasks, exams and classes — as notifications and in your calendar.",
     sumRemOn: "Reminders on", sumRemOff: "Reminders off", sumCalOn: "Calendar connected", sumCalOff: "Calendar not connected", sumNone: "Not set", sumSyncOn: "Sync on", sumSyncOff: "Sync off",
     sumRules: n => n ? (n === 1 ? "1 rule active" : n + " rules active") : "No filters", sumCourses: (a, b) => a + " of " + b + " courses shown",
+    calmLbl: "Calm display (no animations)", calmHint: "Turns off all motion in the app: cards sliding in, sheets sliding up and the animations in guides.", awayLbl: "Back to the overview after", awayHint: "When you come back to the app after a long time, it starts again on the overview (and checks for a new version).", away_0: "Never", away_30: "30 minutes", away_60: "1 hour", away_180: "3 hours", mThemes: "Colour themes and logo", logoTitle: "Logo", logoHint: "The logo at the top of the app and in the browser tab. The home-screen icon stays as installed.", logoOrig: "Original logo",
+    crsTitle: "📘 My courses", dcCourses: "My courses", crsOpen: "📘 Course page", crsNone: "No active courses right now", crsOpenN: n => n + " open", crsNoOpen: "No open tasks", crsNextShort: d => "next: " + d, crsCode: c => "Course number " + c, crsTOpen: "Open", crsTLate: "Overdue", crsTDone: "Done", crsNextDue: "Next deadline", crsNextExam: "Next exam", crsNextClass: "Next class", crsSTasks: n => "Tasks" + (n ? " (" + n + ")" : ""), crsAllTasks: "All of this course’s tasks", crsAddMine: "My own task", crsSExams: n => "Exams and quizzes" + (n ? " (" + n + ")" : ""), crsNoExams: "No exams or quizzes saved for this course", crsAddXq: "Add a quiz or exam", crsExDates: "Exam dates", crsSTT: n => "In the timetable" + (n ? " (" + n + ")" : ""), crsNoTT: "This course isn’t in your timetable yet", crsToTT: "To the timetable", crsAddTT: "Add to timetable", crsSMoodle: "Course content in Moodle", crsQ: "Search a file or topic in this course", crsQNone: "Nothing found in this course", crsEmpty: "No content in this course yet", crsLoading: "Loading the course content…", crsErr: "Couldn’t load the content right now. Showing what was saved last time.", crsAt: a => "Updated " + a, crsMoodle: "Open the course on the Moodle site", crsSec: n => "Topic " + n, crsSNews: n => "Course announcements (" + n + ")", crsSSoc: "Community: chat, WhatsApp and ranking", crsSocOff: "The community has a chat for every course, a discussion for every task, the WhatsApp group link and a leaderboard.", crsSocJoin: "Join the community", crsSSet: "This course in the app", crsColor: "Course colour", crsShow: "Show this course", crsShowHint: "A hidden course doesn’t appear in tasks, the overview or reminders. You can bring it back in Settings → Courses & colours.", crsShown: "Course shown", crsHidden: "Course hidden",
+    exOk: "Got it", exReset: "Show the short explanations again", exResetDone: "The explanations will show again everywhere", ex_dash: "This is the overview\nAt a glance: what’s overdue, what’s due today and this week, exams, your courses and announcements. Tap anything to go to it.\nYou can reorder and hide cards: Settings → Look & display → Arrange the overview.", ex_tasks: "All your tasks in one place\nAssignments, quizzes and your own tasks from every course, by urgency: today, later this week, next week and later.\nThe ✓ on a task marks it done (you can undo), the ✕ on the other side hides it. Tap the course name to open the course page.", ex_tt: "Timetable and academic calendar\nYour classes and the semester, holiday and exam dates. Import the timetable from Levnet or build it by hand, and get a reminder before each class.", ex_chat: "All your conversations\nEvery course has a chat, and every task has its own discussion. Each row says where it belongs: “Course chat”, or “Task discussion” and the course.\n“Active” shows only where people already wrote. To start one, go to “Courses” and pick a course.", ex_settings: "Settings by topic\nNotifications and reminders, look and colours, task filters, courses, semester dates, account and sync, and help. A red dot marks a suggestion you haven’t seen yet.", ex_crs: "The course page\nEverything about the course in one place: what’s open and what’s next, exams and quizzes, its classes, all the files and topics from Moodle (with search), its chat and WhatsApp group, and its colour in the app.", ex_rem: "When to remind you\nChoose how long before a deadline, an exam and a class, and a morning summary at the time you choose. “+ Another time” adds any time you like.\nReminders come as app notifications, in your phone’s calendar, or both.", ex_themes: "How the app looks\nLight, pastel, vivid and dark themes, or build your own. At the top you can also pick the logo shown at the top of the app.", ex_exams: "Exams and quizzes\nYour courses’ exam dates (from Levnet, when published), and quizzes and exams you add yourself. They show on the overview, the course page and in reminders.", ex_mine: "Your own task\nSomething that isn’t in Moodle: reading, studying for an exam, anything. It shows with your other tasks and gets reminders like any assignment.", ex_fb: "Tell us\nWhat works, what doesn’t and what’s missing. Every message is read. Your name, courses and version are sent with it so the problem can be checked. You can attach a screenshot.", ex_socChat: "A conversation\nWrite here to everyone in the course. React with an emoji, reply to a specific message, and ⭐ an answer that helped (it gives the writer points).", ex_board: "The leaderboard\nPoints come from helping others: sharing a quiz, reporting how long a task took, adding the WhatsApp group and answers marked ⭐. See the overall ranking or one course.", ex_daSheet: "Arrange the overview\nChange the order of the cards with the arrows, and turn off cards you don’t need. You can go back to the original order at any time.", ex_cal: "A calendar that updates itself\nAdds your deadlines and exams to your phone’s calendar (Google or iPhone), and it updates by itself when something changes in Moodle.", ex_ttEdit: "A class in the timetable\nName, day, hours and place. For a Zoom class you can get a reminder before it. ✋ marks compulsory attendance.",
+    fbShot: "Attach a screenshot", fbShotHint: "Take a screenshot (on a phone: side button + volume up) and pick it from your gallery.", fbShotDel: "Remove the picture", fbShotBad: "Couldn’t read that picture. Try another one.", fbShotFail: "the picture wasn’t sent",
     cdxLbl: "Exact countdown (minutes and seconds)", cdxHint: "Off: the time left is shown in days and hours only.",
     filterHint: "Choose which tasks to show. The rules apply to the list, the home screen, reminders and the calendar.",
     oldTitle: "Old tasks", oldHideLbl: "Hide old unsubmitted tasks completely",
@@ -1677,7 +1746,7 @@ const I18N = {
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
     remTitle: "🔔 Reminders", remAskTitle: "🔔 Want reminders?", remIntro: "The app can remind you before deadlines, exams and Zoom classes. Choose when, and the reminders go into your phone’s calendar.",
     remTasks: "Assignments and quizzes: how long before the deadline", remExams: "Exams: how long before", remClasses: "Classes", remClsZoom: "Zoom classes only", remClsAll: "All classes", remClsNone: "None",
-    remBefore: "How long before class:", remMinOpt: m => m + " min", remGo: "📅 Add the reminders to my calendar", remLater: "Not now",
+    remBefore: "How long before class:", remMinUnit: "minutes", remMinOpt: m => m + " min", offAny: (n, u) => n + " " + (u === "m" ? "min" : u === "h" ? (n === 1 ? "hour" : "hours") : (n === 1 ? "day" : "days")), offAdd: "+ Another time", offNum: "How many", offUnit: "Unit", offU_m: "minutes", offU_h: "hours", offU_d: "days", offOk: "Add", offBad: "From 5 minutes up to 30 days", remGo: "📅 Add the reminders to my calendar", remLater: "Not now",
     remHow: "Reminders are kept in your phone’s calendar, so they work even when the app is closed. When new assignments appear, the overview offers to add them too. If your phone doesn’t open the file in a calendar: Google Calendar on a computer → Settings → Import.",
     off_7d: "1 week", off_3d: "3 days", off_1d: "1 day", off_3h: "3 hours", off_1h: "1 hour", remNothing: "Nothing to add to the calendar right now",
     remAdded: n => n + " events with reminders are ready. Open the downloaded file to add them to your calendar.",
@@ -1716,7 +1785,7 @@ const I18N = {
     instAnd1: "Tap <b>⋮</b> in the browser’s corner", instAnd2: "Choose <b>“Add to Home screen”</b> or <b>“Install app”</b>", instAnd3: "Confirm, and from now on open it from the new icon",
     remGoBoth: "🔔 Turn on notifications and 📅 add to calendar", remHowBothTxt: "The reminders also go into your phone’s calendar.",
     ttFileOld: "This file was re-saved in Excel’s old format, which can’t be read here. Use the original file from Levnet, or save it in Excel as xlsx or csv.",
-    catAll: "All", catFile: "📄 File upload", catOnline: "✍️ Answer in Moodle", catOther: "Other", hidDone: "Hidden", undo: "↩ Undo",
+    catAll: "All", catFile: "📄 File upload", catOnline: "✍️ Answer in Moodle", catOther: "Other", hidDone: "Hidden", doneToast: "Marked done ✓", undo: "↩ Undo",
     hidShow: n => "👁 " + n + (n === 1 ? " hidden item" : " hidden items") + " · show", hidHide: n => "Hide the " + n + " hidden items again",
     remDelBtn: "🗑 Remove from my calendar what the app added", remDelHint: "Downloads a file that cancels the events. iPhone and Outlook calendars remove them. Google Calendar imports don’t delete, so it’s easiest to add to a separate calendar (e.g. MoodlePro) and delete that when you want.",
     remDelDone: "A removal file was downloaded. Open it to take the events out of your calendar.",
@@ -1746,10 +1815,10 @@ const I18N = {
     tourSkip: "Skip", tourBack: "Back", tourNext: "Next", tourDone: "Let’s go", tourOpen: "📖 Quick guide to the app",
     tmTask: "Exercise 3", tmCourse: "Calculus 1", tmWhen: "Tue, 23:59", tmC1: "Calculus", tmC2: "Intro", tmC3: "Physics", tmC4: "Discrete",
     t1Title: "All your assignments in one place", t1Text: "The app pulls assignments, quizzes and deadlines from all your Moodle courses by itself, and updates every time you open it. At the top you see what’s next and how much time is left.",
-    t2Title: "Tap a task to open it", t2Text: "In “Tasks” every assignment has a countdown, its files and materials from the same topic. Finished something not submitted on Moodle? “Mark done”. Not relevant? ✕ hides it.",
-    t3Title: "Your timetable, no typing", t3Text: "In “Timetable” tap “📄 Levnet file”: it shows step by step how to download the file from the old Levnet. Tap a class to mark ✋ mandatory attendance.",
+    t2Title: "Every task, with what you need", t2Text: "In “Tasks” every assignment has a countdown, its files and materials from the same topic. Done? The ✓ on the task. Not relevant? ✕ hides it. Tap the course name for a page with everything about the course.",
+    t3Title: "Your timetable, no typing", t3Text: "In the “Schedule” tab tap “📄 Levnet file”: it shows step by step how to download the file from the old Levnet. Tap a class to mark ✋ mandatory attendance.",
     t4Title: "Exams and the semester", t4Text: "Exam dates published on Levnet show up by themselves, with a “not final” badge. The semester bar shows which week it is and how long until exams.",
-    t5Title: "Two more small things", t5Text: "Add the app to your home screen so it opens like a normal app. You can come back to this guide any time from ⚙️.",
+    t5Title: "Two more small things", t5Text: "Add the app to your home screen so it opens like a normal app. You can come back to this guide any time: Settings → Help & updates.",
     tInstAndroid: "In the browser: ⋮ → “Add to Home screen”", tInstIos: "In Safari: Share ⬆️ → “Add to Home Screen”", tInstPc: "In Chrome: the install icon in the address bar",
     t5Sync: "Signed in on your computer too? Everything syncs by itself", t5Fb: "Idea or problem? ⚙️ → 💬",
     g1Title: "Open Moodle", g1Hint: "Sign in with your institution username and password if asked. A short page with a single link opens at the end.",
@@ -1775,7 +1844,7 @@ const I18N = {
     oldLabel: "Move overdue tasks to “Old” after", never: "Never", showHidden: "Show tasks I hid", coursesColors: "Courses & colours",
     coursesHint: "Tap a course name to show or hide it. Tap the colour to change it.", logout: "Disconnect this phone (deletes the token from it)",
     logoutConfirm: "Delete the token from this phone? You will need to connect again.",
-    gLate: "Overdue", gToday: "Today", gWeek: "This week", gLater: "Later", gNodue: "No due date", gOld: "Old (overdue)", gDone: "Submitted",
+    gLate: "Overdue", gToday: "Today", gWeek: "Later this week", gNext: "Next week", gLater: "Later", gNodue: "No due date", gOld: "Old (overdue)", gDone: "Submitted",
     tAssign: "Assignment", tQuiz: "Quiz", tEvent: "Event", viaFile: "Upload a file", viaPdf: "Upload a PDF", viaOnline: "Answer in Moodle", viaNone: "No Moodle submission",
     stSubmitted: "Submitted ✓", stManual: "Done (marked by me) ✓", stDraft: "Draft, not submitted", stNa: "No online submission", stUnknown: "Status unknown", stLate: "Overdue", stNone: "Not submitted", grade: x => "Grade: " + x,
     extended: "personal extension", noDue: "No due date", opens: x => "Opens: " + x, cutoff: x => "Final cutoff: " + x, details: "Assignment details", openSite: "Open on site ↗", hide: "Hide", restore: "Restore",
@@ -1848,6 +1917,10 @@ const I18N = {
     sNotifHint: "Rappels pour les devoirs, examens et cours — en notifications et dans votre agenda.",
     sumRemOn: "Rappels activés", sumRemOff: "Rappels désactivés", sumCalOn: "Agenda connecté", sumCalOff: "Agenda non connecté", sumNone: "Non défini", sumSyncOn: "Synchro activée", sumSyncOff: "Synchro désactivée",
     sumRules: n => n ? (n === 1 ? "1 règle active" : n + " règles actives") : "Aucun filtre", sumCourses: (a, b) => a + " cours sur " + b + " affichés",
+    calmLbl: "Affichage calme (sans animations)", calmHint: "Désactive tous les mouvements : cartes qui apparaissent, fenêtres qui glissent et animations des guides.", awayLbl: "Retour à l’aperçu après", awayHint: "Quand vous revenez après longtemps, l’appli repart de l’aperçu (et vérifie s’il y a une nouvelle version).", away_0: "Jamais", away_30: "30 minutes", away_60: "1 heure", away_180: "3 heures", mThemes: "Thèmes de couleurs et logo", logoTitle: "Logo", logoHint: "Le logo en haut de l’appli et dans l’onglet du navigateur. L’icône de l’écran d’accueil reste celle de l’installation.", logoOrig: "Logo d’origine",
+    crsTitle: "📘 Mes cours", dcCourses: "Mes cours", crsOpen: "📘 Page du cours", crsNone: "Aucun cours actif pour l’instant", crsOpenN: n => n + " ouverts", crsNoOpen: "Aucun devoir ouvert", crsNextShort: d => "prochain : " + d, crsCode: c => "Numéro du cours " + c, crsTOpen: "Ouverts", crsTLate: "En retard", crsTDone: "Faits", crsNextDue: "Prochaine échéance", crsNextExam: "Prochain examen", crsNextClass: "Prochain cours", crsSTasks: n => "Devoirs" + (n ? " (" + n + ")" : ""), crsAllTasks: "Tous les devoirs du cours", crsAddMine: "Ma propre tâche", crsSExams: n => "Examens et tests" + (n ? " (" + n + ")" : ""), crsNoExams: "Aucun examen ni test enregistré pour ce cours", crsAddXq: "Ajouter un test ou un examen", crsExDates: "Dates d’examen", crsSTT: n => "Dans l’emploi du temps" + (n ? " (" + n + ")" : ""), crsNoTT: "Ce cours n’est pas encore dans votre emploi du temps", crsToTT: "Vers l’emploi du temps", crsAddTT: "Ajouter à l’emploi du temps", crsSMoodle: "Contenu du cours sur Moodle", crsQ: "Chercher un fichier ou un thème du cours", crsQNone: "Rien trouvé dans ce cours", crsEmpty: "Pas encore de contenu dans ce cours", crsLoading: "Chargement du contenu du cours…", crsErr: "Impossible de charger le contenu maintenant. Voici la dernière version enregistrée.", crsAt: a => "Mis à jour " + a, crsMoodle: "Ouvrir le cours sur le site Moodle", crsSec: n => "Thème " + n, crsSNews: n => "Annonces du cours (" + n + ")", crsSSoc: "Communauté : chat, WhatsApp et classement", crsSocOff: "La communauté a un chat pour chaque cours, une discussion par devoir, le lien du groupe WhatsApp et un classement.", crsSocJoin: "Rejoindre la communauté", crsSSet: "Ce cours dans l’appli", crsColor: "Couleur du cours", crsShow: "Afficher ce cours", crsShowHint: "Un cours masqué n’apparaît ni dans les devoirs, ni dans l’aperçu, ni dans les rappels. Vous pouvez le rétablir dans Paramètres → Cours et couleurs.", crsShown: "Cours affiché", crsHidden: "Cours masqué",
+    exOk: "Compris", exReset: "Afficher à nouveau les courtes explications", exResetDone: "Les explications s’afficheront à nouveau partout", ex_dash: "Voici l’aperçu\nD’un coup d’œil : les retards, ce qui est dû aujourd’hui et cette semaine, les examens, vos cours et les annonces. Touchez un élément pour y aller.\nVous pouvez réordonner et masquer les cartes : Paramètres → Apparence et affichage → Organiser l’aperçu.", ex_tasks: "Toutes vos tâches au même endroit\nDevoirs, tests et vos propres tâches de tous les cours, par urgence : aujourd’hui, plus tard cette semaine, la semaine prochaine et plus tard.\nLe ✓ marque une tâche comme faite (annulable), le ✕ de l’autre côté la masque. Touchez le nom du cours pour ouvrir sa page.", ex_tt: "Emploi du temps et calendrier universitaire\nVos cours et les dates du semestre, des fêtes et des examens. Importez l’emploi du temps depuis Levnet ou créez-le vous-même, et recevez un rappel avant chaque cours.", ex_chat: "Toutes vos conversations\nChaque cours a un chat, et chaque devoir sa propre discussion. Chaque ligne indique où elle appartient : « Chat du cours », ou « Discussion du devoir » et le cours.\n« Actives » montre seulement là où quelqu’un a écrit. Pour en commencer une, allez à « Cours » et choisissez un cours.", ex_settings: "Les paramètres par thème\nNotifications et rappels, apparence et couleurs, filtres, cours, dates du semestre, compte et synchronisation, et aide. Un point rouge signale une suggestion pas encore vue.", ex_crs: "La page du cours\nTout ce qui concerne le cours au même endroit : ce qui est ouvert et la suite, examens et tests, ses cours dans l’emploi du temps, tous les fichiers et thèmes de Moodle (avec recherche), son chat et son groupe WhatsApp, et sa couleur dans l’appli.", ex_rem: "Quand vous le rappeler\nChoisissez combien de temps avant une échéance, un examen et un cours, et un résumé du matin à l’heure voulue. « + Autre durée » ajoute n’importe quelle durée.\nLes rappels arrivent en notification, dans le calendrier du téléphone, ou les deux.", ex_themes: "L’apparence de l’appli\nThèmes clairs, pastel, vifs et sombres, ou votre propre thème. En haut, choisissez aussi le logo affiché en haut de l’appli.", ex_exams: "Examens et tests\nLes dates d’examen de vos cours (de Levnet, quand elles sont publiées), et les tests et examens que vous ajoutez. Ils apparaissent dans l’aperçu, la page du cours et les rappels.", ex_mine: "Votre propre tâche\nQuelque chose qui n’est pas sur Moodle : lecture, révision, n’importe quoi. Elle apparaît avec vos tâches et reçoit des rappels comme un devoir.", ex_fb: "Dites-nous\nCe qui marche, ce qui ne marche pas et ce qui manque. Chaque message est lu. Votre nom, vos cours et la version sont envoyés avec, pour pouvoir vérifier. Vous pouvez joindre une capture d’écran.", ex_socChat: "Une conversation\nÉcrivez ici à tout le cours. Réagissez avec un émoji, répondez à un message précis, et mettez ⭐ à une réponse utile (cela donne des points à son auteur).", ex_board: "Le classement\nLes points viennent de l’aide aux autres : partager un test, indiquer le temps d’un devoir, ajouter le groupe WhatsApp et les réponses marquées ⭐. Classement général ou par cours.", ex_daSheet: "Organiser l’aperçu\nChangez l’ordre des cartes avec les flèches et désactivez celles dont vous n’avez pas besoin. Vous pouvez revenir à l’ordre d’origine à tout moment.", ex_cal: "Un calendrier qui se met à jour seul\nAjoute vos échéances et examens au calendrier du téléphone (Google ou iPhone), et il se met à jour seul quand quelque chose change sur Moodle.", ex_ttEdit: "Un cours dans l’emploi du temps\nNom, jour, heures et lieu. Pour un cours Zoom, vous pouvez recevoir un rappel avant. ✋ indique une présence obligatoire.",
+    fbShot: "Joindre une capture d’écran", fbShotHint: "Faites une capture (sur téléphone : bouton latéral + volume haut) et choisissez-la dans la galerie.", fbShotDel: "Retirer l’image", fbShotBad: "Impossible de lire cette image. Essayez-en une autre.", fbShotFail: "l’image n’a pas été envoyée",
     cdxLbl: "Compte à rebours précis (minutes et secondes)", cdxHint: "Désactivé : le temps restant s’affiche en jours et en heures seulement.",
     filterHint: "Choisissez les devoirs à afficher. Les règles s’appliquent à la liste, à l’accueil, aux rappels et à l’agenda.",
     oldTitle: "Anciens devoirs", oldHideLbl: "Masquer complètement les anciens devoirs non rendus",
@@ -1887,7 +1960,7 @@ const I18N = {
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     remTitle: "🔔 Rappels", remAskTitle: "🔔 Envie de rappels ?", remIntro: "L’application peut vous rappeler les échéances, examens et cours Zoom. Choisissez quand, et les rappels vont dans le calendrier du téléphone.",
     remTasks: "Devoirs et tests : combien de temps avant l’échéance", remExams: "Examens : combien de temps avant", remClasses: "Cours", remClsZoom: "Cours Zoom seulement", remClsAll: "Tous les cours", remClsNone: "Aucun",
-    remBefore: "Combien de temps avant le cours :", remMinOpt: m => m + " min", remGo: "📅 Ajouter les rappels au calendrier", remLater: "Pas maintenant",
+    remBefore: "Combien de temps avant le cours :", remMinUnit: "minutes", remMinOpt: m => m + " min", offAny: (n, u) => n + " " + (u === "m" ? "min" : u === "h" ? (n === 1 ? "heure" : "heures") : (n === 1 ? "jour" : "jours")), offAdd: "+ Autre durée", offNum: "Combien", offUnit: "Unité", offU_m: "minutes", offU_h: "heures", offU_d: "jours", offOk: "Ajouter", offBad: "De 5 minutes à 30 jours", remGo: "📅 Ajouter les rappels au calendrier", remLater: "Pas maintenant",
     remHow: "Les rappels sont gardés dans le calendrier du téléphone : ils fonctionnent même application fermée. Quand de nouveaux devoirs apparaissent, l’aperçu propose de les ajouter. Si le téléphone n’ouvre pas le fichier : Google Agenda sur ordinateur → Paramètres → Importer.",
     off_7d: "1 semaine", off_3d: "3 jours", off_1d: "1 jour", off_3h: "3 heures", off_1h: "1 heure", remNothing: "Rien à ajouter au calendrier pour l’instant",
     remAdded: n => n + " événements avec rappels sont prêts. Ouvrez le fichier téléchargé pour les ajouter au calendrier.",
@@ -1926,7 +1999,7 @@ const I18N = {
     instAnd1: "Touchez <b>⋮</b> dans le coin du navigateur", instAnd2: "Choisissez <b>« Ajouter à l’écran d’accueil »</b> ou <b>« Installer l’application »</b>", instAnd3: "Confirmez, puis ouvrez-la depuis la nouvelle icône",
     remGoBoth: "🔔 Activer les notifications et 📅 ajouter au calendrier", remHowBothTxt: "Les rappels vont aussi dans le calendrier du téléphone.",
     ttFileOld: "Ce fichier a été réenregistré dans l’ancien format Excel, illisible ici. Utilisez le fichier d’origine de Levnet, ou enregistrez-le en xlsx ou csv.",
-    catAll: "Tout", catFile: "📄 Dépôt de fichier", catOnline: "✍️ Réponse sur Moodle", catOther: "Autre", hidDone: "Masqué", undo: "↩ Annuler",
+    catAll: "Tout", catFile: "📄 Dépôt de fichier", catOnline: "✍️ Réponse sur Moodle", catOther: "Autre", hidDone: "Masqué", doneToast: "Marqué comme fait ✓", undo: "↩ Annuler",
     hidShow: n => "👁 " + n + (n === 1 ? " élément masqué" : " éléments masqués") + " · afficher", hidHide: n => "Masquer à nouveau les " + n + " éléments",
     remDelBtn: "🗑 Retirer du calendrier ce que l’app a ajouté", remDelHint: "Télécharge un fichier qui annule les événements. Les calendriers iPhone et Outlook les retirent. Google Agenda ne supprime pas à l’import : le plus simple est d’ajouter dans un agenda séparé (ex. MoodlePro) et de le supprimer au besoin.",
     remDelDone: "Un fichier de retrait a été téléchargé. Ouvrez-le pour retirer les événements du calendrier.",
@@ -1956,10 +2029,10 @@ const I18N = {
     tourSkip: "Passer", tourBack: "Retour", tourNext: "Suivant", tourDone: "C’est parti", tourOpen: "📖 Guide rapide de l’application",
     tmTask: "Exercice 3", tmCourse: "Analyse 1", tmWhen: "mar., 23:59", tmC1: "Analyse", tmC2: "Intro", tmC3: "Physique", tmC4: "Discrètes",
     t1Title: "Tous vos devoirs au même endroit", t1Text: "L’application récupère seule les devoirs, tests et échéances de tous vos cours Moodle, et se met à jour à chaque ouverture. En haut : le prochain devoir et le temps restant.",
-    t2Title: "Touchez un devoir pour l’ouvrir", t2Text: "Dans « Devoirs », chaque devoir a un compte à rebours, ses fichiers et les supports du même thème. Fini quelque chose qui ne se rend pas sur Moodle ? « Marquer fait ». Pas pertinent ? ✕ le masque.",
-    t3Title: "Votre emploi du temps, sans rien taper", t3Text: "Dans « Emploi du temps », touchez « 📄 Fichier Levnet » : les étapes pour télécharger le fichier depuis l’ancien Levnet y sont expliquées. Touchez un cours pour marquer ✋ la présence obligatoire.",
+    t2Title: "Chaque devoir, avec tout le nécessaire", t2Text: "Dans « Devoirs », chaque devoir a un compte à rebours, ses fichiers et les supports du même thème. Fini ? Le ✓ sur le devoir. Pas pertinent ? ✕ le masque. Touchez le nom du cours pour une page avec tout sur le cours.",
+    t3Title: "Votre emploi du temps, sans rien taper", t3Text: "Dans l’onglet « Agenda », touchez « 📄 Fichier Levnet » : les étapes pour télécharger le fichier depuis l’ancien Levnet y sont expliquées. Touchez un cours pour marquer ✋ la présence obligatoire.",
     t4Title: "Examens et semestre", t4Text: "Les dates d’examen publiées sur Levnet s’affichent seules, avec un badge « provisoire ». La barre du semestre montre la semaine en cours et le temps restant avant les examens.",
-    t5Title: "Encore deux petites choses", t5Text: "Ajoutez l’application à l’écran d’accueil pour l’ouvrir comme une vraie application. Ce guide reste accessible dans ⚙️.",
+    t5Title: "Encore deux petites choses", t5Text: "Ajoutez l’application à l’écran d’accueil pour l’ouvrir comme une vraie application. Ce guide reste accessible : Paramètres → Aide et mises à jour.",
     tInstAndroid: "Dans le navigateur : ⋮ → « Ajouter à l’écran d’accueil »", tInstIos: "Dans Safari : Partager ⬆️ → « Sur l’écran d’accueil »", tInstPc: "Dans Chrome : l’icône d’installation dans la barre d’adresse",
     t5Sync: "Connecté aussi sur l’ordinateur ? Tout se synchronise seul", t5Fb: "Une idée, un problème ? ⚙️ → 💬",
     g1Title: "Ouvrez Moodle", g1Hint: "Connectez-vous avec l’identifiant de l’établissement si demandé. Une courte page avec un seul lien s’ouvre à la fin.",
@@ -1985,7 +2058,7 @@ const I18N = {
     oldLabel: "Classer en « Anciens » après un retard de", never: "Jamais", showHidden: "Afficher les devoirs masqués", coursesColors: "Cours et couleurs",
     coursesHint: "Appuyez sur un cours pour l’afficher ou le masquer, et sur la couleur pour la changer.", logout: "Déconnecter ce téléphone (supprime le jeton)",
     logoutConfirm: "Supprimer le jeton de ce téléphone ? Il faudra vous reconnecter.",
-    gLate: "En retard", gToday: "Aujourd’hui", gWeek: "Cette semaine", gLater: "Plus tard", gNodue: "Sans date limite", gOld: "Anciens (en retard)", gDone: "Rendus",
+    gLate: "En retard", gToday: "Aujourd’hui", gWeek: "Plus tard cette semaine", gNext: "La semaine prochaine", gLater: "Plus tard", gNodue: "Sans date limite", gOld: "Anciens (en retard)", gDone: "Rendus",
     tAssign: "Devoir", tQuiz: "Test", tEvent: "Événement", viaFile: "Déposer un fichier", viaPdf: "Déposer un PDF", viaOnline: "Réponse sur Moodle", viaNone: "Sans dépôt Moodle",
     stSubmitted: "Rendu ✓", stManual: "Fait (marqué par moi) ✓", stDraft: "Brouillon, non rendu", stNa: "Pas de remise en ligne", stUnknown: "Statut inconnu", stLate: "En retard", stNone: "Non rendu", grade: x => "Note : " + x,
     extended: "prolongation personnelle", noDue: "Pas de date limite", opens: x => "Ouverture : " + x, cutoff: x => "Clôture définitive : " + x, details: "Contenu du devoir", openSite: "Ouvrir sur le site ↗", hide: "Masquer", restore: "Rétablir",
@@ -2266,8 +2339,9 @@ async function fetchContents(d) {
 
 /* ---------- state ---------- */
 const DAY = 86400;
+const LOGOS = ["", "m", "🎓", "📚", "🚀", "⭐", "🦉", "☕", "🌱", "🔥"];
 const WAS_CONN = (() => { try { return !!JSON.parse(localStorage.getItem(PFX + "token") || '""'); } catch (e) { return false; } })();
-const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [], kw: [], campus: "", zl: "zoom", cdx: false, old_hide: false, xq: [], density: "detailed" }, LS.get("prefs", {}));
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [], kw: [], campus: "", zl: "zoom", cdx: false, old_hide: false, xq: [], density: "detailed", logo: "", calm: false, away: 60 }, LS.get("prefs", {}));
 if (!Array.isArray(P.manual)) P.manual = [];
 if (!Array.isArray(P.mine)) P.mine = [];
 if (!Array.isArray(P.tt)) P.tt = [];
@@ -2276,7 +2350,7 @@ P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_auto"];
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_auto", "logo", "calm", "away"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -2377,10 +2451,13 @@ function groupOf(x, now) {
   if (x.due < now) return P.old_days && now - x.due > P.old_days * 86400 ? "old" : "late";
   const nextDay = new Date(now * 1000); nextDay.setHours(24, 0, 0, 0);
   if (x.due < nextDay.getTime() / 1000) return "today";
-  return x.due < now + 7 * 86400 ? "week" : "later";
+  // calendar weeks (Sunday to Saturday): the rest of this week, next week, and later
+  const ws = weekStartDate(now).getTime() / 1000, wEnd = new Date(ws * 1000); wEnd.setDate(wEnd.getDate() + 7);
+  const nEnd = new Date(wEnd); nEnd.setDate(nEnd.getDate() + 7);
+  return x.due < wEnd.getTime() / 1000 ? "week" : x.due < nEnd.getTime() / 1000 ? "next" : "later";
 }
-const GROUPS = [["late", "gLate"], ["today", "gToday"], ["week", "gWeek"], ["later", "gLater"], ["nodue", "gNodue"], ["old", "gOld"], ["done", "gDone"]];
-const G_OPEN = { late: true, today: true, week: true, later: true, nodue: false, old: false, done: false };
+const GROUPS = [["late", "gLate"], ["today", "gToday"], ["week", "gWeek"], ["next", "gNext"], ["later", "gLater"], ["nodue", "gNodue"], ["old", "gOld"], ["done", "gDone"]];
+const G_OPEN = { late: true, today: true, week: true, next: true, later: true, nodue: false, old: false, done: false };
 const TYPE = { assign: "tAssign", quiz: "tQuiz", event: "tEvent", zoom: "tZoom", mine: "tMine" };
 const dueKey = x => x.due || 9e12;
 /* filtering rules: hidden words (+ "my campus"), zoom links posted as assignments, old overdue tasks */
@@ -2484,7 +2561,9 @@ function card(x, now, g) {
   for (let i = 0; i < acts.length; i++) { const m = /<span class="at">([^<]*)<\/span>/.exec(acts[i]); if (m) acts[i] = acts[i].replace(/^<(a|button) /, '<$1 title="' + m[1] + '" aria-label="' + m[1] + '" '); }
   return '<div class="task' + (g === "done" ? " done" : "") + (hid ? " hid" : "") + (V.hl === x.key ? " hl" : "") + '" data-key="' + esc(x.key) + '" style="--c:' + colorOf(x.cid) + '">' +
     '<button class="x" data-hide="' + esc(x.key) + '" aria-label="' + esc(hid ? t("restore") : t("hide")) + '">' + ic(hid ? "undo-2" : "x") + "</button>" +
-    '<div class="tl"><span class="tname"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(typeLabel(x)) + " · <bdi>" + esc(shortName(x.course)) + "</bdi></span>" + S("badge", x) + "</div>" +
+    (st === "submitted" ? '<span class="ck on" title="' + esc(t("stSubmitted")) + '">' + ic("check") + "</span>"
+      : st === "na" ? "" : '<button class="ck' + (man ? " on" : "") + '" data-done="' + esc(x.key) + '" aria-pressed="' + man + '" aria-label="' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + '" title="' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + '">' + ic("check") + "</button>") +
+    '<div class="tl"><span class="tname"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(typeLabel(x)) + " · " + (x.cid > 0 ? '<button class="crsl" data-crs="' + x.cid + '"><bdi>' + esc(shortName(x.course)) + "</bdi></button>" : "<bdi>" + esc(shortName(x.course)) + "</bdi>") + "</span>" + S("badge", x) + "</div>" +
     '<div class="due">' + due + "</div>" + extra + files + relHtml + body + '<div class="act">' + acts.join("") + "</div></div>";
 }
 
@@ -3037,6 +3116,9 @@ function cleanKey(k, v) {
     case "xq": return Array.isArray(v) ? v.filter(q => obj(q) && typeof q.id === "string" && /^[\w-]{1,16}$/.test(q.id) && XQ_KINDS.includes(q.k) && (parseDT(q.at) || /^\d{4}-\d{2}-\d{2}$/.test(q.at || "")))
       .map(q => Object.assign({ id: q.id, cid: Number.isInteger(q.cid) && q.cid > 0 ? q.cid : 0, n: typeof q.n === "string" ? q.n.slice(0, 60) : "", k: q.k, at: q.at, note: typeof q.note === "string" ? q.note.slice(0, 80) : "" }, socRef(q))).slice(0, 150) : [];
     case "density": return ["detailed", "compact", "clean"].includes(v) ? v : "detailed";
+    case "logo": return LOGOS.includes(v) ? v : "";
+    case "calm": return v === true;
+    case "away": return [0, 30, 60, 180].includes(v) ? v : 60;
     case "kw": return Array.isArray(v) ? [...new Set(v.filter(x => typeof x === "string").map(x => x.trim().slice(0, 40)).filter(Boolean))].slice(0, 40) : [];
     case "campus": return ["lev", "tal"].includes(v) ? v : "";
     case "zl": return ["zoom", "show", "hide"].includes(v) ? v : "zoom";
@@ -3052,9 +3134,9 @@ function cleanKey(k, v) {
     case "theme": { if (!obj(v)) return null; if (v.id === "custom") { const c = {}; if (obj(v.c)) for (const f of TH_FIELDS) if (/^#[0-9a-f]{6}$/i.test(v.c[f])) c[f] = v.c[f];
       return ["bg", "card", "text", "accent"].every(f => c[f]) ? { id: "custom", c } : null; } return THEMES.some(p => p.id === v.id) ? { id: v.id } : null; }
     case "rem": { if (!obj(v)) return null; const ok = (a, set) => Array.isArray(a) ? a.filter(x => set.includes(x)) : [];
-      const mor = MOR_TIMES.includes(v.mor) ? v.mor : "";
-      return { task: ok(v.task, REM_CHOICES.task), exam: ok(v.exam, REM_CHOICES.exam), cls: ["zoom", "all", "none"].includes(v.cls) ? v.cls : "zoom",
-        clsMin: [5, 10, 15, 30].includes(v.clsMin) ? v.clsMin : 10, asked: v.asked === true, on: v.on === true, how: ["cal", "both"].includes(v.how) ? v.how : "push", mor }; }
+      const mor = morOk(v.mor) ? v.mor : "", offs = (a, days) => Array.isArray(a) ? [...new Set(a.filter(x => offOk(x) && (!days || /d$/.test(x))))].slice(0, 8) : [];
+      return { task: offs(v.task), exam: offs(v.exam, true), cls: ["zoom", "all", "none"].includes(v.cls) ? v.cls : "zoom",
+        clsMin: Number.isInteger(v.clsMin) && v.clsMin >= 1 && v.clsMin <= 180 ? v.clsMin : 10, asked: v.asked === true, on: v.on === true, how: ["cal", "both"].includes(v.how) ? v.how : "push", mor }; }
   }
   return v;
 }
@@ -3184,7 +3266,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.6.0-beta.3";
+const APP_VERSION = "1.6.0-beta.4";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -3260,7 +3342,7 @@ function usageStats() {
     exams: Object.keys(P.exams || {}).length, sem: !!(P.sem && P.sem.s), hidden: P.hidden.length, off: P.off.length, manual: P.manual.length,
     colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days,
     dens: P.density || "detailed", xq: (P.xq || []).length, kw: (P.kw || []).length, campus: P.campus || "", zl: P.zl, cdx: P.cdx ? 1 : 0, oldHide: P.old_hide ? 1 : 0, tour: LS.get("tourDone", false) === true,
-    soc: socOn() ? 1 : 0, socDeg: socOn() && P.soc_prof ? P.soc_prof.deg || "" : "", socYr: socOn() && P.soc_prof ? P.soc_prof.yr || "" : "", socPts: socOn() ? LS.get("socPts", 0) : 0, socTimes: socOn() ? (P.soc_asked || []).length : 0,
+    calm: P.calm ? 1 : 0, logo: P.logo || "", away: [0, 30, 60, 180].includes(P.away) ? P.away : 60, soc: socOn() ? 1 : 0, socDeg: socOn() && P.soc_prof ? P.soc_prof.deg || "" : "", socYr: socOn() && P.soc_prof ? P.soc_prof.yr || "" : "", socPts: socOn() ? LS.get("socPts", 0) : 0, socTimes: socOn() ? (P.soc_asked || []).length : 0, socAuto: socOn() && P.soc_auto ? 1 : 0, socMute: socOn() ? (P.soc_mute || []).length : 0,
     n: LS.get("useCnt", {}),
   };
 }
@@ -3276,8 +3358,30 @@ const FB_KINDS = [["idea", "fbIdea"], ["bug", "fbBug"], ["question", "fbQuestion
 function openFb() {
   useHit("fb");
   $("#fbKind").innerHTML = FB_KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join("");
+  FBSHOT.blob = null; $("#fbPrev").hidden = true; $("#fbShot").value = "";
   $("#fbMsg").value = LS.get("fbDraft", ""); $("#fbErr").textContent = ""; $("#sheet").hidden = true; $("#fbSheet").hidden = false; $("#fbMsg").focus();
 }
+/* a screenshot from the gallery, made smaller on the phone (at most 1400 px, JPEG) before it is sent */
+const FBSHOT = { blob: null };
+async function fbShrink(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
+    const k = Math.min(1, 1400 / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement("canvas");
+    c.width = Math.max(1, Math.round(img.naturalWidth * k)); c.height = Math.max(1, Math.round(img.naturalHeight * k));
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    for (const qv of [0.8, 0.65, 0.5]) { const b = await new Promise(ok => c.toBlob(ok, "image/jpeg", qv)); if (b && b.size <= 1400 * 1024) return b; }
+    return null;
+  } finally { URL.revokeObjectURL(url); }
+}
+$("#fbShot").onchange = async e => {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  $("#fbErr").textContent = "";
+  try { FBSHOT.blob = await fbShrink(f); } catch (x) { FBSHOT.blob = null; }
+  if (!FBSHOT.blob) { $("#fbErr").textContent = t("fbShotBad"); $("#fbPrev").hidden = true; return; }
+  const im = $("#fbPrevImg"); if (im.src.startsWith("blob:")) URL.revokeObjectURL(im.src); im.src = URL.createObjectURL(FBSHOT.blob); $("#fbPrev").hidden = false;
+};
+$("#fbShotX").onclick = e => { e.preventDefault(); FBSHOT.blob = null; $("#fbPrev").hidden = true; $("#fbShot").value = ""; };
 async function sendFb() {
   const msg = $("#fbMsg").value.trim();
   if (msg.length < 3) return $("#fbErr").textContent = t("fbEmpty");
@@ -3286,6 +3390,12 @@ async function sendFb() {
   const x = { kind: $("#fbKind").value, msg, contact: phone, meta: techMeta(),
     who: senderInfo() };
   $("#fbSend").disabled = true;
+  if (FBSHOT.blob) {            // the screenshot goes to the app's server first; the message carries its link
+    try {
+      const r = await fetch(pushUrl() + "/fbimg", { method: "POST", headers: { "Content-Type": FBSHOT.blob.type }, body: FBSHOT.blob, credentials: "omit" });
+      const j = r.ok ? await r.json() : null; if (j && j.url) { x.msg += "\n📎 " + j.url; useHit("fbShot"); } else throw new Error(r.status);
+    } catch (e) { x.msg += "\n📎 (" + t("fbShotFail") + ")"; }
+  }
   try { await fbPost(x.kind, x.msg, x.contact, x.meta, x.who); toast(t("fbThanks"), 4000); }
   catch (e) { LS.set("fbQueue", LS.get("fbQueue", []).concat([x]).slice(-20)); toast(t("fbQueued"), 5000); }
   $("#fbSend").disabled = false; $("#fbMsg").value = ""; LS.del("fbDraft"); $("#fbSheet").hidden = true;
@@ -3347,7 +3457,7 @@ function render() {
   { const now = nowS(); renderTT(now); renderAcad(now); renderToday(now); renderSem(d, now); renderExams(now); renderRemCard(); $("#bFb2").hidden = !fbReady(); }
   if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">' + esc(t("loadingTasks")) + "</div>" : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
   const now = nowS();
-  renderDash(d, now); renderNews(d);
+  renderDash(d, now); renderNews(d); renderCrsList(d, now); if (!$("#crsSheet").hidden) renderCourse();
   // focus bar (a day / course / group picked on the dashboard)
   const f = V.focus, fb = $("#focus");
   if (f) {
@@ -3355,7 +3465,7 @@ function render() {
     if (f.kind === "day") { const [y, m, dd] = f.d.split("-").map(Number); txt = t("focusDay", dayLabel(new Date(y, m - 1, dd))); }
     else if (f.kind === "course") txt = t("focusCourse", shortName((d.courses.find(x => x.id === f.cid) || {}).name));
     else txt = t("focusGroup", f.g === "next7" ? t("weekTitle") : t(f.g === "late" ? "gLate" : "gToday"));
-    fb.hidden = false; $("#focusTxt").textContent = txt;
+    fb.hidden = false; $("#focusTxt").textContent = txt; $("#bFocusCrs").hidden = f.kind !== "course";
   } else fb.hidden = true;
   // course chips: courses that have tasks, in enrolment order
   const withTasks = new Set(d.tasks.map(x => x.cid));
@@ -3408,10 +3518,11 @@ function render() {
   $("#sechN").textContent = late.length ? t("sumLate", late.length) : "";
   $("#sum").innerHTML = t("sumOpen", dated.length) + (late.length ? ' · <b class="late">' + esc(t("sumLate", late.length)) + "</b>" : "") +
     (next ? '<div class="next">' + esc(t("next")) + " <b><bdi>" + esc(next.name) + "</bdi></b> · " + cdSpan(next.due, now) + "</div>" : "");
-  const urgent = dated.filter(x => ["late", "today", "week"].includes(groupOf(x, now))).length;
+  const urgent = dated.filter(x => x.due < now + 7 * 86400).length;
   try { if (navigator.setAppBadge) urgent ? navigator.setAppBadge(urgent) : navigator.clearAppBadge(); } catch (e) {}
   if (socOn()) S("render", now); else { $("#socTop").innerHTML = ""; $("#chatBadge").hidden = true; }
   if (V.view === "chat") renderChatv();
+  explainDraw(V.view, $("#exView"));
   $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>" + esc(t("diag", d.diag.length)) + "</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
 }
 const SET_PAGES = { soc: "sSoc", notif: "sNotif", look: "sLook", filter: "sFilter", courses: "sCourses", sem: "sSem", acct: "sAcct", help: "sHelp" };
@@ -3431,7 +3542,8 @@ function renderKw() {
 function renderSheet() {
   applyDensity();
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
-  $("#oldHide").checked = !!P.old_hide; $("#cdx").checked = !!P.cdx;
+  $("#oldHide").checked = !!P.old_hide; $("#cdx").checked = !!P.cdx; $("#calm").checked = !!P.calm;
+  $("#away").innerHTML = [0, 30, 60, 180].map(m => '<option value="' + m + '">' + esc(t("away_" + m)) + "</option>").join(""); $("#away").value = String([0, 30, 60, 180].includes(P.away) ? P.away : 60);
   $("#zl").innerHTML = [["zoom", "zlZoom"], ["show", "zlShow"], ["hide", "zlHide"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#zl").value = P.zl;
   $("#campus").innerHTML = [["", "campusAny"], ["lev", "campusLev"], ["tal", "campusTal"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#campus").value = P.campus;
   renderKw(); $("#ruleInfo").textContent = t("ruleInfo", ruleCount());
@@ -3770,9 +3882,9 @@ function launchUrl(site) {
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
   { v: "1.6.0", at: "2026-11-11 08:00",
-    he: ["👥 חדש: קהילת MoodlePro (אופציונלי, מפעילים פעם אחת): סטודנטים עוזרים לסטודנטים", "⏳ כמה זמן לוקחת כל מטלה – לפי דיווחים של סטודנטים אחרים, ומיון לפי הזמן המשוער", "📢 שיתוף בחנים ומשימות עם כל הקורס (כפתור גדול אחרי שמוסיפים, או אוטומטית), ו״הוסף לשלי״ בלחיצה אחת", "💬 טאב ״צ'אטים״: צ'אט כללי לכל קורס ודיון לכל מטלה, מסודרים לפי קורס – תגובות, אימוג'ים ו״תשובה מועילה ⭐״", "⚙️ ההגדרות עברו לסרגל הטאבים", "💬 קבוצת הוואטסאפ של כל קורס במקום אחד", "🏆 נקודות, דרגות, יומן נקודות וטבלאות דירוג – כללית ולכל קורס", "🎓 פרופיל: התואר והשנה שלך"],
-    en: ["👥 New: the MoodlePro community (optional, switch it on once): students helping students", "⏳ How long each task takes – from other students’ reports, and sorting by estimated time", "📢 Share quizzes and tasks with the whole course (a big button after adding, or automatically), and “Add to mine” in one tap", "💬 A “Chats” tab: a general chat for every course and a discussion for every task, grouped by course – replies, emoji and “helpful answer ⭐”", "⚙️ Settings moved to the tab bar", "💬 Every course’s WhatsApp group in one place", "🏆 Points, ranks, a points log and leaderboards – overall and per course", "🎓 Profile: your degree and year"],
-    fr: ["👥 Nouveau : la communauté MoodlePro (facultative, à activer une fois) : des étudiants qui s’entraident", "⏳ Le temps que prend chaque devoir – d’après les autres étudiants, et un tri par durée estimée", "📢 Partager quiz et devoirs avec tout le cours (un grand bouton après l’ajout, ou automatiquement), et « Ajouter chez moi » en un geste", "💬 Un onglet « Chats » : un chat général par cours et une discussion par devoir, groupés par cours – réponses, emoji et « réponse utile ⭐ »", "⚙️ Les réglages sont dans la barre d’onglets", "💬 Le groupe WhatsApp de chaque cours au même endroit", "🏆 Points, rangs, journal des points et classements – général et par cours", "🎓 Profil : votre diplôme et votre année"] },
+    he: ["📘 דף לכל קורס: מה פתוח ומה הבא, מבחנים, השיעורים, כל הקבצים והנושאים מהמודל עם חיפוש, והצבע שלו. נפתח מ״הקורסים שלי״ בסקירה או בלחיצה על שם הקורס", "✓ סימון ״בוצע״ בלחיצה אחת בצד של כל משימה (ואפשר לבטל)", "🗓 המשימות מסודרות לפי שבועות: היום, עוד השבוע, בשבוע הבא ובהמשך", "⏰ תזכורות בכל זמן שרוצים: ״+ זמן אחר״ לפני הגשה ומבחן, כמה דקות לפני שיעור, וסיכום בוקר בכל שעה", "🏠 חוזרים לאפליקציה אחרי שעה? היא נפתחת בסקירה ובודקת אם יש גרסה חדשה", "🎨 בחירת לוגו, ״ערכות צבעים ולוגו״ ישר מההגדרות, ותצוגה רגועה בלי אנימציות", "💡 הסבר קצר בכל מקום שנפתח בפעם הראשונה", "📎 אפשר לצרף צילום מסך לפידבק", "👥 חדש: קהילת MoodlePro (אופציונלי, מפעילים פעם אחת): סטודנטים עוזרים לסטודנטים", "⏳ כמה זמן לוקחת כל מטלה – לפי דיווחים של סטודנטים אחרים, ומיון לפי הזמן המשוער", "📢 שיתוף בחנים ומשימות עם כל הקורס (כפתור גדול אחרי שמוסיפים, או אוטומטית), ו״הוסף לשלי״ בלחיצה אחת", "💬 טאב ״צ'אטים״: צ'אט לכל קורס ודיון לכל מטלה ברשימה אחת, וכל שורה אומרת לאן היא שייכת – תגובות, אימוג'ים ו״תשובה מועילה ⭐״", "⚙️ ההגדרות עברו לסרגל הטאבים", "💬 קבוצת הוואטסאפ של כל קורס במקום אחד", "🏆 נקודות, דרגות, יומן נקודות וטבלאות דירוג – כללית ולכל קורס", "🎓 פרופיל: התואר והשנה שלך"],
+    en: ["📘 A page for every course: what’s open and next, exams, classes, all the files and topics from Moodle with search, and its colour. Open it from “My courses” on the overview or by tapping a course name", "✓ Mark a task done with one tap on its side (and undo)", "🗓 Tasks grouped by week: today, later this week, next week and later", "⏰ Reminders at any time: “+ Another time” before deadlines and exams, any minutes before class, and a morning summary at any hour", "🏠 Back in the app after an hour? It opens on the overview and checks for a new version", "🎨 Pick a logo, “Colour themes and logo” right in settings, and a calm display with no animations", "💡 A short explanation everywhere the first time it opens", "📎 Attach a screenshot to feedback", "👥 New: the MoodlePro community (optional, switch it on once): students helping students", "⏳ How long each task takes – from other students’ reports, and sorting by estimated time", "📢 Share quizzes and tasks with the whole course (a big button after adding, or automatically), and “Add to mine” in one tap", "💬 A “Chats” tab: a chat for every course and a discussion for every task in one list, each row saying where it belongs – replies, emoji and “helpful answer ⭐”", "⚙️ Settings moved to the tab bar", "💬 Every course’s WhatsApp group in one place", "🏆 Points, ranks, a points log and leaderboards – overall and per course", "🎓 Profile: your degree and year"],
+    fr: ["📘 Une page pour chaque cours : ce qui est ouvert et la suite, examens, cours, tous les fichiers et thèmes de Moodle avec recherche, et sa couleur. Depuis « Mes cours » dans l’aperçu ou en touchant le nom d’un cours", "✓ Marquer un devoir comme fait d’un geste sur son côté (annulable)", "🗓 Devoirs groupés par semaine : aujourd’hui, plus tard cette semaine, la semaine prochaine et plus tard", "⏰ Rappels à n’importe quel moment : « + Autre durée » avant échéances et examens, n’importe quel nombre de minutes avant un cours, et un résumé du matin à toute heure", "🏠 De retour après une heure ? L’appli s’ouvre sur l’aperçu et vérifie s’il y a une nouvelle version", "🎨 Choix du logo, « Thèmes et logo » directement dans les paramètres, et un affichage calme sans animations", "💡 Une courte explication partout à la première ouverture", "📎 Joindre une capture d’écran au retour", "👥 Nouveau : la communauté MoodlePro (facultative, à activer une fois) : des étudiants qui s’entraident", "⏳ Le temps que prend chaque devoir – d’après les autres étudiants, et un tri par durée estimée", "📢 Partager quiz et devoirs avec tout le cours (un grand bouton après l’ajout, ou automatiquement), et « Ajouter chez moi » en un geste", "💬 Un onglet « Chats » : un chat par cours et une discussion par devoir dans une seule liste, chaque ligne indiquant où elle appartient – réponses, emoji et « réponse utile ⭐ »", "⚙️ Les réglages sont dans la barre d’onglets", "💬 Le groupe WhatsApp de chaque cours au même endroit", "🏆 Points, rangs, journal des points et classements – général et par cours", "🎓 Profil : votre diplôme et votre année"] },
   { v: "1.5.0", at: "2026-11-11 02:29",
     he: ["✨ עיצוב חדש ונקי בהשראת אפליקציות המערכת: אייקונים מקצועיים, כפתורים ובוררים בסגנון iOS, וכותרת שקופה", "🧭 טאבים בכל מסך: בטאבלט סרגל צף, ובמחשב סרגל צד – כל דבר במקום שלו במקום עמוד אחד ארוך", "🪟 צפיפות תצוגה בהגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה", "📚 קורסים: ״הצג הכל״, ״הסתר הכל״ או ״רק קורסים פעילים״ בלחיצה אחת, וחיפוש כשיש הרבה", "🔢 ״נותרו 1 יום״ במקום ״נותרו יום״, ושמות הכרטיסיות במשימות לא נחתכים יותר", "🎯 בטאב המשימות מופיעים רק הקורסים שלך (מה שכיבית בהגדרות לא מופיע), ולחיצה על קורס מציגה רק אותו", "🏠 הסקירה באמצע התפריט התחתון, וכפתור ״סינון״ אחד במשימות לסטטוס, מיון וקורס", "🔴 הצעות (תזכורות, התקנה, מבחנים) עברו להגדרות עם נקודה אדומה, וחלונות שעולים מלמטה עם X"],
     en: ["✨ A new, cleaner design inspired by system apps: professional icons, iOS-style buttons and pickers, a translucent toolbar", "🧭 Tabs on every screen: a floating bar on tablets and a side bar on computers – instead of one long page", "🪟 Display density in Settings → Look & display: detailed, compact or clean", "📚 Courses: “Show all”, “Hide all” or “Current courses only” in one tap, plus search when there are many", "🔢 Clearer countdowns (“1 day”), and task category labels are never cut", "🎯 The tasks tab shows only your courses (the ones switched off in settings are gone), and tapping one shows just it", "🏠 The overview sits in the middle of the bottom bar, and one “Filter” button in tasks holds status, sort and course", "🔴 Suggestions (reminders, install, exams) moved into settings with a red dot; windows slide up and close with an X"],
@@ -3840,10 +3952,18 @@ function whatsNew(force) {
 }
 
 /* ---------- reminders: into the phone's own calendar, so they ring even when the app is closed ---------- */
-const REM_OFF = { "7d": "-P7D", "3d": "-P3D", "1d": "-P1D", "3h": "-PT3H", "1h": "-PT1H", "30m": "-PT30M" };
-const REM_DAYOFF = { "7d": "-P6DT15H", "3d": "-P2DT15H", "1d": "-PT15H" };     // an all-day exam: 09:00 that many days before
+/* a reminder offset is a number and a unit: "30m", "3h", "2d" (the chips are the common ones; "another time" adds any) */
+const OFF_MAX = { m: 720, h: 72, d: 30 };
+const offOk = k => { const m = /^(\d{1,3})([mhd])$/.exec(k || ""); return !!m && +m[1] >= (m[2] === "m" ? 5 : 1) && +m[1] <= OFF_MAX[m[2]]; };
+const offParts = k => { const m = /^(\d{1,3})([mhd])$/.exec(k); return [+m[1], m[2]]; };
+const offSec = k => { const [n, u] = offParts(k); return n * (u === "m" ? 60 : u === "h" ? 3600 : DAY); };
+const offIso = k => { const [n, u] = offParts(k); return u === "d" ? "-P" + n + "D" : "-PT" + n + (u === "h" ? "H" : "M"); };
+const offDayIso = k => { const [n, u] = offParts(k); if (u !== "d") return offIso(k); return n === 1 ? "-PT15H" : "-P" + (n - 1) + "DT15H"; };     // an all-day exam: 09:00 that many days before
+const offTxt = k => I18N.he["off_" + k] !== undefined ? t("off_" + k) : t("offAny", ...offParts(k));
+const REM_OFF = new Proxy({}, { get: (o, k) => offOk(k) ? offIso(k) : undefined });
+const REM_DAYOFF = new Proxy({}, { get: (o, k) => offOk(k) ? offDayIso(k) : undefined });
+const morOk = v => /^([01]\d|2[0-3]):[0-5]\d$/.test(v || "");
 const remDefaults = () => ({ task: ["1d", "3h"], exam: ["7d", "1d"], cls: "zoom", clsMin: 10, asked: false, mor: "" });
-const MOR_TIMES = ["", "06:30", "07:00", "07:30", "08:00", "09:00"];
 const isZoom = x => /זום|zoom/i.test([x.place, x.kname, x.title, x.name].filter(Boolean).join(" "));
 function remCfg() { return Object.assign(remDefaults(), P.rem || {}); }
 const icsZone = () => { try { const z = Intl.DateTimeFormat().resolvedOptions().timeZone; return /^[A-Za-z_]+(\/[A-Za-z0-9_+-]+)+$/.test(z || "") ? z : "Asia/Jerusalem"; } catch (e) { return "Asia/Jerusalem"; } };
@@ -3994,17 +4114,25 @@ function remRemoveCal() {
   LS.set("remDone", { tasks: [], exams: [], cls: "" }); toast(t("remDelDone"), 9000); render();
 }
 const REM_CHOICES = { task: ["7d", "3d", "1d", "3h", "1h"], exam: ["7d", "3d", "1d"] };
+/* the common times as chips, any other chosen time as its own chip, and "another time" to add one */
+function remChips(g, sel) {
+  const keys = REM_CHOICES[g].concat(sel.filter(k => !REM_CHOICES[g].includes(k))).sort((a, b) => offSec(b) - offSec(a));
+  $("#rem_" + g).innerHTML = keys.map(k => '<button class="rchip' + (sel.includes(k) ? " on" : "") + '" data-g="' + g + '" data-k="' + k + '" aria-pressed="' + sel.includes(k) + '">' + esc(offTxt(k)) + "</button>").join("") +
+    '<button class="rchip add" data-offadd="' + g + '">' + esc(t("offAdd")) + "</button>" +
+    '<span class="offnew" hidden data-offbox="' + g + '"><input type="number" min="1" max="720" inputmode="numeric" aria-label="' + esc(t("offNum")) + '"><select aria-label="' + esc(t("offUnit")) + '">' +
+    (g === "exam" ? "" : '<option value="m">' + esc(t("offU_m")) + '</option><option value="h">' + esc(t("offU_h")) + "</option>") + '<option value="d"' + (g === "exam" ? " selected" : "") + ">" + esc(t("offU_d")) + '</option></select><button class="btn sm" data-offok="' + g + '">' + esc(t("offOk")) + "</button></span>";
+}
 function openRem(ask) {
   useHit(ask ? "remAsk" : "rem");
   const c = remCfg();
   $("#remTitle").textContent = t(ask ? "remAskTitle" : "remTitle");
   $("#remIntro").hidden = !ask;
-  for (const g of ["task", "exam"]) $("#rem_" + g).innerHTML = REM_CHOICES[g].map(k => '<button class="rchip' + (c[g].includes(k) ? " on" : "") + '" data-g="' + g + '" data-k="' + k + '" aria-pressed="' + c[g].includes(k) + '">' + esc(t("off_" + k)) + "</button>").join("");
+  for (const g of ["task", "exam"]) remChips(g, c[g]);
   $$("#remCls [data-cls]").forEach(b => b.classList.toggle("on", b.dataset.cls === c.cls));
-  $("#remMin").innerHTML = [5, 10, 15, 30].map(m => '<option value="' + m + '">' + esc(t("remMinOpt", m)) + "</option>").join(""); $("#remMin").value = String(c.clsMin);
-  // the morning summary: suggested at 08:00 the first time reminders are set up
-  $("#remMor").innerHTML = MOR_TIMES.map(m => '<option value="' + m + '">' + esc(m ? m : t("morOff")) + "</option>").join("");
-  $("#remMor").value = P.rem && P.rem.mor !== undefined && (P.rem.on || P.rem.mor) ? c.mor : "08:00";
+  $("#remMin").value = String(c.clsMin);
+  // the morning summary: suggested at 08:00 the first time reminders are set up; any time can be picked
+  const morOn = P.rem && P.rem.mor !== undefined && (P.rem.on || P.rem.mor) ? !!c.mor : true;
+  $("#remMorOn").checked = morOn; $("#remMor").value = c.mor || "08:00"; $("#remMor").disabled = !morOn;
   $("#remHowG").hidden = !pushAvail(); remModeUI(remHow());
   $("#remLater").hidden = !ask; $("#sheet").hidden = true; $("#remSheet").hidden = false;
 }
@@ -4050,9 +4178,209 @@ function renderRemCard() {
     : n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button class="primary" data-rem="add">' + esc(t("remUpdateBtn")) + '</button><button class="link" data-rem="set">' + lbl("remChange", "settings") + "</button>"
     : '<div class="hint">✓ ' + esc(t("remCardOk")) + '</div><button class="link" data-rem="set">' + lbl("remChange", "settings") + "</button>";
 }
+
+/* ---------- a page for every course: what's coming, its materials in Moodle, and everything the app does for it ---------- */
+const CRS = { cid: 0, c: LS.get("crsC", {}), busy: {}, q: "", open: {} };
+const crsOf = cid => ((V.data && V.data.courses) || []).find(c => c.id === cid);
+function crsClasses(cid) { return (P.tt || []).filter(x => ttCid(x) === cid).sort((a, b) => a.day - b.day || hm(a.s) - hm(b.s)); }
+function crsNextClass(cid, now) {
+  let best = null;
+  for (const x of crsClasses(cid)) {
+    const m = hm(x.s); if (isNaN(m)) continue;
+    for (let i = 0; i < 8; i++) {
+      const d = new Date(now * 1000); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() + i);
+      if (d.getDay() !== x.day) continue;
+      const ts = new Date(d.getFullYear(), d.getMonth(), d.getDate(), Math.floor(m / 60), m % 60).getTime() / 1000;
+      if (ts > now - 600 && (!best || ts < best.ts)) best = { ts, x };
+    }
+  }
+  return best;
+}
+function crsSummary(cid, now) {
+  const all = ((V.data && V.data.tasks) || []).filter(x => x.cid === cid && counted(x));
+  const open = all.filter(x => !isDone(x) && groupOf(x, now) !== "old"), dated = open.filter(x => x.due).sort((a, b) => a.due - b.due);
+  return { all, open, late: dated.filter(x => x.due < now), next: dated.find(x => x.due >= now), done: all.filter(isDone).length,
+    exam: examList().find(x => x.cid === cid && x.ts >= now - DAY), cls: crsNextClass(cid, now) };
+}
+function renderCrsList(d, now) {
+  const el = $("#crsList"); if (!el) return;
+  const cs = d.courses.filter(c => !isOff(c.id) && courseCurrent(c, now));
+  el.innerHTML = cs.length ? cs.map(c => {
+    const s = crsSummary(c.id, now);
+    const sub = [s.open.length ? t("crsOpenN", s.open.length) : t("crsNoOpen"), s.late.length ? t("sumLate", s.late.length) : "", s.next ? t("crsNextShort", shortDate(s.next.due)) : ""].filter(Boolean).join(" · ");
+    return '<button class="crsrow" data-crs="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small" + (s.late.length ? ' class="late"' : "") + ">" + esc(sub) + "</small></span>" + ic(t("dir") === "rtl" ? "chevron-left" : "chevron-right", "chev") + "</button>";
+  }).join("") : '<div class="hint">' + esc(t("crsNone")) + "</div>";
+}
+function openCourse(cid) {
+  if (!crsOf(cid)) return;
+  useHit("crsPage"); CRS.cid = cid; CRS.q = "";
+  $$(".sheet:not([hidden])").forEach(sh => { if (sh.id !== "crsSheet") sh.hidden = true; });
+  renderCourse(); $("#crsSheet").hidden = false; $("#crsBox").scrollTop = 0;
+  explain("crs");
+  if (!CRS.c[cid] || Date.now() - CRS.c[cid].at > 3600e3) crsLoad(cid);
+}
+/* the course's sections in Moodle: files, links, activities and short notes, as Moodle shows them */
+async function crsLoad(cid) {
+  if (CRS.busy[cid] || !M.token) return; CRS.busy[cid] = true; if (CRS.cid === cid && !$("#crsSheet").hidden) renderCourse();
+  try {
+    const secs = await call("core_course_get_contents", { courseid: cid }), out = [];
+    for (const sec of Array.isArray(secs) ? secs : []) {
+      if (sec.uservisible === false || sec.visible === 0) continue;
+      const items = [];
+      for (const m of sec.modules || []) {
+        if (m.uservisible === false || m.visible === 0) continue;
+        const name = stripHtml(m.name || "");
+        if (m.modname === "label") { const tx = stripHtml(m.description || "").trim(); if (tx) items.push({ k: "label", n: tx.slice(0, 400) }); continue; }
+        if (m.modname === "resource" || m.modname === "folder") {
+          const fs = (m.contents || []).filter(c => c.type === "file" && c.fileurl);
+          for (const c of fs.slice(0, 40)) items.push({ k: "file", n: m.modname === "folder" ? name + " / " + (c.filepath && c.filepath !== "/" ? c.filepath.replace(/^\/|\/$/g, "") + "/" : "") + c.filename : fs.length > 1 ? c.filename : name || c.filename, f: c.filename || "", u: c.fileurl, s: c.filesize || 0 });
+          continue;
+        }
+        if (m.modname === "url") { const c = (m.contents || [])[0]; if (c && c.fileurl) items.push({ k: "link", n: name, u: c.fileurl }); continue; }
+        items.push({ k: m.modname === "assign" || m.modname === "quiz" ? m.modname : "mod", m: m.modname || "", n: name, u: m.url || "", id: Number(m.id) || 0 });
+      }
+      const sum = stripHtml(sec.summary || "").trim().slice(0, 400);
+      if (items.length || sum) out.push({ n: stripHtml(sec.name || "") || t("crsSec", out.length + 1), sum, items: items.slice(0, 150) });
+    }
+    CRS.c[cid] = { at: Date.now(), secs: out };
+    const keep = Object.entries(CRS.c).sort((a, b) => b[1].at - a[1].at).slice(0, 12);
+    CRS.c = Object.fromEntries(keep); try { LS.set("crsC", CRS.c); } catch (e) { try { LS.set("crsC", { [cid]: CRS.c[cid] }); } catch (e2) {} }
+  } catch (e) { if (!CRS.c[cid]) CRS.c[cid] = { at: 0, err: e.message || String(e), secs: [] }; else CRS.c[cid].err = e.message || String(e); }
+  CRS.busy[cid] = false;
+  if (CRS.cid === cid && !$("#crsSheet").hidden) renderCourse();
+}
+const MOD_IC = { assign: "file-up", quiz: "circle-check", forum: "message-circle", page: "file-text", book: "book-open", lesson: "book-open", choice: "list-checks", feedback: "list-checks", zoom: "video", bigbluebuttonbn: "video", h5pactivity: "sparkles", url: "link" };
+function crsItem(it, cid) {
+  if (it.k === "label") return '<div class="crsnote">' + esc(it.n) + "</div>";
+  if (it.k === "file") return fileLink({ n: it.n, u: it.u, s: it.s });
+  if (it.k === "link") return fileLink({ n: it.n, u: it.u, link: 1 });
+  const x = it.id && V.data ? V.data.tasks.find(y => y.cid === cid && y.cmid === it.id) : null;
+  if (x) return '<button class="fl crsact" data-crsgo="' + esc(x.key) + '">' + ic(MOD_IC[it.k] || "file-text") + " <span><bdi>" + esc(it.n) + "</bdi></span><small>" + esc(isDone(x) ? t("stSubmitted") : x.due ? shortDate(x.due) : "") + "</small></button>";
+  return /^https?:\/\//.test(it.u) ? '<a class="fl" href="' + esc(it.u) + '" target="_blank" rel="noopener noreferrer">' + ic(MOD_IC[it.m] || MOD_IC[it.k] || "external-link") + " <span><bdi>" + esc(it.n) + "</bdi></span></a>" : "";
+}
+function renderCourse() {
+  const cid = CRS.cid, c = crsOf(cid), box = $("#crsBox"); if (!c || !box) return;
+  const now = nowS(), s = crsSummary(cid, now), col = colorOf(cid), cc = CRS.c[cid], qq = CRS.q.trim().toLowerCase();
+  const tile = (n, l, cls, attr) => '<button class="crst' + (cls ? " " + cls : "") + '"' + (attr || "") + "><b>" + n + "</b><small>" + esc(l) + "</small></button>";
+  const row = (icn, main, sub, attr) => '<button class="crsli"' + attr + ">" + ic(icn) + '<span class="sw"><b><bdi>' + esc(main) + "</bdi></b>" + (sub ? "<small>" + sub + "</small>" : "") + "</span></button>";
+  const sect = (id, icn, title, body, open) => '<details class="crss" data-crss="' + id + '"' + (open ? " open" : "") + "><summary>" + ic(icn) + "<span>" + esc(title) + "</span></summary>" + body + "</details>";
+  const isOpenS = (id, def) => CRS.open[id] !== undefined ? CRS.open[id] : def;
+  let h = '<div class="crshead" style="--c:' + col + '"><div class="crsht"><i class="dot"></i><h3><bdi>' + esc(shortName(c.name)) + "</bdi></h3>" +
+    '<button class="xbtn" data-crsx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button></div>" + (codeOf(c.name) ? '<div class="hint">' + esc(t("crsCode", codeOf(c.name))) + "</div>" : "") + "</div>";
+  h += '<div id="crsExplain"></div>';
+  // at a glance
+  h += '<div class="crstiles">' +
+    tile(s.open.length, t("crsTOpen"), "", ' data-crsall="1"') +
+    tile(s.late.length, t("crsTLate"), s.late.length ? "late" : "", ' data-crsall="1"') +
+    tile(s.done + "/" + s.all.length, t("crsTDone"), "", ' data-crsall="1"') + "</div>";
+  const nx = [];
+  if (s.next) nx.push(row("alarm-clock", s.next.name, esc(t("crsNextDue")) + " · " + cdSpan(s.next.due, now), ' data-crsgo="' + esc(s.next.key) + '"'));
+  if (s.exam) nx.push(row("graduation-cap", exLbl(s.exam), esc(t("crsNextExam")) + " · " + esc(s.exam.allDay ? dayDate(s.exam.ts) : when(s.exam.ts)) + (s.exam.lev ? " · " + esc(t("exLev")) : ""), " data-crsexams"));
+  if (s.cls) nx.push(row("clock", ttKind(s.cls.x) + (s.cls.x.place ? " · " + s.cls.x.place : ""), esc(t("crsNextClass")) + " · " + esc(dayName(s.cls.x.day) + " " + s.cls.x.s), " data-crstt"));
+  if (nx.length) h += '<div class="crsnext">' + nx.join("") + "</div>";
+  // tasks
+  const tl = s.open.slice().sort((a, b) => dueKey(a) - dueKey(b));
+  h += sect("tasks", "list-checks", t("crsSTasks", tl.length), (tl.length ? tl.slice(0, 8).map(x => row(x.type === "quiz" ? "circle-check" : x.type === "mine" ? "square-pen" : "file-text", x.name,
+      esc(typeLabel(x)) + (x.due ? " · " + esc(when(x.due)) : ""), ' data-crsgo="' + esc(x.key) + '"')).join("") : '<p class="hint">' + esc(t("crsNoOpen")) + "</p>") +
+    '<div class="crsbtns"><button class="btn" data-crsall="1">' + esc(t("crsAllTasks")) + '</button><button class="btn" data-crsmine>' + ic("plus") + " " + esc(t("crsAddMine")) + "</button></div>", isOpenS("tasks", true));
+  // exams and quizzes
+  const ex = examList().filter(x => x.cid === cid && x.ts >= now - DAY);
+  h += sect("exams", "graduation-cap", t("crsSExams", ex.length), (ex.length ? ex.map(x => row(x.m === "q" ? "circle-check" : "graduation-cap", exLbl(x), esc(x.allDay ? dayDate(x.ts) : when(x.ts)) + (x.lev ? " · " + esc(t("exLev")) : ""), " data-crsexams")).join("") : '<p class="hint">' + esc(t("crsNoExams")) + "</p>") +
+    '<div class="crsbtns"><button class="btn" data-crsxq>' + ic("plus") + " " + esc(t("crsAddXq")) + '</button><button class="btn" data-crsexams>' + esc(t("crsExDates")) + "</button></div>", isOpenS("exams", ex.length > 0));
+  // timetable
+  const cl = crsClasses(cid);
+  h += sect("tt", "clock", t("crsSTT", cl.length), (cl.length ? cl.map(x => row(isZoom(x) ? "video" : "clock", dayName(x.day) + " " + x.s + (x.e ? "–" + x.e : ""), esc([ttKind(x), x.place, x.who].filter(Boolean).join(" · ")) + (x.att ? " · " + esc(t("attShort")) : ""), " data-crstt")).join("") : '<p class="hint">' + esc(t("crsNoTT")) + "</p>") +
+    '<div class="crsbtns"><button class="btn" data-crstt>' + esc(t(cl.length ? "crsToTT" : "crsAddTT")) + "</button></div>", isOpenS("tt", false));
+  // the course in Moodle
+  let mb = '<input type="search" class="crsq" id="crsQ" placeholder="' + esc(t("crsQ")) + '" value="' + esc(CRS.q) + '">';
+  if (!cc) mb += '<p class="hint">' + esc(t("crsLoading")) + "</p>";
+  else {
+    const secs = cc.secs.map((sec, i) => ({ sec, i, items: qq ? sec.items.filter(it => (it.n + " " + (it.f || "")).toLowerCase().includes(qq)) : sec.items })).filter(r => !qq || r.items.length || r.sec.n.toLowerCase().includes(qq));
+    mb += secs.length ? secs.map(r => '<details class="crsm"' + (qq || CRS.open["m" + r.i] || (CRS.open["m" + r.i] === undefined && r.i === 0) ? " open" : "") + ' data-crsm="' + r.i + '"><summary><bdi>' + esc(r.sec.n) + "</bdi> <span class=\"cnt\">" + r.items.filter(it => it.k !== "label").length + "</span></summary>" +
+      (r.sec.sum && !qq ? '<div class="crsnote">' + esc(r.sec.sum) + "</div>" : "") + '<div class="files">' + r.items.map(it => crsItem(it, cid)).join("") + "</div></details>").join("")
+      : '<p class="hint">' + esc(qq ? t("crsQNone") : t("crsEmpty")) + "</p>";
+    if (cc.err) mb += '<p class="hint err">' + esc(t("crsErr")) + "</p>";
+    mb += '<p class="hint">' + esc(CRS.busy[cid] ? t("crsLoading") : cc.at ? t("crsAt", ago(Math.floor(cc.at / 1000))) : "") + (CRS.busy[cid] ? "" : ' <button class="link" data-crsre>' + esc(t("refresh")) + "</button>") + "</p>";
+  }
+  mb += '<a class="btn crsmoodle" href="' + esc(M.url + "/course/view.php?id=" + cid) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + " " + esc(t("crsMoodle")) + "</a>";
+  h += sect("moodle", "book-open", t("crsSMoodle"), mb, isOpenS("moodle", true));
+  // announcements
+  const nw = ((V.data && V.data.news) || []).filter(n => n.cid === cid).slice(0, 5);
+  if (nw.length) h += sect("news", "megaphone", t("crsSNews", nw.length), nw.map(n => '<a class="crsli" href="' + esc(n.url) + '" target="_blank" rel="noopener noreferrer">' + ic("megaphone") + '<span class="sw"><b><bdi>' + esc(n.subj) + "</bdi></b><small>" + esc((n.by ? n.by + " · " : "") + ago(n.at)) + "</small></span></a>").join(""), isOpenS("news", false));
+  // community
+  const sc = socOn() ? S("crsLinks", cid) : "";
+  h += sect("soc", "users", t("crsSSoc"), sc || '<p class="hint">' + esc(t("crsSocOff")) + '</p><div class="crsbtns"><button class="btn" data-crssoc>' + esc(t("crsSocJoin")) + "</button></div>", isOpenS("soc", socOn()));
+  // this course in the app
+  h += sect("set", "settings", t("crsSSet"), '<div class="srow"><span>' + esc(t("crsColor")) + '</span><input type="color" data-crscol value="' + col + '"></div>' +
+    '<div class="srow"><span>' + esc(t("crsShow")) + '</span><input type="checkbox" data-crsoff' + (isOff(cid) ? "" : " checked") + "></div>" +
+    '<p class="hint">' + esc(t("crsShowHint")) + "</p>", isOpenS("set", false));
+  const keep = document.activeElement && document.activeElement.id === "crsQ" ? document.activeElement.selectionStart : null, top = box.scrollTop;
+  box.innerHTML = h; box.scrollTop = top;
+  explainDraw("crs", $("#crsExplain"));
+  const qi = $("#crsQ"); if (qi) { qi.oninput = () => { CRS.q = qi.value; renderCourse(); }; if (keep !== null) { qi.focus(); try { qi.setSelectionRange(keep, keep); } catch (e) {} } }
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-crs]"); if (b && !e.target.closest("#crsSheet")) { e.preventDefault(); openCourse(Number(b.dataset.crs)); }
+});
+$("#bFocusCrs").onclick = () => { if (V.focus && V.focus.kind === "course") openCourse(V.focus.cid); };
+$("#crsSheet").addEventListener("toggle", e => { const d = e.target.closest && e.target.closest("[data-crss],[data-crsm]"); if (d) { const k = d.dataset.crss || "m" + d.dataset.crsm; CRS.open[k] = d.open; } }, true);
+$("#crsSheet").addEventListener("click", e => {
+  const g = sel => e.target.closest(sel), cid = CRS.cid, close = () => { $("#crsSheet").hidden = true; };
+  if (e.target.id === "crsSheet" || g("[data-crsx]")) return close();
+  let b;
+  if ((b = g("[data-crsgo]"))) { close(); return gotoTask(b.dataset.crsgo); }
+  if (g("[data-crsall]")) { close(); return goTasks({ kind: "course", cid }); }
+  if (g("[data-crsmine]")) { close(); V.focus = { kind: "course", cid }; openMine(null); $("#mineCid").value = String(cid); return; }
+  if (g("[data-crsxq]")) { close(); openExams(true); $("#xqCourse").value = String(cid); $("#xqName").hidden = true; return; }
+  if (g("[data-crsexams]")) { close(); return openExams(); }
+  if (g("[data-crstt]")) { close(); return crsClasses(cid).length ? goTT() : openTT(); }
+  if (g("[data-crsre]")) { CRS.c[cid] && (CRS.c[cid].at = 0); return crsLoad(cid); }
+  if (g("[data-crssoc]")) { close(); return socEnsure(() => SOC.intro(true)); }
+});
+$("#crsSheet").addEventListener("input", e => { if (e.target.matches("[data-crscol]")) { P.colors[CRS.cid] = e.target.value; savePrefs(); render(); } });
+$("#crsSheet").addEventListener("change", e => {
+  if (!e.target.matches("[data-crsoff]")) return;
+  const cid = CRS.cid; P.off = e.target.checked ? P.off.filter(x => x !== cid) : [...new Set([...P.off, cid])]; savePrefs(); render();
+  toast(t(e.target.checked ? "crsShown" : "crsHidden"));
+});
+
+
+/* ---------- a short explanation the first time each part of the app opens ("got it" hides it; Help → show the explanations again) ---------- */
+const EX_SHEET = { sheet: "settings", remSheet: "rem", thSheet: "themes", exSheet: "exams", mineSheet: "mine", fbSheet: "fb", socChat: "socChat", socBoard: "board", daSheet: "daSheet", calSheet: "cal", ttSheet: "ttEdit" };
+const EXS = new Set();          // shown in this session (counted once per session)
+function explainDraw(area, el) {
+  if (!el) return;
+  const seen = LS.get("exSeen", []), cnt = LS.get("exCnt", {});
+  if (!I18N.he["ex_" + area] || seen.includes(area) || (navigator.webdriver && !LS.get("exTest", false))) { if (el.innerHTML) el.innerHTML = ""; return; }
+  if (!EXS.has(area)) { EXS.add(area); cnt[area] = (cnt[area] || 0) + 1; LS.set("exCnt", cnt); if (cnt[area] > 4) { LS.set("exSeen", seen.concat(area)); el.innerHTML = ""; return; } }
+  const [title, ...lines] = String(t("ex_" + area)).split("\n");
+  const html = '<div class="excard" data-exarea="' + area + '">' + ic("sparkles") + '<div class="exb"><b>' + esc(title) + "</b>" + lines.map(l => "<p>" + esc(l) + "</p>").join("") +
+    '<button class="exok" data-exok="' + area + '">' + esc(t("exOk")) + "</button></div></div>";
+  if (el.innerHTML !== html) el.innerHTML = html;
+}
+function explain(area) { /* the course page draws its own; kept for areas opened from code */ }
+function exScan() {
+  for (const [id, area] of Object.entries(EX_SHEET)) {
+    const sh = document.getElementById(id); if (!sh || sh.hidden) continue;
+    const box = sh.querySelector(".box"); if (!box) continue;
+    let slot = box.querySelector(":scope > .exslot");
+    if (!slot) { slot = document.createElement("div"); slot.className = "exslot"; const h = box.querySelector(":scope > h3"); if (h) h.after(slot); else box.prepend(slot); }
+    explainDraw(area, slot);
+  }
+}
+let exPending = false;
+new MutationObserver(() => { if (exPending) return; exPending = true; requestAnimationFrame(() => { exPending = false; exScan(); }); })
+  .observe(document.body, { subtree: true, childList: true, attributes: true, attributeFilter: ["hidden"] });
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-exok]"); if (!b) return;
+  const a = b.dataset.exok; LS.set("exSeen", [...new Set(LS.get("exSeen", []).concat(a))]); useHit("exOk");
+  $$('.excard[data-exarea="' + a + '"]').forEach(c => c.remove());
+});
+$("#bExReset").onclick = () => { LS.set("exSeen", []); LS.set("exCnt", {}); EXS.clear(); toast(t("exResetDone")); render(); };
+
 /* ---------- arrange the overview: the order of its cards, and which are shown ---------- */
 const DASH_CARDS = [{ id: "hero", k: "dcHero" }, { id: "stats", k: "dcStats" }, { id: "todayCard", k: "dcToday" }, { id: "examCard", k: "dcExams" }, { id: "semCard", k: "dcSem" },
-  { id: "weekCard", k: "dcWeek" }, { id: "monthCard", k: "dcMonth" }, { id: "newsCard", k: "dcNews" }, { id: "loadCard", k: "dcLoad" }, { id: "icsCard", k: "dcRem" }];
+  { id: "weekCard", k: "dcWeek" }, { id: "monthCard", k: "dcMonth" }, { id: "newsCard", k: "dcNews" }, { id: "coursesCard", k: "dcCourses" }, { id: "loadCard", k: "dcLoad" }, { id: "icsCard", k: "dcRem" }];
 function dashCfg() {
   const ids = DASH_CARDS.map(c => c.id), v = P.dash || {}, order = (Array.isArray(v.order) ? v.order : []).filter(x => ids.includes(x));
   return { order: order.concat(ids.filter(x => !order.includes(x))), off: (Array.isArray(v.off) ? v.off : []).filter(x => ids.includes(x) && x !== "hero") };
@@ -4175,7 +4503,7 @@ const pushPerm = () => ("Notification" in window) ? Notification.permission : "d
 const pushOn = () => pushSupported() && LS.get("pushOn", false) === true && pushPerm() === "granted";
 const remHow = () => { const h = remCfg().how; return pushAvail() ? (h || "push") : "cal"; };      // "push", "cal" or "both"
 const usePush = () => remHow() !== "cal", useCal = () => remHow() !== "push";
-const OFF_S = { "7d": 7 * DAY, "3d": 3 * DAY, "1d": DAY, "3h": 3 * 3600, "1h": 3600, "30m": 1800 };
+const OFF_S = new Proxy({}, { get: (o, k) => offOk(k) ? offSec(k) : 0 });
 const PS = { p: null, err: null, timer: 0 };
 const clockTxt = ts => { const d = new Date(ts * 1000); try { return d.toLocaleString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return d.toLocaleString(); } };
 /* every notification this device should get, by the chosen offsets: one per offset per item */
@@ -4185,11 +4513,11 @@ function pushItems() {
   if (d) for (const x of d.tasks) {
     if (!counted(x) || isDone(x) || !x.due || x.due < now) continue;
     if (x.type === "zoom") { if (c.cls !== "none") add(x.due - c.clsMin * 60, "📹 " + shortName(x.course) + ": " + x.name, t("pushClass", c.clsMin), "z:" + x.key); continue; }
-    for (const k of c.task) add(x.due - OFF_S[k], "⏰ " + shortName(x.course) + ": " + x.name, t("pushDue", t("off_" + k), clockTxt(x.due)), "t:" + x.key + ":" + k);
+    for (const k of c.task) add(x.due - OFF_S[k], "⏰ " + shortName(x.course) + ": " + x.name, t("pushDue", offTxt(k), clockTxt(x.due)), "t:" + x.key + ":" + k);
   }
   for (const x of examList()) for (const k of c.exam) {
     const at = x.allDay ? dayStart(x.ts) - OFF_S[k] + 9 * 3600 : x.ts - OFF_S[k];      // an all-day exam: at 09:00 that many days before
-    add(at, "📝 " + exName(x) + " · " + exLbl(x), t("pushExam", t("off_" + k), x.allDay ? dayDate(x.ts) : clockTxt(x.ts)) + (x.lev ? " · " + t("exLev") : ""), "e:" + x.cid + ":" + exMk(x) + ":" + k);
+    add(at, "📝 " + exName(x) + " · " + exLbl(x), t("pushExam", offTxt(k), x.allDay ? dayDate(x.ts) : clockTxt(x.ts)) + (x.lev ? " · " + t("exLev") : ""), "e:" + x.cid + ":" + exMk(x) + ":" + k);
   }
   if (c.cls !== "none") {
     const D = semDates(now), until = D ? D.e : addD(now, 15 * 7), list = P.tt.filter(x => c.cls === "all" || isZoom(x));
@@ -4335,10 +4663,28 @@ function setTheme(th) {
   $$(".thcur").forEach(e => e.textContent = thCur() === "custom" ? t("thCustom") : thName(THEMES.find(p => p.id === thCur()) || THEMES[0]));
   if (!$("#thSheet").hidden) { $("#thCustomOn").hidden = thCur() !== "custom"; if (thCur() !== "custom") { const cc = thEffective(); $$("#thEdit [data-thf]").forEach(i => i.value = cc[i.dataset.thf]); } }
 }
-function openThemes() { useHit("themes"); $("#sheet").hidden = true; $("#wnSheet").hidden = true; renderThemes(); $("#thSheet").hidden = false; }
+function openThemes() { useHit("themes"); $("#sheet").hidden = true; $("#wnSheet").hidden = true; renderThemes(); renderLogos(); $("#thSheet").hidden = false; }
+/* the logo inside the app (the header, the side bar and the browser tab); the home-screen icon is set when installing and stays */
+function logoSrc(k) {
+  if (!k) return "icon-any-192.png";
+  const cs = getComputedStyle(document.body), acc = (cs.getPropertyValue("--accent") || "#5b4bdb").trim(), card = (cs.getPropertyValue("--card") || "#fff").trim();
+  const glyph = k === "m" ? '<text x="48" y="66" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="56" text-anchor="middle" fill="' + card + '">M</text>'
+    : '<text x="48" y="68" font-size="54" text-anchor="middle">' + k + "</text>";
+  return "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" rx="22" fill="' + acc + '"/>' + glyph + "</svg>");
+}
+let logoLast = "";
+function applyLogo() {
+  const k = LOGOS.includes(P.logo) ? P.logo : "", src = logoSrc(k), sig = k + "|" + src; if (sig === logoLast) return; logoLast = sig;
+  $$(".top .logo, .sbrand img").forEach(im => im.src = src);
+  const fav = document.querySelector('link[rel="icon"]'); if (fav) { fav.type = k ? "image/svg+xml" : "image/svg+xml"; fav.href = k ? src : "logo.svg"; }
+}
+function renderLogos() {
+  $("#logoGrid").innerHTML = LOGOS.map(k => '<button class="lg' + ((P.logo || "") === k ? " on" : "") + '" data-logo="' + esc(k) + '" aria-pressed="' + ((P.logo || "") === k) + '" aria-label="' + esc(k ? (k === "m" ? "M" : k) : t("logoOrig")) + '"><img src="' + esc(logoSrc(k)) + '" alt="" width="40" height="40"></button>').join("");
+}
 let thLast = "";
 function themeSync() {
-  const j = JSON.stringify(P.theme || null); if (j !== thLast) { thLast = j; applyTheme(P.theme); }
+  const j = JSON.stringify(P.theme || null); if (j !== thLast) { thLast = j; applyTheme(P.theme); logoLast = ""; }
+  applyLogo(); document.body.classList.toggle("calm", !!P.calm);
   $$(".thcur").forEach(e => e.textContent = thCur() === "custom" ? t("thCustom") : thName(THEMES.find(p => p.id === thCur()) || THEMES[0]));
 }
 /* ---------- first-run tour: a few cards, skippable, shown once; reopened from settings ---------- */
@@ -4352,7 +4698,7 @@ function tourSlides() {
       art: '<div><div class="tm-hero"><small>' + esc(t("upNext")) + "</small><b>" + esc(t("tmTask")) + "</b><span>" + esc(t("left", t("days", 2) + ", " + t("cdH", 4))) + "</span></div>" +
         '<div class="tm-tiles"><div><b>1</b>' + esc(t("tLate")) + "</div><div><b>2</b>" + esc(t("tToday")) + "</div><div><b>5</b>" + esc(t("tWeek")) + "</div></div></div>" },
     { title: t("t2Title"), text: t("t2Text"),
-      art: '<div class="task" style="--c:#13c57b"><div class="tl"><span class="tname">' + esc(t("tmTask")) + '</span><span class="st none">' + esc(t("stNone")) +
+      art: '<div class="task" style="--c:#13c57b"><span class="ck">' + ic("check") + '</span><div class="tl"><span class="tname">' + esc(t("tmTask")) + '</span><span class="st none">' + esc(t("stNone")) +
         '</span><span class="tc">' + esc(t("tAssign") + " · " + t("tmCourse")) + '</span></div><div class="due"><b>' + esc(t("tmWhen")) + '</b><br><span class="cd soon">' +
         esc(t("left", t("cdH", 20) + ", " + t("cdM", 12))) + '</span></div><div class="act"><a>' +
         esc(t("openSite")) + "</a><button>" + esc(t("markDone")) + "</button></div></div>" },
@@ -4427,7 +4773,7 @@ function showMain() {
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
   render(); refresh(); useHit("open"); navInit(); masonInit();
   if (socOn()) socEnsure(() => render());
-  document.body.classList.add("intro"); setTimeout(() => document.body.classList.remove("intro"), 1400);
+  if (!P.calm) { document.body.classList.add("intro"); setTimeout(() => document.body.classList.remove("intro"), 1400); }
   if (!showMain.counted) { showMain.counted = true; LS.set("opens", LS.get("opens", 0) + 1); }
   $("#bInst").hidden = isStandalone();
   // the tour opens once, after the app first opens (not in automated test browsers, where it would cover everything)
@@ -4508,9 +4854,15 @@ $("#bPaste").onclick = async () => {
 };
 $("#site").addEventListener("input", () => { $("#bGet").href = launchUrl($("#site").value); });
 $$(".langSel").forEach(s => s.addEventListener("change", e => applyLang(e.target.value)));
+$("#remMorOn").onchange = e => { $("#remMor").disabled = !e.target.checked; };
 $("#remSheet").addEventListener("click", e => {
   if (e.target.id === "remSheet") { $("#remSheet").hidden = true; if (!$("#remLater").hidden) remSave({ asked: true }); return; }
-  const b = e.target.closest("[data-g]"); if (b) { b.classList.toggle("on"); b.setAttribute("aria-pressed", b.classList.contains("on")); return; }
+  { const a = e.target.closest("[data-offadd]"); if (a) { const bx = $('[data-offbox="' + a.dataset.offadd + '"]'); bx.hidden = !bx.hidden; if (!bx.hidden) bx.querySelector("input").focus(); return; } }
+  { const ok = e.target.closest("[data-offok]"); if (ok) {
+    const g = ok.dataset.offok, bx = $('[data-offbox="' + g + '"]'), k = Math.round(Number(bx.querySelector("input").value)) + bx.querySelector("select").value;
+    if (!offOk(k)) { toast(t("offBad")); return; }
+    const sel = $$("#rem_" + g + " .rchip.on[data-k]").map(b => b.dataset.k); if (!sel.includes(k)) sel.push(k); remChips(g, sel); return; } }
+  const b = e.target.closest("[data-g][data-k]"); if (b) { b.classList.toggle("on"); b.setAttribute("aria-pressed", b.classList.contains("on")); return; }
   const c = e.target.closest("[data-cls]"); if (c) $$("#remCls [data-cls]").forEach(x => x.classList.toggle("on", x === c));
   const h = e.target.closest("[data-how]");
   if (h) {   // each one on or off by itself; at least one stays on
@@ -4522,10 +4874,10 @@ $("#remSheet").addEventListener("click", e => {
   }
 });
 $("#remGo").onclick = () => {
-  const pick = g => $$("#rem_" + g + " .rchip.on").map(b => b.dataset.k), cls = ($("#remCls .rchip.on") || {}).dataset;
+  const pick = g => $$("#rem_" + g + " .rchip.on[data-k]").map(b => b.dataset.k), cls = ($("#remCls .rchip.on") || {}).dataset;
   const on = k => !!$("#remHowC [data-how=" + k + "].on");
   const how = !pushAvail() ? "cal" : on("push") && on("cal") ? "both" : on("cal") ? "cal" : "push";
-  remSave({ task: pick("task"), exam: pick("exam"), cls: cls ? cls.cls : "zoom", clsMin: Number($("#remMin").value) || 10, on: true, asked: true, how, mor: how === "cal" ? "" : $("#remMor").value });
+  remSave({ task: pick("task"), exam: pick("exam"), cls: cls ? cls.cls : "zoom", clsMin: Math.min(180, Math.max(1, Math.round(Number($("#remMin").value)) || 10)), on: true, asked: true, how, mor: how === "cal" || !$("#remMorOn").checked || !morOk($("#remMor").value) ? "" : $("#remMor").value });
   $("#remSheet").hidden = true;
   if (how !== "cal") { LS.set("pushSig", null); pushEnable(); }       // asks for permission right inside the tap
   if (how !== "push") openCal();
@@ -4604,6 +4956,10 @@ $("#sMenu").addEventListener("click", e => {
 $("#sBack").onclick = () => setPage("");
 $("#oldHide").onchange = e => { P.old_hide = e.target.checked; savePrefs(); render(); renderSheet(); };
 $("#cdx").onchange = e => { P.cdx = e.target.checked; savePrefs(); render(); };
+$("#calm").onchange = e => { P.calm = e.target.checked; savePrefs(); render(); };
+$("#away").onchange = e => { P.away = Number(e.target.value); savePrefs(); };
+$("#mThemes").onclick = () => openThemes();
+$("#logoGrid").addEventListener("click", e => { const b = e.target.closest("[data-logo]"); if (!b) return; P.logo = b.dataset.logo; useHit("logo"); savePrefs(); applyLogo(); renderLogos(); });
 $("#zl").onchange = e => { P.zl = e.target.value; savePrefs(); if (V.data) applyZl(V.data.tasks, nowS()); render(); renderSheet(); };
 $("#campus").onchange = e => { P.campus = e.target.value; savePrefs(); render(); renderSheet(); };
 function kwAdd(w) { w = (w || "").trim().slice(0, 40); if (!w) return; if (!P.kw.some(x => x.toLowerCase() === w.toLowerCase())) { P.kw = [...P.kw, w].slice(0, 40); savePrefs(); render(); } renderSheet(); }
@@ -4657,7 +5013,8 @@ $("#list").addEventListener("click", e => {
   if (e.target.closest("[data-rules]")) { renderSheet(); setPage("filter"); $("#sheet").hidden = false; return; }
   { const me = e.target.closest("[data-mine]"); if (me) { openMine(me.dataset.mine); return; } }
   const dn = e.target.closest("[data-done]");
-  if (dn) { const k = dn.dataset.done, was = P.manual.includes(k); P.manual = was ? P.manual.filter(y => y !== k) : [...P.manual, k]; savePrefs(); render(); if (!was) S("askTime", k); return; }
+  if (dn) { const k = dn.dataset.done, was = P.manual.includes(k); P.manual = was ? P.manual.filter(y => y !== k) : [...P.manual, k]; savePrefs(); render(); useHit(dn.classList.contains("ck") ? "doneQuick" : "doneBtn");
+    if (!was) { toastUndo(t("doneToast"), () => { P.manual = P.manual.filter(y => y !== k); savePrefs(); render(); }); S("askTime", k); } return; }
   const g = e.target.closest("[data-g]");
   if (g) { const k = g.dataset.g, def = k.startsWith("u:") ? G_OPEN[k.slice(2)] : true; V.openG[k] = !(V.openG[k] === undefined ? def : V.openG[k]); render(); }
 });
@@ -4771,6 +5128,25 @@ $("#bFocusClear").onclick = () => {
 $("#bNavSet").onclick = () => $("#bSet").click();
 window.addEventListener("resize", () => { const b = $("#dash"); if (b) for (const el of b.children) masonOne(el); });
 $("#tabbar").addEventListener("click", e => { if (e.target.closest("#bNavSet")) return; const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
+/* back after a while away (1 hour by default): start again from the overview, like opening the app fresh, and quietly look for a new version */
+let awayAt = 0;
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) { awayAt = Date.now(); return; }
+  const mins = [0, 30, 60, 180].includes(P.away) ? P.away : 60;
+  if (!awayAt || !mins || Date.now() - awayAt < mins * 60000 || !M.token || $("#setup") && !$("#setup").hidden) return;
+  awayAt = 0; useHit("awayBack");
+  $$(".sheet:not([hidden])").forEach(sh => { if (!sh.querySelector("input:focus,textarea:focus")) sh.hidden = true; });
+  if (!$("#tour").hidden) closeTour();
+  V.focus = null; V.hl = null; setView("dash"); render(); window.scrollTo(0, 0);
+  updQuiet();
+});
+async function updQuiet() {          // a newer version on the site: reload into it right away (the person just came back, nothing is lost)
+  try {
+    const r = await fetch("index.html", { cache: "reload" }); if (!r.ok) return;
+    const v = (/const APP_VERSION = "([^"]+)"/.exec(await r.text()) || [])[1];
+    if (v && v !== APP_VERSION && !/beta/.test(APP_VERSION) === !/beta/.test(v)) { await fetch("./", { cache: "reload" }).catch(() => null); location.reload(); }
+  } catch (e) {}
+}
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !M.token) return;
   if (!V.data || Date.now() / 1000 - V.data.at > 20) refresh(); else syncSoon(400);      // back in the app: fresh data (unless it was just loaded)

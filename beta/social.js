@@ -4,14 +4,16 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.6.0-beta.3";
+const SOC_V = "1.6.0-beta.4";
 const MIN_N = 3;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 const RANKS = [[0, "🌱", "rk0"], [20, "📝", "rk1"], [60, "🧠", "rk2"], [150, "⚡", "rk3"], [300, "👑", "rk4"], [600, "🏆", "rk5"]];
-const DEGS = { b: ["opt", "ee", "se", "ie", "cs", "bio", "nur", "nur2", "acc", "ba"], m: ["m_cs", "m_phy", "m_nur"] };
+const DEGS = { b: ["opt", "ee", "se", "ie", "cs", "bio", "nur", "nur2", "acc", "ba", "pha"], m: ["m_cs", "m_phy", "m_nur"] };
 const YEARS = ["1", "2", "3", "4"];
 
 Object.assign(I18N.he, {
+  crsBoard: "טבלת הקורס", crsChatN: (n, tn) => n + " הודעות בצ'אט הקורס" + (tn ? " · " + tn + " דיונים על מטלות" : ""), crsChatNone: "עוד אין הודעות בצ'אט של הקורס. אפשר לכתוב ראשונים.",
+  chvTagCourse: "צ'אט הקורס", chvTagTask: "דיון במטלה", chvFAct: "פעילות", chvFCourse: "קורסים", chvFTask: "מטלות", chvNoAct: "עוד אין שיחות. אפשר לפתוח את הצ'אט של אחד הקורסים ולכתוב ראשונים.", chvStart: "לצ'אטים של הקורסים", chvNoMatch: "לא נמצא צ'אט שמתאים לחיפוש",
   socIntroT: "חדש: קהילת MoodlePro 🎉", socIntroP: "סטודנטים עוזרים לסטודנטים. הכל אופציונלי, ואפשר לכבות בכל רגע בהגדרות.",
   socB1: "⏳ כמה זמן לוקחת כל מטלה – לפי מה שסטודנטים אחרים דיווחו", socB2: "📢 בחנים ומשימות שמישהו מהקורס הוסיף – בלחיצה אחת אצלך",
   socB3: "💬 הקבוצת וואטסאפ של כל קורס במקום אחד", socB4: "🏆 נקודות, דרגות וטבלאות דירוג – כללית ולכל קורס",
@@ -20,7 +22,7 @@ Object.assign(I18N.he, {
   socJoin: "יאללה, להצטרף", socLater: "לא עכשיו", socWelcome: "ברוך הבא לקהילה! 🎉",
   socGrpB: "תואר ראשון", socGrpM: "תואר שני", socOther: "אחר…",
   dg_opt: "פיזיקה יישומית / הנדסת אלקטרו-אופטיקה", dg_ee: "הנדסת חשמל ואלקטרוניקה", dg_se: "הנדסת תוכנה", dg_ie: "הנדסת תעשייה וניהול", dg_cs: "מדעי המחשב",
-  dg_bio: "ביואינפורמטיקה", dg_nur: "סיעוד", dg_nur2: "הסבת אקדמאים לסיעוד", dg_acc: "חשבונאות ומערכות מידע", dg_ba: "מנהל עסקים",
+  dg_bio: "ביואינפורמטיקה", dg_nur: "סיעוד", dg_nur2: "הסבת אקדמאים לסיעוד", dg_acc: "חשבונאות ומערכות מידע", dg_ba: "מנהל עסקים", dg_pha: "מדעי הרוקחות",
   dg_m_cs: "מדעי המחשב – בינה מלאכותית (תואר שני)", dg_m_phy: "פיזיקה יישומית / אלקטרו-אופטיקה (תואר שני)", dg_m_nur: "סיעוד (תואר שני)",
   yr1: "שנה א׳", yr2: "שנה ב׳", yr3: "שנה ג׳", yr4: "שנה ד׳",
   rk0: "שורד סמסטר", rk1: "צדיק של סיכומים", rk2: "פותר בעיות מוסמך", rk3: "מציל מועדי א׳", rk4: "אגדת קמפוס", rk5: "מתרגל של כבוד",
@@ -52,6 +54,8 @@ Object.assign(I18N.he, {
   socNet: "אין חיבור לשרת הקהילה כרגע", socLoading: "טוען…", socRanksT: "הדרגות", socJoinBtn: "הצטרפות לקהילה",
 });
 Object.assign(I18N.en, {
+  crsBoard: "Course leaderboard", crsChatN: (n, tn) => n + " messages in the course chat" + (tn ? " · " + tn + " task discussions" : ""), crsChatNone: "No messages in the course chat yet. Be the first to write.",
+  chvTagCourse: "Course chat", chvTagTask: "Task discussion", chvFAct: "Active", chvFCourse: "Courses", chvFTask: "Tasks", chvNoAct: "No conversations yet. Open one of your course chats and be the first to write.", chvStart: "Go to course chats", chvNoMatch: "No chat matches the search",
   socIntroT: "New: the MoodlePro community 🎉", socIntroP: "Students helping students. All optional, and you can switch it off any time in settings.",
   socB1: "⏳ How long each task takes – from what other students reported", socB2: "📢 Quizzes and tasks someone in the course added – yours in one tap",
   socB3: "💬 Every course’s WhatsApp group in one place", socB4: "🏆 Points, ranks and leaderboards – overall and per course",
@@ -60,7 +64,7 @@ Object.assign(I18N.en, {
   socJoin: "Join", socLater: "Not now", socWelcome: "Welcome to the community! 🎉",
   socGrpB: "Bachelor’s", socGrpM: "Master’s", socOther: "Other…",
   dg_opt: "Applied Physics / Electro-Optics Eng.", dg_ee: "Electrical & Electronics Eng.", dg_se: "Software Eng.", dg_ie: "Industrial Eng. & Management", dg_cs: "Computer Science",
-  dg_bio: "Bioinformatics", dg_nur: "Nursing", dg_nur2: "Nursing for graduates", dg_acc: "Accounting & Information Systems", dg_ba: "Business Administration",
+  dg_bio: "Bioinformatics", dg_nur: "Nursing", dg_nur2: "Nursing for graduates", dg_acc: "Accounting & Information Systems", dg_ba: "Business Administration", dg_pha: "Pharmaceutical Sciences",
   dg_m_cs: "M.Sc. Computer Science (AI)", dg_m_phy: "M.Sc. Applied Physics / Electro-Optics", dg_m_nur: "M.S.N. Nursing",
   yr1: "1st year", yr2: "2nd year", yr3: "3rd year", yr4: "4th year",
   rk0: "Semester Survivor", rk1: "Summary Saint", rk2: "Certified Solver", rk3: "Exam Saver", rk4: "Campus Legend", rk5: "Honorary TA",
@@ -92,6 +96,8 @@ Object.assign(I18N.en, {
   socNet: "Can’t reach the community server right now", socLoading: "Loading…", socRanksT: "Ranks", socJoinBtn: "Join the community",
 });
 Object.assign(I18N.fr, {
+  crsBoard: "Classement du cours", crsChatN: (n, tn) => n + " messages dans le chat du cours" + (tn ? " · " + tn + " discussions de devoirs" : ""), crsChatNone: "Pas encore de message dans le chat du cours. Écrivez en premier.",
+  chvTagCourse: "Chat du cours", chvTagTask: "Discussion du devoir", chvFAct: "Actives", chvFCourse: "Cours", chvFTask: "Devoirs", chvNoAct: "Pas encore de conversation. Ouvrez le chat d’un cours et écrivez en premier.", chvStart: "Aux chats des cours", chvNoMatch: "Aucun chat ne correspond",
   socIntroT: "Nouveau : la communauté MoodlePro 🎉", socIntroP: "Des étudiants qui s’entraident. Tout est facultatif, et désactivable à tout moment dans les réglages.",
   socB1: "⏳ Le temps que prend chaque devoir – d’après les autres étudiants", socB2: "📢 Les quiz et devoirs ajoutés par quelqu’un du cours – chez vous en un geste",
   socB3: "💬 Le groupe WhatsApp de chaque cours au même endroit", socB4: "🏆 Points, rangs et classements – général et par cours",
@@ -100,7 +106,7 @@ Object.assign(I18N.fr, {
   socJoin: "Rejoindre", socLater: "Pas maintenant", socWelcome: "Bienvenue dans la communauté ! 🎉",
   socGrpB: "Licence", socGrpM: "Master", socOther: "Autre…",
   dg_opt: "Physique appliquée / électro-optique", dg_ee: "Génie électrique et électronique", dg_se: "Génie logiciel", dg_ie: "Génie industriel et management", dg_cs: "Informatique",
-  dg_bio: "Bio-informatique", dg_nur: "Soins infirmiers", dg_nur2: "Reconversion en soins infirmiers", dg_acc: "Comptabilité et systèmes d’information", dg_ba: "Administration des affaires",
+  dg_bio: "Bio-informatique", dg_nur: "Soins infirmiers", dg_nur2: "Reconversion en soins infirmiers", dg_acc: "Comptabilité et systèmes d’information", dg_ba: "Administration des affaires", dg_pha: "Sciences pharmaceutiques",
   dg_m_cs: "M.Sc. Informatique (IA)", dg_m_phy: "M.Sc. Physique appliquée / électro-optique", dg_m_nur: "Soins infirmiers (M.S.N.)",
   yr1: "1re année", yr2: "2e année", yr3: "3e année", yr4: "4e année",
   rk0: "Survivant du semestre", rk1: "Saint des résumés", rk2: "Solveur certifié", rk3: "Sauveur d’examens", rk4: "Légende du campus", rk5: "Assistant d’honneur",
@@ -133,7 +139,7 @@ Object.assign(I18N.fr, {
 });
 
 /* ---------- state and the server ---------- */
-const ST = { ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" }, queue: [] };
+const ST = { chf: LS.get("socChF", "act"), ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" }, queue: [] };
 const hex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(b => b.toString(16).padStart(2, "0")).join("");
 function ensureId() { if (!P.soc_id) { P.soc_id = { uid: hex(16), sec: hex(24) }; savePrefs(); } return P.soc_id; }
 const prof = () => P.soc_prof || { deg: "", yr: "" };
@@ -191,7 +197,7 @@ function askTime(key) {
 }
 async function sendTime(h) {
   const x = V.data && V.data.tasks.find(y => y.key === ST.timeKey); close("socTime"); if (!x) return;
-  try { const r = await api("time", { cid: x.cid, aid: x.key, h, ref: x.name, cname: shortName(x.course) }); toast(t(r.first ? "socThanks" : "socThanks0")); overview(true); }
+  try { const r = await api("time", { cid: x.cid, aid: x.key, h, ref: x.name, cname: shortName(x.course) }); useHit("socTimeRep"); toast(t(r.first ? "socThanks" : "socThanks0")); overview(true); }
   catch (e) { toast(t("socNet")); }
 }
 function afterFetch(d, prevSt) {
@@ -232,7 +238,7 @@ function addShared(id) {
     P.xq = (P.xq || []).concat({ id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), cid: s.cid, n: s.cname, k: XQ_KINDS.includes(s.d.k) ? s.d.k : "quiz", at, note: (s.d.note || "").slice(0, 80), from: s.id });
   } else P.mine = (P.mine || []).concat({ id: "m" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), title: s.d.n || "?", due: s.at, cid: s.cid, note: s.d.note || "", from: s.id });
   if (ST.ov) ST.ov.added = (ST.ov.added || []).concat(id);
-  savePrefs(); render(); toast(t("socAdded"));
+  savePrefs(); render(); toast(t("socAdded")); useHit("socAddShared");
   api("add", { id }).then(() => overview(true)).catch(() => {});
 }
 function ignoreShared(id) { P.soc_ign = (P.soc_ign || []).concat(id).slice(-500); savePrefs(); render(); }
@@ -253,7 +259,7 @@ async function shareItem(kind, id, quiet) {
   try {
     const r = await api("share", shareBody(kind, item)), live = findItem(kind, id);
     if (live && r.id) { live.sid = r.id; savePrefs(); }
-    if (!quiet) toast(t("socShareOn")); overview(true); refreshForms();
+    if (!quiet) { toast(t("socShareOn")); useHit(kind === "xq" ? "socShareXq" : "socShareTask"); } overview(true); refreshForms();
   } catch (e) { toast(t("socNet")); }
 }
 function stopSharing(kind, id) { const item = findItem(kind, id); if (!item || !item.sid) return; unshare(item); delete item.sid; savePrefs(); toast(t("socShareOff")); refreshForms(); }
@@ -309,7 +315,7 @@ async function saveWa(cid, del) {
   const url = del ? "" : ($("#socWaIn").value || "").trim().replace(/\?.*$/, "");
   if (!del && !/^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{10,40}$/.test(url)) { $("#socWaErr").textContent = t("waBad"); $("#socWaErr").hidden = false; return; }
   const c = ((V.data && V.data.courses) || []).find(x => x.id === cid);
-  try { const r = await api("wa", { cid, url, cname: c ? shortName(c.name) : "" }); close("socWa"); toast(del ? t("waRemoved") : t("waSaved") + (r.pts ? " · \u2066+" + r.pts + "\u2069" : "")); await overview(true); if (V.spage === "soc") page(); }
+  try { const r = await api("wa", { cid, url, cname: c ? shortName(c.name) : "" }); useHit(del ? "socWaDel" : "socWaSet"); close("socWa"); toast(del ? t("waRemoved") : t("waSaved") + (r.pts ? " · \u2066+" + r.pts + "\u2069" : "")); await overview(true); if (V.spage === "soc") page(); }
   catch (e) { $("#socWaErr").textContent = t("socNet"); $("#socWaErr").hidden = false; }
 }
 
@@ -335,6 +341,12 @@ function taskAct(x) {
 function chatBtnCourse(cid) {
   const n = thInfo(cid, "c").n, u = unread(cid, "c");
   return '<button class="schatc" data-socchat="' + cid + '|c">' + ic("message-square") + "<span>" + esc(t("chatCourse")) + "</span>" + (n ? '<span class="scnt' + (u ? " new" : "") + '">' + (u || n) + "</span>" : "") + "</button>";
+}
+/* the community part of a course's page: its chat, its WhatsApp group and its leaderboard */
+function crsLinks(cid) {
+  const n = thInfo(cid, "c").n, u = unread(cid, "c"), tn = Object.keys((cdata(cid) || {}).th || {}).filter(k => k !== "c").length;
+  return '<div class="crsoc">' + chatBtnCourse(cid) + '<button class="crsbtn" data-socboard="' + cid + '">' + ic("trophy") + "<span>" + esc(t("crsBoard")) + "</span></button>" + "</div>" +
+    '<p class="hint">' + esc(n || tn ? t("crsChatN", n, tn) : t("crsChatNone")) + (u ? " · " + esc(t("chvUnread", u)) : "") + "</p>" + waBar(cid);
 }
 function totalUnread() { let n = 0; for (const c of myCourses()) { const cd = cdata(c.id); if (!cd || !cd.th) continue; for (const tk in cd.th) n += unread(c.id, tk); } return n; }
 function chatTitle(cid, tk) {
@@ -400,10 +412,10 @@ async function sendMsg() {
   const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch || !body) return;
   const btn = $("[data-socsend]"); btn.disabled = true;
   try { await api("post", { cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") });
-    tx.value = ""; tx.style.height = "auto"; setReply(0); $("#socChL").dataset.drawn = ""; await loadChat(true); }
+    useHit(ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); $("#socChL").dataset.drawn = ""; await loadChat(true); }
   catch (e) { toast(t("socNet")); } finally { btn.disabled = false; }
 }
-async function chatAct(op, body) { try { await api(op, body); if (op === "star") toast(t("chatStarred")); await loadChat(true); } catch (e) { toast(t("socNet")); } }
+async function chatAct(op, body) { try { await api(op, body); useHit(op === "star" ? "socStar" : op === "react" ? "socReact" : "socMsgDel"); if (op === "star") toast(t("chatStarred")); await loadChat(true); } catch (e) { toast(t("socNet")); } }
 function pickEmoji(id) {
   const old = $(".spick"); if (old) { const same = old.dataset.mid === String(id); old.remove(); if (same) return; }
   const row = document.createElement("div"); row.className = "spick"; row.dataset.mid = id;
@@ -414,36 +426,41 @@ function chatView() {
   const el = $("#chatList"); if (!el) return;
   const typing = document.activeElement && document.activeElement.id === "chq" ? document.activeElement.selectionStart : null;
   if (!ST.ov) { el.innerHTML = '<div class="hint" style="padding:20px;text-align:center">' + esc(t("socLoading")) + "</div>"; overview(); return; }
-  const now = nowS(), q = (ST.chq || "").trim().toLowerCase(), col = LS.get("socChCol", []);
-  const tasksOf = cid => ((V.data && V.data.tasks) || []).filter(x => x.cid === cid && chattable(x));
-  const cards = myCourses().map(c => {
+  /* one list, like WhatsApp: every conversation is a row that says plainly where it belongs (a course's chat, or a task's discussion inside a course) */
+  const now = nowS(), q = (ST.chq || "").trim().toLowerCase(), f = ["act", "course", "task"].includes(ST.chf) ? ST.chf : "act";
+  const rows = [];
+  for (const c of myCourses()) {
     const cd = cdata(c.id) || {}, th = cd.th || {}, cname = shortName(c.name);
-    // the course's task discussions: every task with messages, and every task still open
-    const L = tasksOf(c.id).map(x => ({ x, i: thInfo(c.id, x.key), u: unread(c.id, x.key) }))
-      .filter(r => r.i.n > 0 || (!isDone(r.x) && (!r.x.due || r.x.due > now - 2 * DAY)));
-    for (const tk in th) if (tk !== "c" && !L.some(r => r.x.key === tk)) L.push({ x: { key: tk, name: th[tk][2] || tk, type: "", due: 0 }, i: thInfo(c.id, tk), u: unread(c.id, tk) });
-    L.sort((a, b) => (b.u > 0) - (a.u > 0) || (b.i.n > 0) - (a.i.n > 0) || b.i.last - a.i.last || (a.x.due || 9e9) - (b.x.due || 9e9));
-    const match = s => !q || s.toLowerCase().includes(q);
-    const cMatch = match(cname), shown = cMatch ? L : L.filter(r => match(r.x.name));
-    if (q && !cMatch && !shown.length) return null;
-    const gen = thInfo(c.id, "c"), gu = unread(c.id, "c"), tot = gu + L.reduce((n, r) => n + r.u, 0), act = Math.max(gen.last, ...L.map(r => r.i.last), 0);
-    return { c, cname, cd, gen, gu, tot, act, shown, open: q || !col.includes(c.id) };
-  }).filter(Boolean).sort((a, b) => (b.tot > 0) - (a.tot > 0) || b.act - a.act || a.cname.localeCompare(b.cname));
-  const preview = i => i.n ? '<small class="chpv"><b><bdi>' + esc(i.lb && i.lb === myName() ? t("chatYou") : i.lb || "") + "</bdi>:</b> <bdi>" + esc(i.lt || "") + "</bdi> · " + esc(i.last ? msgTime(i.last) : "") + "</small>" : '<small class="chpv">' + esc(t("chvNoMsg")) + "</small>";
-  const badgeN = (i, u) => u ? '<span class="scnt new">' + u + "</span>" : i.n ? '<span class="scnt">' + i.n + "</span>" : "";
-  el.innerHTML = '<div class="chvh"><h2>' + esc(t("chvT")) + '</h2><p class="hint">' + esc(t("chvHint")) + '</p><input type="search" id="chq" placeholder="' + esc(t("chvSearch")) + '" value="' + esc(ST.chq || "") + '"></div>' +
-    (cards.length ? cards.map(k => {
-      const more = !q && !(ST.chx || {})[k.c.id] && k.shown.length > 5, rows = more ? k.shown.slice(0, 5) : k.shown;
-      return '<section class="chcard" style="--c:' + colorOf(k.c.id) + '"><button class="chhead" data-chcol="' + k.c.id + '" aria-expanded="' + !!k.open + '"><i class="chdot"></i><span class="chname"><bdi>' + esc(k.cname) + "</bdi></span>" +
-        (k.tot ? '<span class="scnt new">' + esc(t("chvUnread", k.tot)) + "</span>" : "") + ic(k.open ? "chevron-down" : "chevron-left", "chev") + "</button>" +
-        (k.open ? '<div class="chbody">' +
-          '<button class="chrow gen" data-socchat="' + k.c.id + '|c"><span class="chic">' + ic("users") + '</span><span class="sw"><b>' + esc(t("chvGeneral")) + "</b>" + (k.gen.n ? preview(k.gen) : '<small class="chpv">' + esc(t("chvGeneralSub")) + "</small>") + "</span>" + badgeN(k.gen, k.gu) + "</button>" +
-          (k.cd.wa ? '<a class="chwa" href="' + esc(k.cd.wa) + '" target="_blank" rel="noopener noreferrer">' + ic("message-circle") + "<span>" + esc(t("waOpen")) + "</span></a>" : "") +
-          '<div class="chsub">' + esc(t("chvTasks", k.shown.length)) + '</div><div class="chtree">' +
-          rows.map(r => '<button class="chrow" data-socchat="' + k.c.id + "|" + esc(r.x.key) + '"><span class="chic">' + ic(r.x.type === "quiz" ? "circle-check" : r.x.type === "assign" ? "file-text" : "message-square") + '</span><span class="sw"><b><bdi>' + esc(r.x.name) + "</bdi></b>" +
-            (r.x.type ? '<small class="chmeta">' + esc(typeLabel(r.x)) + (r.x.due ? " · " + esc(t("chvDue", shortDate(r.x.due))) : "") + "</small>" : "") + preview(r.i) + "</span>" + badgeN(r.i, r.u) + "</button>").join("") +
-          (more ? '<button class="link chmore" data-chmore="' + k.c.id + '">' + esc(t("chvMore", k.shown.length - 5)) + "</button>" : "") + "</div></div>" : "") + "</section>";
-    }).join("") : '<div class="hint" style="padding:20px;text-align:center">' + esc(t("chvNone")) + "</div>");
+    rows.push({ kind: "c", c, cname, tk: "c", title: cname, i: thInfo(c.id, "c"), u: unread(c.id, "c"), wa: cd.wa });
+    const seen = new Set();
+    for (const x of ((V.data && V.data.tasks) || []).filter(x => x.cid === c.id && chattable(x))) {
+      const i = thInfo(c.id, x.key); if (!(i.n > 0 || (!isDone(x) && (!x.due || x.due > now - 2 * DAY)))) continue;
+      seen.add(x.key); rows.push({ kind: "t", c, cname, tk: x.key, x, title: x.name, i, u: unread(c.id, x.key) });
+    }
+    for (const tk in th) if (tk !== "c" && !seen.has(tk)) rows.push({ kind: "t", c, cname, tk, x: null, title: th[tk][2] || tk, i: thInfo(c.id, tk), u: unread(c.id, tk) });
+  }
+  const match = r => !q || (r.title + " " + r.cname).toLowerCase().includes(q);
+  const pass = r => q ? true : f === "act" ? r.i.n > 0 : f === "course" ? r.kind === "c" : r.kind === "t";
+  const L = rows.filter(r => match(r) && pass(r)).sort((a, b) => (b.u > 0) - (a.u > 0) || b.i.last - a.i.last ||
+    (f === "task" ? ((a.x && a.x.due) || 9e9) - ((b.x && b.x.due) || 9e9) : 0) || (a.kind === "c" ? -1 : 0) - (b.kind === "c" ? -1 : 0) || a.title.localeCompare(b.title));
+  const cnt = k => rows.filter(r => (k === "act" ? r.i.n > 0 : k === "course" ? r.kind === "c" : r.kind === "t")).length;
+  const un = rows.reduce((n, r) => n + r.u, 0);
+  const preview = i => i.n ? '<span class="chpv"><b><bdi>' + esc(i.lb && i.lb === myName() ? t("chatYou") : i.lb || "") + "</bdi>:</b> <bdi>" + esc(i.lt || "") + "</bdi></span>" : '<span class="chpv">' + esc(t("chvNoMsg")) + "</span>";
+  const row = r => {
+    const ini = (r.cname.replace(/^[^\p{L}\p{N}]+/u, "")[0] || "?").toUpperCase();
+    const where = r.kind === "c" ? '<span class="chwhere"><span class="chtag">' + esc(t("chvTagCourse")) + "</span></span>"
+      : '<span class="chwhere"><span class="chtag t">' + esc(t("chvTagTask")) + '</span> · <bdi>' + esc(r.cname) + "</bdi>" + (r.x && r.x.due ? " · " + esc(t("chvDue", shortDate(r.x.due))) : "") + "</span>";
+    return '<button class="chrow2' + (r.u ? " un" : "") + '" data-socchat="' + r.c.id + "|" + esc(r.tk) + '" style="--c:' + colorOf(r.c.id) + '">' +
+      '<span class="chav">' + esc(ini) + (r.kind === "t" ? '<i class="chsubic">' + ic(r.x && r.x.type === "quiz" ? "circle-check" : "file-text") + "</i>" : "") + "</span>" +
+      '<span class="sw"><span class="chl1"><b><bdi>' + esc(r.title) + "</bdi></b><small>" + esc(r.i.last ? msgTime(r.i.last) : "") + "</small></span>" + where +
+      '<span class="chl3">' + preview(r.i) + (r.u ? '<span class="scnt new">' + r.u + "</span>" : "") + "</span></span></button>";
+  };
+  const chip = (k, lbl) => '<button class="chf' + (f === k ? " on" : "") + '" data-chf="' + k + '" aria-pressed="' + (f === k) + '">' + esc(lbl) + ' <span class="n">' + cnt(k) + "</span></button>";
+  const empty = q ? t("chvNoMatch") : f === "act" ? t("chvNoAct") : t("chvNone");
+  el.innerHTML = '<div class="chvh"><h2>' + esc(t("chvT")) + (un ? ' <span class="scnt new">' + esc(t("chvUnread", un)) + "</span>" : "") + "</h2>" +
+    '<input type="search" id="chq" placeholder="' + esc(t("chvSearch")) + '" value="' + esc(ST.chq || "") + '">' +
+    (q ? "" : '<div class="chfs">' + chip("act", t("chvFAct")) + chip("course", t("chvFCourse")) + chip("task", t("chvFTask")) + "</div>") + "</div>" +
+    (L.length ? '<div class="chlist">' + L.map(row).join("") + "</div>" : '<div class="chempty"><p>' + esc(empty) + "</p>" + (f === "act" && !q ? '<button class="primary" data-chf="course">' + esc(t("chvStart")) + "</button>" : "") + "</div>");
   const inp = $("#chq");
   inp.oninput = () => { ST.chq = inp.value; chatView(); };
   if (typing !== null) { inp.focus(); try { inp.setSelectionRange(typing, typing); } catch (e) {} }
@@ -492,6 +509,7 @@ function toggleMute(uid, name) {
 
 /* ---------- leaderboards ---------- */
 function openBoard(cid) {
+  useHit("socBoard");
   if (cid !== undefined) ST.board.cid = String(cid || "");
   const cs = myCourses(), b = ST.board;
   sheet("socBoard", "<h3><span>" + esc(t("socBoardT")) + "</span>" + xbtn() + "</h3>" +
@@ -606,7 +624,7 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socwasave]"))) return saveWa(Number(b.dataset.socwasave), false);
   if ((b = g("[data-socwadel]"))) return saveWa(Number(b.dataset.socwadel), true);
   if ((b = g("[data-socmute]"))) return toggleMute(b.dataset.socmute, b.dataset.n);
-  if ((b = g("[data-socboard]"))) return openBoard();
+  if ((b = g("[data-socboard]"))) return openBoard(b.dataset.socboard ? Number(b.dataset.socboard) : undefined);
   if ((b = g("[data-socme]"))) return P.soc_id && openUser(P.soc_id.uid);
   if ((b = g("[data-socjoin]"))) return intro(true);
   if ((b = g("[data-socjoinnow]"))) return join();
@@ -614,8 +632,7 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socunsh]"))) { const [k, id] = b.dataset.socunsh.split("|"); return stopSharing(k, id); }
   if ((b = g("[data-socchat]"))) { e.preventDefault(); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
   if ((b = g("[data-socchats]"))) { $$(".sheet").forEach(x => x.hidden = true); setView("chat"); render(); window.scrollTo(0, 0); return; }
-  if ((b = g("[data-chcol]"))) { const id = Number(b.dataset.chcol); let c = LS.get("socChCol", []); c = c.includes(id) ? c.filter(x => x !== id) : c.concat(id); LS.set("socChCol", c); return chatView(); }
-  if ((b = g("[data-chmore]"))) { ST.chx = Object.assign(ST.chx || {}, { [b.dataset.chmore]: true }); return chatView(); }
+  if ((b = g("[data-chf]"))) { ST.chf = b.dataset.chf; LS.set("socChF", ST.chf); return chatView(); }
   if ((b = g("[data-socsend]"))) return sendMsg();
   if ((b = g("[data-socrep]"))) return setReply(Number(b.dataset.socrep));
   if ((b = g("[data-socrepx]"))) return setReply(0);
@@ -777,8 +794,26 @@ html[dir=ltr] .chhead{background:linear-gradient(to right,color-mix(in srgb,var(
 .chsub{font-size:12.5px;font-weight:700;color:var(--muted);margin:12px 8px 4px;text-transform:none}
 .chtree{margin-inline-start:22px;padding-inline-start:10px;border-inline-start:2px solid color-mix(in srgb,var(--c) 35%,var(--line))}
 .chmore{margin:4px 8px}
+.chfs{display:flex;gap:6px;margin:0 0 10px;overflow-x:auto}
+.chf{flex:none;padding:7px 14px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-weight:650;font-size:13.5px}
+.chf.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent,#fff)}.chf .n{opacity:.7;font-weight:500}
+.chlist{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.chrow2{display:flex;align-items:center;gap:12px;width:100%;text-align:start;padding:12px 14px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none}
+.chrow2:last-child{border-bottom:0}.chrow2:hover{background:var(--row)}
+.chav{position:relative;flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:18px;background:color-mix(in srgb,var(--c) 22%,var(--card));color:color-mix(in srgb,var(--c) 70%,var(--text))}
+.chsubic{position:absolute;inset-block-end:-2px;inset-inline-end:-2px;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+.chsubic .i{width:12px;height:12px}
+.chrow2 .sw{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.chl1{display:flex;gap:8px;align-items:baseline}.chl1 b{flex:1;min-width:0;font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chl1 small{flex:none;color:var(--muted);font-size:12px}.chrow2.un .chl1 small{color:var(--accent-t);font-weight:700}
+.chwhere{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chtag{display:inline-block;padding:0 7px;border-radius:6px;font-size:11.5px;font-weight:700;background:color-mix(in srgb,var(--c) 18%,var(--card));color:color-mix(in srgb,var(--c) 70%,var(--text))}
+.chtag.t{background:var(--row);color:var(--muted)}
+.chl3{display:flex;gap:8px;align-items:center}.chl3 .chpv{flex:1;min-width:0}.chrow2.un .chpv{color:var(--text)}
+.crsoc{display:flex;gap:8px;flex-wrap:wrap}.crsoc .schatc,.crsbtn{flex:1 1 140px}
+.chempty{text-align:center;padding:28px 16px;color:var(--muted)}.chempty p{margin:0 0 14px}
 `;
 document.head.appendChild(css);
 
-window.SOC = { chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
+window.SOC = { crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
 })();

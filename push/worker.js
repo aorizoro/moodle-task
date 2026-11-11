@@ -193,8 +193,18 @@ export class Community extends DurableObject {
       CREATE TABLE IF NOT EXISTS thr (cid TEXT, tk TEXT, n INTEGER, last INTEGER, ver INTEGER, ref TEXT, PRIMARY KEY (cid, tk));
       CREATE TABLE IF NOT EXISTS reacts (mid INTEGER, uid TEXT, emo TEXT, PRIMARY KEY (mid, uid, emo));
       CREATE TABLE IF NOT EXISTS stars (mid INTEGER, uid TEXT, PRIMARY KEY (mid, uid));`);
+    this.sql.exec("CREATE TABLE IF NOT EXISTS imgs (id TEXT PRIMARY KEY, type TEXT, data BLOB, at INTEGER)");
     for (const col of ["lb TEXT", "lt TEXT"]) try { this.sql.exec("ALTER TABLE thr ADD COLUMN " + col); } catch (e) {}   // the last message of a thread (who, what) for the chats list
   }
+  /* a screenshot attached to a feedback message: kept 120 days, at most 3000, behind a link nobody can guess */
+  putImg(type, buf) {
+    const id = [...crypto.getRandomValues(new Uint8Array(18))].map(x => x.toString(16).padStart(2, "0")).join("");
+    this.sql.exec("INSERT INTO imgs (id, type, data, at) VALUES (?, ?, ?, ?)", id, type, buf, Date.now());
+    this.sql.exec("DELETE FROM imgs WHERE at < ?", Date.now() - 120 * 864e5);
+    this.sql.exec("DELETE FROM imgs WHERE id NOT IN (SELECT id FROM imgs ORDER BY at DESC LIMIT 3000)");
+    return id;
+  }
+  getImg(id) { const r = this.one("SELECT type, data FROM imgs WHERE id = ?", id); return r ? { type: r.type, data: r.data } : null; }
   q(sql, ...a) { return this.sql.exec(sql, ...a).toArray(); }
   one(sql, ...a) { return this.q(sql, ...a)[0] || null; }
   async auth(b) {
@@ -386,8 +396,20 @@ export default {
         return new Response(req.method === "HEAD" ? null : ics, { headers: { "Content-Type": "text/calendar; charset=utf-8", "Cache-Control": "max-age=600",
           "Content-Disposition": 'inline; filename="moodlepro.ics"', "X-Content-Type-Options": "nosniff", "Access-Control-Allow-Origin": "*" } });
       } }
+    { const m = /^\/fbimg\/([0-9a-f]{36})$/.exec(path);
+      if (m && req.method === "GET") {
+        const im = await community(env).getImg(m[1]); if (!im) return new Response("not found", { status: 404 });
+        return new Response(im.data, { headers: { "Content-Type": im.type, "Cache-Control": "private, max-age=86400", "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'" } });
+      } }
     if (req.method !== "POST") return out({ error: "not found" }, 404);
     if (!allowed) return out({ error: "origin" }, 403);
+    if (path === "/fbimg") {            // a screenshot for a feedback message: an image, up to 1.5 MB
+      const type = (req.headers.get("Content-Type") || "").split(";")[0].trim();
+      if (!["image/jpeg", "image/png", "image/webp"].includes(type)) return out({ error: "type" }, 415);
+      const buf = await req.arrayBuffer(); if (buf.byteLength > 1536 * 1024 || buf.byteLength < 100) return out({ error: "size" }, 413);
+      const id = await community(env).putImg(type, buf);
+      return out({ id, url: new URL(req.url).origin + "/fbimg/" + id });
+    }
     const raw = await req.text(); if (raw.length > MAX_BODY) return out({ error: "too big" }, 413);
     let b; try { b = JSON.parse(raw); } catch (e) { return out({ error: "json" }, 400); }
     if (path === "/feed" || path === "/feed/stop") {
