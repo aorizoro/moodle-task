@@ -125,40 +125,73 @@ body:has(#setup:not([hidden])) .top .by{display:none}
 @keyframes s{to{transform:rotate(360deg)}}
 main{max-width:720px;margin:0 auto;padding:12px max(12px,env(safe-area-inset-right)) max(30px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
 
-/* ---------- layout: phone = one pane + bottom tabs, tablet/desktop = side by side ---------- */
-body.app main{padding-bottom:calc(84px + env(safe-area-inset-bottom))}
+/* ---------- layout: one tab at a time on every screen.
+   phone: bottom tab bar · tablet: floating tab bar · computer: side bar (like Mail / Notes / Notion) ---------- */
+body.app main{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
 body.app[data-view=dash] #tasks,body.app[data-view=dash] #ttv{display:none}
 body.app[data-view=tasks] #dash,body.app[data-view=tasks] #ttv{display:none}
 body.app[data-view=tt] #dash,body.app[data-view=tt] #tasks{display:none}
 .sech{display:none}
-.tabbar{position:fixed;inset-inline:0;bottom:0;z-index:12;display:flex;background:var(--card);border-top:1px solid var(--line);padding:6px 10px max(8px,env(safe-area-inset-bottom))}
-.tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12.5px;color:var(--muted);padding:6px 4px;border-radius:12px}
-.tabbar button span{font-size:20px;line-height:1.1}
-.tabbar button.on{color:var(--accent-t);background:var(--accent-soft);font-weight:700}
-.tabbar .b{position:relative}
-.tabbar .badge{position:absolute;inset-block-start:2px;inset-inline-end:calc(50% - 26px);min-width:18px;padding:0 5px;border-radius:99px;background:var(--err);color:#fff;font-size:11px;font-weight:700;font-style:normal}
-/* tablet / desktop: every card is placed on one grid (the tab sections dissolve into it) */
-@media (min-width:760px){
-  main{max-width:1440px;padding-inline:20px}
-  body.app main{padding-bottom:30px}
-  .tabbar{display:none!important}
-  body.app #dash,body.app #ttv{display:contents!important}
-  body.app #tasks{display:block!important}
-  #app{display:grid;gap:14px;align-items:start;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
-    grid-template-areas:"hero stats" "exams today" "sem sem" "tt tt" "acad acad" "tasks week" "tasks month" "tasks news" "tasks load" "tasks ics" "tasks .";
-    grid-template-rows:auto auto auto auto auto auto auto auto auto auto 1fr}
-  #app .dcard,#app .stats{margin:0}
-  #hero{grid-area:hero} #stats{grid-area:stats} #todayCard{grid-area:today} #examCard{grid-area:exams} #semCard{grid-area:sem} #ttCard{grid-area:tt}
-  #weekCard{grid-area:week} #monthCard{grid-area:month} #newsCard{grid-area:news} #loadCard{grid-area:load} #icsCard{grid-area:ics} #tasks{grid-area:tasks}
-  #hero,#stats,#todayCard,#examCard{align-self:stretch}
-  .sech{display:flex;align-items:baseline;gap:10px;font-size:19px;font-weight:800;margin:2px 2px 10px}
-  .sech .hint{font-weight:400;font-size:13px}
+.ptitle{display:none}
+.tabbar{position:fixed;inset-inline:0;bottom:0;z-index:12;display:flex;gap:4px;padding:6px 10px max(8px,env(safe-area-inset-bottom));
+  background:color-mix(in srgb,var(--card) 86%,transparent);-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);border-top:1px solid var(--line)}
+.tabbar .sbrand,.tabbar .sbset{display:none}
+.tabbar button{flex:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;color:var(--muted);padding:4px 4px 2px;border-radius:14px}
+.tabbar button b{font-weight:600}
+.tabbar .ti{position:relative;display:grid;place-items:center;width:56px;height:30px;border-radius:99px;transition:background .2s}
+.tabbar .ti .i{width:22px;height:22px}
+.tabbar button.on{color:var(--accent-t)}
+.tabbar button.on .ti{background:var(--accent-soft)}
+.tabbar button.on b{font-weight:700}
+.tabbar .badge{position:absolute;inset-block-start:-3px;inset-inline-end:6px;min-width:18px;height:18px;line-height:18px;padding:0 5px;border-radius:99px;background:var(--err);color:#fff;font-size:11px;font-weight:700;font-style:normal;text-align:center;box-shadow:0 0 0 2px var(--card)}
+@media (min-width:600px) and (max-width:999px){
+  .tabbar{inset-inline:auto;left:50%;transform:translateX(-50%);bottom:max(14px,env(safe-area-inset-bottom));width:min(440px,calc(100% - 32px));border:1px solid var(--line);border-radius:24px;padding:6px;box-shadow:0 10px 30px #0000001f,0 1px 3px #00000014}
+  .tabbar button{flex-direction:row;justify-content:center;gap:6px;font-size:14px;padding:8px 6px;border-radius:18px}
+  .tabbar .ti{width:auto;height:auto;background:none!important}
+  .tabbar button.on{background:var(--accent-soft)}
 }
-@media (min-width:1100px){
-  #app{gap:16px;grid-template-columns:repeat(3,minmax(0,1fr));
-    grid-template-areas:"hero stats exams" "sem sem sem" "today tt tt" "week tt tt" "acad acad acad" "month tasks tasks" "news tasks tasks" "load tasks tasks" "ics tasks tasks" ". tasks tasks";
-    grid-template-rows:auto auto auto auto auto auto auto auto auto 1fr}
-  #todayCard{align-self:start}
+@media (min-width:760px){
+  main{max-width:1180px;padding-inline:24px}
+  .sech{display:flex;align-items:baseline;gap:10px;font-size:22px;font-weight:800;margin:6px 2px 12px;letter-spacing:-.01em}
+  .sech .hint{font-weight:400;font-size:13.5px}
+  /* the overview: its cards on a grid, in the order the student arranged them */
+  #dash{display:grid;column-gap:14px;row-gap:0;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-flow:row dense;grid-auto-rows:6px;align-items:start}
+  #dash > .dcard,#dash > .stats{margin:0 0 14px;align-self:start}
+  #stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* tasks: two columns of cards */
+  #list{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:0 12px;align-items:start}
+  #list > :not(.task){grid-column:1/-1}
+}
+@media (min-width:1200px){
+  #dash{grid-template-columns:repeat(3,minmax(0,1fr))}
+  #dash > #hero{grid-column:span 2}
+  #dash > #weekCard{grid-column:span 2}
+}
+@media (min-width:1000px){
+  :root{--sbw:248px}
+  body.app .tabbar{inset:0 auto 0 auto;inset-inline-start:0;width:var(--sbw);flex-direction:column;gap:2px;padding:16px 12px 16px;border-top:0;border-inline-end:1px solid var(--line);
+    background:color-mix(in srgb,var(--bg) 70%,var(--card));-webkit-backdrop-filter:none;backdrop-filter:none;transform:none;border-radius:0;box-shadow:none}
+  body.app .tabbar .sbrand{display:flex;align-items:center;gap:10px;padding:2px 8px 18px}
+  body.app .tabbar .sbrand img{border-radius:9px;box-shadow:0 2px 8px #2a186833}
+  body.app .tabbar .sbrand b{font-size:18px;display:block;line-height:1.1}
+  body.app .tabbar .sbrand .hint{font-size:12px}
+  body.app .tabbar .sbset{display:flex;margin-top:auto}
+  body.app .tabbar button{flex:none;flex-direction:row;justify-content:flex-start;gap:12px;font-size:14.5px;padding:9px 10px;border-radius:10px;color:var(--text)}
+  body.app .tabbar button:hover{background:color-mix(in srgb,var(--text) 6%,transparent)}
+  body.app .tabbar .ti{width:auto;height:auto;background:none!important;position:static}
+  body.app .tabbar .ti .i{width:19px;height:19px;color:var(--muted)}
+  body.app .tabbar button.on{background:var(--accent-soft);color:var(--accent-t)}
+  body.app .tabbar button.on .i{color:var(--accent-t)}
+  body.app .tabbar .badge{position:static;order:3;margin-inline-start:auto;box-shadow:none}
+  body.app .tabbar button{display:flex;align-items:center}
+  body.app .tabbar button .ti{display:contents}
+  body.app .top,body.app main{margin-inline-start:var(--sbw)}
+  body.app main{padding-bottom:40px}
+  body.app .top .logo,body.app .top .ttl > span:first-child,body.app .top .by{display:none}
+  body.app .ptitle{display:block;font-size:20px;font-weight:800;letter-spacing:-.01em;order:-1}
+  body.app .top{gap:12px;padding-inline:28px}
+  body.app .top .ttl{order:0;flex:1}
+  body.app .top .ttl #upd{text-align:end}
 }
 
 /* ---------- setup ---------- */
@@ -536,6 +569,9 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .chips::-webkit-scrollbar{display:none}
 .chip{--c:#888;flex:none;display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--card);font-size:14px;opacity:.55;user-select:none;cursor:pointer}
 .chip.on{opacity:1;border-color:var(--c);background:color-mix(in srgb,var(--c) 13%,var(--card))}
+.chip.sel{background:var(--c);color:#fff;border-color:var(--c)}
+.chip.sel i{background:#fff}
+.chip.sel .n{color:#fffc}
 .chip i{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
 .chip .n{font-size:12px;color:var(--muted)}
 .ctl{display:flex;gap:8px;align-items:center;margin-bottom:8px}
@@ -667,7 +703,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 .acym .yg i.t{box-shadow:inset 0 0 0 1.5px var(--accent);font-weight:700}
 .acym .yh{font-size:10.5px;color:var(--muted);line-height:1.3;min-height:14px}
 .acnote{margin-top:12px;font-size:12px;color:var(--muted);line-height:1.5}
-@media (min-width:760px){ .lzseg{display:none} body.app #ttCard,body.app #acadCard{display:block!important} #acadCard{grid-area:acad} .ad{min-height:74px} .ad .lb{font-size:10.5px} }
+@media (min-width:760px){ .ad{min-height:74px} .ad .lb{font-size:10.5px} }
 .sheet h3 .sh{display:flex;align-items:center;gap:6px;min-width:0}
 .sback{font-size:20px;line-height:1;padding:2px 8px}
 .mgroup{background:var(--bg);border:1px solid var(--line);border-radius:14px;margin:0 0 14px;overflow:hidden}
@@ -677,7 +713,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 .mrow .mi{font-size:19px;width:36px;height:36px;display:grid;place-items:center;border-radius:10px;background:var(--accent-soft);flex:none}
 .mrow .mt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .mrow .mt small{color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mrow::after{content:"\2039";color:var(--muted);font-size:22px;line-height:1}
+.mrow::after{content:"\203A";color:var(--muted);font-size:22px;line-height:1}
 [dir=ltr] .mrow::after{content:"\203A"}
 .prow{display:block;width:100%;margin-top:8px;text-align:start}
 .stitle{margin-top:16px;font-weight:700}
@@ -692,14 +728,209 @@ body.app[data-lz=acad] #ttCard{display:none}
 .srow .cn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));inset-inline:0;margin:auto;width:fit-content;max-width:90%;background:#222;color:#fff;padding:10px 16px;border-radius:12px;display:none;z-index:40;white-space:pre-line;font-size:14px}
 @media (min-width:760px){ #toast{bottom:24px} }
+
+/* ---------- 1.5 design refresh: system-app look (iOS / macOS / Material 3) ---------- */
+.i{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
+[data-ic]{display:inline-flex;align-items:center;gap:7px}
+.ic .i{width:20px;height:20px}
+.top{-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);background:color-mix(in srgb,var(--card) 86%,transparent)}
+.ic{border-color:transparent;background:var(--row);color:var(--text)}
+.dcard,.tile,.task{box-shadow:0 1px 2px #1018280a,0 1px 3px #1018280f}
+.dcard{border-radius:18px;padding:16px}
+.dcard .ch{font-size:15.5px}
+.dcard .ch [data-ic] .i{color:var(--accent-t)}
+.tile{border-radius:16px}
+/* segmented controls like iOS: a sliding white pill on a grey track */
+.seg{background:var(--track);border:0;border-radius:11px;padding:3px;gap:2px}
+.seg button{border-radius:8px!important;padding:7px 8px;color:var(--text);font-weight:500;transition:background .15s}
+.seg button.on{background:var(--card);color:var(--text);font-weight:700;box-shadow:0 1px 3px #0000001f,0 1px 1px #0000000d}
+/* the task categories scroll sideways as chips, so no label is ever cut ("אחר" on iPhone) */
+.seg.cats{display:flex;width:auto;margin:8px -2px 4px;padding:2px;background:none;gap:7px;overflow-x:auto;scrollbar-width:none;border-radius:0}
+.seg.cats::-webkit-scrollbar{display:none}
+.seg.cats button{flex:0 0 auto;border:1px solid var(--line)!important;border-radius:99px!important;background:var(--card);padding:7px 13px;display:inline-flex;align-items:center;gap:6px;font-size:14px}
+.seg.cats button.on{background:var(--accent);border-color:var(--accent)!important;color:var(--on-accent);box-shadow:none}
+.seg.cats button.on i{opacity:.9}
+.seg.cats [data-ic]{gap:6px}
+.mineadd{display:flex;align-items:center;justify-content:center;gap:6px;border-radius:14px;color:var(--accent-t);font-weight:600;background:none}
+/* settings: iOS Settings — coloured icon tiles, grouped rows */
+.mrow .mi{background:var(--mc,var(--accent));color:#fff;width:32px;height:32px;border-radius:8px}
+.mrow .mi .i{width:19px;height:19px}
+.prow{display:flex!important;align-items:center;gap:10px;width:100%;margin-top:8px;text-align:start;background:var(--row);border:0;border-radius:12px;padding:12px 14px;font-weight:500}
+.prow .i{color:var(--accent-t);width:19px;height:19px}
+.prow::after{content:"\203A";margin-inline-start:auto;color:var(--muted);font-size:20px;line-height:1}
+[dir=ltr] .prow::after{content:"\203A"}
+#bLogout .i{color:var(--err)}
+#bLogout::after{content:none}
+/* task cards */
+.task{border-radius:16px}
+.task .x .i{width:17px;height:17px}
+.task .act a,.task .act button{display:inline-flex;align-items:center;gap:5px}
+.task .act .i{width:16px;height:16px}
+.fl .i{width:16px;height:16px}
+.fk-pdf{color:#e5484d}.fk-doc{color:#3e63dd}.fk-ppt{color:#f76b15}.fk-xls{color:#30a46c}.fk-img{color:#8e4ec6}.fk-zip{color:#978365}.fk-code{color:#0090ff}.fk-lnk,.fk-gen{color:var(--muted)}
+.lzseg [data-ic],.lzseg button{justify-content:center}
+
+/* ---------- view density: detailed (default) · compact · clean ---------- */
+body[data-density=compact]{font-size:14.5px}
+body[data-density=compact] .dcard{padding:11px 12px;margin-bottom:8px;border-radius:14px}
+body[data-density=compact] .dcard .ch{margin-bottom:6px;font-size:14.5px}
+body[data-density=compact] .tile{min-height:64px;padding:9px 11px}
+body[data-density=compact] .tile .n{font-size:21px}
+body[data-density=compact] .stats{gap:8px;margin-bottom:8px}
+body[data-density=compact] .task{padding:8px 12px;margin-bottom:6px;border-radius:12px}
+body[data-density=compact] .task .tname{font-size:14.5px}
+body[data-density=compact] .task .tl{gap:4px}
+body[data-density=compact] .task .due{margin-top:3px;font-size:13px}
+body[data-density=compact] .task .due br{display:none}
+body[data-density=compact] .task .due .cd{margin-inline-start:6px}
+body[data-density=compact] .task .files,body[data-density=compact] .task details,body[data-density=compact] .task .sub{display:none}
+body[data-density=compact] .task .act{margin-top:4px;gap:2px 12px}
+body[data-density=compact] .task .act a,body[data-density=compact] .task .act button{font-size:13px;padding:3px 0}
+body[data-density=compact] .grp{margin:10px 2px 5px}
+body[data-density=compact] .hero{padding:12px 14px}
+body[data-density=compact] .hero .nm{font-size:17px;margin:0 0 2px}
+body[data-density=compact] .hero .lbl{margin-top:4px}
+body[data-density=compact] .hero .big{font-size:18px;margin-top:4px}
+body[data-density=compact] .hero button{margin-top:8px;padding:6px 12px}
+body[data-density=compact] .er,body[data-density=compact] .tr{padding:5px 9px;margin-bottom:4px;border-radius:10px}
+body[data-density=compact] .er .ec .en{font-size:18px}
+body[data-density=compact] .er .eb small .lv{display:none}
+body[data-density=compact] .ni summary{padding:6px 9px}
+body[data-density=compact] .ni{margin-bottom:4px}
+body[data-density=compact] .wd{min-height:96px}
+body[data-density=compact] .wd .bar{height:10px}
+body[data-density=compact] .md{min-height:40px}
+body[data-density=compact] .sem .big{font-size:18px}
+body[data-density=compact] .sem .sub{margin-bottom:8px}
+body[data-density=compact] .load .lr{padding:3px 4px}
+body[data-density=compact] .exnote,body[data-density=compact] .sem .guess,body[data-density=compact] .dcard .ch .hint{display:none}
+body[data-density=clean] .task{border-inline-start-width:1px;box-shadow:0 1px 2px #1018280a;padding:14px 16px}
+body[data-density=clean] .task::before{content:"";position:absolute;inset-block:14px;inset-inline-start:0;width:3px;border-radius:3px;background:var(--c)}
+body[data-density=clean] .task .files,body[data-density=clean] .task details,body[data-density=clean] .task .sub,body[data-density=clean] .task .st.none,body[data-density=clean] .task .st.unknown,body[data-density=clean] .task .st.na{display:none}
+body[data-density=clean] #loadCard,body[data-density=clean] #icsCard,body[data-density=clean] #monthCard,body[data-density=clean] .exnote,body[data-density=clean] .sem .guess,body[data-density=clean] .dcard .ch .hint,body[data-density=clean] .er .eb small .lv{display:none!important}
+body[data-density=clean] .tile{min-height:0;padding:12px 14px}
+body[data-density=clean] .er,body[data-density=clean] .tr,body[data-density=clean] .ni{background:none;border-inline-start-width:3px;border-radius:0 10px 10px 0;padding-block:7px}
+[dir=rtl] body[data-density=clean] .er,[dir=rtl] body[data-density=clean] .tr,[dir=rtl] body[data-density=clean] .ni{border-radius:10px 0 0 10px}
+body[data-density=clean] .hero{background:color-mix(in srgb,var(--c) 14%,var(--card));color:var(--text)}
+body[data-density=clean] .hero .big{color:var(--text)!important}
+body[data-density=clean] .hero .crs{background:color-mix(in srgb,var(--c) 18%,transparent);color:var(--text)}
+body[data-density=clean] .hero button{background:var(--card);border-color:var(--line);color:var(--accent-t)}
+body[data-density=clean] .hero.done{background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+body[data-density=clean] .dcard,body[data-density=clean] .tile{border-color:transparent}
+body[data-density=clean] .chips{display:none}
+body[data-density=clean] .task .tc{background:none;padding:0;color:var(--muted);font-weight:500}
+body[data-density=clean] .task .act{justify-content:flex-end;gap:6px;margin-top:6px}
+body[data-density=clean] .task .act .at{display:none}
+body[data-density=clean] .task .act a,body[data-density=clean] .task .act button{width:38px;height:38px;justify-content:center;border-radius:50%;background:var(--row);padding:0}
+body[data-density=clean] .task .act .i{width:18px;height:18px}
+body[data-density=clean] .task .tname{font-size:16.5px}
+body[data-density=clean] .task .due{color:var(--muted)}
+body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
+/* the picker in settings */
+.dens{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0 4px}
+.dens button{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:8px;border-radius:14px;border:1.5px solid var(--line);background:var(--card);font-size:13px;font-weight:600}
+.dens button.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.dens .pv{display:flex;flex-direction:column;gap:3px;height:58px;padding:6px;border-radius:9px;background:var(--bg);overflow:hidden}
+.dens .pv i{display:block;border-radius:4px;background:var(--card);border-inline-start:3px solid var(--accent)}
+.dens [data-dn=detailed] .pv i{height:22px}
+.dens [data-dn=compact] .pv i{height:10px}
+.dens [data-dn=clean] .pv{gap:7px}.dens [data-dn=clean] .pv i{height:18px;border-inline-start-color:transparent}
+.dens small{font-weight:400;color:var(--muted);font-size:11.5px;line-height:1.3}
+/* courses page: bulk actions */
+.cbulk{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.cbulk button{padding:6px 11px;font-size:13px;border-radius:99px;display:inline-flex;align-items:center;gap:5px}
+.cbulk .i{width:15px;height:15px}
+#cq{margin:4px 0 2px}
+.srow .cn .act1{font-size:11px;color:var(--ok);font-weight:700;margin-inline-start:6px}
+
+/* ---------- 1.5 · round 2 (Mendi's suggestions) ---------- */
+/* phone: the overview is the home tab, in the middle, raised */
+@media (max-width:599px){
+  .tabbar{overflow:visible}
+  .tabbar .home .ti{width:54px;height:54px;margin-top:-20px;border-radius:50%;background:var(--accent)!important;color:var(--on-accent);
+    box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 40%,transparent),0 0 0 5px var(--card)}
+  .tabbar .home .ti .i{width:25px;height:25px}
+  .tabbar .home{color:var(--muted)}
+  .tabbar .home.on{color:var(--accent-t)}
+  .tabbar .home:not(.on) .ti{background:color-mix(in srgb,var(--accent) 82%,var(--card))!important}
+}
+@media (min-width:1000px){ body.app .tabbar .sbrand{order:0} body.app .tabbar .home{order:1} body.app .tabbar [data-v=tasks]{order:2} body.app .tabbar [data-v=tt]{order:3} body.app .tabbar .sbset{order:9} }
+/* X instead of "סגירה" */
+.xbtn{width:32px;height:32px;border-radius:50%;border:0;background:var(--row);color:var(--muted);display:grid;place-items:center;padding:0;flex:none}
+.xbtn .i{width:18px;height:18px;stroke-width:2.4}
+.xbtn:hover{color:var(--text)}
+/* every window: a fixed size that scrolls inside, the title row and the X stay on top */
+.sheet .box{max-height:88vh;max-height:88dvh;overscroll-behavior:contain}
+.sheet .box:has(> h3:first-child){padding-top:0}
+.sheet .box > h3:first-child{position:sticky;top:0;z-index:3;background:var(--card);margin:0 -16px 10px;padding:16px 16px 10px}
+#sheet .box{height:min(88vh,760px);height:min(88dvh,760px)}
+.tbox{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto}
+/* windows slide up from below (iOS sheet); on a computer they appear in the middle */
+@media (prefers-reduced-motion:no-preference){
+  .sheet:not([hidden]),.tour:not([hidden]){animation:shFade .24s ease}
+  .sheet:not([hidden]) > .box{animation:shUp .36s cubic-bezier(.2,.9,.25,1)}
+  .tour:not([hidden]) .tbox{animation:shPop .3s cubic-bezier(.2,.9,.25,1)}
+  body.intro #dash > *,body.intro #list > *,body.intro #ttv > *{animation:tin .5s cubic-bezier(.2,.8,.2,1) both}
+  body.intro #dash > :nth-child(2),body.intro #list > :nth-child(2){animation-delay:.04s}
+  body.intro #dash > :nth-child(3),body.intro #list > :nth-child(3){animation-delay:.08s}
+  body.intro #dash > :nth-child(4),body.intro #list > :nth-child(4){animation-delay:.12s}
+  body.intro #dash > :nth-child(5),body.intro #list > :nth-child(5){animation-delay:.16s}
+  body.intro #dash > :nth-child(6),body.intro #list > :nth-child(6){animation-delay:.2s}
+  body.intro #dash > :nth-child(n+7),body.intro #list > :nth-child(n+7){animation-delay:.24s}
+}
+@media (prefers-reduced-motion:no-preference) and (min-width:760px){ .sheet:not([hidden]) > .box{animation:shPop .26s cubic-bezier(.2,.9,.25,1)} }
+@keyframes shFade{from{background:#0000}}
+@keyframes shUp{from{transform:translateY(100%)}}
+@keyframes shPop{from{opacity:0;transform:translateY(14px) scale(.97)}}
+/* big banners: a quiet gradient, darker at the top right, a touch lighter at the bottom left */
+.hero{background:linear-gradient(to bottom left,color-mix(in srgb,var(--c) 42%,#000),color-mix(in srgb,var(--c) 92%,#000))}
+.hero.done{background:linear-gradient(to bottom left,#134a26,#37a865)}
+/* refresh: only the icon turns */
+.ic.spin{animation:none}
+.ic.spin .i{animation:s 1s linear infinite}
+/* the tasks toolbar: search + one filter button */
+.tbar{display:flex;gap:8px;margin:8px 0 4px;align-items:stretch}
+.tbar #q{flex:1;min-width:0;margin:0}
+.fbtn{position:relative;display:inline-flex;align-items:center;gap:6px;border-radius:12px;padding:0 14px;font-weight:600;background:var(--card);border:1px solid var(--line)}
+.fbtn.act{border-color:var(--accent);color:var(--accent-t);background:var(--accent-soft)}
+.fbtn .badge{position:absolute;top:-6px;inset-inline-end:-6px;min-width:18px;height:18px;line-height:18px;padding:0 5px;border-radius:99px;background:var(--accent);color:var(--on-accent);font-size:11px;font-weight:700;font-style:normal;text-align:center}
+#fSheet .seg{display:flex;width:100%}
+#fSheet .seg button{flex:1}
+#fSheet #sort{width:100%;margin-top:4px}
+#fSheet .chips{margin-top:8px}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px}
+.frow .primary{flex:1;max-width:220px}
+/* suggestions + red dots */
+.sugw .stitle{margin:0 2px 6px}
+.sugr{display:flex;align-items:center;border-bottom:1px solid var(--line)}
+.sugr:last-child{border-bottom:0}
+.sugr .mrow{border-bottom:0;flex:1;min-width:0}
+.sugr .mrow::after{content:none}
+.sugx{border:0;background:none;color:var(--muted);padding:10px 12px;flex:none}
+.sugx .i{width:16px;height:16px}
+.rdot{width:9px;height:9px;border-radius:50%;background:var(--err);flex:none}
+.has-dot{position:relative}
+.has-dot::after{content:"";position:absolute;top:5px;inset-inline-end:5px;width:9px;height:9px;border-radius:50%;background:var(--err);box-shadow:0 0 0 2px var(--card)}
+body.app .tabbar .sbset.has-dot::after{top:12px;inset-inline-end:12px}
+.sugmoved{display:none!important}
+.dfoot{text-align:center;margin:6px 0 4px}
+body.app:not([data-view=dash]) .dfoot{display:none}
+/* squircle corners where the browser can draw them (Chrome / Android now; Safari keeps normal rounded corners) */
+@supports (corner-shape: squircle){
+  .dcard,.tile,.task,.sheet .box,.prow,.mgroup,.mrow .mi,.seg,.seg button,.er,.tr,.ni,.md,.ad,.acym,.dens button,.xqbox,.tbox,.hero,.ic,.fbtn,.tbar #q,button.primary,.acday,.acsoon button,.top .logo,.sbrand img{corner-shape:squircle}
+  .dcard,.task,.hero{border-radius:24px}
+  .mrow .mi{border-radius:11px}
+}
 </style>
 </head>
 <body>
+<svg id="icons" width="0" height="0" style="position:absolute" aria-hidden="true"><!-- icons: Lucide (ISC license) --><defs><symbol id="i-layout-dashboard" viewBox="0 0 24 24"><svg class="lucide lucide-layout-dashboard" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1"/> <rect width="7" height="5" x="14" y="3" rx="1"/> <rect width="7" height="9" x="14" y="12" rx="1"/> <rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-days" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v4"/> <path d="M16 2v4"/> <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M3 10h18"/> <path d="M8 14h.01"/> <path d="M12 14h.01"/> <path d="M16 14h.01"/> <path d="M8 18h.01"/> <path d="M12 18h.01"/> <path d="M16 18h.01"/></symbol><symbol id="i-list-checks" viewBox="0 0 24 24"><svg class="lucide lucide-list-checks" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m3 17 2 2 4-4"/> <path d="m3 7 2 2 4-4"/> <path d="M13 6h8"/> <path d="M13 12h8"/> <path d="M13 18h8"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><svg class="lucide lucide-settings" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><svg class="lucide lucide-refresh-cw" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/> <path d="M21 3v5h-5"/> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/> <path d="M8 16H3v5"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><svg class="lucide lucide-bell" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/> <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><svg class="lucide lucide-palette" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/> <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/> <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/> <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/> <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><svg class="lucide lucide-sliders-horizontal" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <line x1="21" x2="14" y1="4" y2="4"/> <line x1="10" x2="3" y1="4" y2="4"/> <line x1="21" x2="12" y1="12" y2="12"/> <line x1="8" x2="3" y1="12" y2="12"/> <line x1="21" x2="16" y1="20" y2="20"/> <line x1="12" x2="3" y1="20" y2="20"/> <line x1="14" x2="14" y1="2" y2="6"/> <line x1="8" x2="8" y1="10" y2="14"/> <line x1="16" x2="16" y1="18" y2="22"/></symbol><symbol id="i-book-open" viewBox="0 0 24 24"><svg class="lucide lucide-book-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 7v14"/> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol><symbol id="i-calendar-range" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-range" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M16 2v4"/> <path d="M3 10h18"/> <path d="M8 2v4"/> <path d="M17 14h-6"/> <path d="M13 18H7"/> <path d="M7 14h.01"/> <path d="M17 18h.01"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><svg class="lucide lucide-cloud" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol><symbol id="i-life-buoy" viewBox="0 0 24 24"><svg class="lucide lucide-life-buoy" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <path d="m4.93 4.93 4.24 4.24"/> <path d="m14.83 9.17 4.24-4.24"/> <path d="m14.83 14.83 4.24 4.24"/> <path d="m9.17 14.83-4.24 4.24"/> <circle cx="12" cy="12" r="4"/></symbol><symbol id="i-layers" viewBox="0 0 24 24"><svg class="lucide lucide-layers" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/> <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/> <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol><symbol id="i-file-up" viewBox="0 0 24 24"><svg class="lucide lucide-file-up" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M12 12v6"/> <path d="m15 15-3-3-3 3"/></symbol><symbol id="i-monitor-check" viewBox="0 0 24 24"><svg class="lucide lucide-monitor-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m9 10 2 2 4-4"/> <rect width="20" height="14" x="2" y="3" rx="2"/> <path d="M12 17v4"/> <path d="M8 21h8"/></symbol><symbol id="i-ellipsis" viewBox="0 0 24 24"><svg class="lucide lucide-ellipsis" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="1"/> <circle cx="19" cy="12" r="1"/> <circle cx="5" cy="12" r="1"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><svg class="lucide lucide-user" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><svg class="lucide lucide-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14"/> <path d="M12 5v14"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><svg class="lucide lucide-clock" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <polyline points="12 6 12 12 16 14"/></symbol><symbol id="i-calendar-plus" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v4"/> <path d="M16 2v4"/> <path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/> <path d="M3 10h18"/> <path d="M16 19h6"/> <path d="M19 16v6"/></symbol><symbol id="i-layout-grid" viewBox="0 0 24 24"><svg class="lucide lucide-layout-grid" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="7" x="3" y="3" rx="1"/> <rect width="7" height="7" x="14" y="3" rx="1"/> <rect width="7" height="7" x="14" y="14" rx="1"/> <rect width="7" height="7" x="3" y="14" rx="1"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><svg class="lucide lucide-compass" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/> <circle cx="12" cy="12" r="10"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><svg class="lucide lucide-download" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/> <polyline points="7 10 12 15 17 10"/> <line x1="12" x2="12" y1="15" y2="3"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><svg class="lucide lucide-message-circle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol><symbol id="i-history" viewBox="0 0 24 24"><svg class="lucide lucide-history" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/> <path d="M3 3v5h5"/> <path d="M12 7v5l4 2"/></symbol><symbol id="i-log-out" viewBox="0 0 24 24"><svg class="lucide lucide-log-out" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/> <polyline points="16 17 21 12 16 7"/> <line x1="21" x2="9" y1="12" y2="12"/></symbol><symbol id="i-graduation-cap" viewBox="0 0 24 24"><svg class="lucide lucide-graduation-cap" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/> <path d="M22 10v6"/> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m15 18-6-6 6-6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m9 18 6-6-6-6"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><svg class="lucide lucide-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><svg class="lucide lucide-search" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><svg class="lucide lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="4"/> <path d="M12 2v2"/> <path d="M12 20v2"/> <path d="m4.93 4.93 1.41 1.41"/> <path d="m17.66 17.66 1.41 1.41"/> <path d="M2 12h2"/> <path d="M20 12h2"/> <path d="m6.34 17.66-1.41 1.41"/> <path d="m19.07 4.93-1.41 1.41"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><svg class="lucide lucide-video" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/> <rect x="2" y="6" width="14" height="12" rx="2"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><svg class="lucide lucide-sparkles" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/> <path d="M20 3v4"/> <path d="M22 5h-4"/> <path d="M4 17v2"/> <path d="M5 18H3"/></symbol><symbol id="i-square-pen" viewBox="0 0 24 24"><svg class="lucide lucide-square-pen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/> <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></symbol><symbol id="i-eye-off" viewBox="0 0 24 24"><svg class="lucide lucide-eye-off" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/> <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/> <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/> <path d="m2 2 20 20"/></symbol><symbol id="i-trash-2" viewBox="0 0 24 24"><svg class="lucide lucide-trash-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 6h18"/> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/> <line x1="10" x2="10" y1="11" y2="17"/> <line x1="14" x2="14" y1="11" y2="17"/></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><svg class="lucide lucide-external-link" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 3h6v6"/> <path d="M10 14 21 3"/> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><svg class="lucide lucide-circle-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <path d="m9 12 2 2 4-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><svg class="lucide lucide-flag" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/> <line x1="4" x2="4" y1="22" y2="15"/></symbol><symbol id="i-alarm-clock" viewBox="0 0 24 24"><svg class="lucide lucide-alarm-clock" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="13" r="8"/> <path d="M12 9v4l2 2"/> <path d="M5 3 2 6"/> <path d="m22 6-3-3"/> <path d="M6.38 18.7 4 21"/> <path d="M17.64 18.67 20 21"/></symbol><symbol id="i-undo-2" viewBox="0 0 24 24"><svg class="lucide lucide-undo-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9 14 4 9l5-5"/> <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></symbol><symbol id="i-megaphone" viewBox="0 0 24 24"><svg class="lucide lucide-megaphone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m3 11 18-5v12L3 14v-3z"/> <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><svg class="lucide lucide-chart-column" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 3v16a2 2 0 0 0 2 2h16"/> <path d="M18 17V9"/> <path d="M13 17V5"/> <path d="M8 17v-3"/></symbol><symbol id="i-file-text" viewBox="0 0 24 24"><svg class="lucide lucide-file-text" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M10 9H8"/> <path d="M16 13H8"/> <path d="M16 17H8"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><svg class="lucide lucide-link" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/> <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol><symbol id="i-presentation" viewBox="0 0 24 24"><svg class="lucide lucide-presentation" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2 3h20"/> <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/> <path d="m7 21 5-5 5 5"/></symbol><symbol id="i-sheet" viewBox="0 0 24 24"><svg class="lucide lucide-sheet" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/> <line x1="3" x2="21" y1="9" y2="9"/> <line x1="3" x2="21" y1="15" y2="15"/> <line x1="9" x2="9" y1="9" y2="21"/> <line x1="15" x2="15" y1="9" y2="21"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><svg class="lucide lucide-image" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/> <circle cx="9" cy="9" r="2"/> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol><symbol id="i-file-archive" viewBox="0 0 24 24"><svg class="lucide lucide-file-archive" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 12v-1"/> <path d="M10 18v-2"/> <path d="M10 7V6"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M15.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 .274 1.01"/> <circle cx="10" cy="20" r="2"/></symbol><symbol id="i-file-code" viewBox="0 0 24 24"><svg class="lucide lucide-file-code" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 12.5 8 15l2 2.5"/> <path d="m14 12.5 2 2.5-2 2.5"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/></symbol><symbol id="i-languages" viewBox="0 0 24 24"><svg class="lucide lucide-languages" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m5 8 6 6"/> <path d="m4 14 6-6 2-3"/> <path d="M2 5h12"/> <path d="M7 2h1"/> <path d="m22 22-5-10-5 10"/> <path d="M14 18h6"/></symbol><symbol id="i-rows-3" viewBox="0 0 24 24"><svg class="lucide lucide-rows-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/> <path d="M21 9H3"/> <path d="M21 15H3"/></symbol><symbol id="i-rows-4" viewBox="0 0 24 24"><svg class="lucide lucide-rows-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/> <path d="M21 7.5H3"/> <path d="M21 12H3"/> <path d="M21 16.5H3"/></symbol><symbol id="i-square" viewBox="0 0 24 24"><svg class="lucide lucide-square" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/></symbol></defs></svg>
 <header class="top">
   <img class="logo" src="icon-any-192.png" alt="" width="34" height="34">
   <div class="ttl"><span><b class="wm" dir="ltr">Moodle<span>Pro</span></b> <span class="betatag" id="betaTag" hidden>BETA</span></span><span class="hint by" data-i18n="byHii"></span><span class="hint" id="upd"></span></div>
-  <button class="ic" id="bRefresh" data-i18n-aria="refresh" aria-label="רענן" hidden>⟳</button>
-  <button class="ic" id="bSet" data-i18n-aria="settings" aria-label="הגדרות" hidden>⚙</button>
+  <span class="ptitle" id="pTitle"></span>
+  <button class="ic" id="bRefresh" data-i18n-aria="refresh" aria-label="רענן" hidden><svg class="i"><use href="#i-refresh-cw"/></svg></button>
+  <button class="ic" id="bSet" data-i18n-aria="settings" aria-label="הגדרות" hidden><svg class="i"><use href="#i-settings"/></svg></button>
 </header>
 
 <main>
@@ -769,16 +1000,16 @@ body.app[data-lz=acad] #ttCard{display:none}
       <div id="today"></div>
     </div>
     <div id="examCard" class="dcard exams">
-      <div class="ch"><span data-i18n="examsTitle"></span><span><button class="link" id="bExAdd" data-i18n="xqAddShort"></button><button class="link" id="bExEdit" data-i18n="edit"></button></span></div>
+      <div class="ch"><span data-i18n="examsTitle" data-ic="graduation-cap"></span><span><button class="link" id="bExAdd" data-i18n="xqAddShort" data-ic="plus"></button><button class="link" id="bExEdit" data-i18n="edit"></button></span></div>
       <div id="exams"></div>
     </div>
     <div id="stats" class="stats"></div>
     <div id="semCard" class="dcard sem">
-      <div class="ch"><span data-i18n="semTitle"></span><span><button class="link" id="bAcadGo" data-i18n="acGo" hidden></button><button class="link" id="bSemEdit" data-i18n="edit"></button></span></div>
+      <div class="ch"><span data-i18n="semTitle" data-ic="flag"></span><span><button class="link" id="bAcadGo" data-i18n="acGo" hidden></button><button class="link" id="bSemEdit" data-i18n="edit"></button></span></div>
       <div id="sem"></div>
     </div>
     <div id="weekCard" class="dcard">
-      <div class="ch"><span data-i18n="weekTitle"></span><span class="hint" data-i18n="tapDay"></span></div>
+      <div class="ch"><span data-i18n="weekTitle" data-ic="calendar-days"></span><span class="hint" data-i18n="tapDay"></span></div>
       <div id="week" class="week"></div>
     </div>
     <div id="monthCard" class="dcard">
@@ -786,22 +1017,22 @@ body.app[data-lz=acad] #ttCard{display:none}
       <div id="month" class="month"></div>
     </div>
     <div id="newsCard" class="dcard news">
-      <div class="ch"><span><span data-i18n="newsTitle"></span><i class="nb" id="newsBadge" hidden></i></span><button class="link" id="bNewsRead" data-i18n="markAllRead" hidden></button></div>
+      <div class="ch"><span><span data-i18n="newsTitle" data-ic="megaphone"></span><i class="nb" id="newsBadge" hidden></i></span><button class="link" id="bNewsRead" data-i18n="markAllRead" hidden></button></div>
       <div id="news"></div>
     </div>
     <div id="loadCard" class="dcard load">
-      <div class="ch"><span data-i18n="loadTitle"></span></div>
+      <div class="ch"><span data-i18n="loadTitle" data-ic="chart-column"></span></div>
       <div id="load"></div>
     </div>
     <div id="icsCard" class="dcard dact">
-      <div class="ch"><span data-i18n="remTitle"></span></div>
+      <div class="ch"><span data-i18n="remTitle" data-ic="bell"></span></div>
       <div id="remCardBody" class="remcard"></div>
-      <button class="link" id="bFb2" data-i18n="fbOpen" hidden></button>
     </div>
   </section>
+  <div class="dfoot"><button class="link" id="bFb2" data-i18n="fbOpen" hidden></button></div>
 
   <section id="ttv">
-    <div class="seg lzseg" id="lzSeg"><button data-lz="tt" data-i18n="lzTT"></button><button data-lz="acad" data-i18n="lzAcad"></button></div>
+    <div class="seg lzseg" id="lzSeg"><button data-lz="tt" data-i18n="lzTT" data-ic="clock"></button><button data-lz="acad" data-i18n="lzAcad" data-ic="calendar-days"></button></div>
     <div id="ttCard" class="dcard tt">
       <div class="ch"><span data-i18n="ttTitle"></span><span class="ttb"><button id="bTtFile" data-i18n="ttImport"></button><button class="primary" id="bTtAdd" data-i18n="ttAdd"></button></span></div>
       <div id="tt"></div>
@@ -820,27 +1051,14 @@ body.app[data-lz=acad] #ttCard{display:none}
     <div id="focus" class="focus" hidden><span id="focusTxt"></span><button id="bFocusClear" data-i18n="clearFocus"></button></div>
     <div id="sum"></div>
     <div class="seg cats" id="cats">
-      <button data-cat="all"><span data-i18n="catAll"></span> <i id="catN_all"></i></button>
-      <button data-cat="file"><span data-i18n="catFile"></span> <i id="catN_file"></i></button>
-      <button data-cat="online"><span data-i18n="catOnline"></span> <i id="catN_online"></i></button>
-      <button data-cat="other"><span data-i18n="catOther"></span> <i id="catN_other"></i></button>
-      <button data-cat="mine"><span data-i18n="catMine"></span> <i id="catN_mine"></i></button>
+      <button data-cat="all"><span data-i18n="catAll" data-ic="layers"></span> <i id="catN_all"></i></button>
+      <button data-cat="file"><span data-i18n="catFile" data-ic="file-up"></span> <i id="catN_file"></i></button>
+      <button data-cat="online"><span data-i18n="catOnline" data-ic="monitor-check"></span> <i id="catN_online"></i></button>
+      <button data-cat="other"><span data-i18n="catOther" data-ic="ellipsis"></span> <i id="catN_other"></i></button>
+      <button data-cat="mine"><span data-i18n="catMine" data-ic="user"></span> <i id="catN_mine"></i></button>
     </div>
-    <button id="bMineAdd" class="mineadd" data-i18n="mineAdd"></button>
-    <div class="chips" id="chips"></div>
-    <div class="ctl">
-      <div class="seg" id="seg">
-        <button data-f="open" class="on" data-i18n="fOpen"></button>
-        <button data-f="all" data-i18n="fAll"></button>
-        <button data-f="done" data-i18n="fDone"></button>
-      </div>
-      <select id="sort" data-i18n-aria="sort">
-        <option value="urgency" data-i18n="sUrgency"></option>
-        <option value="course" data-i18n="sCourse"></option>
-        <option value="date" data-i18n="sDate"></option>
-      </select>
-    </div>
-    <input type="search" id="q" autocomplete="off" data-i18n-ph="searchPh">
+    <div class="tbar"><input type="search" id="q" autocomplete="off" data-i18n-ph="searchPh"><button id="bFilter" class="fbtn"><svg class="i"><use href="#i-sliders-horizontal"/></svg><span data-i18n="filterBtn"></span><i class="badge" id="fN" hidden></i></button></div>
+    <button id="bMineAdd" class="mineadd" data-i18n="mineAdd" data-ic="plus"></button>
     <div id="list"></div>
     <div class="diag" id="diag"></div>
   </section>
@@ -848,25 +1066,28 @@ body.app[data-lz=acad] #ttCard{display:none}
 </main>
 
 <nav class="tabbar" id="tabbar" hidden>
-  <button data-v="dash" class="b"><span>🏠</span><b data-i18n="viewDash"></b></button>
-  <button data-v="tt" class="b"><span>🗓</span><b data-i18n="viewTT"></b></button>
-  <button data-v="tasks" class="b"><span>📋</span><b data-i18n="viewTasks"></b><i class="badge" id="tabBadge" hidden></i></button>
+  <div class="sbrand"><img src="icon-any-192.png" alt="" width="34" height="34"><div><b class="wm" dir="ltr">Moodle<span>Pro</span></b><span class="hint by" data-i18n="byHii"></span></div></div>
+  <button data-v="tasks" class="b"><span class="ti"><svg class="i"><use href="#i-list-checks"/></svg><i class="badge" id="tabBadge" hidden></i></span><b data-i18n="viewTasks"></b></button>
+  <button data-v="dash" class="b home"><span class="ti"><svg class="i"><use href="#i-layout-dashboard"/></svg></span><b data-i18n="viewDash"></b></button>
+  <button data-v="tt" class="b"><span class="ti"><svg class="i"><use href="#i-calendar-days"/></svg></span><b data-i18n="viewTT"></b></button>
+  <button class="b sbset" id="bNavSet"><span class="ti"><svg class="i"><use href="#i-settings"/></svg></span><b data-i18n="settings"></b></button>
 </nav>
 
 <div class="sheet" id="sheet" hidden>
   <div class="box">
-    <h3><span class="sh"><button class="link sback" id="sBack" hidden data-i18n-aria="back"></button><span id="sTitle"></span></span> <button class="link" id="bClose" data-i18n="close"></button></h3>
+    <h3><span class="sh"><button class="link sback" id="sBack" hidden data-i18n-aria="back"></button><span id="sTitle"></span></span> <button class="xbtn" id="bClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div id="sMenu">
+      <div class="sugw" id="sugW" hidden><div class="stitle" data-i18n="sugTitle"></div><div class="mgroup" id="sugList"></div></div>
       <div class="mgroup">
-        <button class="mrow" data-go="notif"><span class="mi">🔔</span><span class="mt"><b data-i18n="sNotif"></b><small id="sumNotif"></small></span></button>
-        <button class="mrow" data-go="look"><span class="mi">🎨</span><span class="mt"><b data-i18n="sLook"></b><small id="sumLook"></small></span></button>
-        <button class="mrow" data-go="filter"><span class="mi">🔎</span><span class="mt"><b data-i18n="sFilter"></b><small id="sumFilter"></small></span></button>
-        <button class="mrow" data-go="courses"><span class="mi">📚</span><span class="mt"><b data-i18n="sCourses"></b><small id="sumCourses"></small></span></button>
-        <button class="mrow" data-go="sem"><span class="mi">📅</span><span class="mt"><b data-i18n="sSem"></b><small id="sumSem"></small></span></button>
+        <button class="mrow" data-go="notif"><span class="mi" style="--mc:#ff9500"><svg class="i"><use href="#i-bell"/></svg></span><span class="mt"><b data-i18n="sNotif"></b><small id="sumNotif"></small></span></button>
+        <button class="mrow" data-go="look"><span class="mi" style="--mc:#af52de"><svg class="i"><use href="#i-palette"/></svg></span><span class="mt"><b data-i18n="sLook"></b><small id="sumLook"></small></span></button>
+        <button class="mrow" data-go="filter"><span class="mi" style="--mc:#007aff"><svg class="i"><use href="#i-sliders-horizontal"/></svg></span><span class="mt"><b data-i18n="sFilter"></b><small id="sumFilter"></small></span></button>
+        <button class="mrow" data-go="courses"><span class="mi" style="--mc:#34c759"><svg class="i"><use href="#i-book-open"/></svg></span><span class="mt"><b data-i18n="sCourses"></b><small id="sumCourses"></small></span></button>
+        <button class="mrow" data-go="sem"><span class="mi" style="--mc:#ff2d55"><svg class="i"><use href="#i-calendar-range"/></svg></span><span class="mt"><b data-i18n="sSem"></b><small id="sumSem"></small></span></button>
       </div>
       <div class="mgroup">
-        <button class="mrow" data-go="acct"><span class="mi">☁️</span><span class="mt"><b data-i18n="sAcct"></b><small id="sumAcct"></small></span></button>
-        <button class="mrow" data-go="help"><span class="mi">💡</span><span class="mt"><b data-i18n="sHelp"></b><small id="sumHelp"></small></span></button>
+        <button class="mrow" data-go="acct"><span class="mi" style="--mc:#32ade6"><svg class="i"><use href="#i-cloud"/></svg></span><span class="mt"><b data-i18n="sAcct"></b><small id="sumAcct"></small></span></button>
+        <button class="mrow" data-go="help"><span class="mi" style="--mc:#8e8e93"><svg class="i"><use href="#i-life-buoy"/></svg></span><span class="mt"><b data-i18n="sHelp"></b><small id="sumHelp"></small></span></button>
       </div>
       <div class="byset hint by" data-i18n="byHii"></div>
       <div class="hint" id="verLine" style="text-align:center"></div>
@@ -874,14 +1095,20 @@ body.app[data-lz=acad] #ttCard{display:none}
 
     <div class="spage" data-page="notif" hidden>
       <div class="hint" data-i18n="sNotifHint"></div>
-      <button id="bRem" class="prow" data-i18n="remTitle"></button>
-      <button id="bCal" class="prow" data-i18n="calBtn"></button>
+      <button id="bRem" class="prow" data-i18n="remTitle" data-ic="bell"></button>
+      <button id="bCal" class="prow" data-i18n="calBtn" data-ic="calendar-plus"></button>
     </div>
 
     <div class="spage" data-page="look" hidden>
       <div class="srow"><span data-i18n="language"></span><select class="langSel"><option value="he">עברית</option><option value="en">English</option><option value="fr">Français</option></select></div>
-      <button id="bTheme" class="prow"><span data-i18n="thTitle"></span> · <span class="thcur"></span></button>
-      <button id="bDashArr" class="prow" data-i18n="daTitle"></button>
+      <button id="bTheme" class="prow"><svg class="i"><use href="#i-palette"/></svg><span data-i18n="thTitle" data-noemo="1"></span> · <span class="thcur"></span></button>
+      <button id="bDashArr" class="prow" data-i18n="daTitle" data-ic="layout-grid"></button>
+      <div class="stitle" data-i18n="densTitle"></div>
+      <div class="dens" id="dens">
+        <button data-dn="detailed"><span class="pv"><i></i><i></i></span><span data-i18n="densDetailed"></span><small data-i18n="densDetailedD"></small></button>
+        <button data-dn="compact"><span class="pv"><i></i><i></i><i></i><i></i></span><span data-i18n="densCompact"></span><small data-i18n="densCompactD"></small></button>
+        <button data-dn="clean"><span class="pv"><i></i><i></i></span><span data-i18n="densClean"></span><small data-i18n="densCleanD"></small></button>
+      </div>
       <div class="srow"><span data-i18n="cdxLbl"></span><input type="checkbox" id="cdx"></div>
       <div class="hint" data-i18n="cdxHint"></div>
     </div>
@@ -909,6 +1136,9 @@ body.app[data-lz=acad] #ttCard{display:none}
 
     <div class="spage" data-page="courses" hidden>
       <div class="hint" data-i18n="coursesHint"></div>
+      <div class="cbulk"><button data-cb="all"><svg class="i"><use href="#i-check"/></svg><span data-i18n="cbAll"></span></button><button data-cb="none"><svg class="i"><use href="#i-eye-off"/></svg><span data-i18n="cbNone"></span></button><button data-cb="cur"><svg class="i"><use href="#i-sparkles"/></svg><span data-i18n="cbCur"></span></button></div>
+      <input type="search" id="cq" autocomplete="off" data-i18n-ph="cqPh">
+      <div class="hint" id="cbInfo"></div>
       <div id="clist"></div>
     </div>
 
@@ -929,22 +1159,41 @@ body.app[data-lz=acad] #ttCard{display:none}
       <div class="srow"><span class="hint" id="syncStatus"></span><button class="link" id="bSyncNow" data-i18n="syncNowBtn"></button></div>
       <div class="stitle" data-i18n="acctTitle"></div>
       <div class="srow"><span class="hint" id="who"></span></div>
-      <button id="bLogout" class="prow" style="color:var(--err)" data-i18n="logout"></button>
+      <button id="bLogout" class="prow" style="color:var(--err)" data-i18n="logout" data-ic="log-out"></button>
     </div>
 
     <div class="spage" data-page="help" hidden>
-      <button id="bTour" class="prow" data-i18n="tourOpen"></button>
-      <button id="bInst" class="prow" hidden data-i18n="instTitle"></button>
-      <div id="fbSet" hidden><button id="bFb" class="prow" data-i18n="fbOpen"></button></div>
-      <button id="bWn" class="prow" data-i18n="wnAllBtn"></button>
-      <button id="bUpd" class="prow" data-i18n="updCheck"></button>
+      <button id="bTour" class="prow" data-i18n="tourOpen" data-ic="compass"></button>
+      <button id="bInst" class="prow" hidden data-i18n="instTitle" data-ic="download"></button>
+      <div id="fbSet" hidden><button id="bFb" class="prow" data-i18n="fbOpen" data-ic="message-circle"></button></div>
+      <button id="bWn" class="prow" data-i18n="wnAllBtn" data-ic="history"></button>
+      <button id="bUpd" class="prow" data-i18n="updCheck" data-ic="refresh-cw"></button>
       <p class="hint" style="margin:6px 2px 0" data-i18n="updHow"></p>
     </div>
   </div>
 </div>
+<div class="sheet" id="fSheet" hidden>
+  <div class="box">
+    <h3><span data-i18n="filterTitle"></span> <button class="xbtn" id="fClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
+    <div class="stitle" data-i18n="fShow"></div>
+    <div class="seg" id="seg">
+      <button data-f="open" class="on" data-i18n="fOpen"></button>
+      <button data-f="all" data-i18n="fAll"></button>
+      <button data-f="done" data-i18n="fDone"></button>
+    </div>
+    <div class="stitle" data-i18n="fSortT"></div>
+    <select id="sort" data-i18n-aria="sort">
+      <option value="urgency" data-i18n="sUrgency"></option>
+      <option value="course" data-i18n="sCourse"></option>
+      <option value="date" data-i18n="sDate"></option>
+    </select>
+    <div id="fCourses"><div class="stitle" data-i18n="fCourseT"></div><div class="hint" data-i18n="fCourseHint"></div><div class="chips" id="chips"></div></div>
+    <div class="frow"><button class="link" id="fReset" data-i18n="fReset"></button><button class="primary" id="fDone" data-i18n="fDoneBtn"></button></div>
+  </div>
+</div>
 <div class="sheet" id="ttSheet" hidden>
   <div class="box form">
-    <h3><span id="ttFormTitle"></span> <button class="link" id="ttClose" data-i18n="close"></button></h3>
+    <h3><span id="ttFormTitle"></span> <button class="xbtn" id="ttClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <label><span data-i18n="ttCourse"></span><select id="fCourse"></select></label>
     <label><span data-i18n="ttName"></span><input type="text" id="fTitle" maxlength="60" autocomplete="off"></label>
     <div class="two">
@@ -965,7 +1214,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="exSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="exSheetTitle"></span> <button class="link" id="exClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="exSheetTitle"></span> <button class="xbtn" id="exClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div class="hint" data-i18n="exHint"></div>
     <div class="xqbox" id="xqBox">
       <div class="stitle" data-i18n="xqTitle"></div>
@@ -988,7 +1237,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="scSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="ttScanTitle"></span> <button class="link" id="scClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="ttScanTitle"></span> <button class="xbtn" id="scClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div class="hint" id="scMsg"></div>
     <div id="scList" class="scl"></div>
     <button class="primary" id="scAdd" style="width:100%;margin-top:12px" hidden></button>
@@ -996,7 +1245,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="fbSheet" hidden>
   <div class="box form">
-    <h3><span data-i18n="fbTitle"></span> <button class="link" id="fbClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="fbTitle"></span> <button class="xbtn" id="fbClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div class="hint" data-i18n="fbHint"></div>
     <label><span data-i18n="fbKind"></span><select id="fbKind"></select></label>
     <label><span data-i18n="fbMsg"></span><textarea id="fbMsg" rows="5" maxlength="2000"></textarea></label>
@@ -1020,7 +1269,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="remSheet" hidden>
   <div class="box form">
-    <h3><span id="remTitle"></span> <button class="link" id="remClose" data-i18n="close"></button></h3>
+    <h3><span id="remTitle"></span> <button class="xbtn" id="remClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" id="remIntro"></p>
     <div class="rgrp"><b data-i18n="remTasks"></b><div class="rchips" id="rem_task"></div></div>
     <div class="rgrp"><b data-i18n="remExams"></b><div class="rchips" id="rem_exam"></div></div>
@@ -1046,7 +1295,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="calSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="calTitle"></span> <button class="link" id="calClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="calTitle"></span> <button class="xbtn" id="calClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="calIntro"></p>
     <div class="calbtns" id="calBtns">
       <button class="primary" id="calGoogle" data-i18n="calGoogle"></button>
@@ -1067,7 +1316,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="daSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="daTitle"></span> <button class="link" id="daClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="daTitle"></span> <button class="xbtn" id="daClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="daIntro"></p>
     <div id="daList" class="dalist"></div>
     <button class="link" id="daReset" style="width:100%;margin-top:8px" data-i18n="daReset"></button>
@@ -1075,7 +1324,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="mineSheet" hidden>
   <div class="box">
-    <h3><span id="mineTitle"></span> <button class="link" id="mineClose" data-i18n="close"></button></h3>
+    <h3><span id="mineTitle"></span> <button class="xbtn" id="mineClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <label class="fld"><span data-i18n="mineName"></span><input id="mineName" maxlength="200" autocomplete="off" data-i18n-ph="mineNamePh"></label>
     <div class="fld2"><label class="fld"><span data-i18n="mineDate"></span><input type="date" id="mineDate"></label><label class="fld"><span data-i18n="mineTime"></span><input type="time" id="mineTime" value="23:59"></label></div>
     <label class="fld"><span data-i18n="mineCid"></span><select id="mineCid"></select></label>
@@ -1095,7 +1344,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="lvSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="lvTitle"></span> <button class="link" id="lvClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="lvTitle"></span> <button class="xbtn" id="lvClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="lvIntro"></p>
     <ol class="lvsteps" id="lvSteps"></ol>
     <p class="hint" data-i18n="lvNote"></p>
@@ -1104,7 +1353,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="thSheet" hidden>
   <div class="box">
-    <h3><span data-i18n="thTitle"></span> <button class="link" id="thClose" data-i18n="close"></button></h3>
+    <h3><span data-i18n="thTitle"></span> <button class="xbtn" id="thClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <p class="hint" data-i18n="thIntro"></p>
     <div class="thgrp" data-i18n="thg_base"></div><div class="thgrid" id="th_base"></div>
     <div class="thgrp" data-i18n="thg_pastel"></div><div class="thgrid" id="th_pastel"></div>
@@ -1118,7 +1367,7 @@ body.app[data-lz=acad] #ttCard{display:none}
 </div>
 <div class="sheet" id="wnSheet" hidden>
   <div class="box">
-    <h3><span id="wnHead" data-i18n="wnTitle"></span> <button class="link" id="wnClose" data-i18n="close"></button></h3>
+    <h3><span id="wnHead" data-i18n="wnTitle"></span> <button class="xbtn" id="wnClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div id="wnList"></div>
     <div class="wnx" id="wnRemBox"><b data-i18n="wnRemT"></b><span class="hint" data-i18n="wnRemD"></span><button class="primary" id="wnRem" data-i18n="wnRemBtn"></button></div>
     <div class="wnx" id="wnThBox"><b data-i18n="wnThT"></b><span class="hint" data-i18n="wnThD"></span><div class="thgrid sm" id="wnThemes"></div><button class="link" id="wnThAll" data-i18n="wnThAll"></button></div>
@@ -1183,6 +1432,15 @@ const I18N = {
     xqMoedTitle: "מועדי א׳ / ב׳ לפי קורס", xqPickCourse: "בחר קורס…", xqOtherCourse: "אחר (לכתוב שם)", xq_quiz: "בוחן", xq_mid: "מבחן אמצע", xq_exam: "מבחן", xq_other: "אחר",
     xqNeedCourse: "בחר קורס (או ״אחר״ וכתוב שם)", xqNeedDate: "בחר תאריך", xqAdded: "נוסף ללוח המבחנים ✓", xqSaved: "נשמר ✓", acMine: "שלי",
         wnAllTitle: "📜 כל העדכונים", wnAllBtn: "📜 כל העדכונים – מה נוסף ומתי", wnFix: "תיקונים", wnYours: "הגרסה שלך", wnFromTo: (a, b) => "עודכנת מגרסה " + a + " לגרסה " + b + ". זה כל מה שהשתנה בדרך:",
+        densTitle: "צפיפות התצוגה", densDetailed: "מפורטת", densCompact: "קומפקטית", densClean: "נקייה",
+    densDetailedD: "כל הפרטים, קבצים וכפתורים", densCompactD: "יותר בכל מסך, שורות צפופות", densCleanD: "רק מה שחשוב, בלי רעש",
+    dens_detailed: "מפורטת", dens_compact: "קומפקטית", dens_clean: "נקייה",
+    cbAll: "הצג הכל", cbNone: "הסתר הכל", cbCur: "רק קורסים פעילים", cqPh: "חיפוש קורס…", cbNow: "פעיל",
+    cbInfo: (a, b) => a + " מתוך " + b + " קורסים מוצגים",
+        filterBtn: "סינון", filterTitle: "סינון ומיון", fShow: "הצג", fSortT: "מיון", fCourseT: "קורס", fCourseHint: "לחיצה על קורס מציגה רק את המשימות שלו", fReset: "איפוס", fDoneBtn: "סיום",
+    sugTitle: "הצעות", sugNew: "חדש", sugHide: "לא מעוניין", sugRem: "הפעלת תזכורות", sugRemD: "תזכורת לפני הגשות ומבחנים – בהתראות או ביומן",
+    sugPush: "הפעלת התראות במכשיר הזה", sugPushD: "התזכורות מוגדרות, אבל ההתראות עוד לא הופעלו כאן", sugInst: "התקנה במסך הבית", sugInstD: "נפתחת כמו אפליקציה, מהר ובלי שורת כתובת",
+    sugTT: "הוספת מערכת השעות", sugTTD: "מהלב נט או ידנית – והשיעורים מופיעים בלו״ז ובסקירה", sugEx: "הוספת מועדי מבחנים", sugExD: "ספירה לאחור ותזכורת לפני כל מבחן",
     locale: "he-IL", dir: "rtl", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "האפליקציה של Hii 😉", brandTag: "כל המטלות, הבחנים והמערכת שלך במקום אחד", refresh: "רענן", settings: "הגדרות", close: "סגור", language: "שפה",
     setupTitle: "חיבור ל-Moodle", setupHint: "פעם אחת, בערך דקה. הטוקן נשמר רק בטלפון הזה ונשלח רק לאתר המוסד.",
     remTitle: "🔔 תזכורות", remAskTitle: "🔔 רוצה תזכורות?", remIntro: "האפליקציה יכולה להזכיר לך לפני הגשות, מבחנים ושיעורי זום. בחר מתי, והתזכורות ייכנסו ליומן של הטלפון.",
@@ -1294,7 +1552,7 @@ const I18N = {
     missingToken: "חסר טוקן. העתק את הקישור מעמוד Moodle ונסה שוב.",
     notToken: "זה לא נראה כמו טוקן. צריך להעתיק את כתובת הקישור (לחיצה ארוכה ← העתק כתובת קישור), לא את הטקסט שלו.",
     checking: "בודק…", connected: "מחובר ✓", clipFail: "לא הצלחתי לקרוא מהלוח. הדבק ידנית בשדה (לחיצה ארוכה ← הדבק).", phoneConnected: "הטלפון חובר ✓",
-    lessHour: "פחות משעה", hours: n => n === 1 ? "שעה" : n + " שעות", days: n => n === 1 ? "יום" : n + " ימים", months: n => n === 1 ? "חודש" : n + " חודשים", years: n => n === 1 ? "שנה" : n + " שנים",
+    lessHour: "פחות משעה", hours: n => n === 1 ? "שעה" : n + " שעות", days: n => n === 1 ? "1 יום" : n + " ימים", months: n => n === 1 ? "חודש" : n + " חודשים", years: n => n === 1 ? "שנה" : n + " שנים",
     fut: x => "בעוד " + x, past: x => "לפני " + x, cdH: n => n + " שע׳", cdM: n => n + " דק׳", cdS: n => n + " שנ׳", left: x => "נותרו " + x, overdueBy: x => "באיחור של " + x,
     now: "עכשיו", agoM: n => "לפני " + n + " דק׳", agoH: n => "לפני " + n + " שע׳", agoD: n => "לפני " + n + " ימים", closedArrow: "◂",
     viewDash: "סקירה", viewTasks: "משימות", morning: "בוקר טוב", noon: "צהריים טובים", evening: "ערב טוב", night: "לילה טוב",
@@ -1381,6 +1639,15 @@ const I18N = {
     xqMoedTitle: "1st / 2nd sittings by course", xqPickCourse: "Choose a course…", xqOtherCourse: "Other (type a name)", xq_quiz: "Quiz", xq_mid: "Midterm", xq_exam: "Exam", xq_other: "Other",
     xqNeedCourse: "Choose a course (or “Other” and type a name)", xqNeedDate: "Choose a date", xqAdded: "Added to the exam board ✓", xqSaved: "Saved ✓", acMine: "mine",
         wnAllTitle: "📜 All updates", wnAllBtn: "📜 All updates – what was added when", wnFix: "fixes", wnYours: "your version", wnFromTo: (a, b) => "You were updated from version " + a + " to " + b + ". Here’s everything that changed:",
+        densTitle: "Display density", densDetailed: "Detailed", densCompact: "Compact", densClean: "Clean",
+    densDetailedD: "Every detail, files and buttons", densCompactD: "More on screen, tighter rows", densCleanD: "Only what matters, no clutter",
+    dens_detailed: "detailed", dens_compact: "compact", dens_clean: "clean",
+    cbAll: "Show all", cbNone: "Hide all", cbCur: "Current courses only", cqPh: "Search courses…", cbNow: "current",
+    cbInfo: (a, b) => a + " of " + b + " courses shown",
+        filterBtn: "Filter", filterTitle: "Filter & sort", fShow: "Show", fSortT: "Sort", fCourseT: "Course", fCourseHint: "Tap a course to see only its tasks", fReset: "Reset", fDoneBtn: "Done",
+    sugTitle: "Suggestions", sugNew: "new", sugHide: "Not interested", sugRem: "Turn on reminders", sugRemD: "A reminder before deadlines and exams – as notifications or in your calendar",
+    sugPush: "Turn on notifications on this device", sugPushD: "Reminders are set, but notifications aren’t on here yet", sugInst: "Add to the home screen", sugInstD: "Opens like an app – faster, no address bar",
+    sugTT: "Add your timetable", sugTTD: "From Levnet or by hand – classes then show in the schedule and overview", sugEx: "Add exam dates", sugExD: "A countdown and a reminder before each exam",
     locale: "en-GB", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "Hii’s app 😉", brandTag: "All your assignments, quizzes and timetable in one place", refresh: "Refresh", settings: "Settings", close: "Close", language: "Language",
     setupTitle: "Connect to Moodle", setupHint: "One time, about a minute. The token is stored only on this phone and sent only to your institution’s site.",
     remTitle: "🔔 Reminders", remAskTitle: "🔔 Want reminders?", remIntro: "The app can remind you before deadlines, exams and Zoom classes. Choose when, and the reminders go into your phone’s calendar.",
@@ -1579,6 +1846,15 @@ const I18N = {
     xqMoedTitle: "1re / 2e session par cours", xqPickCourse: "Choisir un cours…", xqOtherCourse: "Autre (saisir un nom)", xq_quiz: "Quiz", xq_mid: "Partiel", xq_exam: "Examen", xq_other: "Autre",
     xqNeedCourse: "Choisissez un cours (ou « Autre » avec un nom)", xqNeedDate: "Choisissez une date", xqAdded: "Ajouté aux examens ✓", xqSaved: "Enregistré ✓", acMine: "à moi",
         wnAllTitle: "📜 Toutes les mises à jour", wnAllBtn: "📜 Toutes les mises à jour – quoi et quand", wnFix: "correctifs", wnYours: "votre version", wnFromTo: (a, b) => "Mise à jour de la version " + a + " à la " + b + ". Voici tout ce qui a changé :",
+        densTitle: "Densité d’affichage", densDetailed: "Détaillée", densCompact: "Compacte", densClean: "Épurée",
+    densDetailedD: "Tous les détails, fichiers et boutons", densCompactD: "Plus à l’écran, lignes serrées", densCleanD: "L’essentiel, sans encombrement",
+    dens_detailed: "détaillée", dens_compact: "compacte", dens_clean: "épurée",
+    cbAll: "Tout afficher", cbNone: "Tout masquer", cbCur: "Cours actuels seulement", cqPh: "Chercher un cours…", cbNow: "actuel",
+    cbInfo: (a, b) => a + " cours sur " + b + " affichés",
+        filterBtn: "Filtrer", filterTitle: "Filtrer et trier", fShow: "Afficher", fSortT: "Trier", fCourseT: "Cours", fCourseHint: "Touchez un cours pour ne voir que ses devoirs", fReset: "Réinitialiser", fDoneBtn: "OK",
+    sugTitle: "Suggestions", sugNew: "nouveau", sugHide: "Pas intéressé", sugRem: "Activer les rappels", sugRemD: "Un rappel avant les échéances et examens – en notification ou dans l’agenda",
+    sugPush: "Activer les notifications ici", sugPushD: "Les rappels sont réglés, mais les notifications ne sont pas encore activées ici", sugInst: "Ajouter à l’écran d’accueil", sugInstD: "S’ouvre comme une app – plus rapide, sans barre d’adresse",
+    sugTT: "Ajouter l’emploi du temps", sugTTD: "Depuis Levnet ou à la main – les cours apparaissent dans l’agenda et l’accueil", sugEx: "Ajouter les dates d’examen", sugExD: "Un compte à rebours et un rappel avant chaque examen",
     locale: "fr-FR", dir: "ltr", weekStart: 0, docTitle: "MoodlePro", appTitle: "MoodlePro", byHii: "L’appli de Hii 😉", brandTag: "Tous vos devoirs, tests et cours au même endroit", refresh: "Actualiser", settings: "Paramètres", close: "Fermer", language: "Langue",
     setupTitle: "Connexion à Moodle", setupHint: "Une seule fois, environ une minute. Le jeton est stocké uniquement sur ce téléphone et envoyé uniquement au site de votre établissement.",
     remTitle: "🔔 Rappels", remAskTitle: "🔔 Envie de rappels ?", remIntro: "L’application peut vous rappeler les échéances, examens et cours Zoom. Choisissez quand, et les rappels vont dans le calendrier du téléphone.",
@@ -1757,10 +2033,13 @@ function t(key, ...a) {
   const v = (I18N[LANG] && I18N[LANG][key] !== undefined) ? I18N[LANG][key] : I18N.he[key];
   return typeof v === "function" ? v(...a) : (v === undefined ? key : v);
 }
+const lbl = (k, n) => ic(n) + '<span>' + esc(noEmo(t(k))) + '</span>';
+const ic = (n, cls) => '<svg class="i' + (cls ? " " + cls : "") + '" aria-hidden="true"><use href="#i-' + n + '"/></svg>';
+const noEmo = s => String(s).replace(/^[\p{Extended_Pictographic}\p{So}\u2190-\u21ff\u2713\u2714\u2795\ufe0f\u200d\s]+/u, "");
 function applyLang(l) {
   if (l) { LANG = I18N[l] ? l : "he"; LS.set("lang", LANG); }
   document.documentElement.lang = LANG; document.documentElement.dir = t("dir"); document.title = t("docTitle");
-  $$("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+  $$("[data-i18n]").forEach(el => { const s = t(el.dataset.i18n); if (el.dataset.ic) el.innerHTML = ic(el.dataset.ic) + "<span>" + esc(noEmo(s)) + "</span>"; else el.textContent = el.dataset.noemo ? noEmo(s) : s; });
   $$("[data-i18n-html]").forEach(el => el.innerHTML = t(el.dataset.i18nHtml));      // constant strings from I18N only
   $$("[data-i18n-ph]").forEach(el => el.placeholder = t(el.dataset.i18nPh));
   $$("[data-i18n-aria]").forEach(el => el.setAttribute("aria-label", t(el.dataset.i18nAria)));
@@ -1957,7 +2236,7 @@ async function fetchContents(d) {
 /* ---------- state ---------- */
 const DAY = 86400;
 const WAS_CONN = (() => { try { return !!JSON.parse(localStorage.getItem(PFX + "token") || '""'); } catch (e) { return false; } })();
-const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [], kw: [], campus: "", zl: "zoom", cdx: false, old_hide: false, xq: [] }, LS.get("prefs", {}));
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [], kw: [], campus: "", zl: "zoom", cdx: false, old_hide: false, xq: [], density: "detailed" }, LS.get("prefs", {}));
 if (!Array.isArray(P.manual)) P.manual = [];
 if (!Array.isArray(P.mine)) P.mine = [];
 if (!Array.isArray(P.tt)) P.tt = [];
@@ -1966,7 +2245,7 @@ P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq"];
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -2143,7 +2422,9 @@ function related(x) {
 }
 const fsize = b => !b ? "" : b < 1024 ? b + " B" : b < 1048576 ? Math.round(b / 1024) + " KB" : (b / 1048576).toFixed(1) + " MB";
 const ficon = n => /\.pdf$/i.test(n) ? "📕" : /\.(docx?|odt)$/i.test(n) ? "📘" : /\.(pptx?|ppsx|odp)$/i.test(n) ? "📙" : /\.(xlsx?|csv)$/i.test(n) ? "📗" : /\.(png|jpe?g|gif)$/i.test(n) ? "🖼" : /\.(zip|rar|7z)$/i.test(n) ? "🗜" : /\.(c|cpp|h|py|java)$/i.test(n) ? "💻" : "📄";
-const fileLink = f => '<a class="fl" href="' + esc(fileHref(f.u)) + '" target="_blank" rel="noopener noreferrer">' + (f.link ? "🔗" : ficon(/\.\w{2,5}$/.test(f.n) ? f.n : String(f.u || "").split("?")[0])) + " <span><bdi>" + esc(f.n) + "</bdi></span>" + (f.s ? "<small>" + fsize(f.s) + "</small>" : "") + "</a>";
+const fkind = n => /\.pdf$/i.test(n) ? ["file-text", "pdf"] : /\.(docx?|odt)$/i.test(n) ? ["file-text", "doc"] : /\.(pptx?|ppsx|odp)$/i.test(n) ? ["presentation", "ppt"] : /\.(xlsx?|csv)$/i.test(n) ? ["sheet", "xls"] : /\.(png|jpe?g|gif)$/i.test(n) ? ["image", "img"] : /\.(zip|rar|7z)$/i.test(n) ? ["file-archive", "zip"] : /\.(c|cpp|h|py|java)$/i.test(n) ? ["file-code", "code"] : ["file-text", "gen"];
+const fileIc = f => { const k = f.link ? ["link", "lnk"] : fkind(/\.\w{2,5}$/.test(f.n) ? f.n : String(f.u || "").split("?")[0]); return ic(k[0], "fk-" + k[1]); };
+const fileLink = f => '<a class="fl" href="' + esc(fileHref(f.u)) + '" target="_blank" rel="noopener noreferrer">' + fileIc(f) + " <span><bdi>" + esc(f.n) + "</bdi></span>" + (f.s ? "<small>" + fsize(f.s) + "</small>" : "") + "</a>";
 function gcalHref(x) {
   const f = ts => new Date(ts * 1000).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(shortName(x.course) + ": " + x.name) +
@@ -2161,15 +2442,16 @@ function card(x, now, g) {
   const own = (x.files || []).filter(f => f.u).concat((x.links || []).map(l => ({ n: l.n, u: l.u, link: /\/pluginfile\.php\//.test(l.u) ? 0 : 1 })));
   const files = own.length ? '<div class="files">' + own.map(fileLink).join("") + "</div>" : "";
   const rl = related(x);
-  const relHtml = rl.length ? "<details><summary>" + esc(t("related", rl.length)) + '</summary><div class="files">' + rl.map(fileLink).join("") + "</div></details>" : "";
+  const relHtml = rl.length ? "<details><summary>" + ic("book-open") + " " + esc(noEmo(t("related", rl.length))) + '</summary><div class="files">' + rl.map(fileLink).join("") + "</div></details>" : "";
   const body = x.intro ? "<details><summary>" + esc(t("details")) + "</summary><pre>" + esc(x.intro) + "</pre></details>" : "";
   const acts = [];
-  if (/^https?:\/\//.test(x.url)) acts.push('<a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + esc(t("openSite")) + "</a>");
-  if (x.due && x.due > now && !isDone(x)) acts.push('<a href="' + esc(gcalHref(x)) + '" target="_blank" rel="noopener noreferrer">' + esc(t("toCal")) + "</a>");
-  if (st !== "submitted" && st !== "na") acts.push('<button data-done="' + esc(x.key) + '">' + esc(man ? t("unmarkDone") : t("markDone")) + "</button>");
-  if (x.mine) acts.push('<button data-mine="' + esc(x.mine) + '">' + esc(t("mineEdit")) + "</button>");
+  if (/^https?:\/\//.test(x.url)) acts.push('<a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + '<span class="at">' + esc(noEmo(t("openSite")).replace(/\s*↗$/, "")) + "</span></a>");
+  if (x.due && x.due > now && !isDone(x)) acts.push('<a href="' + esc(gcalHref(x)) + '" target="_blank" rel="noopener noreferrer">' + ic("calendar-plus") + '<span class="at">' + esc(noEmo(t("toCal"))) + "</span></a>");
+  if (st !== "submitted" && st !== "na") acts.push('<button data-done="' + esc(x.key) + '">' + ic(man ? "undo-2" : "circle-check") + '<span class="at">' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + "</span></button>");
+  if (x.mine) acts.push('<button data-mine="' + esc(x.mine) + '">' + ic("square-pen") + '<span class="at">' + esc(noEmo(t("mineEdit"))) + "</span></button>");
+  for (let i = 0; i < acts.length; i++) { const m = /<span class="at">([^<]*)<\/span>/.exec(acts[i]); if (m) acts[i] = acts[i].replace(/^<(a|button) /, '<$1 title="' + m[1] + '" aria-label="' + m[1] + '" '); }
   return '<div class="task' + (g === "done" ? " done" : "") + (hid ? " hid" : "") + (V.hl === x.key ? " hl" : "") + '" data-key="' + esc(x.key) + '" style="--c:' + colorOf(x.cid) + '">' +
-    '<button class="x" data-hide="' + esc(x.key) + '" aria-label="' + esc(hid ? t("restore") : t("hide")) + '">' + (hid ? "↩" : "✕") + "</button>" +
+    '<button class="x" data-hide="' + esc(x.key) + '" aria-label="' + esc(hid ? t("restore") : t("hide")) + '">' + ic(hid ? "undo-2" : "x") + "</button>" +
     '<div class="tl"><span class="tname"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(typeLabel(x)) + " · <bdi>" + esc(shortName(x.course)) + "</bdi></span></div>" +
     '<div class="due">' + due + "</div>" + extra + files + relHtml + body + '<div class="act">' + acts.join("") + "</div></div>";
 }
@@ -2438,7 +2720,7 @@ async function shareTT() {
   const pub = P.tt.filter(x => !x.priv);
   if (!pub.length) return toast(t("ttNothing"));
   const link = location.origin + location.pathname + "#tt=" + b64enc(JSON.stringify(pub.map(({ id, cid, priv, ...r }) => r)));
-  try { if (navigator.share && !wide()) { await navigator.share({ title: t("ttTitle"), url: link }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
+  try { if (navigator.share && !bigScreen()) { await navigator.share({ title: t("ttTitle"), url: link }); return; } } catch (e) { if (e && e.name === "AbortError") return; }
   try { await navigator.clipboard.writeText(link); toast(t("ttCopied"), 5000); } catch (e) { prompt(t("ttTitle"), link); }
 }
 /* the personal timetable file from Levnet (a CSV saved as .xls): the user picks the file, sees what was found, then confirms */
@@ -2586,7 +2868,7 @@ function examList() {
 const dayDate = ts => { try { return new Date(ts * 1000).toLocaleDateString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", year: "numeric" }); } catch (e) { return ymd(ts); } };
 function renderExams(now) {
   const el = $("#exams"), L = examList().filter(x => x.allDay ? addD(x.ts, 1) > now : x.ts > now - 3 * 3600);
-  if (!L.length) { el.innerHTML = '<div class="exempty">' + esc(t("exNone")) + '<button data-exedit>' + esc(t("exAddBtn")) + "</button></div>"; return; }
+  if (!L.length) { el.innerHTML = '<div class="exempty">' + esc(t("exNone")) + '<button data-exedit>' + lbl("exAddBtn", "graduation-cap") + "</button></div>"; return; }
   const N = 5, shown = V.exAll ? L : L.slice(0, N);
   el.innerHTML = shown.map(x => {
     const days = daysBetween(now, x.ts);
@@ -2720,6 +3002,7 @@ function cleanKey(k, v) {
     case "off": return Array.isArray(v) ? v.filter(Number.isInteger).slice(0, 500) : [];
     case "xq": return Array.isArray(v) ? v.filter(q => obj(q) && typeof q.id === "string" && /^[\w-]{1,16}$/.test(q.id) && XQ_KINDS.includes(q.k) && (parseDT(q.at) || /^\d{4}-\d{2}-\d{2}$/.test(q.at || "")))
       .map(q => ({ id: q.id, cid: Number.isInteger(q.cid) && q.cid > 0 ? q.cid : 0, n: typeof q.n === "string" ? q.n.slice(0, 60) : "", k: q.k, at: q.at, note: typeof q.note === "string" ? q.note.slice(0, 80) : "" })).slice(0, 150) : [];
+    case "density": return ["detailed", "compact", "clean"].includes(v) ? v : "detailed";
     case "kw": return Array.isArray(v) ? [...new Set(v.filter(x => typeof x === "string").map(x => x.trim().slice(0, 40)).filter(Boolean))].slice(0, 40) : [];
     case "campus": return ["lev", "tal"].includes(v) ? v : "";
     case "zl": return ["zoom", "show", "hide"].includes(v) ? v : "zoom";
@@ -2861,7 +3144,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.4.0";
+const APP_VERSION = "1.5.0";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -2913,7 +3196,7 @@ function usageStats() {
     tt: P.tt.filter(x => !x.priv).length, priv: P.tt.filter(x => x.priv).length, att: P.tt.filter(x => x.att).length,
     exams: Object.keys(P.exams || {}).length, sem: !!(P.sem && P.sem.s), hidden: P.hidden.length, off: P.off.length, manual: P.manual.length,
     colors: Object.keys(P.colors || {}).length, sort: P.sort, filter: P.filter, old: P.old_days,
-    xq: (P.xq || []).length, kw: (P.kw || []).length, campus: P.campus || "", zl: P.zl, cdx: P.cdx ? 1 : 0, oldHide: P.old_hide ? 1 : 0, tour: LS.get("tourDone", false) === true,
+    dens: P.density || "detailed", xq: (P.xq || []).length, kw: (P.kw || []).length, campus: P.campus || "", zl: P.zl, cdx: P.cdx ? 1 : 0, oldHide: P.old_hide ? 1 : 0, tour: LS.get("tourDone", false) === true,
     n: LS.get("useCnt", {}),
   };
 }
@@ -2970,10 +3253,26 @@ function setView(v, fromHistory) {
   V.view = v === "tasks" || v === "tt" ? v : "dash";
   if (!fromHistory && NAV.ready && V.view !== prev) history.pushState({ v: V.view }, ""); LS.set("view", V.view); document.body.dataset.view = V.view; useHit("v_" + V.view);
   $$("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.v === V.view));
+  $("#pTitle").textContent = t(V.view === "tasks" ? "viewTasks" : V.view === "tt" ? "viewTT" : "viewDash");
 }
-const wide = () => window.matchMedia("(min-width:760px)").matches;
+const wide = () => false;          // every screen size now moves between tabs (phone: bottom bar, tablet: floating bar, computer: side bar)
+const bigScreen = () => window.matchMedia("(min-width:760px)").matches;
+/* wide screens: the overview is a masonry of cards (like Google Keep) — every card takes rows by its own height */
+const MASON_ROW = 6, MASON_GAP = 14;
+function masonOne(el) {
+  if (!bigScreen() || !el.offsetParent) { el.style.gridRowEnd = ""; return; }
+  el.style.gridRowEnd = "span " + Math.max(1, Math.ceil((el.getBoundingClientRect().height + MASON_GAP) / MASON_ROW));
+}
+const masonRO = "ResizeObserver" in window ? new ResizeObserver(es => { for (const e of es) masonOne(e.target); }) : null;
+function masonInit() { const box = $("#dash"); if (!box) return; for (const el of box.children) { if (masonRO) masonRO.observe(el); masonOne(el); } }
+const applyDensity = () => { document.body.dataset.density = P.density || "detailed"; $$("#dens [data-dn]").forEach(b => b.classList.toggle("on", b.dataset.dn === (P.density || "detailed"))); };
+/* a course counts as current if it hasn't ended, or (no end date in Moodle) had a deadline in the last 4 months or has one coming */
+function courseCurrent(c, now) {
+  if (c.end) return c.end > now;
+  return ((V.data && V.data.tasks) || []).some(x => x.cid === c.id && x.due && x.due > now - 120 * DAY);
+}
 function render() {
-  withMine(); applyDash();
+  withMine(); applyDash(); applyDensity(); renderSug();
   const d = V.data;
   $("#bRefresh").classList.toggle("spin", V.loading);
   $("#upd").textContent = (V.loading && !d ? t("loading") : d ? (V.loading ? t("refreshing") + " · " : "") + t("updated", ago(d.at)) : "") + syncBadge();
@@ -2996,13 +3295,16 @@ function render() {
   } else fb.hidden = true;
   // course chips: courses that have tasks, in enrolment order
   const withTasks = new Set(d.tasks.map(x => x.cid));
-  const cs = d.courses.filter(c => withTasks.has(c.id));
+  const cs = d.courses.filter(c => withTasks.has(c.id) && !isOff(c.id)), fc = V.focus && V.focus.kind === "course" ? V.focus.cid : null;
   $("#chips").innerHTML = cs.map(c => {
     const n = d.tasks.filter(x => x.cid === c.id && !isDone(x) && x.due && groupOf(x, now) !== "old" && !P.hidden.includes(x.key) && !ruleHidden(x, now)).length;
-    return '<span class="chip' + (isOff(c.id) ? "" : " on") + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
+    return '<span class="chip' + (fc === null || fc === c.id ? " on" : "") + (fc === c.id ? " sel" : "") + '" role="button" aria-pressed="' + (fc === c.id) + '" data-c="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i></i><bdi>' + esc(shortName(c.name)) + "</bdi>" + (n ? ' <span class="n">' + n + "</span>" : "") + "</span>";
   }).join("");
   $$("#seg button").forEach(b => b.classList.toggle("on", b.dataset.f === P.filter));
   $("#sort").value = P.sort;
+  const nf = (P.filter !== "open" ? 1 : 0) + (P.sort !== "urgency" ? 1 : 0) + (V.focus && V.focus.kind === "course" ? 1 : 0);
+  $("#fN").hidden = !nf; $("#fN").textContent = nf; $("#bFilter").classList.toggle("act", !!nf);
+  $("#fCourses").hidden = cs.length < 2;
 
   const shown = d.tasks.filter(x => visible(x, now)), buckets = [];
   const isOpen = (k, def) => (V.focus ? true : V.openG[k] !== undefined ? V.openG[k] : (P.filter === "done" && k === "u:done") ? true : def);
@@ -3055,6 +3357,7 @@ function renderKw() {
   $("#kwSug").innerHTML = sug.length ? esc(t("kwSug")) + " " + sug.map(w => '<button class="kwchip add" data-kwsug="' + esc(w) + '">+ ' + esc(w) + "</button>").join(" ") : "";
 }
 function renderSheet() {
+  applyDensity();
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
   $("#oldHide").checked = !!P.old_hide; $("#cdx").checked = !!P.cdx;
   $("#zl").innerHTML = [["zoom", "zlZoom"], ["show", "zlShow"], ["hide", "zlHide"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#zl").value = P.zl;
@@ -3067,12 +3370,16 @@ function renderSheet() {
   $$("[data-sem]").forEach(i => i.value = sv[i.dataset.sem] ? ymd(sv[i.dataset.sem]) : "");
   $("#semSrc").textContent = D ? t(D.src) : "";
   $("#bSemAuto").hidden = !["s", "e", "xs", "xe"].some(k => P.sem[k]);
-  $("#clist").innerHTML = d ? d.courses.map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span><bdi>" + esc(shortName(c.name)) + "</bdi></span></label>" +
+  const nowC = nowS(), cq = ($("#cq").value || "").trim().toLowerCase();
+  $("#cq").hidden = !d || d.courses.length < 8;
+  $("#cbInfo").textContent = d ? t("cbInfo", d.courses.filter(c => !isOff(c.id)).length, d.courses.length) : "";
+  $("#clist").innerHTML = d ? d.courses.filter(c => !cq || c.name.toLowerCase().includes(cq)).map(c => '<div class="srow"><label class="cn" data-tc="' + c.id + '"><input type="checkbox"' + (isOff(c.id) ? "" : " checked") + "><span><bdi>" + esc(shortName(c.name)) + "</bdi>" +
+    (courseCurrent(c, nowC) ? '<span class="act1">' + esc(t("cbNow")) + "</span>" : "") + "</span></label>" +
     '<input type="color" data-cc="' + c.id + '" value="' + colorOf(c.id) + '"></div>').join("") : "";
   /* one-line summaries on the menu */
   const on = P.rem && P.rem.on, cal = P.feed && P.feed.on, so = syncOnNow();
   $("#sumNotif").textContent = t(on ? "sumRemOn" : "sumRemOff") + " · " + t(cal ? "sumCalOn" : "sumCalOff");
-  $("#sumLook").textContent = ({ he: "עברית", en: "English", fr: "Français" })[LANG] + " · " + ($(".thcur") ? $(".thcur").textContent : "");
+  $("#sumLook").textContent = ({ he: "עברית", en: "English", fr: "Français" })[LANG] + " · " + ($(".thcur") ? $(".thcur").textContent : "") + " · " + t("dens_" + (P.density || "detailed"));
   $("#sumFilter").textContent = t("sumRules", (P.old_hide ? 1 : 0) + (P.zl === "hide" ? 1 : 0) + (P.campus ? 1 : 0) + (P.kw || []).length);
   $("#sumCourses").textContent = d ? t("sumCourses", d.courses.filter(c => !isOff(c.id)).length, d.courses.length) : "";
   $("#sumSem").textContent = D ? shortDate(D.s) + "–" + shortDate(addD(D.e, -1)) : t("sumNone");
@@ -3387,6 +3694,10 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
+  { v: "1.5.0", at: "2026-11-11 02:29",
+    he: ["✨ עיצוב חדש ונקי בהשראת אפליקציות המערכת: אייקונים מקצועיים, כפתורים ובוררים בסגנון iOS, וכותרת שקופה", "🧭 טאבים בכל מסך: בטאבלט סרגל צף, ובמחשב סרגל צד – כל דבר במקום שלו במקום עמוד אחד ארוך", "🪟 צפיפות תצוגה בהגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה", "📚 קורסים: ״הצג הכל״, ״הסתר הכל״ או ״רק קורסים פעילים״ בלחיצה אחת, וחיפוש כשיש הרבה", "🔢 ״נותרו 1 יום״ במקום ״נותרו יום״, ושמות הכרטיסיות במשימות לא נחתכים יותר", "🎯 בטאב המשימות מופיעים רק הקורסים שלך (מה שכיבית בהגדרות לא מופיע), ולחיצה על קורס מציגה רק אותו", "🏠 הסקירה באמצע התפריט התחתון, וכפתור ״סינון״ אחד במשימות לסטטוס, מיון וקורס", "🔴 הצעות (תזכורות, התקנה, מבחנים) עברו להגדרות עם נקודה אדומה, וחלונות שעולים מלמטה עם X"],
+    en: ["✨ A new, cleaner design inspired by system apps: professional icons, iOS-style buttons and pickers, a translucent toolbar", "🧭 Tabs on every screen: a floating bar on tablets and a side bar on computers – instead of one long page", "🪟 Display density in Settings → Look & display: detailed, compact or clean", "📚 Courses: “Show all”, “Hide all” or “Current courses only” in one tap, plus search when there are many", "🔢 Clearer countdowns (“1 day”), and task category labels are never cut", "🎯 The tasks tab shows only your courses (the ones switched off in settings are gone), and tapping one shows just it", "🏠 The overview sits in the middle of the bottom bar, and one “Filter” button in tasks holds status, sort and course", "🔴 Suggestions (reminders, install, exams) moved into settings with a red dot; windows slide up and close with an X"],
+    fr: ["✨ Un design plus épuré inspiré des apps système : icônes professionnelles, boutons et sélecteurs façon iOS, barre translucide", "🧭 Des onglets sur tous les écrans : barre flottante sur tablette, barre latérale sur ordinateur – au lieu d’une longue page", "🪟 Densité d’affichage dans Réglages → Apparence : détaillée, compacte ou épurée", "📚 Cours : « Tout afficher », « Tout masquer » ou « Cours actuels » en un geste, et une recherche", "🔢 Comptes à rebours plus clairs (« 1 jour »), et les libellés des catégories ne sont plus coupés", "🎯 L’onglet Devoirs n’affiche que vos cours (ceux désactivés dans les réglages disparaissent), et toucher un cours n’affiche que lui", "🏠 L’accueil est au centre de la barre du bas, et un seul bouton « Filtrer » dans Devoirs", "🔴 Les suggestions (rappels, installation, examens) sont dans les réglages avec un point rouge ; les fenêtres montent du bas et se ferment avec un X"] },
   { v: "1.4.0", at: "2026-11-10 14:43", he: ["📅 לשונית ״לו״ז״: מערכת השעות וגם הלוח האקדמי של תשפ״ז – תצוגה חודשית ושנתית עם כל החגים, החופשות, הבחינות והתאריכים העבריים", "📝 אפשר להוסיף ללוח המבחנים בחנים, מבחני אמצע ומבחנים שהמועד שלהם שונה בין הקבוצות (״＋ בוחן״) – עם תזכורות, ביומן ובלו״ז", "⚙️ הגדרות מסודרות בקטגוריות: התראות ויומן, מראה, סינון מטלות, קורסים, סמסטר, חשבון ועזרה", "🔎 סינון מטלות: להסתיר לפי מכון (לב / טל), לפי מילים (למשל ״קבוצה ב״ או שם מרצה), וקישורי זום שמופיעים כמטלה", "🧹 אפשר להסתיר לגמרי מטלות ישנות שלא הוגשו", "⏱ הזמן שנשאר להגשה מוצג בימים ובשעות (ספירה מדויקת עם דקות ושניות — בהגדרות)", "💬 בפידבק, השם, הקורסים ופרטי המכשיר מצורפים תמיד כדי שיהיה קל לעזור"],
     en: ["📅 “Schedule” tab: your timetable plus the 5787 academic calendar – month and year views with every holiday, break, exam period and Hebrew date", "📝 Add your own quizzes, midterms and group-specific exams to the exam board (“＋ Quiz”) – with reminders, in your calendar and in the schedule", "⚙️ Settings organised into categories: reminders & calendar, look, task filters, courses, semester, account and help", "🔎 Task filters: hide by campus (Lev / Tal), by words (e.g. “Group B” or a lecturer’s name), and Zoom links posted as tasks", "🧹 You can hide old unsubmitted tasks completely", "⏱ Time left is shown in days and hours (exact countdown with minutes and seconds is in settings)", "💬 Feedback always includes your name, courses and device details so it’s easier to help"],
     fr: ["📅 Onglet « Agenda » : l’emploi du temps et le calendrier académique 5787 – vues mois et année avec fêtes, vacances, examens et dates hébraïques", "📝 Ajoutez vos quiz, partiels et examens propres à votre groupe (« ＋ Quiz ») – avec rappels, dans votre calendrier et l’agenda", "⚙️ Réglages classés par catégories : rappels et agenda, apparence, filtres, cours, semestre, compte et aide", "🔎 Filtres de devoirs : masquer par campus (Lev / Tal), par mots (p. ex. « Groupe B » ou un enseignant) et les liens Zoom publiés comme devoirs", "🧹 Vous pouvez masquer complètement les anciens devoirs non rendus", "⏱ Le temps restant s’affiche en jours et en heures (compte à rebours précis dans les réglages)", "💬 Les avis incluent toujours votre nom, vos cours et les détails de l’appareil pour mieux vous aider"] },
@@ -3619,26 +3930,45 @@ function openRem(ask) {
   $("#remLater").hidden = !ask; $("#sheet").hidden = true; $("#remSheet").hidden = false;
 }
 function remSave(patch) { P.rem = Object.assign(remCfg(), patch); savePrefs(); }
+/* suggestions live in settings (a red dot on the gear until each one has been opened) instead of cards on the overview */
+function suggestions() {
+  const out = [], on = P.rem && P.rem.on, off = LS.get("sugOff", []);
+  if (!on) out.push({ id: "rem", ic: "bell", c: "#ff3b30", k: "sugRem", d: "sugRemD", go: () => openRem(false) });
+  else if (usePush() && !pushOn() && !pushNeedsInstall() && pushPerm() !== "denied") out.push({ id: "push", ic: "bell", c: "#ff3b30", k: "sugPush", d: "sugPushD", go: () => pushEnable() });
+  if (!isStandalone()) out.push({ id: "inst", ic: "download", c: "#007aff", k: "sugInst", d: "sugInstD", go: () => openInstall() });
+  if (V.data && !(P.tt || []).length) out.push({ id: "tt", ic: "clock", c: "#34c759", k: "sugTT", d: "sugTTD", go: () => goTT() });
+  if (V.data && !examList().length) out.push({ id: "ex", ic: "graduation-cap", c: "#af52de", k: "sugEx", d: "sugExD", go: () => openExams() });
+  return out.filter(x => !off.includes(x.id));
+}
+function renderSug() {
+  let L = []; try { L = suggestions(); } catch (e) {}
+  const seen = LS.get("sugSeen", []), unread = L.some(x => !seen.includes(x.id));
+  $("#bSet").classList.toggle("has-dot", unread); $("#bNavSet").classList.toggle("has-dot", unread);
+  $("#sugW").hidden = !L.length;
+  $("#sugList").innerHTML = L.map(x => '<div class="sugr"><button class="mrow" data-sug="' + x.id + '"><span class="mi" style="--mc:' + x.c + '">' + ic(x.ic) + '</span><span class="mt"><b>' + esc(t(x.k)) + "</b><small>" + esc(t(x.d)) + "</small></span>" +
+    (seen.includes(x.id) ? "" : '<i class="rdot" aria-label="' + esc(t("sugNew")) + '"></i>') + '</button><button class="sugx" data-sugx="' + x.id + '" aria-label="' + esc(t("sugHide")) + '" title="' + esc(t("sugHide")) + '">' + ic("x") + "</button></div>").join("");
+}
 function renderRemCard() {
   const el = $("#remCardBody"); if (!el) return;
   const on = P.rem && P.rem.on;
+  $("#icsCard").classList.toggle("sugmoved", !on);
   if (feedOn()) feedSoon();
   const calLine = () => { if (feedOn()) return '<div class="hint">📅 ' + esc(t("calLive")) + "</div>"; if (!useCal()) return ""; const n = remPending();
     return n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button data-rem="add">' + esc(t("remUpdateBtn")) + "</button>" : '<div class="hint">📅 ' + esc(t("remCardOk")) + "</div>"; };
   if (on && usePush()) {
     const next = pushOn() && pushItems()[0], perm = pushPerm();
-    el.innerHTML = (pushOn() ? '<div class="hint">' + esc(t("pushOnCard")) + (next ? "<br>" + esc(t("pushNext", clockTxt(next.at / 1000), next.title)) : "") + "</div>" + (PS.err ? '<div class="hint">' + esc(t("pushFail")) + "</div>" : "") + '<button data-rem="test">' + esc(t("pushTestBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
-      : pushNeedsInstall() ? '<div class="hint">' + esc(t("pushIos")) + '</div><button data-rem="cal">' + esc(t("remGo")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
-      : '<div class="remnew">' + esc(t(perm === "denied" ? "pushBlockedCard" : "pushOffCard")) + '</div><button class="primary" data-rem="push">' + esc(t("pushEnableBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>");
+    el.innerHTML = (pushOn() ? '<div class="hint">' + esc(t("pushOnCard")) + (next ? "<br>" + esc(t("pushNext", clockTxt(next.at / 1000), next.title)) : "") + "</div>" + (PS.err ? '<div class="hint">' + esc(t("pushFail")) + "</div>" : "") + '<button data-rem="test">' + esc(t("pushTestBtn")) + '</button><button class="link" data-rem="set">' + lbl("remChange", "settings") + "</button>"
+      : pushNeedsInstall() ? '<div class="hint">' + esc(t("pushIos")) + '</div><button data-rem="cal">' + lbl("remGo", "calendar-plus") + '</button><button class="link" data-rem="set">' + lbl("remChange", "settings") + "</button>"
+      : '<div class="remnew">' + esc(t(perm === "denied" ? "pushBlockedCard" : "pushOffCard")) + '</div><button class="primary" data-rem="push">' + lbl("pushEnableBtn", "bell") + '</button><button class="link" data-rem="set">' + lbl("remChange", "settings") + "</button>");
     if ((remHow() === "both" || feedOn()) && !pushNeedsInstall()) el.insertAdjacentHTML("beforeend", calLine());
     if (pushOn()) pushSoon();
     return;
   }
   const n = on ? remPending() : 0;
-  if (on && feedOn()) { el.innerHTML = '<div class="hint">📅 ' + esc(t("calLive")) + '</div><button class="link" data-rem="feed">' + esc(t("calManage")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"; return; }
-  el.innerHTML = !on ? '<div class="hint">' + esc(t(pushAvail() ? "remCardOffPush" : "remCardOff")) + '</div><button class="primary" data-rem="set">' + esc(t("remSetBtn")) + "</button>"
-    : n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button class="primary" data-rem="add">' + esc(t("remUpdateBtn")) + '</button><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>"
-    : '<div class="hint">✓ ' + esc(t("remCardOk")) + '</div><button class="link" data-rem="set">' + esc(t("remChange")) + "</button>";
+  if (on && feedOn()) { el.innerHTML = '<div class="hint">📅 ' + esc(t("calLive")) + '</div><button class="link" data-rem="feed">' + esc(t("calManage")) + '</button><button class="link" data-rem="set">' + lbl("remChange", "settings") + "</button>"; return; }
+  el.innerHTML = !on ? '<div class="hint">' + esc(t(pushAvail() ? "remCardOffPush" : "remCardOff")) + '</div><button class="primary" data-rem="set">' + lbl("remSetBtn", "bell") + "</button>"
+    : n ? '<div class="remnew">' + esc(t("remCardNew", n)) + '</div><button class="primary" data-rem="add">' + esc(t("remUpdateBtn")) + '</button><button class="link" data-rem="set">' + lbl("remChange", "settings") + "</button>"
+    : '<div class="hint">✓ ' + esc(t("remCardOk")) + '</div><button class="link" data-rem="set">' + lbl("remChange", "settings") + "</button>";
 }
 /* ---------- arrange the overview: the order of its cards, and which are shown ---------- */
 const DASH_CARDS = [{ id: "hero", k: "dcHero" }, { id: "stats", k: "dcStats" }, { id: "todayCard", k: "dcToday" }, { id: "examCard", k: "dcExams" }, { id: "semCard", k: "dcSem" },
@@ -4012,7 +4342,8 @@ function showMain() {
   M.url = LS.get("site", DEFAULT_SITE); M.token = LS.get("token", "");
   document.body.classList.add("app"); $("#tabbar").hidden = false; setView(V.view);
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
-  render(); refresh(); useHit("open"); navInit();
+  render(); refresh(); useHit("open"); navInit(); masonInit();
+  document.body.classList.add("intro"); setTimeout(() => document.body.classList.remove("intro"), 1400);
   if (!showMain.counted) { showMain.counted = true; LS.set("opens", LS.get("opens", 0) + 1); }
   $("#bInst").hidden = isStandalone();
   // the tour opens once, after the app first opens (not in automated test browsers, where it would cover everything)
@@ -4181,7 +4512,11 @@ $("#acad").addEventListener("click", e => {
 });
 $("#bAcadGo").onclick = () => goAcad();
 $("#bSet").onclick = () => { renderSheet(); setPage(""); $("#sheet").hidden = false; };
-$("#sMenu").addEventListener("click", e => { const b = e.target.closest("[data-go]"); if (b) setPage(b.dataset.go); });
+$("#sMenu").addEventListener("click", e => {
+  const x = e.target.closest("[data-sugx]"); if (x) { LS.set("sugOff", [...new Set(LS.get("sugOff", []).concat(x.dataset.sugx))]); useHit("sugOff_" + x.dataset.sugx); renderSug(); return; }
+  const g = e.target.closest("[data-sug]");
+  if (g) { const id = g.dataset.sug, s = suggestions().find(y => y.id === id); LS.set("sugSeen", [...new Set(LS.get("sugSeen", []).concat(id))]); useHit("sug_" + id); renderSug(); if (s) { $("#sheet").hidden = true; s.go(); } return; }
+  const b = e.target.closest("[data-go]"); if (b) setPage(b.dataset.go); });
 $("#sBack").onclick = () => setPage("");
 $("#oldHide").onchange = e => { P.old_hide = e.target.checked; savePrefs(); render(); renderSheet(); };
 $("#cdx").onchange = e => { P.cdx = e.target.checked; savePrefs(); render(); };
@@ -4200,6 +4535,13 @@ $("#clist").addEventListener("change", e => {
   const tc = e.target.closest("[data-tc]");
   if (tc) { const id = Number(tc.dataset.tc); P.off = e.target.checked ? P.off.filter(x => x !== id) : [...new Set([...P.off, id])]; savePrefs(); render(); }
 });
+$("#cq").addEventListener("input", () => renderSheet());
+$$(".cbulk [data-cb]").forEach(b => b.onclick = () => {
+  const d = V.data; if (!d) return; const now = nowS(), all = d.courses.map(c => c.id), k = b.dataset.cb;
+  P.off = k === "all" ? [] : k === "none" ? all : d.courses.filter(c => !courseCurrent(c, now)).map(c => c.id);
+  savePrefs(); render(); renderSheet(); toast(t("cbInfo", all.length - P.off.length, all.length));
+});
+$("#dens").addEventListener("click", e => { const b = e.target.closest("[data-dn]"); if (!b) return; P.density = b.dataset.dn; savePrefs(); useHit("dens_" + P.density); render(); renderSheet(); });
 $("#clist").addEventListener("input", e => { if (e.target.dataset.cc) { P.colors[e.target.dataset.cc] = e.target.value; savePrefs(); render(); } });
 $("#bLogout").onclick = () => {
   if (!confirm(t("logoutConfirm"))) return;
@@ -4207,9 +4549,13 @@ $("#bLogout").onclick = () => {
   try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
   showSetup();
 };
+$("#bFilter").onclick = () => { useHit("filter"); render(); $("#fSheet").hidden = false; };
+$("#fClose").onclick = $("#fDone").onclick = () => { $("#fSheet").hidden = true; };
+$("#fSheet").addEventListener("click", e => { if (e.target.id === "fSheet") $("#fSheet").hidden = true; });
+$("#fReset").onclick = () => { P.filter = "open"; P.sort = "urgency"; if (V.focus && V.focus.kind === "course") V.focus = null; savePrefs(); render(); };
 $("#chips").addEventListener("click", e => {
   const c = e.target.closest("[data-c]"); if (!c) return;
-  const id = Number(c.dataset.c); P.off = isOff(id) ? P.off.filter(x => x !== id) : [...P.off, id]; savePrefs(); render();
+  const id = Number(c.dataset.c); V.focus = V.focus && V.focus.kind === "course" && V.focus.cid === id ? null : { kind: "course", cid: id }; V.hl = null; render();
 });
 $("#cats").addEventListener("click", e => { const b = e.target.closest("[data-cat]"); if (b) { V.cat = b.dataset.cat; LS.set("cat", V.cat); useHit("cat_" + V.cat); render(); } });
 $("#seg").addEventListener("click", e => { const b = e.target.closest("[data-f]"); if (b) { P.filter = b.dataset.f; savePrefs(); render(); } });
@@ -4338,6 +4684,8 @@ $("#bFocusClear").onclick = () => {
   const back = V.focusFrom === "dash" && !wide(); V.focus = null; V.focusFrom = null;
   if (back) { if (history.state && history.state.v === "tasks") history.back(); else { setView("dash"); render(); window.scrollTo(0, 0); } } else render();
 };
+$("#bNavSet").onclick = () => $("#bSet").click();
+window.addEventListener("resize", () => { const b = $("#dash"); if (b) for (const el of b.children) masonOne(el); });
 $("#tabbar").addEventListener("click", e => { const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !M.token) return;

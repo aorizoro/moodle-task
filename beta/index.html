@@ -3144,7 +3144,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.5.0-beta.5";
+const APP_VERSION = "1.5.0";
 const FEEDBACK = { url: "https://docs.google.com/forms/d/e/1FAIpQLSeZLQ-f6wqE1OWoPMXkrMiKJS18Z2izS2BL93xatuIswVYS-A/viewform",
   f: { kind: "1776452066", msg: "354802977", contact: "1697934642", meta: "1541901280", name: "1941724081", courses: "1216264303" } };
 const fbReady = () => !!(FEEDBACK.url && FEEDBACK.f.kind && FEEDBACK.f.msg && FEEDBACK.f.meta);
@@ -3694,7 +3694,7 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
-  { v: "1.5.0", at: "2026-11-10 16:09",
+  { v: "1.5.0", at: "2026-11-11 02:29",
     he: ["✨ עיצוב חדש ונקי בהשראת אפליקציות המערכת: אייקונים מקצועיים, כפתורים ובוררים בסגנון iOS, וכותרת שקופה", "🧭 טאבים בכל מסך: בטאבלט סרגל צף, ובמחשב סרגל צד – כל דבר במקום שלו במקום עמוד אחד ארוך", "🪟 צפיפות תצוגה בהגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה", "📚 קורסים: ״הצג הכל״, ״הסתר הכל״ או ״רק קורסים פעילים״ בלחיצה אחת, וחיפוש כשיש הרבה", "🔢 ״נותרו 1 יום״ במקום ״נותרו יום״, ושמות הכרטיסיות במשימות לא נחתכים יותר", "🎯 בטאב המשימות מופיעים רק הקורסים שלך (מה שכיבית בהגדרות לא מופיע), ולחיצה על קורס מציגה רק אותו", "🏠 הסקירה באמצע התפריט התחתון, וכפתור ״סינון״ אחד במשימות לסטטוס, מיון וקורס", "🔴 הצעות (תזכורות, התקנה, מבחנים) עברו להגדרות עם נקודה אדומה, וחלונות שעולים מלמטה עם X"],
     en: ["✨ A new, cleaner design inspired by system apps: professional icons, iOS-style buttons and pickers, a translucent toolbar", "🧭 Tabs on every screen: a floating bar on tablets and a side bar on computers – instead of one long page", "🪟 Display density in Settings → Look & display: detailed, compact or clean", "📚 Courses: “Show all”, “Hide all” or “Current courses only” in one tap, plus search when there are many", "🔢 Clearer countdowns (“1 day”), and task category labels are never cut", "🎯 The tasks tab shows only your courses (the ones switched off in settings are gone), and tapping one shows just it", "🏠 The overview sits in the middle of the bottom bar, and one “Filter” button in tasks holds status, sort and course", "🔴 Suggestions (reminders, install, exams) moved into settings with a red dot; windows slide up and close with an X"],
     fr: ["✨ Un design plus épuré inspiré des apps système : icônes professionnelles, boutons et sélecteurs façon iOS, barre translucide", "🧭 Des onglets sur tous les écrans : barre flottante sur tablette, barre latérale sur ordinateur – au lieu d’une longue page", "🪟 Densité d’affichage dans Réglages → Apparence : détaillée, compacte ou épurée", "📚 Cours : « Tout afficher », « Tout masquer » ou « Cours actuels » en un geste, et une recherche", "🔢 Comptes à rebours plus clairs (« 1 jour »), et les libellés des catégories ne sont plus coupés", "🎯 L’onglet Devoirs n’affiche que vos cours (ceux désactivés dans les réglages disparaissent), et toucher un cours n’affiche que lui", "🏠 L’accueil est au centre de la barre du bas, et un seul bouton « Filtrer » dans Devoirs", "🔴 Les suggestions (rappels, installation, examens) sont dans les réglages avec un point rouge ; les fenêtres montent du bas et se ferment avec un X"] },
