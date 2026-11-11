@@ -12,6 +12,10 @@
 4. **Keep the version.** Push the released commit as a branch: `git push origin HEAD:refs/heads/release-X.Y.Z`
    (`release-1.0.0` is the first). To roll back: copy `index.html` and `sw.js` from the previous
    release branch to the root and bump `CACHE`.
+5. **Update the system map.** The Claude Doc "MoodlePro – מפת המערכת"
+   (https://claude.ai/artifact/1oa3V3CyavZvAwBTiJ1aSB) describes the whole system for people and for other AIs.
+   On every release: add a row to "היסטוריית גרסאות", update "מצב נכון ל:" at the top, and fix any section
+   the release changed (screens, settings keys, reminders, worker endpoints, limits).
 
 "מה חדש" opens only for versions that have an entry in `CHANGES` inside `index.html`. A fix-only release
 (PATCH) gets no entry there, so it updates quietly; it still goes into CHANGELOG.md.
