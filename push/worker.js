@@ -194,6 +194,9 @@ export class Community extends DurableObject {
       CREATE TABLE IF NOT EXISTS reacts (mid INTEGER, uid TEXT, emo TEXT, PRIMARY KEY (mid, uid, emo));
       CREATE TABLE IF NOT EXISTS stars (mid INTEGER, uid TEXT, PRIMARY KEY (mid, uid));`);
     this.sql.exec("CREATE TABLE IF NOT EXISTS imgs (id TEXT PRIMARY KEY, type TEXT, data BLOB, at INTEGER)");
+    // what happened to me that I'll want to hear about when I open the app (for now: someone starred my message)
+    this.sql.exec("CREATE TABLE IF NOT EXISTS notes (id INTEGER PRIMARY KEY AUTOINCREMENT, uid TEXT, kind TEXT, from_uid TEXT, cid TEXT, tk TEXT, mid INTEGER, body TEXT, at INTEGER)");
+    this.sql.exec("CREATE INDEX IF NOT EXISTS notes_u ON notes (uid, at)");
     for (const col of ["lb TEXT", "lt TEXT"]) try { this.sql.exec("ALTER TABLE thr ADD COLUMN " + col); } catch (e) {}   // the last message of a thread (who, what) for the chats list
   }
   /* a screenshot attached to a feedback message: kept 120 days, at most 3000, behind a link nobody can guess */
@@ -250,7 +253,10 @@ export class Community extends DurableObject {
       for (const c of cs) { const cid = String(c.id); this.course(cid, c.name); out[cid] = this.pub(cid); }
       const mine = {}; for (const r of this.q("SELECT cid, aid, h FROM times WHERE uid = ?", me.uid)) mine[r.cid + ":" + r.aid] = r.h;
       const added = this.q("SELECT sid FROM adds WHERE uid = ?", me.uid).map(r => r.sid);
-      return [200, { me: { uid: me.uid, ...this.pts(me.uid) }, c: out, mine, added }];
+      const since = Math.max(Number(b.ns) || 0, now - 14 * 86400e3);
+      const notes = this.q(`SELECT n.id, n.kind, n.cid, n.tk, n.mid, n.body, n.at, u.name, t.ref FROM notes n LEFT JOIN users u ON u.uid = n.from_uid LEFT JOIN thr t ON t.cid = n.cid AND t.tk = n.tk
+        WHERE n.uid = ? AND n.at > ? ORDER BY n.at DESC LIMIT 20`, me.uid, since).map(r => ({ id: r.id, kind: r.kind, cid: r.cid, tk: r.tk, mid: r.mid, body: r.body || "", at: r.at, name: r.name || "", ref: r.ref || "" }));
+      return [200, { me: { uid: me.uid, ...this.pts(me.uid) }, c: out, mine, added, notes }];
     }
     const cid = okCid(b.cid) ? String(b.cid) : "";
     if (op === "time") {
@@ -352,6 +358,8 @@ export class Community extends DurableObject {
         this.sql.exec("UPDATE thr SET ver = ver + 1 WHERE cid = ? AND tk = ?", m.cid, m.tk);
         const th = this.one("SELECT ref FROM thr WHERE cid = ? AND tk = ?", m.cid, m.tk);
         this.award(m.uid, PTS.star, "star", me.uid, m.cid, (th && th.ref) || "");
+        this.sql.exec("INSERT INTO notes (uid, kind, from_uid, cid, tk, mid, body, at) VALUES (?, 'star', ?, ?, ?, ?, ?, ?)", m.uid, me.uid, m.cid, m.tk, m.id, String(m.body || "").replace(/\s+/g, " ").slice(0, 120), now);
+        if (Math.random() < 0.05) this.sql.exec("DELETE FROM notes WHERE at < ?", now - 60 * 86400e3);
       }
       return [200, { ok: true }];
     }
