@@ -638,6 +638,13 @@ body.calm *,body.calm *::before,body.calm *::after{animation:none!important;tran
 .tkmeta .crsl{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--c);filter:brightness(.8);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .tkdue{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--c) 10%,var(--card));border:1px solid color-mix(in srgb,var(--c) 30%,var(--line));margin:0 0 10px}
 .tkdue small{color:var(--muted);font-size:12.5px}.tkdue b{font-size:17px}.tkdue .cd{font-size:15px}.tkdue .sub{font-size:13px;color:var(--muted)}
+.tkgr{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;padding:10px 14px;border-radius:14px;background:color-mix(in srgb,var(--ok) 10%,var(--card));border:1px solid color-mix(in srgb,var(--ok) 30%,var(--line));margin:0 0 10px}
+.tkgr>span{display:inline-flex;align-items:center;gap:6px;font-weight:650}.tkgr .i{width:17px;height:17px;color:var(--ok)}.tkgr b{font-size:18px}.tkgr small{color:var(--muted);font-size:12.5px}.tkgr .grfb{flex-basis:100%;font-size:13px;white-space:pre-wrap}
+.grrow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line)}.grrow[data-crsgo]{cursor:pointer}.grrow>.i{width:18px;height:18px;color:var(--accent-t);flex:none}.grrow.att>.i{color:#8e5bd8}
+.grrow .sw{flex:1;min-width:0;display:flex;flex-direction:column}.grrow b{font-weight:650;font-size:14px}.grrow small{color:var(--muted);font-size:12px}.grrow .grfb{white-space:pre-wrap;margin-top:2px}
+.grv{font-size:15px;font-weight:800;white-space:nowrap}.grv.dim,.grt.dim{color:var(--muted);font-weight:600}
+.grtot{display:flex;align-items:baseline;justify-content:space-between;padding:10px 14px;border-radius:14px;background:var(--row);margin:4px 0 6px;font-weight:700}.grtot b{font-size:22px}.grtot small{font-size:13px;color:var(--muted)}
+.grmore>summary{cursor:pointer;color:var(--muted);font-size:13px;padding:8px 2px}.grt{font-size:16px;font-weight:800;margin-inline-start:auto}.grfoot{margin-top:6px}
 .tkgone{font-size:13px;color:var(--muted);margin:-4px 0 10px;padding:8px 12px;border-radius:12px;background:var(--row)}
 .tkacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}.tkacts>*{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 10px;border-radius:12px;font-weight:650;font-size:14px;text-decoration:none}
 .tkacts>*{margin:0}.tkacts>a.btn:not(.primary){border:1px solid var(--line);background:var(--card);color:inherit}.tkacts>.wide{grid-column:1/-1}.tkacts .i{width:17px;height:17px}
@@ -1120,6 +1127,10 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       <div id="fresh"></div>
       <div id="news"></div>
     </div>
+    <div id="gradesCard" class="dcard crsc">
+      <div class="ch"><span data-i18n="grTitle" data-ic="graduation-cap"></span></div>
+      <div id="grades"></div>
+    </div>
     <div id="coursesCard" class="dcard crsc">
       <div class="ch"><span data-i18n="crsTitle" data-ic="book-open"></span></div>
       <div id="crsList"></div>
@@ -1213,6 +1224,8 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       <button id="bCal" class="prow" data-i18n="calBtn" data-ic="calendar-plus"></button>
       <div class="srow"><span data-i18n="newAlLbl"></span><input type="checkbox" id="newAl"></div>
       <div class="hint" data-i18n="newAlHint"></div>
+      <div class="srow"><span data-i18n="grLbl"></span><input type="checkbox" id="grOn"></div>
+      <div class="hint" data-i18n="grHint"></div>
       <div class="srow"><span data-i18n="badgeLbl"></span><input type="checkbox" id="appBadge"></div>
       <div class="hint" data-i18n="badgeHint"></div>
     </div>
@@ -1563,6 +1576,10 @@ const I18N = {
     tkCrsSub: (o, l) => (o ? o + " פתוחות" : "אין מטלות פתוחות") + (l ? " · " + l + " באיחור" : ""), tkPageBtn: "עמוד המטלה",
     ex_task: "עמוד המטלה\nכל מה שקשור למטלה במקום אחד: מתי ההגשה, ההנחיות, הקבצים והחומרים מאותו נושא, כמה זמן זה לקח לאחרים והדיון עליה.\nמכאן אפשר לפתוח אותה במודל, לסמן שסיימת, להוסיף ליומן או לעבור לדף הקורס.",
     lgTask: "מטלה", lgMine: "משימה שלי", lgExam: "מבחן / בוחן", lgDone: "הוגש / בוצע", tkExpand: "פתיחת עמוד המטלה",
+    grTitle: "ציונים", dcGrades: "ציונים", grTitleC: "ציונים", grItem: "פריט ציון", grLoading: "טוען ציונים מהמודל…", grNone: "עוד לא נטענו ציונים. הם נטענים ברענון הבא.", grNoneYet: "עוד אין ציונים", grHidden: "המרצה לא מאפשר לראות ציונים בקורס הזה במודל.", grHiddenShort: "הציונים מוסתרים במודל",
+    grAt: x => "עודכן " + x, grTotHint: "המספר בצד = הציון בקורס עד עכשיו, לפי מה שכבר נבדק", grMoodle: "טבלת הציונים במודל", grAtt: "נוכחות", grVpl: "בודק אוטומטי", grW: w => "משקל " + w + "%", grTotal: "הציון בקורס עד עכשיו", grNoGrade: n => n + " פריטים עוד בלי ציון",
+    grWHint: "המשקלים מגיעים מהמודל ומראים כמה כל פריט שווה בציון של הקורס. לפריט שעוד לא נבדק המודל מראה \u20660%\u2069.", grTk: "ציון", grNotifT: n => n === 1 ? "🎓 ציון חדש" : "🎓 " + n + " ציונים חדשים", frGrade: "ציון חדש",
+    grLbl: "ציונים מהמודל", grHint: "מציג את הציונים מטבלת הציונים במודל (מטלות, בחנים, בודק אוטומטי ונוכחות) בכרטיס בסקירה, בדף הקורס ובכל מטלה, ומודיע כשמגיע ציון חדש. נבדק לכל היותר כל רבע שעה.", grOffHint: "הציונים כבויים. אפשר להפעיל בהגדרות ← התראות ויומן.",
     exOk: "הבנתי", exReset: "להציג שוב את ההסברים הקצרים", exResetDone: "ההסברים יופיעו שוב בכל מקום", ex_dash: "זו הסקירה\nבמבט אחד: מה באיחור, מה להיום ולשבוע הקרוב, מבחנים, הקורסים שלך והודעות מהמרצים. לחיצה על כל דבר לוקחת אליו.\nאת הכרטיסים אפשר לסדר ולהסתיר: הגדרות ← מראה ותצוגה ← סידור הסקירה.", ex_tasks: "כל המשימות במקום אחד\nמטלות, בחנים ומשימות משלך מכל הקורסים, לפי הדחיפות: היום, עוד השבוע, בשבוע הבא ובהמשך.\n✓ בצד של המשימה מסמן שסיימת (ואפשר לבטל), ✕ בצד השני מסתיר. לחיצה על משימה פותחת את עמוד המשימה עם כל הפרטים, ולחיצה על שם הקורס פותחת את דף הקורס.\nבמטלה שהגשת יש ⏳ ״כמה זמן לקח?״ – אפשר לדווח או לשנות מתי שרוצים.", ex_tt: "לו״ז: המערכת והלוח האקדמי\nמערכת השעות שלך ותאריכי הסמסטר, החגים והמבחנים. את המערכת אפשר לייבא מהלב נט או לבנות ידנית, ולקבל תזכורת לפני כל שיעור.", ex_chat: "כל השיחות שלך\nלכל קורס יש צ'אט, ולכל מטלה יש דיון משלה. בכל שורה כתוב לאן היא שייכת: ״צ'אט הקורס״, או ״דיון במטלה״ ושם הקורס.\n״פעילות״ מציג רק איפה שכבר כתבו. כדי להתחיל שיחה, עוברים ל״קורסים״ ובוחרים קורס.", ex_settings: "ההגדרות לפי נושא\nהתראות ותזכורות, מראה וצבעים, סינון מטלות, קורסים, תאריכי סמסטר, חשבון וסנכרון, ועזרה. נקודה אדומה מסמנת הצעה שעוד לא ראית.", ex_crs: "דף הקורס\nכל מה שקשור לקורס במקום אחד: מה פתוח ומה הבא בתור, מבחנים ובחנים, השיעורים שלו במערכת, כל הקבצים והנושאים מהמודל (עם חיפוש), הצ'אט והוואטסאפ של הקורס, והצבע שלו באפליקציה.", ex_rem: "מתי להזכיר לך\nבוחרים כמה זמן לפני הגשה, לפני מבחן ולפני שיעור, וסיכום בוקר בשעה שבוחרים. ״+ זמן אחר״ מוסיף כל זמן שרוצים.\nהתזכורות מגיעות כהתראה מהאפליקציה, ביומן של הטלפון, או בשניהם.", ex_themes: "המראה של האפליקציה\nערכות בהירות, פסטל, צבעוניות וכהות, או ערכה שבונים לבד. למעלה בוחרים גם את הלוגו שמופיע בראש האפליקציה.", ex_exams: "מבחנים ובחנים\nמועדי המבחנים של הקורסים (מהלב נט, כשפורסמו), ובחנים ומבחנים שמוסיפים לבד. הם מופיעים בסקירה, בדף הקורס ובתזכורות.", ex_mine: "משימה משלך\nמשהו שלא נמצא במודל: קריאה, הכנה למבחן, כל דבר. הוא מופיע עם שאר המשימות ומקבל תזכורות כמו כל מטלה.", ex_fb: "ספרו לנו\nמה עובד, מה לא ומה חסר. כל הודעה נקראת. עם ההודעה נשלחים גם השם, הקורסים והגרסה, כדי שאפשר יהיה לבדוק מה קרה. אפשר לצרף צילום מסך.", ex_socChat: "שיחה\nכותבים כאן לכל מי שבקורס. אפשר להגיב באימוג'י, לענות להודעה מסוימת, ולסמן ⭐ תשובה שעזרה (זה נותן לכותב נקודות).", ex_board: "טבלת הדירוג\nנקודות מקבלים על עזרה לאחרים: שיתוף בוחן, דיווח כמה זמן לקחה מטלה, הוספת קבוצת וואטסאפ ותשובה שסומנה ⭐. אפשר לראות דירוג כללי או לפי קורס.", ex_daSheet: "סידור הסקירה\nמשנים את סדר הכרטיסים בחצים, ומכבים כרטיסים שלא צריך. אפשר לחזור לסידור המקורי בכל רגע.", ex_cal: "יומן שמתעדכן לבד\nמוסיף ליומן של הטלפון (Google או אייפון) את ההגשות והמבחנים, והוא מתעדכן לבד כשמשהו משתנה במודל.", ex_ttEdit: "שיעור במערכת\nשם, יום, שעות ומקום. אם השיעור בזום, אפשר לקבל תזכורת לפניו. ✋ מסמן שיש בו נוכחות חובה.",
     fbShot: "צירוף צילום מסך", fbShotHint: "אפשר לצלם את המסך (בטלפון: כפתור הצד + הגברת עוצמה) ולבחור את התמונה מהגלריה.", fbShotDel: "הסרת התמונה", fbShotBad: "לא הצלחתי לקרוא את התמונה. אפשר לנסות תמונה אחרת.", fbShotFail: "התמונה לא נשלחה",
     crsSDone: n => "הוגשו (" + n + ")", crsDoneHint: "כמה זמן לקחה כל מטלה? הדיווח עוזר לכולם בקורס לדעת כמה זמן לתכנן (ואפשר לשנות אותו מתי שרוצים).",
@@ -1786,6 +1803,10 @@ const I18N = {
     tkCrsSub: (o, l) => (o ? o + " open" : "No open tasks") + (l ? " · " + l + " overdue" : ""), tkPageBtn: "Task page",
     ex_task: "The task page\nEverything about the task in one place: when it's due, the instructions, its files and materials from the same topic, how long it took others and the discussion about it.\nFrom here you can open it in Moodle, mark it done, add it to your calendar or go to the course page.",
     lgTask: "Task", lgMine: "My own task", lgExam: "Exam / quiz", lgDone: "Submitted / done", tkExpand: "Open the task page",
+    grTitle: "Grades", dcGrades: "Grades", grTitleC: "Grades", grItem: "Grade item", grLoading: "Loading grades from Moodle…", grNone: "Grades haven't loaded yet. They load on the next refresh.", grNoneYet: "No grades yet", grHidden: "The lecturer doesn't let students see grades in this course in Moodle.", grHiddenShort: "Grades hidden in Moodle",
+    grAt: x => "Updated " + x, grTotHint: "The number on the side = your grade in the course so far, from what's been graded", grMoodle: "Grades in Moodle", grAtt: "Attendance", grVpl: "Automatic checker", grW: w => "weight " + w + "%", grTotal: "Course grade so far", grNoGrade: n => n + " items not graded yet",
+    grWHint: "Weights come from Moodle and show how much each item counts in the course grade. Moodle shows 0% for items not graded yet.", grTk: "Grade", grNotifT: n => n === 1 ? "🎓 New grade" : "🎓 " + n + " new grades", frGrade: "New grade",
+    grLbl: "Grades from Moodle", grHint: "Shows the grades from Moodle's gradebook (assignments, quizzes, automatic checker and attendance) in a card on the overview, on the course page and on each task, and tells you when a new grade arrives. Checked at most every 15 minutes.", grOffHint: "Grades are off. Turn them on in Settings → Notifications & calendar.",
     exOk: "Got it", exReset: "Show the short explanations again", exResetDone: "The explanations will show again everywhere", ex_dash: "This is the overview\nAt a glance: what’s overdue, what’s due today and this week, exams, your courses and announcements. Tap anything to go to it.\nYou can reorder and hide cards: Settings → Look & display → Arrange the overview.", ex_tasks: "All your tasks in one place\nAssignments, quizzes and your own tasks from every course, by urgency: today, later this week, next week and later.\nThe ✓ on a task marks it done (you can undo), the ✕ on the other side hides it. Tap a task to open its page with all the details, or the course name to open the course page.\nA submitted task has ⏳ “How long did it take?” – report or change it any time.", ex_tt: "Timetable and academic calendar\nYour classes and the semester, holiday and exam dates. Import the timetable from Levnet or build it by hand, and get a reminder before each class.", ex_chat: "All your conversations\nEvery course has a chat, and every task has its own discussion. Each row says where it belongs: “Course chat”, or “Task discussion” and the course.\n“Active” shows only where people already wrote. To start one, go to “Courses” and pick a course.", ex_settings: "Settings by topic\nNotifications and reminders, look and colours, task filters, courses, semester dates, account and sync, and help. A red dot marks a suggestion you haven’t seen yet.", ex_crs: "The course page\nEverything about the course in one place: what’s open and what’s next, exams and quizzes, its classes, all the files and topics from Moodle (with search), its chat and WhatsApp group, and its colour in the app.", ex_rem: "When to remind you\nChoose how long before a deadline, an exam and a class, and a morning summary at the time you choose. “+ Another time” adds any time you like.\nReminders come as app notifications, in your phone’s calendar, or both.", ex_themes: "How the app looks\nLight, pastel, vivid and dark themes, or build your own. At the top you can also pick the logo shown at the top of the app.", ex_exams: "Exams and quizzes\nYour courses’ exam dates (from Levnet, when published), and quizzes and exams you add yourself. They show on the overview, the course page and in reminders.", ex_mine: "Your own task\nSomething that isn’t in Moodle: reading, studying for an exam, anything. It shows with your other tasks and gets reminders like any assignment.", ex_fb: "Tell us\nWhat works, what doesn’t and what’s missing. Every message is read. Your name, courses and version are sent with it so the problem can be checked. You can attach a screenshot.", ex_socChat: "A conversation\nWrite here to everyone in the course. React with an emoji, reply to a specific message, and ⭐ an answer that helped (it gives the writer points).", ex_board: "The leaderboard\nPoints come from helping others: sharing a quiz, reporting how long a task took, adding the WhatsApp group and answers marked ⭐. See the overall ranking or one course.", ex_daSheet: "Arrange the overview\nChange the order of the cards with the arrows, and turn off cards you don’t need. You can go back to the original order at any time.", ex_cal: "A calendar that updates itself\nAdds your deadlines and exams to your phone’s calendar (Google or iPhone), and it updates by itself when something changes in Moodle.", ex_ttEdit: "A class in the timetable\nName, day, hours and place. For a Zoom class you can get a reminder before it. ✋ marks compulsory attendance.",
     fbShot: "Attach a screenshot", fbShotHint: "Take a screenshot (on a phone: side button + volume up) and pick it from your gallery.", fbShotDel: "Remove the picture", fbShotBad: "Couldn’t read that picture. Try another one.", fbShotFail: "the picture wasn’t sent",
     crsSDone: n => "Submitted (" + n + ")", crsDoneHint: "How long did each one take? It helps everyone in the course plan their time (you can change it any time).",
@@ -2009,6 +2030,10 @@ const I18N = {
     tkCrsSub: (o, l) => (o ? o + " ouverts" : "Rien d’ouvert") + (l ? " · " + l + " en retard" : ""), tkPageBtn: "Page du devoir",
     ex_task: "La page du devoir\nTout sur le devoir au même endroit : l’échéance, les consignes, ses fichiers et les ressources du même thème, le temps qu’il a pris aux autres et la discussion.\nDe là, ouvrez-le dans Moodle, marquez-le fait, ajoutez-le à l’agenda ou allez à la page du cours.",
     lgTask: "Devoir", lgMine: "Ma tâche", lgExam: "Examen / test", lgDone: "Rendu / fait", tkExpand: "Ouvrir la page du devoir",
+    grTitle: "Notes", dcGrades: "Notes", grTitleC: "Notes", grItem: "Élément noté", grLoading: "Chargement des notes depuis Moodle…", grNone: "Les notes ne sont pas encore chargées. Elles le seront à la prochaine actualisation.", grNoneYet: "Pas encore de notes", grHidden: "L’enseignant ne permet pas de voir les notes de ce cours dans Moodle.", grHiddenShort: "Notes masquées dans Moodle",
+    grAt: x => "Mis à jour " + x, grTotHint: "Le nombre à droite = votre note dans le cours jusqu’ici, d’après ce qui est noté", grMoodle: "Notes dans Moodle", grAtt: "Présence", grVpl: "Correcteur automatique", grW: w => "poids " + w + " %", grTotal: "Note du cours jusqu’ici", grNoGrade: n => n + " éléments pas encore notés",
+    grWHint: "Les poids viennent de Moodle et indiquent combien chaque élément compte dans la note du cours. Moodle affiche 0 % pour ce qui n’est pas encore noté.", grTk: "Note", grNotifT: n => n === 1 ? "🎓 Nouvelle note" : "🎓 " + n + " nouvelles notes", frGrade: "Nouvelle note",
+    grLbl: "Notes depuis Moodle", grHint: "Affiche les notes du carnet de notes de Moodle (devoirs, tests, correcteur automatique et présence) dans une carte de l’aperçu, sur la page du cours et sur chaque devoir, et prévient quand une nouvelle note arrive. Vérifié au plus tous les quarts d’heure.", grOffHint: "Les notes sont désactivées. Activez-les dans Paramètres → Notifications et agenda.",
     exOk: "Compris", exReset: "Afficher à nouveau les courtes explications", exResetDone: "Les explications s’afficheront à nouveau partout", ex_dash: "Voici l’aperçu\nD’un coup d’œil : les retards, ce qui est dû aujourd’hui et cette semaine, les examens, vos cours et les annonces. Touchez un élément pour y aller.\nVous pouvez réordonner et masquer les cartes : Paramètres → Apparence et affichage → Organiser l’aperçu.", ex_tasks: "Toutes vos tâches au même endroit\nDevoirs, tests et vos propres tâches de tous les cours, par urgence : aujourd’hui, plus tard cette semaine, la semaine prochaine et plus tard.\nLe ✓ marque une tâche comme faite (annulable), le ✕ de l’autre côté la masque. Touchez une tâche pour ouvrir sa page détaillée, ou le nom du cours pour ouvrir la page du cours.\nUn devoir rendu a ⏳ « Combien de temps ? » – à indiquer ou modifier à tout moment.", ex_tt: "Emploi du temps et calendrier universitaire\nVos cours et les dates du semestre, des fêtes et des examens. Importez l’emploi du temps depuis Levnet ou créez-le vous-même, et recevez un rappel avant chaque cours.", ex_chat: "Toutes vos conversations\nChaque cours a un chat, et chaque devoir sa propre discussion. Chaque ligne indique où elle appartient : « Chat du cours », ou « Discussion du devoir » et le cours.\n« Actives » montre seulement là où quelqu’un a écrit. Pour en commencer une, allez à « Cours » et choisissez un cours.", ex_settings: "Les paramètres par thème\nNotifications et rappels, apparence et couleurs, filtres, cours, dates du semestre, compte et synchronisation, et aide. Un point rouge signale une suggestion pas encore vue.", ex_crs: "La page du cours\nTout ce qui concerne le cours au même endroit : ce qui est ouvert et la suite, examens et tests, ses cours dans l’emploi du temps, tous les fichiers et thèmes de Moodle (avec recherche), son chat et son groupe WhatsApp, et sa couleur dans l’appli.", ex_rem: "Quand vous le rappeler\nChoisissez combien de temps avant une échéance, un examen et un cours, et un résumé du matin à l’heure voulue. « + Autre durée » ajoute n’importe quelle durée.\nLes rappels arrivent en notification, dans le calendrier du téléphone, ou les deux.", ex_themes: "L’apparence de l’appli\nThèmes clairs, pastel, vifs et sombres, ou votre propre thème. En haut, choisissez aussi le logo affiché en haut de l’appli.", ex_exams: "Examens et tests\nLes dates d’examen de vos cours (de Levnet, quand elles sont publiées), et les tests et examens que vous ajoutez. Ils apparaissent dans l’aperçu, la page du cours et les rappels.", ex_mine: "Votre propre tâche\nQuelque chose qui n’est pas sur Moodle : lecture, révision, n’importe quoi. Elle apparaît avec vos tâches et reçoit des rappels comme un devoir.", ex_fb: "Dites-nous\nCe qui marche, ce qui ne marche pas et ce qui manque. Chaque message est lu. Votre nom, vos cours et la version sont envoyés avec, pour pouvoir vérifier. Vous pouvez joindre une capture d’écran.", ex_socChat: "Une conversation\nÉcrivez ici à tout le cours. Réagissez avec un émoji, répondez à un message précis, et mettez ⭐ à une réponse utile (cela donne des points à son auteur).", ex_board: "Le classement\nLes points viennent de l’aide aux autres : partager un test, indiquer le temps d’un devoir, ajouter le groupe WhatsApp et les réponses marquées ⭐. Classement général ou par cours.", ex_daSheet: "Organiser l’aperçu\nChangez l’ordre des cartes avec les flèches et désactivez celles dont vous n’avez pas besoin. Vous pouvez revenir à l’ordre d’origine à tout moment.", ex_cal: "Un calendrier qui se met à jour seul\nAjoute vos échéances et examens au calendrier du téléphone (Google ou iPhone), et il se met à jour seul quand quelque chose change sur Moodle.", ex_ttEdit: "Un cours dans l’emploi du temps\nNom, jour, heures et lieu. Pour un cours Zoom, vous pouvez recevoir un rappel avant. ✋ indique une présence obligatoire.",
     fbShot: "Joindre une capture d’écran", fbShotHint: "Faites une capture (sur téléphone : bouton latéral + volume haut) et choisissez-la dans la galerie.", fbShotDel: "Retirer l’image", fbShotBad: "Impossible de lire cette image. Essayez-en une autre.", fbShotFail: "l’image n’a pas été envoyée",
     crsSDone: n => "Rendus (" + n + ")", crsDoneHint: "Combien de temps a pris chacun ? Cela aide tout le cours à s’organiser (modifiable à tout moment).",
@@ -2404,6 +2429,7 @@ async function fetchAll() {
       tasks.push(Object.assign({}, p, { status: "submitted", gone: now }));
     }
   }
+  for (const x of tasks) if (x.type === "event" && x.via === "online" && x.status !== "submitted" && x.cmid && grItems(x.cid).some(i => i.cmid === x.cmid && i.raw != null)) x.status = "submitted";   // it has a grade = it was submitted
   LS.set("uid", info.userid); applyZl(tasks, now);
   return { tasks, diag: [...diag], courses, user: info.fullname || "", userid: info.userid, at: now, contents: (V.data && V.data.contents) || {}, news: (V.data && V.data.news) || null };
 }
@@ -2470,7 +2496,7 @@ P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf"];
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf", "grades"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -2667,6 +2693,7 @@ function stChip(x, g) {
     : st === "na" ? '<span class="st na">' + esc(t("stNa")) + "</span>" : st === "unknown" ? '<span class="st unknown">' + esc(t("stUnknown")) + "</span>"
     : (g === "late" || g === "old") ? '<span class="st late">' + esc(t("stLate")) + "</span>" : '<span class="st none">' + esc(t("stNone")) + "</span>";
   if (x.grade) chip += '<span class="st grade">' + esc(t("grade", x.grade)) + "</span>";
+  else { const gr = gradeOfTask(x); if (gr) chip += '<span class="st grade">' + esc(t("grade", grTxt(gr))) + "</span>"; }
   return chip;
 }
 function card(x, now, g) {
@@ -3396,7 +3423,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.7.0-beta.3";
+const APP_VERSION = "1.7.0-beta.4";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -3537,7 +3564,7 @@ const newsRead = () => LS.get("newsRead", []);
 const isNewNews = n => n.at > newsBase() && !newsRead().includes(n.id);
 function markRead(ids) { const r = newsRead(); for (const i of ids) if (!r.includes(i)) r.push(i); LS.set("newsRead", r.slice(-300)); }
 /* ---------- new in a course: a new assignment or quiz, a new file or link (found when the app refreshes) ---------- */
-const FR_LBL = { task: "frTask", quiz: "frQuiz", file: "frFile", link: "frLink" };
+const FR_LBL = { task: "frTask", quiz: "frQuiz", file: "frFile", link: "frLink", grade: "frGrade" };
 const freshAll = () => (LS.get("fresh", []) || []).filter(x => x && !isOff(x.cid) && nowS() - x.at < 7 * DAY);
 async function freshScan(d) {
   const now = nowS(), add = [], acts = d.tasks.filter(isAct);           // assignments, quizzes and other Moodle activities with a deadline (the automatic checker…)
@@ -3579,10 +3606,91 @@ async function freshScan(d) {
     if (shown.length) await reg.showNotification(t("frNotifT", shown.length), { body: shown.slice(0, 4).map(x => t(FR_LBL[x.k]) + " · " + courseName(x.cid) + ": " + x.n).join("\n"), tag: "fresh", renotify: true, icon: "icon-any-192.png", badge: "badge-96.png", dir: "auto", data: { tag: "fresh" } });
   } catch (e) {}
 }
+/* ---------- grades from Moodle's gradebook: every graded item (assignments, quizzes, the automatic checker, attendance…), its weight in the course, and the course total.
+   One call per current course, at most every 15 minutes (or on "refresh" in a course page). A grade that appears or changes = "new grade" (overview + phone notification).
+   The first look only remembers. A course whose lecturer hides grades answers with an error: shown as "grades are hidden in this course". */
+const GR = { busy: false };
+const grAll = () => { const g = LS.get("grades", null); return g && g.c ? g : { at: 0, c: {} }; };
+const grOn = () => P.grades !== false;
+const grItems = cid => { const g = grAll().c[cid]; return g && Array.isArray(g.items) ? g.items : []; };
+const grNum = n => String(Math.round(n * 100) / 100);
+const grTxt = it => /^-?[\d.,]+\s*%?$/.test(it.fmt || "") && it.raw != null && it.max ? grNum(it.raw) + "/" + grNum(it.max) : it.fmt || "";
+const grIsAtt = it => it.mod === "attendance";
+function gradeOfTask(x) { if (!grOn() || !x || !(x.cid > 0) || !x.cmid) return null; return grItems(x.cid).find(i => i.cmid === x.cmid && i.raw != null) || null; }
+async function gradeScan(d, force, only) {
+  if (!grOn() || GR.busy || !d || !M.token) return;
+  const old = grAll(); if (!force && Date.now() - (old.at || 0) < 15 * 60e3) return;
+  GR.busy = true; if (!$("#crsSheet").hidden) renderCourse();
+  try {
+    const now = nowS(), cids = only ? [only] : d.courses.filter(c => !isOff(c.id) && courseCurrent(c, now)).map(c => c.id).slice(0, 25);
+    const res = await pool(cids, 3, async cid => { try { return [cid, await call("gradereport_user_get_grade_items", { courseid: cid, userid: d.userid })]; } catch (e) { return [cid, { err: e.code === "network" || e.code === "invalidtoken" ? "net" : "hidden" }]; } });
+    const out = { at: only ? old.at : Date.now(), c: Object.assign({}, old.c) }, add = [];
+    for (const [cid, r] of res) {
+      if (r.err) { if (r.err !== "net" || !old.c[cid]) out.c[cid] = { at: Date.now(), err: r.err, items: (old.c[cid] || {}).items || [] }; continue; }
+      const gi = (((r.usergrades || [])[0] || {}).gradeitems) || [], items = [], tot = gi.find(g => g.itemtype === "course");
+      for (const g of gi) {
+        if (g.itemtype === "course" || g.itemtype === "category" || g.gradeishidden) continue;
+        const w = g.weightraw != null ? Number(g.weightraw) * 100 : parseFloat(g.weightformatted);
+        items.push({ id: Number(g.id) || 0, cmid: Number(g.cmid) || 0, mod: g.itemmodule || "", n: stripHtml(g.itemname || "").trim() || t("grItem"), raw: g.graderaw == null ? null : Number(g.graderaw),
+          max: Number(g.grademax) || 0, fmt: String(g.gradeformatted || "").trim(), w: Number.isFinite(w) ? Math.round(w * 100) / 100 : null, at: Number(g.gradedategraded) || 0, fb: stripHtml(g.feedback || "").trim().slice(0, 500) });
+      }
+      out.c[cid] = { at: Date.now(), items, total: tot && tot.graderaw != null && !tot.gradeishidden ? { raw: Number(tot.graderaw), max: Number(tot.grademax) || 100, fmt: String(tot.gradeformatted || "").trim() } : null };
+      const prev = old.c[cid];
+      if (prev && Array.isArray(prev.items) && !prev.err) {
+        const pm = new Map(prev.items.map(i => [i.id, i]));
+        for (const it of items) {
+          if (it.raw == null) continue; const p = pm.get(it.id);
+          if (p && p.raw === it.raw && p.fmt === it.fmt) continue;
+          const x = it.cmid ? d.tasks.find(y => y.cid === cid && y.cmid === it.cmid) : null;
+          add.push({ id: "g:" + cid + ":" + it.id + ":" + it.raw, k: "grade", cid, n: it.n + " · " + grTxt(it), key: x ? x.key : "", gcid: cid, at: now });
+        }
+      }
+    }
+    try { LS.set("grades", out); } catch (e) {}
+    if (add.length) {
+      const seen = new Set(), list = add.concat(LS.get("fresh", []) || []).filter(x => x && now - x.at < 10 * DAY && !seen.has(x.id) && seen.add(x.id)).slice(0, 40);
+      LS.set("fresh", list); useHit("gradeNew");
+      if (pushOn()) try {
+        const reg = await navigator.serviceWorker.ready, shown = add.filter(x => !isOff(x.cid));
+        if (shown.length) await reg.showNotification(t("grNotifT", shown.length), { body: shown.slice(0, 4).map(x => courseName(x.cid) + ": " + x.n).join("\n"), tag: "grade", renotify: true, icon: "icon-any-192.png", badge: "badge-96.png", dir: "auto", data: { tag: "grade" } });
+      } catch (e) {}
+    }
+  } finally { GR.busy = false; }
+  render();
+}
+function renderGradesCard() {
+  const el = $("#grades"); if (!el || !V.data) return;
+  if (!grOn()) { el.innerHTML = '<p class="hint">' + esc(t("grOffHint")) + "</p>"; return; }
+  const g = grAll(), now = nowS(), cs = V.data.courses.filter(c => !isOff(c.id) && courseCurrent(c, now));
+  if (!g.at) { el.innerHTML = '<p class="hint">' + esc(t(GR.busy ? "grLoading" : "grNone")) + "</p>"; return; }
+  const rows = cs.map(c => {
+    const cg = g.c[c.id] || {}, its = (cg.items || []).filter(i => i.raw != null), last = its.slice().sort((a, b) => b.at - a.at)[0];
+    const sub = cg.err === "hidden" ? t("grHiddenShort") : last ? last.n + " · " + grTxt(last) + (last.at ? " · " + ago(last.at) : "") : t("grNoneYet");
+    const tot = cg.total ? '<b class="grt">' + esc(grNum(cg.total.raw / (cg.total.max || 100) * 100)) + "</b>" : '<b class="grt dim">—</b>';
+    return '<button class="crsrow" data-grcrs="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small><bdi>" + esc(sub) + "</bdi></small></span>" + tot + "</button>";
+  }).join("");
+  el.innerHTML = (rows || '<p class="hint">' + esc(t("crsNone")) + "</p>") + '<p class="hint grfoot">' + esc(t("grAt", ago(Math.floor(g.at / 1000)))) + " · " + esc(t("grTotHint")) + "</p>";
+}
+function grSection(cid) {
+  if (!grOn()) return '<p class="hint">' + esc(t("grOffHint")) + "</p>";
+  const cg = grAll().c[cid], link = '<a class="btn crsmoodle grmoodle" href="' + esc(M.url + "/grade/report/user/index.php?id=" + cid) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + " " + esc(t("grMoodle")) + "</a>";
+  const re = GR.busy ? '<p class="hint">' + esc(t("grLoading")) + "</p>" : '<p class="hint">' + (cg && cg.at ? esc(t("grAt", ago(Math.floor(cg.at / 1000)))) + " " : "") + '<button class="link" data-crsgr>' + esc(t("refresh")) + "</button></p>";
+  if (!cg) return '<p class="hint">' + esc(t("grNone")) + "</p>" + re + link;
+  if (cg.err === "hidden") return '<p class="hint">' + esc(t("grHidden")) + "</p>" + re + link;
+  const its = cg.items || [], got = its.filter(i => i.raw != null).sort((a, b) => b.at - a.at), none = its.filter(i => i.raw == null);
+  const row = it => { const x = it.cmid && V.data ? V.data.tasks.find(y => y.cid === cid && y.cmid === it.cmid) : null;
+    return '<div class="grrow' + (grIsAtt(it) ? " att" : "") + '"' + (x ? ' data-crsgo="' + esc(x.key) + '" role="button" tabindex="0"' : "") + ">" + ic(grIsAtt(it) ? "users" : MOD_IC[it.mod] || (it.mod === "vpl" ? "file-code" : "file-text")) +
+      '<span class="sw"><b><bdi>' + esc(it.n) + "</bdi></b><small>" + esc([grIsAtt(it) ? t("grAtt") : it.mod === "vpl" ? t("grVpl") : "", it.w ? t("grW", grNum(it.w)) : "", it.at ? ago(it.at) : ""].filter(Boolean).join(" · ")) + "</small>" +
+      (it.fb ? '<small class="grfb"><bdi>' + esc(it.fb) + "</bdi></small>" : "") + "</span>" + (it.raw != null ? '<b class="grv">' + esc(grTxt(it)) + "</b>" : '<span class="grv dim">—</span>') + "</div>"; };
+  return (cg.total ? '<div class="grtot"><span>' + esc(t("grTotal")) + '</span><b>' + esc(grNum(cg.total.raw)) + '<small>/' + esc(grNum(cg.total.max)) + "</small></b></div>" : "") +
+    (got.length ? got.map(row).join("") : '<p class="hint">' + esc(t("grNoneYet")) + "</p>") +
+    (none.length ? '<details class="grmore"><summary>' + esc(t("grNoGrade", none.length)) + "</summary>" + none.map(row).join("") + "</details>" : "") +
+    '<p class="hint">' + esc(t("grWHint")) + "</p>" + re + link;
+}
 function freshSeen(ids) { const all = LS.get("fresh", []) || []; for (const x of all) if (!ids || ids.includes(x.id)) x.seen = 1; LS.set("fresh", all); }
 function renderFresh() {
   const el = $("#fresh"); if (!el) return;
-  const L = P.newAl === false ? [] : freshAll(), nNew = L.filter(x => !x.seen).length;
+  const L = freshAll().filter(x => x.k === "grade" ? grOn() : P.newAl !== false), nNew = L.filter(x => !x.seen).length;
   if (!L.length) { el.innerHTML = ""; return; }
   const N = 5;
   el.innerHTML = '<div class="frl"><div class="frh"><span>' + esc(t("frTitle")) + (nNew ? ' <i class="nb">' + nNew + "</i>" : "") + "</span>" + (nNew ? '<button class="link" data-frseen>' + esc(t("frSeen")) + "</button>" : "") + "</div>" +
@@ -3590,6 +3698,7 @@ function renderFresh() {
       const c = courseName(x.cid), sub = esc(t(FR_LBL[x.k])) + " · <bdi>" + esc(c) + "</bdi> · " + esc(ago(x.at)), cls = "fri" + (x.seen ? "" : " new");
       const inner = '<span class="nt"><b><bdi>' + esc(x.n) + "</bdi></b><small>" + sub + "</small></span>";
       return x.key ? '<button class="' + cls + '" data-frgo="' + esc(x.key) + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
+        : x.k === "grade" ? '<button class="' + cls + '" data-frcrs="' + x.cid + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
         : '<a class="' + cls + '" href="' + esc(fileHref(x.u)) + '" target="_blank" rel="noopener noreferrer" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</a>";
     }).join("") + (L.length > N ? '<div class="hint">' + esc(t("frMore", L.length - N)) + "</div>" : "") + "</div>";
 }
@@ -3645,7 +3754,7 @@ function render() {
   { const now = nowS(); renderTT(now); renderAcad(now); renderToday(now); renderSem(d, now); renderExams(now); renderRemCard(); $("#bFb2").hidden = !fbReady(); }
   if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">' + esc(t("loadingTasks")) + "</div>" : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
   const now = nowS();
-  renderDash(d, now); renderNews(d); renderCrsList(d, now); if (!$("#crsSheet").hidden) renderCourse(); if (!$("#tkSheet").hidden) renderTask();
+  renderDash(d, now); renderNews(d); renderCrsList(d, now); renderGradesCard(); if (!$("#crsSheet").hidden) renderCourse(); if (!$("#tkSheet").hidden) renderTask();
   // focus bar (a day / course / group picked on the dashboard)
   const f = V.focus, fb = $("#focus");
   if (f) {
@@ -3735,7 +3844,7 @@ function renderKw() {
 function renderSheet() {
   applyDensity();
   const d = V.data; $("#old").value = String(P.old_days); $("#hidn").textContent = P.hidden.length; $("#showHid").checked = V.showHid;
-  $("#oldHide").checked = !!P.old_hide; $("#cdx").checked = !!P.cdx; $("#calm").checked = !!P.calm; $("#newAl").checked = P.newAl !== false; $("#appBadge").checked = P.appBadge !== false;
+  $("#oldHide").checked = !!P.old_hide; $("#cdx").checked = !!P.cdx; $("#calm").checked = !!P.calm; $("#newAl").checked = P.newAl !== false; $("#grOn").checked = P.grades !== false; $("#appBadge").checked = P.appBadge !== false;
   $("#away").innerHTML = [0, 30, 60, 180].map(m => '<option value="' + m + '">' + esc(t("away_" + m)) + "</option>").join(""); $("#away").value = String([0, 30, 60, 180].includes(P.away) ? P.away : 60);
   $("#zl").innerHTML = [["zoom", "zlZoom"], ["show", "zlShow"], ["hide", "zlHide"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#zl").value = P.zl;
   $("#campus").innerHTML = [["", "campusAny"], ["lev", "campusLev"], ["tal", "campusTal"]].map(o => '<option value="' + o[0] + '">' + esc(t(o[1])) + "</option>").join(""); $("#campus").value = P.campus;
@@ -4065,7 +4174,7 @@ async function refresh(manual) {
     if (c) d.contents = c;
     if (n) d.news = n;
     if (V.data === d) { LS.set("cache", d); render(); }
-    freshScan(d).catch(() => {});
+    freshScan(d).catch(() => {}); gradeScan(d).catch(() => {});
     setTimeout(maybeAskRem, 1200); setTimeout(maybeAskInstall, 2600);
   }
 }
@@ -4076,9 +4185,9 @@ function launchUrl(site) {
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
   { v: "1.7.0", at: "2026-11-12 16:30",
-    he: ["📄 עמוד לכל מטלה: לחיצה על מטלה פותחת את כל מה שקשור אליה – מתי ההגשה, ההנחיות, הקבצים והחומרים מאותו נושא, כמה זמן זה לקח לאחרים והדיון עליה – ומשם לדף הקורס בלחיצה", "⏳ הזמן שלקח לאחרים מוצג כבר מהדיווח הראשון", "🤖 מטלות של הבודק האוטומטי (VPL) ומטלות קבוצתיות נחשבות ״הוגש״ אחרי ההגשה, ונשאלת השאלה ״כמה זמן לקח?״", "⭐ כשמישהו מסמן הודעה שלך כ״תשובה מועילה״, זה מופיע כשנכנסים לאפליקציה, ובצ'אט רואים מי סימן", "👥 בעמוד המטלה: מי דיווח כמה זמן זה לקח לו", "🏆 בטאב הצ'אטים: הדרגה, הנקודות ופס עד הדרגה הבאה", "🗓 בשבוע ובחודש בסקירה, המשימות שלך נראות אחרת (מקווקו / יהלום) באותו צבע של הקורס"],
-    en: ["📄 A page for every task: tap a task to see everything about it – when it's due, the instructions, its files and materials from the same topic, how long it took others and its discussion – and go to the course page from there", "⏳ How long a task took others shows from the first report", "🤖 Automatic checker (VPL) tasks and group assignments count as submitted once you submit, and you're asked how long they took", "⭐ When someone marks your message as a helpful answer, you see it when you open the app, and the chat shows who did", "👥 On the task page: who reported how long it took them", "🏆 The chats tab shows your rank, points and a bar to the next rank", "🗓 In the week and month on the overview, your own tasks look different (dashed / diamond) in the course's colour"],
-    fr: ["📄 Une page pour chaque devoir : touchez un devoir pour tout voir – l’échéance, les consignes, ses fichiers et les ressources du même thème, le temps qu’il a pris aux autres et sa discussion – et allez de là à la page du cours", "⏳ Le temps pris par les autres s’affiche dès la première réponse", "🤖 Les devoirs du correcteur automatique (VPL) et les devoirs de groupe comptent comme rendus après le rendu, avec la question « Combien de temps ? »", "⭐ Quand quelqu’un marque votre message comme réponse utile, vous le voyez en ouvrant l’appli, et le chat montre qui", "👥 Sur la page du devoir : qui a indiqué combien de temps", "🏆 L’onglet Chats montre votre rang, vos points et la barre vers le rang suivant", "🗓 Dans la semaine et le mois de l’aperçu, vos propres tâches ont un autre style (pointillés / losange), dans la couleur du cours"] },
+    he: ["🎓 ציונים מהמודל: כרטיס בסקירה עם הציון בכל קורס, כל הציונים בדף הקורס (כולל נוכחות ובודק אוטומטי, עם המשקל של כל אחד), הציון על כל מטלה, והתראה כשמגיע ציון חדש", "📄 עמוד לכל מטלה: לחיצה על מטלה פותחת את כל מה שקשור אליה – מתי ההגשה, ההנחיות, הקבצים והחומרים מאותו נושא, כמה זמן זה לקח לאחרים והדיון עליה – ומשם לדף הקורס בלחיצה", "⏳ הזמן שלקח לאחרים מוצג כבר מהדיווח הראשון", "🤖 מטלות של הבודק האוטומטי (VPL) ומטלות קבוצתיות נחשבות ״הוגש״ אחרי ההגשה, ונשאלת השאלה ״כמה זמן לקח?״", "⭐ כשמישהו מסמן הודעה שלך כ״תשובה מועילה״, זה מופיע כשנכנסים לאפליקציה, ובצ'אט רק את/ה רואה מי סימן", "⏳ דיווח כמה זמן לקח נסגר 12 שעות אחרי מועד ההגשה", "👥 בעמוד המטלה: מי דיווח כמה זמן זה לקח לו", "🏆 בטאב הצ'אטים: הדרגה, הנקודות ופס עד הדרגה הבאה", "🗓 בשבוע ובחודש בסקירה, המשימות שלך נראות אחרת (מקווקו / יהלום) באותו צבע של הקורס"],
+    en: ["🎓 Grades from Moodle: an overview card with your grade in each course, every grade on the course page (attendance and automatic checker included, with each one's weight), the grade on each task, and a notification when a new grade arrives", "📄 A page for every task: tap a task to see everything about it – when it's due, the instructions, its files and materials from the same topic, how long it took others and its discussion – and go to the course page from there", "⏳ How long a task took others shows from the first report", "🤖 Automatic checker (VPL) tasks and group assignments count as submitted once you submit, and you're asked how long they took", "⭐ When someone marks your message as a helpful answer, you see it when you open the app, and only you see who did in the chat", "⏳ Reporting how long a task took closes 12 hours after its deadline", "👥 On the task page: who reported how long it took them", "🏆 The chats tab shows your rank, points and a bar to the next rank", "🗓 In the week and month on the overview, your own tasks look different (dashed / diamond) in the course's colour"],
+    fr: ["🎓 Les notes de Moodle : une carte dans l’aperçu avec la note de chaque cours, toutes les notes sur la page du cours (présence et correcteur automatique compris, avec le poids de chacune), la note sur chaque devoir, et une notification à chaque nouvelle note", "📄 Une page pour chaque devoir : touchez un devoir pour tout voir – l’échéance, les consignes, ses fichiers et les ressources du même thème, le temps qu’il a pris aux autres et sa discussion – et allez de là à la page du cours", "⏳ Le temps pris par les autres s’affiche dès la première réponse", "🤖 Les devoirs du correcteur automatique (VPL) et les devoirs de groupe comptent comme rendus après le rendu, avec la question « Combien de temps ? »", "⭐ Quand quelqu’un marque votre message comme réponse utile, vous le voyez en ouvrant l’appli, et vous seul voyez qui dans le chat", "⏳ Indiquer le temps passé se ferme 12 h après l’échéance", "👥 Sur la page du devoir : qui a indiqué combien de temps", "🏆 L’onglet Chats montre votre rang, vos points et la barre vers le rang suivant", "🗓 Dans la semaine et le mois de l’aperçu, vos propres tâches ont un autre style (pointillés / losange), dans la couleur du cours"] },
   { v: "1.6.0", at: "2026-11-12 10:10",
     he: ["🤖 ״שליחה ל-AI שלי״: כל המטלות, המבחנים, המערכת ותאריכי הסמסטר כטקסט מסודר, בלחיצה אחת, להדביק ב-ChatGPT, Gemini, Claude או Grok", "📘 דף לכל קורס: מה פתוח ומה הבא, מבחנים, השיעורים, כל הקבצים והנושאים מהמודל עם חיפוש, והצבע שלו. נפתח מ״הקורסים שלי״ בסקירה או בלחיצה על שם הקורס", "✓ סימון ״בוצע״ בלחיצה אחת בצד של כל משימה (ואפשר לבטל)", "🗓 המשימות מסודרות לפי שבועות: היום, עוד השבוע, בשבוע הבא ובהמשך", "⏰ תזכורות בכל זמן שרוצים: ״+ זמן אחר״ לפני הגשה ומבחן, כמה דקות לפני שיעור, וסיכום בוקר בכל שעה", "🆕 התראה כשנפתחת מטלה או בוחן חדש, או כשמרצה מעלה קובץ או קישור חדש, ורשימת ״חדש בקורסים״ בסקירה", "📅 ביומן המתעדכן בוחרים מה נכנס: מטלות, מבחנים, שיעורים, ואילו קורסים", "✅ מטלה שהוגשה לא מסומנת יותר ״באיחור״, והמספר על אייקון האפליקציה = באיחור ולהיום, כמו בלשונית המשימות (אפשר לכבות)", "🏠 חוזרים לאפליקציה אחרי שעה? היא נפתחת בסקירה ובודקת אם יש גרסה חדשה", "🎨 בחירת לוגו, ״ערכות צבעים ולוגו״ ישר מההגדרות, ותצוגה רגועה בלי אנימציות", "💡 הסבר קצר בכל מקום שנפתח בפעם הראשונה", "📎 אפשר לצרף צילום מסך לפידבק", "👥 חדש: קהילת MoodlePro (אופציונלי, מפעילים פעם אחת): סטודנטים עוזרים לסטודנטים", "⏳ כמה זמן לוקחת כל מטלה – לפי דיווחים של סטודנטים אחרים, ומיון לפי הזמן המשוער", "📢 שיתוף בחנים ומשימות עם כל הקורס (כפתור גדול אחרי שמוסיפים, או אוטומטית), ו״הוסף לשלי״ בלחיצה אחת", "💬 טאב ״צ'אטים״: צ'אט לכל קורס ודיון לכל מטלה ברשימה אחת, וכל שורה אומרת לאן היא שייכת – תגובות, אימוג'ים ו״תשובה מועילה ⭐״", "⚙️ ההגדרות עברו לסרגל הטאבים", "💬 קבוצת הוואטסאפ של כל קורס במקום אחד", "🏆 נקודות, דרגות, יומן נקודות וטבלאות דירוג – כללית ולכל קורס", "🎓 פרופיל: התואר והשנה שלך"],
     en: ["🤖 “Send to my AI”: all your tasks, exams, timetable and semester dates as clear text in one tap, to paste into ChatGPT, Gemini, Claude or Grok", "📘 A page for every course: what’s open and next, exams, classes, all the files and topics from Moodle with search, and its colour. Open it from “My courses” on the overview or by tapping a course name", "✓ Mark a task done with one tap on its side (and undo)", "🗓 Tasks grouped by week: today, later this week, next week and later", "⏰ Reminders at any time: “+ Another time” before deadlines and exams, any minutes before class, and a morning summary at any hour", "🆕 An alert when a new assignment or quiz opens, or a lecturer uploads a new file or link, plus “New in your courses” on the overview", "📅 Choose what goes into the updating calendar: tasks, exams, classes, and which courses", "✅ A submitted task is no longer marked “overdue”, and the number on the app icon = overdue + due today, same as the Tasks tab (can be turned off)", "🏠 Back in the app after an hour? It opens on the overview and checks for a new version", "🎨 Pick a logo, “Colour themes and logo” right in settings, and a calm display with no animations", "💡 A short explanation everywhere the first time it opens", "📎 Attach a screenshot to feedback", "👥 New: the MoodlePro community (optional, switch it on once): students helping students", "⏳ How long each task takes – from other students’ reports, and sorting by estimated time", "📢 Share quizzes and tasks with the whole course (a big button after adding, or automatically), and “Add to mine” in one tap", "💬 A “Chats” tab: a chat for every course and a discussion for every task in one list, each row saying where it belongs – replies, emoji and “helpful answer ⭐”", "⚙️ Settings moved to the tab bar", "💬 Every course’s WhatsApp group in one place", "🏆 Points, ranks, a points log and leaderboards – overall and per course", "🎓 Profile: your degree and year"],
@@ -4424,11 +4533,14 @@ function renderCrsList(d, now) {
     return '<button class="crsrow" data-crs="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small" + (s.late.length ? ' class="late"' : "") + ">" + esc(sub) + "</small></span>" + ic(t("dir") === "rtl" ? "chevron-left" : "chevron-right", "chev") + "</button>";
   }).join("") : '<div class="hint">' + esc(t("crsNone")) + "</div>";
 }
-function openCourse(cid) {
+function openCourse(cid, part) {
   if (!crsOf(cid)) return;
+  if (part) CRS.open[part] = true;
   useHit("crsPage"); CRS.cid = cid; CRS.q = "";
   $$(".sheet:not([hidden])").forEach(sh => { if (sh.id !== "crsSheet") sh.hidden = true; });
   renderCourse(); $("#crsSheet").hidden = false; $("#crsBox").scrollTop = 0;
+  if (part) setTimeout(() => { const el = $('#crsBox [data-crss="' + part + '"]'), box = $("#crsBox"); if (el && box) box.scrollTop = el.offsetTop - ($("#crsBox .crshead") || { offsetHeight: 0 }).offsetHeight - 8; }, 120);
+  if (part === "grades" && Date.now() - ((grAll().c[cid] || {}).at || 0) > 5 * 60e3) gradeScan(V.data, true, cid);
   explain("crs");
   if (!CRS.c[cid] || Date.now() - CRS.c[cid].at > 3600e3) crsLoad(cid);
 }
@@ -4499,6 +4611,9 @@ function renderCourse() {
   // done: report how long each took (the community's estimates come from these)
   const dn = socOn() ? s.all.filter(x => (x.status === "submitted" || isDone(x)) && isAct(x)).sort((a, b) => (b.due || 0) - (a.due || 0)) : [];
   if (dn.length) h += sect("done", "check", t("crsSDone", dn.length), '<p class="hint">' + esc(t("crsDoneHint")) + "</p>" + dn.slice(0, 20).map(x => '<div class="crsdn"><button class="crsli" data-crsgo="' + esc(x.key) + '">' + ic("check") + '<span class="sw"><b><bdi>' + esc(x.name) + "</bdi></b><small>" + esc(x.due ? when(x.due) : "") + "</small></span></button>" + S("timeBtn", x) + "</div>").join(""), isOpenS("done", false));
+  // grades
+  { const cg = grAll().c[cid], tot = cg && cg.total ? " · " + grNum(cg.total.raw) : "";
+    h += sect("grades", "graduation-cap", t("grTitleC") + tot, grSection(cid), isOpenS("grades", false)); }
   // exams and quizzes
   const ex = examList().filter(x => x.cid === cid && x.ts >= now - DAY);
   h += sect("exams", "graduation-cap", t("crsSExams", ex.length), (ex.length ? ex.map(x => row(x.m === "q" ? "circle-check" : "graduation-cap", exLbl(x), esc(x.allDay ? dayDate(x.ts) : when(x.ts)) + (x.lev ? " · " + esc(t("exLev")) : ""), " data-crsexams")).join("") : '<p class="hint">' + esc(t("crsNoExams")) + "</p>") +
@@ -4536,6 +4651,7 @@ function renderCourse() {
   const qi = $("#crsQ"); if (qi) { qi.oninput = () => { CRS.q = qi.value; renderCourse(); }; if (keep !== null) { qi.focus(); try { qi.setSelectionRange(keep, keep); } catch (e) {} } }
 }
 document.addEventListener("click", e => {
+  const gc = e.target.closest("[data-grcrs]"); if (gc) { e.preventDefault(); useHit("gradesCard"); return openCourse(Number(gc.dataset.grcrs), "grades"); }
   const b = e.target.closest("[data-crs]"); if (b && !e.target.closest("#crsSheet")) { e.preventDefault(); openCourse(Number(b.dataset.crs)); }
 });
 $("#bFocusCrs").onclick = () => { if (V.focus && V.focus.kind === "course") openCourse(V.focus.cid); };
@@ -4551,6 +4667,7 @@ $("#crsSheet").addEventListener("click", e => {
   if (g("[data-crsexams]")) { close(); return openExams(); }
   if (g("[data-crstt]")) { close(); return crsClasses(cid).length ? goTT() : openTT(); }
   if (g("[data-crsre]")) { CRS.c[cid] && (CRS.c[cid].at = 0); return crsLoad(cid); }
+  if (g("[data-crsgr]")) { useHit("gradeRefresh"); return gradeScan(V.data, true, cid); }
   if (g("[data-crssoc]")) { close(); return socEnsure(() => SOC.intro(true)); }
 });
 $("#crsSheet").addEventListener("input", e => { if (e.target.matches("[data-crscol]")) { P.colors[CRS.cid] = e.target.value; savePrefs(); render(); } });
@@ -4585,6 +4702,9 @@ function renderTask() {
   h += '<div class="tkdue" style="--c:' + col + '">' + dl + (x.extended ? '<span class="sub">' + esc(t("extended")) + "</span>" : "") +
     (x.from && x.from > now ? '<span class="sub">' + esc(t("opens", when(x.from))) + "</span>" : "") + (x.cutoff && !done ? '<span class="sub">' + esc(t("cutoff", when(x.cutoff))) + "</span>" : "") + "</div>";
   if (x.gone) h += '<div class="tkgone">' + esc(t("tkGone")) + "</div>";
+  { const gr = gradeOfTask(x);
+    if (gr) h += '<div class="tkgr"><span>' + ic("graduation-cap") + esc(t("grTk")) + "</span><b>" + esc(grTxt(gr)) + "</b>" + '<small>' + esc([gr.w ? t("grW", grNum(gr.w)) : "", gr.at ? ago(gr.at) : ""].filter(Boolean).join(" · ")) + "</small>" +
+      (gr.fb ? '<div class="grfb"><bdi>' + esc(gr.fb) + "</bdi></div>" : "") + "</div>"; }
   // what to do
   const acts = [];
   if (/^https?:\/\//.test(x.url)) acts.push('<a class="btn primary' + (x.due && x.due > now && !done ? "" : " wide") + '" href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + "<span>" + esc(t("tkOpen")) + "</span></a>");
@@ -4749,7 +4869,7 @@ $("#aiShare").onclick = async () => { useHit("aiShare"); try { await navigator.s
 
 /* ---------- arrange the overview: the order of its cards, and which are shown ---------- */
 const DASH_CARDS = [{ id: "hero", k: "dcHero" }, { id: "stats", k: "dcStats" }, { id: "todayCard", k: "dcToday" }, { id: "examCard", k: "dcExams" }, { id: "semCard", k: "dcSem" },
-  { id: "weekCard", k: "dcWeek" }, { id: "monthCard", k: "dcMonth" }, { id: "newsCard", k: "dcNews" }, { id: "aiCard", k: "dcAi" }, { id: "coursesCard", k: "dcCourses" }, { id: "loadCard", k: "dcLoad" }, { id: "icsCard", k: "dcRem" }];
+  { id: "weekCard", k: "dcWeek" }, { id: "monthCard", k: "dcMonth" }, { id: "newsCard", k: "dcNews" }, { id: "aiCard", k: "dcAi" }, { id: "coursesCard", k: "dcCourses" }, { id: "gradesCard", k: "dcGrades" }, { id: "loadCard", k: "dcLoad" }, { id: "icsCard", k: "dcRem" }];
 function dashCfg() {
   const ids = DASH_CARDS.map(c => c.id), v = P.dash || {}, order = (Array.isArray(v.order) ? v.order : []).filter(x => ids.includes(x));
   return { order: order.concat(ids.filter(x => !order.includes(x))), off: (Array.isArray(v.off) ? v.off : []).filter(x => ids.includes(x) && x !== "hero") };
@@ -5331,9 +5451,10 @@ $("#fresh").addEventListener("click", e => {
   if (e.target.closest("[data-frseen]")) { freshSeen(null); renderFresh(); return; }
   const it = e.target.closest("[data-frid]"); if (!it) return;
   freshSeen([it.dataset.frid]); useHit("freshOpen");
-  if (it.dataset.frgo) { e.preventDefault(); openTask(it.dataset.frgo); } else setTimeout(renderFresh, 300);
+  if (it.dataset.frgo) { e.preventDefault(); openTask(it.dataset.frgo); } else if (it.dataset.frcrs) { e.preventDefault(); openCourse(Number(it.dataset.frcrs), "grades"); } else setTimeout(renderFresh, 300);
 });
 $("#calm").onchange = e => { P.calm = e.target.checked; savePrefs(); render(); };
+$("#grOn").onchange = e => { P.grades = e.target.checked; savePrefs(); useHit("grades_" + (P.grades ? 1 : 0)); if (P.grades && V.data) gradeScan(V.data, true); render(); };
 $("#newAl").onchange = e => { P.newAl = e.target.checked; savePrefs(); useHit("newAl_" + (P.newAl ? 1 : 0)); render(); };
 $("#appBadge").onchange = e => { P.appBadge = e.target.checked; savePrefs(); useHit("appBadge_" + (P.appBadge ? 1 : 0)); render(); };
 $("#away").onchange = e => { P.away = Number(e.target.value); savePrefs(); };

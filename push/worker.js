@@ -262,6 +262,7 @@ export class Community extends DurableObject {
     if (op === "time") {
       const h = Number(b.h), aid = clip(b.aid, 40);
       if (!cid || !aid || !HOURS.includes(h)) return [400, { error: "bad" }];
+      if (Number(b.due) > 0 && Number(b.due) * 1000 + 12 * 3600e3 < now) return [400, { error: "late" }];   // closed 12 h after the deadline (helps nobody, no points)
       this.course(cid, b.cname);
       const old = this.one("SELECT h FROM times WHERE cid = ? AND aid = ? AND uid = ?", cid, aid, me.uid);
       if (old && old.h === h) return [200, { ok: true }];
@@ -328,9 +329,9 @@ export class Community extends DurableObject {
         }
         for (const a of Object.values(agg)) (re[a[0]] = re[a[0]] || []).push([a[1], a[2], a[3]]);
         for (const r of this.q("SELECT mid FROM stars WHERE uid = ? AND mid >= ? AND mid <= ?", me.uid, lo, hi)) mine.add(r.mid);
-        if (ms.some(m => m.stars > 0))                      // who starred each message (shown under it)
+        if (ms.some(m => m.stars > 0 && m.uid === me.uid))  // who starred my messages (only the writer sees it)
           for (const r of this.q("SELECT s.mid, u.name FROM stars s LEFT JOIN users u ON u.uid = s.uid WHERE s.mid >= ? AND s.mid <= ?", lo, hi))
-            if (here.has(r.mid)) (sb[r.mid] = sb[r.mid] || []).length < 20 && sb[r.mid].push(r.name || "");
+            if (here.has(r.mid) && ms.find(m => m.id === r.mid).uid === me.uid) (sb[r.mid] = sb[r.mid] || []).length < 20 && sb[r.mid].push(r.name || "");
       }
       return [200, { ver, msgs: ms.map(m => ({ id: m.id, uid: m.uid, name: m.name || "", deg: m.deg || "", yr: m.yr || "", total: m.total || 0, body: m.del ? "" : m.body, del: !!m.del,
         reply: m.reply || 0, at: m.at, stars: m.stars, starred: mine.has(m.id), sb: sb[m.id] || [], re: re[m.id] || [] })) }];
@@ -360,6 +361,8 @@ export class Community extends DurableObject {
         this.sql.exec("UPDATE thr SET ver = ver + 1 WHERE cid = ? AND tk = ?", m.cid, m.tk);
       } else {                                              // "helpful answer": once per person, +2 to the writer (not for your own)
         if (m.uid === me.uid) return [400, { error: "own" }];
+        const au = this.one("SELECT name FROM users WHERE uid = ?", m.uid);                 // the same person on another device (same name): still their own
+        if (au && au.name && me.name && au.name.trim() === me.name.trim()) return [400, { error: "own" }];
         if (this.one("SELECT mid FROM stars WHERE mid = ? AND uid = ?", m.id, me.uid)) return [200, { ok: true, again: true }];
         this.sql.exec("INSERT INTO stars (mid, uid) VALUES (?, ?)", m.id, me.uid);
         this.sql.exec("UPDATE msgs SET stars = stars + 1 WHERE id = ?", m.id);

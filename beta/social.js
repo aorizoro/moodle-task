@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.7.0-beta.3";
+const SOC_V = "1.7.0-beta.4";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 const RANKS = [[0, "🌱", "rk0"], [20, "📝", "rk1"], [60, "🧠", "rk2"], [150, "⚡", "rk3"], [300, "👑", "rk4"], [600, "🏆", "rk5"]];
@@ -13,7 +13,7 @@ const YEARS = ["1", "2", "3", "4"];
 
 Object.assign(I18N.he, {
   tkEst: (h, n) => n === 1 ? "דיווח אחד עד עכשיו: בערך " + h + " שעות" : "לאחרים לקח בממוצע בערך " + h + " שעות (" + n + " דיווחים)", tkEstNone: "עוד אף אחד לא דיווח כמה זמן זה לקח", tkEstMine: "עד עכשיו רק את/ה דיווחת כמה זמן זה לקח",
-  tkRepAsk: "לחיצה כדי לדווח כמה זמן לקח לך", tkRepChange: "מה שדיווחת. אפשר לשנות", tkAfter: "אחרי שמגישים נשאל כמה זמן לקח, וזה עוזר לאחרים לתכנן", tkChat: "דיון על המטלה", tkChatNone: "עוד אין הודעות. אפשר לשאול כאן שאלה",
+  socTimeLate: "זמן ההגשה עבר, אז כבר אי אפשר לדווח כמה זמן זה לקח (הדיווח עוזר לאחרים רק לפני ההגשה)", tkRepAsk: "לחיצה כדי לדווח כמה זמן לקח לך", tkRepChange: "מה שדיווחת. אפשר לשנות", tkAfter: "אחרי שמגישים נשאל כמה זמן לקח, וזה עוזר לאחרים לתכנן", tkChat: "דיון על המטלה", tkChatNone: "עוד אין הודעות. אפשר לשאול כאן שאלה",
   noteT: () => "⭐ ההודעה שלך עזרה למישהו!", noteT2: n => "⭐ " + n + " הודעות שלך סומנו כמועילות!", noteStar: (f, w) => f + " סימן/ה את ההודעה שלך כתשובה מועילה" + (w ? " ב\u2068״" + w + "״\u2069" : ""), noteGo: "לצ'אט ←", notePts: n => "קיבלת \u2066+" + n + "\u2069 נקודות. ממשיכים לעזור 💪", noteOk: "יופי, תודה",
   tkWho: n => "מי דיווח וכמה זמן (" + n + ")", tkWhoSub: "כל הדיווחים: שם, תואר, כמה זמן ומתי", tmT: "⏳ כמה זמן זה לקח לכל אחד", tmWho: n => n === 1 ? "דיווח אחד" : n + " דיווחים", chatStarBy: s => "סימנו כמועיל: " + s, chmeSem: n => n + " בסמסטר הזה",
   socTimeAsk: "כמה זמן לקח?", socTimeT2: "כמה זמן לקח? (אפשר לשנות)",
@@ -60,7 +60,7 @@ Object.assign(I18N.he, {
 });
 Object.assign(I18N.en, {
   tkEst: (h, n) => n === 1 ? "One student reported about " + h + " hours" : "It took others about " + h + " hours on average (" + n + " reports)", tkEstNone: "No one has reported how long it took yet", tkEstMine: "So far only you reported how long it took",
-  tkRepAsk: "Tap to report how long it took you", tkRepChange: "What you reported. You can change it", tkAfter: "Once you submit, we'll ask how long it took – it helps others plan", tkChat: "Discussion about this task", tkChatNone: "No messages yet. Ask a question here",
+  socTimeLate: "The deadline has passed, so reporting how long it took is closed (a report only helps others before the deadline)", tkRepAsk: "Tap to report how long it took you", tkRepChange: "What you reported. You can change it", tkAfter: "Once you submit, we'll ask how long it took – it helps others plan", tkChat: "Discussion about this task", tkChatNone: "No messages yet. Ask a question here",
   noteT: () => "⭐ Your message helped someone!", noteT2: n => "⭐ " + n + " of your messages were marked helpful!", noteStar: (f, w) => f + " marked your message as a helpful answer" + (w ? " in “" + w + "”" : ""), noteGo: "Go to the chat →", notePts: n => "You got +" + n + " points. Keep helping 💪", noteOk: "Nice, thanks",
   tkWho: n => "Who reported and how long (" + n + ")", tkWhoSub: "Every report: name, degree, how long and when", tmT: "⏳ How long it took each person", tmWho: n => n === 1 ? "1 report" : n + " reports", chatStarBy: s => "Marked helpful by: " + s, chmeSem: n => n + " this semester",
   socTimeAsk: "How long did it take?", socTimeT2: "How long did it take? (you can change it)",
@@ -107,7 +107,7 @@ Object.assign(I18N.en, {
 });
 Object.assign(I18N.fr, {
   tkEst: (h, n) => n === 1 ? "Un étudiant a indiqué environ " + h + " h" : "Les autres ont mis environ " + h + " h en moyenne (" + n + " avis)", tkEstNone: "Personne n’a encore indiqué le temps passé", tkEstMine: "Pour l’instant, vous seul(e) l’avez indiqué",
-  tkRepAsk: "Touchez pour indiquer votre temps", tkRepChange: "Votre réponse, modifiable", tkAfter: "Après le rendu, on vous demandera le temps passé – ça aide les autres", tkChat: "Discussion sur ce devoir", tkChatNone: "Pas encore de messages. Posez une question ici",
+  socTimeLate: "L’échéance est passée : on ne peut plus indiquer le temps (ça n’aide les autres qu’avant l’échéance)", tkRepAsk: "Touchez pour indiquer votre temps", tkRepChange: "Votre réponse, modifiable", tkAfter: "Après le rendu, on vous demandera le temps passé – ça aide les autres", tkChat: "Discussion sur ce devoir", tkChatNone: "Pas encore de messages. Posez une question ici",
   noteT: () => "⭐ Votre message a aidé quelqu’un !", noteT2: n => "⭐ " + n + " de vos messages ont été jugés utiles !", noteStar: (f, w) => f + " a marqué votre message comme réponse utile" + (w ? " dans « " + w + " »" : ""), noteGo: "Aller au chat →", notePts: n => "Vous avez gagné +" + n + " points. Continuez 💪", noteOk: "Super, merci",
   tkWho: n => "Qui a répondu et combien de temps (" + n + ")", tkWhoSub: "Toutes les réponses : nom, diplôme, durée et date", tmT: "⏳ Le temps pris par chacun", tmWho: n => n === 1 ? "1 réponse" : n + " réponses", chatStarBy: s => "Jugé utile par : " + s, chmeSem: n => n + " ce semestre",
   socTimeAsk: "Combien de temps ?", socTimeT2: "Combien de temps ? (modifiable)",
@@ -209,9 +209,13 @@ function markAsked(k) { if (!asked(k)) { P.soc_asked = (P.soc_asked || []).conca
 const myRep = k => (P.soc_rep || {})[k];
 const repLbl = h => { const r = HOURS.find(x => x[0] === h); return r ? r[1] + " " + t(r[2]) : ""; };
 /* how: "auto" (Moodle now shows it submitted: asked once), "done" (marked done by hand: asked unless already reported), "me" (the button: always) */
+/* reporting closes 12 hours after the deadline: a report after that helps nobody plan (and shouldn't earn points). The 12 hours = submitted at the last minute, asked at the next refresh */
+const TIME_GRACE = 12 * 3600;
+const timeOpen = x => !x.due || nowS() < x.due + TIME_GRACE;
 function askTime(key, how) {
   const x = V.data && V.data.tasks.find(y => y.key === key);
   if (!timeable(x)) return false;
+  if (!timeOpen(x)) { if (how === "me") toast(t("socTimeLate")); return false; }
   if (how !== "me" && (myRep(key) !== undefined || (how !== "done" && asked(key)))) return false;
   const cur = myRep(key);
   sheet("socTime", '<h3><span>' + esc(t(cur !== undefined ? "socTimeT2" : "socTimeT")) + "</span>" + xbtn() + '</h3><div class="hint"><bdi>' + esc(x.name) + "</bdi> · <bdi>" + esc(shortName(x.course)) + "</bdi></div>" +
@@ -223,19 +227,20 @@ function askTime(key, how) {
 function timeBtn(x) {
   if (!timeable(x) || !(x.status === "submitted" || isDone(x))) return "";
   const h = myRep(x.key);
+  if (!timeOpen(x)) return h !== undefined ? '<span class="stbtn on locked" title="' + esc(t("socTimeLate")) + '">' + ic("hourglass") + '<span class="at">' + esc(repLbl(h)) + "</span></span>" : "";
   return '<button class="stbtn' + (h !== undefined ? " on" : "") + '" data-soctime="' + esc(x.key) + '">' + ic("hourglass") + '<span class="at">' + esc(h !== undefined ? repLbl(h) : t("socTimeAsk")) + "</span></button>";
 }
 async function sendTime(h) {
   const x = V.data && V.data.tasks.find(y => y.key === ST.timeKey); close("socTime"); if (!x) return;
-  try { const r = await api("time", { cid: x.cid, aid: x.key, h, ref: x.name, cname: shortName(x.course) }); useHit("socTimeRep");
+  try { const r = await api("time", { cid: x.cid, aid: x.key, h, ref: x.name, cname: shortName(x.course), due: x.due || 0 }); useHit("socTimeRep");
     P.soc_rep = Object.assign({}, P.soc_rep || {}, { [x.key]: h }); const ks = Object.keys(P.soc_rep); if (ks.length > 400) for (const k of ks.slice(0, ks.length - 400)) delete P.soc_rep[k];
     savePrefs(); render(); toast(t(r.first ? "socThanks" : "socThanks0")); overview(true); }
-  catch (e) { toast(t("socNet")); }
+  catch (e) { toast(t(e.message === "late" ? "socTimeLate" : "socNet")); }
 }
 function afterFetch(d, prevSt) {
   overview();
   if (!prevSt) return;
-  for (const x of d.tasks) if (timeable(x) && x.status === "submitted" && prevSt[x.key] && prevSt[x.key] !== "submitted" && !asked(x.key) && myRep(x.key) === undefined && !ST.queue.includes(x.key)) ST.queue.push(x.key);
+  for (const x of d.tasks) if (timeable(x) && timeOpen(x) && x.status === "submitted" && prevSt[x.key] && prevSt[x.key] !== "submitted" && !asked(x.key) && myRep(x.key) === undefined && !ST.queue.includes(x.key)) ST.queue.push(x.key);
   LS.set("socTQ", ST.queue.slice(-20)); timeQueue();
 }
 /* ask about the newly submitted ones one at a time, when nothing else is open (kept across restarts until asked) */
@@ -415,7 +420,8 @@ function taskSoc(x) {
     const tb = timeBtn(x);
     const all = cdata(x.cid), av = all && all.t && all.t[x.key];
     if (av && av[1] > 0) h += '<button class="crsli" data-soctimes="' + esc(x.key) + '">' + ic("users") + '<span class="sw"><b>' + esc(t("tkWho", av[1])) + "</b><small>" + esc(t("tkWhoSub")) + "</small></span></button>";
-    h += tb ? '<div class="tksrow">' + tb + '<span class="hint">' + esc(t(mine !== undefined ? "tkRepChange" : "tkRepAsk")) + "</span></div>" : '<p class="hint">' + esc(t("tkAfter")) + "</p>";
+    h += !timeOpen(x) ? (tb ? '<div class="tksrow">' + tb + "</div>" : "") + '<p class="hint">' + esc(t("socTimeLate")) + "</p>"
+      : tb ? '<div class="tksrow">' + tb + '<span class="hint">' + esc(t(mine !== undefined ? "tkRepChange" : "tkRepAsk")) + "</span></div>" : '<p class="hint">' + esc(t("tkAfter")) + "</p>";
   }
   if (chattable(x)) {
     const i = thInfo(x.cid, x.key), u = unread(x.cid, x.key);
@@ -491,7 +497,7 @@ function drawChat() {
       (rp ? '<div class="sq"><b><bdi>' + esc(rp.name) + "</bdi></b> " + esc(rp.del ? t("chatDel") : rp.body.slice(0, 90)) + "</div>" : "") +
       '<div class="smb' + (m.del ? " del" : "") + '">' + (m.del ? esc(t("chatDel")) : linkify(esc(m.body))) + "</div>" +
       (m.del ? "" : '<div class="smf">' + m.re.map(r => '<button class="sre' + (r[2] ? " on" : "") + '" data-socemo="' + m.id + "|" + r[0] + '">' + r[0] + " " + r[1] + "</button>").join("") +
-        (mine ? (m.stars ? '<span class="sstar on">' + ic("star") + m.stars + "</span>" : "") : '<button class="sstar' + (m.starred ? " on" : "") + '" data-socstar="' + m.id + '" title="' + esc(t("chatStarT")) + '">' + ic("star") + "<span>" + esc(t("chatStar")) + "</span>" + (m.stars ? " " + m.stars : "") + "</button>") +
+        (mine || isMeName(m.name) ? (m.stars ? '<span class="sstar on">' + ic("star") + m.stars + "</span>" : "") : '<button class="sstar' + (m.starred ? " on" : "") + '" data-socstar="' + m.id + '" title="' + esc(t("chatStarT")) + '">' + ic("star") + "<span>" + esc(t("chatStar")) + "</span>" + (m.stars ? " " + m.stars : "") + "</button>") +
         '<button class="sic" data-socpick="' + m.id + '" aria-label="' + esc(t("chatReact")) + '">' + ic("smile-plus") + '</button><button class="sic" data-socrep="' + m.id + '" aria-label="' + esc(t("chatReply")) + '">' + ic("reply") + "</button>" +
         (mine ? '<button class="sic" data-socmdel="' + m.id + '" aria-label="delete">' + ic("trash-2") + "</button>" : "") + "</div>") +
       (!m.del && m.stars && (m.sb || []).length ? '<div class="ssb">' + ic("star") + "<span>" + esc(t("chatStarBy", m.sb.map(n => isMeName(n) ? t("chatYou") : n || t("lgSomeone")).join(", "))) + "</span></div>" : "") + "</div>";
@@ -775,6 +781,7 @@ css.textContent = `
 .tmr{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.tmr .sw{flex:1;min-width:0;display:flex;flex-direction:column}.tmr .tma{font-weight:700;font-size:13.5px;white-space:nowrap}.tmr small{color:var(--muted);font-size:12px}
 .chme{margin:10px 0 4px;padding:12px;border-radius:16px;background:var(--row)}.chme1{display:flex;gap:12px;align-items:flex-start}.chme1 .sw{flex:1;min-width:0}.chme .sbtns{margin-top:8px}
 .snote{padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.5}.snote:last-of-type{border-bottom:0}.snote .link{padding:0;margin-top:4px}
+.stbtn.locked{opacity:.75;cursor:default}
 .tksest{display:flex;align-items:center;gap:8px;font-size:14px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--accent) 9%,var(--card));margin-bottom:8px}.tksest .i{width:18px;height:18px;color:var(--accent-t);flex:none}
 .tksrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}.tksrow .hint{margin:0}
 .sest{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:2px 8px;border-radius:99px;background:color-mix(in srgb,var(--accent) 12%,var(--card));color:var(--accent-t);margin-inline-start:6px;white-space:nowrap;vertical-align:middle}
