@@ -7,7 +7,8 @@
 const SOC_V = "1.7.0";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
-const RANKS = [[0, "🌱", "rk0"], [20, "📝", "rk1"], [60, "🧠", "rk2"], [150, "⚡", "rk3"], [300, "👑", "rk4"], [600, "🏆", "rk5"]];
+/* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
+const RANKS = [[0, "🌱", "rk0"], [30, "📝", "rk1"], [80, "🧠", "rk2"], [150, "⚡", "rk3"], [350, "🎓", "rk4"], [800, "🔥", "rk5"], [2000, "👑", "rk6"]];
 const DEGS = { b: ["opt", "ee", "se", "ie", "cs", "bio", "nur", "nur2", "acc", "ba", "pha"], m: ["m_cs", "m_phy", "m_nur"] };
 const YEARS = ["1", "2", "3", "4"];
 
@@ -31,7 +32,7 @@ Object.assign(I18N.he, {
   dg_bio: "ביואינפורמטיקה", dg_nur: "סיעוד", dg_nur2: "הסבת אקדמאים לסיעוד", dg_acc: "חשבונאות ומערכות מידע", dg_ba: "מנהל עסקים", dg_pha: "מדעי הרוקחות",
   dg_m_cs: "מדעי המחשב – בינה מלאכותית (תואר שני)", dg_m_phy: "פיזיקה יישומית / אלקטרו-אופטיקה (תואר שני)", dg_m_nur: "סיעוד (תואר שני)",
   yr1: "שנה א׳", yr2: "שנה ב׳", yr3: "שנה ג׳", yr4: "שנה ד׳",
-  rk0: "שורד סמסטר", rk1: "צדיק של סיכומים", rk2: "פותר בעיות מוסמך", rk3: "מציל מועדי א׳", rk4: "אגדת קמפוס", rk5: "מתרגל של כבוד",
+  rk0: "שורד סמסטר", rk1: "צדיק של סיכומים", rk2: "פותר בעיות מוסמך", rk3: "מציל מועדי א׳", rk4: "מתרגל של כבוד", rk5: "גאון הפקולטה", rk6: "אגדת הקמפוס",
   socTimeT: "סחתיין על ההגשה! כמה זמן לקח לך בערך?", socTimeHint: "עוזר לאחרים לתכנן את הזמן. לחיצה אחת.", socSkip: "דלג",
   h1: "עד שעה", h2: "\u20661–3\u2069 שעות", h3: "\u20663–6\u2069 שעות", h4: "\u20666–10\u2069 שעות", h5: "יותר מ-10 שעות",
   socThanks: "תודה! \u2066+1\u2069 נקודה", socThanks0: "עודכן ✓", estBadge: (h, n) => "~" + h + " שע׳ · " + (n === 1 ? "דיווח אחד" : n + " דיווחים"), estTitle: (h, n) => n === 1 ? "סטודנט אחד דיווח: כ-" + h + " שעות" : "זמן ממוצע לפי " + n + " סטודנטים: כ-" + h + " שעות",
@@ -79,7 +80,7 @@ Object.assign(I18N.en, {
   dg_bio: "Bioinformatics", dg_nur: "Nursing", dg_nur2: "Nursing for graduates", dg_acc: "Accounting & Information Systems", dg_ba: "Business Administration", dg_pha: "Pharmaceutical Sciences",
   dg_m_cs: "M.Sc. Computer Science (AI)", dg_m_phy: "M.Sc. Applied Physics / Electro-Optics", dg_m_nur: "M.S.N. Nursing",
   yr1: "1st year", yr2: "2nd year", yr3: "3rd year", yr4: "4th year",
-  rk0: "Semester Survivor", rk1: "Summary Saint", rk2: "Certified Solver", rk3: "Exam Saver", rk4: "Campus Legend", rk5: "Honorary TA",
+  rk0: "Semester Survivor", rk1: "Summary Saint", rk2: "Certified Solver", rk3: "Exam Saver", rk4: "Honorary TA", rk5: "Faculty Genius", rk6: "Campus Legend",
   socTimeT: "Nice, submitted! Roughly how long did it take?", socTimeHint: "Helps others plan their time. One tap.", socSkip: "Skip",
   h1: "Up to 1 hour", h2: "1–3 hours", h3: "3–6 hours", h4: "6–10 hours", h5: "10+ hours",
   socThanks: "Thanks! +1 point", socThanks0: "Updated ✓", estBadge: (h, n) => "~" + h + " h · " + n + (n === 1 ? " report" : " reports"), estTitle: (h, n) => n === 1 ? "One student reported: about " + h + " hours" : "Average from " + n + " students: about " + h + " hours",
@@ -127,7 +128,7 @@ Object.assign(I18N.fr, {
   dg_bio: "Bio-informatique", dg_nur: "Soins infirmiers", dg_nur2: "Reconversion en soins infirmiers", dg_acc: "Comptabilité et systèmes d’information", dg_ba: "Administration des affaires", dg_pha: "Sciences pharmaceutiques",
   dg_m_cs: "M.Sc. Informatique (IA)", dg_m_phy: "M.Sc. Physique appliquée / électro-optique", dg_m_nur: "Soins infirmiers (M.S.N.)",
   yr1: "1re année", yr2: "2e année", yr3: "3e année", yr4: "4e année",
-  rk0: "Survivant du semestre", rk1: "Saint des résumés", rk2: "Solveur certifié", rk3: "Sauveur d’examens", rk4: "Légende du campus", rk5: "Assistant d’honneur",
+  rk0: "Survivant du semestre", rk1: "Saint des résumés", rk2: "Solveur certifié", rk3: "Sauveur d’examens", rk4: "Assistant d’honneur", rk5: "Génie de la faculté", rk6: "Légende du campus",
   socTimeT: "Bravo, c’est rendu ! Ça vous a pris combien de temps ?", socTimeHint: "Aide les autres à s’organiser. Un seul geste.", socSkip: "Passer",
   h1: "Jusqu’à 1 h", h2: "1 à 3 h", h3: "3 à 6 h", h4: "6 à 10 h", h5: "Plus de 10 h",
   socThanks: "Merci ! +1 point", socThanks0: "Mis à jour ✓", estBadge: (h, n) => "~" + h + " h · " + n + " avis", estTitle: (h, n) => n === 1 ? "Un étudiant a répondu : environ " + h + " heures" : "Moyenne de " + n + " étudiants : environ " + h + " heures",
@@ -837,8 +838,10 @@ css.textContent = `
 .stime button:last-child{grid-column:1/-1}
 .stime .e{font-size:22px}
 .srk{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:99px;margin:4px 0;white-space:nowrap}
-.srk.r0{background:#e6f6ea;color:#2b8a3e}.srk.r1{background:#e7f1fd;color:#1c63b7}.srk.r2{background:#f3e8ff;color:#7c3aed}
-.srk.r3{background:#fff4e0;color:#c05600}.srk.r4{background:#fff8d6;color:#9a6b00}.srk.r5{background:linear-gradient(90deg,#ffe9a8,#ffd1e8);color:#7a2e5a}
+.srk.r0{background:#eceef2;color:#5b6270;border:1px solid #d5d9e0}.srk.r1{background:#e2f6e7;color:#1f7a37;border:1px solid #9fdcb0}.srk.r2{background:#e2eefd;color:#1757b8;border:1px solid #9cc2f5}
+.srk.r3{background:#efe4ff;color:#6d28d9;border:1px solid #c5a6f7}.srk.r4{background:#fff0dc;color:#b35000;border:1px solid #f7b36b}.srk.r5{background:#ffe3e3;color:#b4161e;border:1px solid #f39a9a}
+.srk.r6{background:linear-gradient(100deg,#fff1b0 0%,#ffcf3f 30%,#fff6cc 50%,#ffc21a 70%,#ffe68a 100%);background-size:220% 100%;color:#6b4300;border:1px solid #e0a800;box-shadow:0 0 0 1px #fff3 inset,0 0 10px #ffc21a88;animation:rk6 3.2s linear infinite}
+@keyframes rk6{to{background-position:-220% 0}}body.calm .srk.r6{animation:none}@media (prefers-reduced-motion:reduce){.srk.r6{animation:none}}
 .sprofcard{display:flex;gap:12px;align-items:flex-start;padding:4px 0 8px}
 .sprofcard.spc{padding:12px;border-radius:16px;background:var(--row);margin-bottom:12px}
 .sprofcard .sw{flex:1;min-width:0}

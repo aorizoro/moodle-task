@@ -166,7 +166,8 @@ const PTS = { add: 3, time: 1, wa: 1, star: 2 };
 const EMO = ["👍", "❤️", "🔥", "😂", "🙏"];
 const okTk = k => typeof k === "string" && /^(c|[a-z]+:[0-9A-Za-z_.-]{1,40})$/.test(k);   // a thread: "c" = the course chat, or a task key (assign:123)
 // [earlier id, id in use]: 12.11.2026 – Meir's account (177 points) was replaced when he joined on a second device before its sync arrived
-const REPAIRS = [["009e02b977552fd2f5bef065b4bc55ea", "d9d9ec43113385bd0af68794cd5f1e72"]];
+const REPAIRS = [["009e02b977552fd2f5bef065b4bc55ea", "d9d9ec43113385bd0af68794cd5f1e72"],
+  ["647d4113d96619485bd6ea504dacf03c", "d37e0f70b45198ea33bc62dadd29e48f"]];   // 12.11: רוני טמבור – two accounts (same name, degree and year) on the board
 const okId = s => typeof s === "string" && /^[a-f0-9]{32}$/.test(s);
 const okSec = s => typeof s === "string" && /^[a-f0-9]{48}$/.test(s);
 const okCid = c => (typeof c === "string" || typeof c === "number") && /^[0-9]{1,12}$/.test(String(c));
