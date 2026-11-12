@@ -218,6 +218,37 @@ export class Community extends DurableObject {
     this.sql.exec("INSERT INTO users (uid, sech, name, deg, yr, seen) VALUES (?, ?, ?, ?, ?, ?)", b.uid, h, name, clip(b.deg, 60), clip(b.yr, 20), Date.now());
     return { uid: b.uid, sech: h, name, deg: clip(b.deg, 60), yr: clip(b.yr, 20) };
   }
+  /* the same person under an earlier id (another device made its own before the two met through sync): they still hold its secret, so its points,
+     log, time reports, messages and shares move to the id in use. Nothing is ever deleted except the empty old account. */
+  async mergeInto(me, olds) {
+    const done = [];
+    for (const o of (Array.isArray(olds) ? olds : []).slice(0, 8)) {
+      if (!o || !okId(o.uid) || !okSec(o.sec) || o.uid === me.uid) continue;
+      const u = this.one("SELECT uid, sech FROM users WHERE uid = ?", o.uid);
+      if (!u) { done.push(o.uid); continue; }                                    // never used on the server: nothing to bring over
+      if (u.sech !== await sha256("soc:" + o.sec)) continue;
+      const a = o.uid, b = me.uid;
+      this.ctx.storage.transactionSync(() => {
+        this.sql.exec("UPDATE ledger SET uid = ? WHERE uid = ?", b, a);
+        this.sql.exec("UPDATE ledger SET from_uid = ? WHERE from_uid = ?", b, a);
+        for (const r of this.q("SELECT cid, per, pts FROM tot WHERE uid = ?", a))
+          this.sql.exec("INSERT INTO tot (uid, cid, per, pts) VALUES (?, ?, ?, ?) ON CONFLICT (uid, cid, per) DO UPDATE SET pts = pts + excluded.pts", b, r.cid, r.per, r.pts);
+        this.sql.exec("DELETE FROM tot WHERE uid = ?", a);
+        for (const r of this.q("SELECT cid, aid, h FROM times WHERE uid = ?", a)) {
+          if (this.one("SELECT h FROM times WHERE cid = ? AND aid = ? AND uid = ?", r.cid, r.aid, b)) this.sql.exec("UPDATE agg SET sum = sum - ?, n = n - 1 WHERE cid = ? AND aid = ?", r.h, r.cid, r.aid);   // reported from both: one report
+          else this.sql.exec("UPDATE times SET uid = ? WHERE cid = ? AND aid = ? AND uid = ?", b, r.cid, r.aid, a);
+        }
+        this.sql.exec("DELETE FROM times WHERE uid = ?", a);
+        for (const tb of ["msgs", "shares", "notes"]) this.sql.exec(`UPDATE ${tb} SET uid = ? WHERE uid = ?`, b, a);
+        this.sql.exec("UPDATE notes SET from_uid = ? WHERE from_uid = ?", b, a);
+        for (const tb of ["adds", "stars", "reacts"]) { this.sql.exec(`UPDATE OR IGNORE ${tb} SET uid = ? WHERE uid = ?`, b, a); this.sql.exec(`DELETE FROM ${tb} WHERE uid = ?`, a); }
+        this.sql.exec("UPDATE courses SET wa_by = ? WHERE wa_by = ?", b, a);
+        this.sql.exec("DELETE FROM users WHERE uid = ?", a);
+      });
+      this.cc.clear(); done.push(a);
+    }
+    return done;
+  }
   course(cid, name) {                                       // remember a course's name (for boards and logs); a write only when it is new or renamed
     if (!name) return;
     const c = this.one("SELECT name FROM courses WHERE cid = ?", cid), n = clip(name, 120);
@@ -249,6 +280,7 @@ export class Community extends DurableObject {
     if (op === "overview") {
       const name = clip(b.name, 60).trim(), deg = b.deg === undefined ? me.deg || "" : clip(b.deg, 60), yr = b.yr === undefined ? me.yr || "" : clip(b.yr, 20);
       if ((name && name !== me.name) || deg !== (me.deg || "") || yr !== (me.yr || "")) this.sql.exec("UPDATE users SET name = ?, deg = ?, yr = ?, seen = ? WHERE uid = ?", name || me.name, deg, yr, now, me.uid);
+      const merged = Array.isArray(b.old) && b.old.length ? await this.mergeInto(me, b.old) : [];
       const cs = (Array.isArray(b.courses) ? b.courses : []).filter(c => c && okCid(c.id)).slice(0, 40), out = {};
       for (const c of cs) { const cid = String(c.id); this.course(cid, c.name); out[cid] = this.pub(cid); }
       const mine = {}; for (const r of this.q("SELECT cid, aid, h FROM times WHERE uid = ?", me.uid)) mine[r.cid + ":" + r.aid] = r.h;
@@ -256,7 +288,7 @@ export class Community extends DurableObject {
       const since = Math.max(Number(b.ns) || 0, now - 14 * 86400e3);
       const notes = this.q(`SELECT n.id, n.kind, n.cid, n.tk, n.mid, n.body, n.at, u.name, t.ref FROM notes n LEFT JOIN users u ON u.uid = n.from_uid LEFT JOIN thr t ON t.cid = n.cid AND t.tk = n.tk
         WHERE n.uid = ? AND n.at > ? ORDER BY n.at DESC LIMIT 20`, me.uid, since).map(r => ({ id: r.id, kind: r.kind, cid: r.cid, tk: r.tk, mid: r.mid, body: r.body || "", at: r.at, name: r.name || "", ref: r.ref || "" }));
-      return [200, { me: { uid: me.uid, ...this.pts(me.uid) }, c: out, mine, added, notes }];
+      return [200, { me: { uid: me.uid, ...this.pts(me.uid) }, c: out, mine, added, notes, merged }];
     }
     const cid = okCid(b.cid) ? String(b.cid) : "";
     if (op === "time") {

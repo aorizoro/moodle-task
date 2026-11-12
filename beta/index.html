@@ -2547,7 +2547,7 @@ P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf", "grades"];
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf", "grades", "soc_old"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -3334,6 +3334,7 @@ function cleanKey(k, v) {
     case "old_days": return Number.isFinite(v) ? Math.max(0, Math.min(365, Math.round(v))) : 14;
     case "sort": return ["urgency", "course", "date", "est"].includes(v) ? v : "urgency";
     case "soc_on": case "soc_auto": return v === true;
+    case "soc_old": return Array.isArray(v) ? v.filter(x => obj(x) && /^[a-f0-9]{32}$/.test(x.uid || "") && /^[a-f0-9]{48}$/.test(x.sec || "")).map(x => ({ uid: x.uid, sec: x.sec })).slice(-8) : [];
     case "soc_id": return obj(v) && /^[a-f0-9]{32}$/.test(v.uid || "") && /^[a-f0-9]{48}$/.test(v.sec || "") ? { uid: v.uid, sec: v.sec } : null;
     case "soc_prof": return obj(v) ? { deg: typeof v.deg === "string" ? v.deg.slice(0, 80) : "", yr: /^[1-7]?$/.test(v.yr || "") ? v.yr || "" : "" } : null;
     case "soc_mute": return Array.isArray(v) ? v.filter(x => obj(x) && /^[a-f0-9]{32}$/.test(x.uid || "")).map(x => ({ uid: x.uid, name: typeof x.name === "string" ? x.name.slice(0, 60) : "" })).slice(0, 200) : [];
@@ -3427,6 +3428,15 @@ async function syncRound() {
   let pulled = false, push = !remote;
   for (const k of SYNC_KEYS) {
     const lt = P._ts[k] || 0, rt = Number(rts[k]) || 0, has = Object.prototype.hasOwnProperty.call(rd, k);
+    if (k === "soc_old") {                     // earlier community ids still waiting to be folded in: always the union of both sides
+      const mine = cleanKey(k, P.soc_old || []), theirs = has ? cleanKey(k, rd[k]) : [], all = mine.concat(theirs.filter(x => !mine.some(y => y.uid === x.uid))).filter(x => !P.soc_id || x.uid !== P.soc_id.uid).slice(-8);
+      const j = JSON.stringify(all); if (j !== JSON.stringify(theirs)) push = true;
+      if (j !== syncSnap[k]) { P.soc_old = all; syncSnap[k] = j; pulled = true; }
+      P._ts[k] = Math.max(lt, rt); continue;
+    }
+    if (k === "soc_id" && has && rt >= lt && P.soc_id && rd[k] && rd[k].uid && rd[k].uid !== P.soc_id.uid) {
+      P.soc_old = (P.soc_old || []).concat([{ uid: P.soc_id.uid, sec: P.soc_id.sec }]).slice(-8); push = true;   // another device has a different id: keep ours to fold its points into that one
+    }
     if (has && rt >= lt) {
       const v = cleanKey(k, rd[k]), j = JSON.stringify(v);
       if (j !== syncSnap[k]) { P[k] = v; syncSnap[k] = j; pulled = true; }
@@ -3475,7 +3485,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.7.0-beta.7";
+const APP_VERSION = "1.7.0-beta.8";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };

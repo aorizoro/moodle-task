@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.7.0-beta.7";
+const SOC_V = "1.7.0-beta.8";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 const RANKS = [[0, "🌱", "rk0"], [20, "📝", "rk1"], [60, "🧠", "rk2"], [150, "⚡", "rk3"], [300, "👑", "rk4"], [600, "🏆", "rk5"]];
@@ -16,6 +16,7 @@ Object.assign(I18N.he, {
   socTimeLate: "זמן ההגשה עבר, אז כבר אי אפשר לדווח כמה זמן זה לקח (הדיווח עוזר לאחרים רק לפני ההגשה)", tkRepAsk: "לחיצה כדי לדווח כמה זמן לקח לך", tkRepChange: "מה שדיווחת. אפשר לשנות", tkAfter: "אחרי שמגישים נשאל כמה זמן לקח, וזה עוזר לאחרים לתכנן", tkChat: "דיון על המטלה", tkChatNone: "עוד אין הודעות. אפשר לשאול כאן שאלה",
   noteT: () => "⭐ ההודעה שלך עזרה למישהו!", noteT2: n => "⭐ " + n + " הודעות שלך סומנו כמועילות!", noteStar: (f, w) => f + " סימן/ה את ההודעה שלך כתשובה מועילה" + (w ? " ב\u2068״" + w + "״\u2069" : ""), noteGo: "לצ'אט ←", notePts: n => "קיבלת \u2066+" + n + "\u2069 נקודות. ממשיכים לעזור 💪", noteOk: "יופי, תודה",
   tkWho: n => "מי דיווח וכמה זמן (" + n + ")", tkWhoSub: "כל הדיווחים: שם, תואר, כמה זמן ומתי", tmT: "⏳ כמה זמן זה לקח לכל אחד", tmWho: n => n === 1 ? "דיווח אחד" : n + " דיווחים", chatStarBy: s => "סימנו כמועיל: " + s, chmeSem: n => n + " בסמסטר הזה",
+  socMergedT: "הנקודות מהמכשיר השני שלך אוחדו לחשבון הזה ✓",
   socTimeAsk: "כמה זמן לקח?", socTimeT2: "כמה זמן לקח? (אפשר לשנות)",
   crsBoard: "טבלת הקורס", crsChatN: (n, tn) => n + " הודעות בצ'אט הקורס" + (tn ? " · " + tn + " דיונים על מטלות" : ""), crsChatNone: "עוד אין הודעות בצ'אט של הקורס. אפשר לכתוב ראשונים.",
   chvTagCourse: "צ'אט הקורס", chvTagTask: "דיון במטלה", chvFAct: "פעילות", chvFCourse: "קורסים", chvFTask: "מטלות", chvNoAct: "עוד אין שיחות. אפשר לפתוח את הצ'אט של אחד הקורסים ולכתוב ראשונים.", chvStart: "לצ'אטים של הקורסים", chvNoMatch: "לא נמצא צ'אט שמתאים לחיפוש",
@@ -63,6 +64,7 @@ Object.assign(I18N.en, {
   socTimeLate: "The deadline has passed, so reporting how long it took is closed (a report only helps others before the deadline)", tkRepAsk: "Tap to report how long it took you", tkRepChange: "What you reported. You can change it", tkAfter: "Once you submit, we'll ask how long it took – it helps others plan", tkChat: "Discussion about this task", tkChatNone: "No messages yet. Ask a question here",
   noteT: () => "⭐ Your message helped someone!", noteT2: n => "⭐ " + n + " of your messages were marked helpful!", noteStar: (f, w) => f + " marked your message as a helpful answer" + (w ? " in “" + w + "”" : ""), noteGo: "Go to the chat →", notePts: n => "You got +" + n + " points. Keep helping 💪", noteOk: "Nice, thanks",
   tkWho: n => "Who reported and how long (" + n + ")", tkWhoSub: "Every report: name, degree, how long and when", tmT: "⏳ How long it took each person", tmWho: n => n === 1 ? "1 report" : n + " reports", chatStarBy: s => "Marked helpful by: " + s, chmeSem: n => n + " this semester",
+  socMergedT: "The points from your other device were joined into this account ✓",
   socTimeAsk: "How long did it take?", socTimeT2: "How long did it take? (you can change it)",
   crsBoard: "Course leaderboard", crsChatN: (n, tn) => n + " messages in the course chat" + (tn ? " · " + tn + " task discussions" : ""), crsChatNone: "No messages in the course chat yet. Be the first to write.",
   chvTagCourse: "Course chat", chvTagTask: "Task discussion", chvFAct: "Active", chvFCourse: "Courses", chvFTask: "Tasks", chvNoAct: "No conversations yet. Open one of your course chats and be the first to write.", chvStart: "Go to course chats", chvNoMatch: "No chat matches the search",
@@ -110,6 +112,7 @@ Object.assign(I18N.fr, {
   socTimeLate: "L’échéance est passée : on ne peut plus indiquer le temps (ça n’aide les autres qu’avant l’échéance)", tkRepAsk: "Touchez pour indiquer votre temps", tkRepChange: "Votre réponse, modifiable", tkAfter: "Après le rendu, on vous demandera le temps passé – ça aide les autres", tkChat: "Discussion sur ce devoir", tkChatNone: "Pas encore de messages. Posez une question ici",
   noteT: () => "⭐ Votre message a aidé quelqu’un !", noteT2: n => "⭐ " + n + " de vos messages ont été jugés utiles !", noteStar: (f, w) => f + " a marqué votre message comme réponse utile" + (w ? " dans « " + w + " »" : ""), noteGo: "Aller au chat →", notePts: n => "Vous avez gagné +" + n + " points. Continuez 💪", noteOk: "Super, merci",
   tkWho: n => "Qui a répondu et combien de temps (" + n + ")", tkWhoSub: "Toutes les réponses : nom, diplôme, durée et date", tmT: "⏳ Le temps pris par chacun", tmWho: n => n === 1 ? "1 réponse" : n + " réponses", chatStarBy: s => "Jugé utile par : " + s, chmeSem: n => n + " ce semestre",
+  socMergedT: "Les points de votre autre appareil ont été réunis dans ce compte ✓",
   socTimeAsk: "Combien de temps ?", socTimeT2: "Combien de temps ? (modifiable)",
   crsBoard: "Classement du cours", crsChatN: (n, tn) => n + " messages dans le chat du cours" + (tn ? " · " + tn + " discussions de devoirs" : ""), crsChatNone: "Pas encore de message dans le chat du cours. Écrivez en premier.",
   chvTagCourse: "Chat du cours", chvTagTask: "Discussion du devoir", chvFAct: "Actives", chvFCourse: "Cours", chvFTask: "Devoirs", chvNoAct: "Pas encore de conversation. Ouvrez le chat d’un cours et écrivez en premier.", chvStart: "Aux chats des cours", chvNoMatch: "Aucun chat ne correspond",
@@ -156,7 +159,18 @@ Object.assign(I18N.fr, {
 /* ---------- state and the server ---------- */
 const ST = { queue: LS.get("socTQ", []).filter(k => typeof k === "string").slice(-20), chf: LS.get("socChF", "act"), ov: LS.get("socOv", null), at: 0, busy: null, board: { cid: "", per: "sem", deg: "" }, queue: [] };
 const hex = n => [...crypto.getRandomValues(new Uint8Array(n))].map(b => b.toString(16).padStart(2, "0")).join("");
-function ensureId() { if (!P.soc_id) { P.soc_id = { uid: hex(16), sec: hex(24) }; savePrefs(); } return P.soc_id; }
+function ensureId() {
+  if (!P.soc_id) { P.soc_id = { uid: hex(16), sec: hex(24) }; savePrefs(); }
+  const h = LS.get("socIds", []) || [];                       // every id this device ever had (kept here, never synced): a safety net for the points
+  if (!h.some(x => x.uid === P.soc_id.uid)) LS.set("socIds", h.concat([{ uid: P.soc_id.uid, sec: P.soc_id.sec, at: Date.now() }]).slice(-8));
+  return P.soc_id;
+}
+/* ids this device used before (if sync ever replaced one) that the server hasn't folded in yet */
+function oldIds() {
+  const cur = ensureId().uid, done = LS.get("socMerged", []) || [];
+  const all = (P.soc_old || []).concat(LS.get("socIds", []) || []).filter(x => x && x.uid !== cur && !done.includes(x.uid));
+  return all.filter((x, i) => all.findIndex(y => y.uid === x.uid) === i).slice(-8).map(x => ({ uid: x.uid, sec: x.sec }));
+}
 const prof = () => P.soc_prof || { deg: "", yr: "" };
 const myName = () => ((V.data && V.data.user) || "").trim();
 async function api(op, body) {
@@ -175,8 +189,15 @@ async function overview(force) {
   if (!force && Date.now() - ST.at < 3 * 60000) return ST.ov;
   if (ST.busy) return ST.busy;
   ST.at = Date.now();
-  ST.busy = api("overview", { courses: myCourses().map(c => ({ id: c.id, name: shortName(c.name) })), ns: LS.get("socNs", 0) })
-    .then(o => { ST.ov = o; ST.err = false; LS.set("socOv", o); LS.set("socPts", (o.me && o.me.all) || 0); render(); if (!$("#sheet").hidden) SOC.card(); notesCheck(o.notes); return o; })
+  const old = oldIds();
+  ST.busy = api("overview", Object.assign({ courses: myCourses().map(c => ({ id: c.id, name: shortName(c.name) })), ns: LS.get("socNs", 0) }, old.length ? { old } : {}))
+    .then(o => {
+      if (Array.isArray(o.merged) && o.merged.length) {          // the server folded them into this id: never send them again
+        LS.set("socMerged", (LS.get("socMerged", []) || []).concat(o.merged).slice(-40));
+        P.soc_old = (P.soc_old || []).filter(x => !o.merged.includes(x.uid)); savePrefs(); useHit("socMerged");
+        if (o.me && o.me.all) toast(t("socMergedT"));
+      }
+      ST.ov = o; ST.err = false; LS.set("socOv", o); LS.set("socPts", (o.me && o.me.all) || 0); render(); if (!$("#sheet").hidden) SOC.card(); notesCheck(o.notes); return o; })
     .catch(e => { ST.err = true; return null; }).finally(() => { ST.busy = null; });
   return ST.busy;
 }
@@ -705,7 +726,7 @@ function intro(manual) {
 async function join() {
   const p = readProf("socI"), btn = $("[data-socjoinnow]"); if (btn) btn.disabled = true;
   // joined already on another device? take that id (and its points) instead of making a second one
-  if (!P.soc_id && syncOnNow() && M.token) { try { await Promise.race([syncNow(), new Promise(r => setTimeout(r, 4000))]); } catch (e) {} }
+  if (!P.soc_id && syncOnNow() && M.token) { try { await Promise.race([syncNow(), new Promise(r => setTimeout(r, 12000))]); } catch (e) {} }
   P.soc_prof = p; P.soc_on = true; ensureId(); savePrefs(); useHit("socJoin");
   close("socIntro"); toast(t("socWelcome")); render(); overview(true);
   if (!$("#sheet").hidden) { renderSheet(); if (V.spage === "soc") page(); }
