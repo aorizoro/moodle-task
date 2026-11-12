@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.7.0-beta.1";
+const SOC_V = "1.7.0-beta.2";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 const RANKS = [[0, "🌱", "rk0"], [20, "📝", "rk1"], [60, "🧠", "rk2"], [150, "⚡", "rk3"], [300, "👑", "rk4"], [600, "🏆", "rk5"]];
@@ -15,6 +15,7 @@ Object.assign(I18N.he, {
   tkEst: (h, n) => n === 1 ? "דיווח אחד עד עכשיו: בערך " + h + " שעות" : "לאחרים לקח בממוצע בערך " + h + " שעות (" + n + " דיווחים)", tkEstNone: "עוד אף אחד לא דיווח כמה זמן זה לקח", tkEstMine: "עד עכשיו רק את/ה דיווחת כמה זמן זה לקח",
   tkRepAsk: "לחיצה כדי לדווח כמה זמן לקח לך", tkRepChange: "מה שדיווחת. אפשר לשנות", tkAfter: "אחרי שמגישים נשאל כמה זמן לקח, וזה עוזר לאחרים לתכנן", tkChat: "דיון על המטלה", tkChatNone: "עוד אין הודעות. אפשר לשאול כאן שאלה",
   noteT: () => "⭐ ההודעה שלך עזרה למישהו!", noteT2: n => "⭐ " + n + " הודעות שלך סומנו כמועילות!", noteStar: (f, w) => f + " סימן/ה את ההודעה שלך כתשובה מועילה" + (w ? " ב\u2068״" + w + "״\u2069" : ""), noteGo: "לצ'אט ←", notePts: n => "קיבלת \u2066+" + n + "\u2069 נקודות. ממשיכים לעזור 💪", noteOk: "יופי, תודה",
+  tkWho: n => "מי דיווח וכמה זמן (" + n + ")", tkWhoSub: "כל הדיווחים: שם, תואר, כמה זמן ומתי", tmT: "⏳ כמה זמן זה לקח לכל אחד", tmWho: n => n === 1 ? "דיווח אחד" : n + " דיווחים", chatStarBy: s => "סימנו כמועיל: " + s, chmeSem: n => n + " בסמסטר הזה",
   socTimeAsk: "כמה זמן לקח?", socTimeT2: "כמה זמן לקח? (אפשר לשנות)",
   crsBoard: "טבלת הקורס", crsChatN: (n, tn) => n + " הודעות בצ'אט הקורס" + (tn ? " · " + tn + " דיונים על מטלות" : ""), crsChatNone: "עוד אין הודעות בצ'אט של הקורס. אפשר לכתוב ראשונים.",
   chvTagCourse: "צ'אט הקורס", chvTagTask: "דיון במטלה", chvFAct: "פעילות", chvFCourse: "קורסים", chvFTask: "מטלות", chvNoAct: "עוד אין שיחות. אפשר לפתוח את הצ'אט של אחד הקורסים ולכתוב ראשונים.", chvStart: "לצ'אטים של הקורסים", chvNoMatch: "לא נמצא צ'אט שמתאים לחיפוש",
@@ -61,6 +62,7 @@ Object.assign(I18N.en, {
   tkEst: (h, n) => n === 1 ? "One student reported about " + h + " hours" : "It took others about " + h + " hours on average (" + n + " reports)", tkEstNone: "No one has reported how long it took yet", tkEstMine: "So far only you reported how long it took",
   tkRepAsk: "Tap to report how long it took you", tkRepChange: "What you reported. You can change it", tkAfter: "Once you submit, we'll ask how long it took – it helps others plan", tkChat: "Discussion about this task", tkChatNone: "No messages yet. Ask a question here",
   noteT: () => "⭐ Your message helped someone!", noteT2: n => "⭐ " + n + " of your messages were marked helpful!", noteStar: (f, w) => f + " marked your message as a helpful answer" + (w ? " in “" + w + "”" : ""), noteGo: "Go to the chat →", notePts: n => "You got +" + n + " points. Keep helping 💪", noteOk: "Nice, thanks",
+  tkWho: n => "Who reported and how long (" + n + ")", tkWhoSub: "Every report: name, degree, how long and when", tmT: "⏳ How long it took each person", tmWho: n => n === 1 ? "1 report" : n + " reports", chatStarBy: s => "Marked helpful by: " + s, chmeSem: n => n + " this semester",
   socTimeAsk: "How long did it take?", socTimeT2: "How long did it take? (you can change it)",
   crsBoard: "Course leaderboard", crsChatN: (n, tn) => n + " messages in the course chat" + (tn ? " · " + tn + " task discussions" : ""), crsChatNone: "No messages in the course chat yet. Be the first to write.",
   chvTagCourse: "Course chat", chvTagTask: "Task discussion", chvFAct: "Active", chvFCourse: "Courses", chvFTask: "Tasks", chvNoAct: "No conversations yet. Open one of your course chats and be the first to write.", chvStart: "Go to course chats", chvNoMatch: "No chat matches the search",
@@ -107,6 +109,7 @@ Object.assign(I18N.fr, {
   tkEst: (h, n) => n === 1 ? "Un étudiant a indiqué environ " + h + " h" : "Les autres ont mis environ " + h + " h en moyenne (" + n + " avis)", tkEstNone: "Personne n’a encore indiqué le temps passé", tkEstMine: "Pour l’instant, vous seul(e) l’avez indiqué",
   tkRepAsk: "Touchez pour indiquer votre temps", tkRepChange: "Votre réponse, modifiable", tkAfter: "Après le rendu, on vous demandera le temps passé – ça aide les autres", tkChat: "Discussion sur ce devoir", tkChatNone: "Pas encore de messages. Posez une question ici",
   noteT: () => "⭐ Votre message a aidé quelqu’un !", noteT2: n => "⭐ " + n + " de vos messages ont été jugés utiles !", noteStar: (f, w) => f + " a marqué votre message comme réponse utile" + (w ? " dans « " + w + " »" : ""), noteGo: "Aller au chat →", notePts: n => "Vous avez gagné +" + n + " points. Continuez 💪", noteOk: "Super, merci",
+  tkWho: n => "Qui a répondu et combien de temps (" + n + ")", tkWhoSub: "Toutes les réponses : nom, diplôme, durée et date", tmT: "⏳ Le temps pris par chacun", tmWho: n => n === 1 ? "1 réponse" : n + " réponses", chatStarBy: s => "Jugé utile par : " + s, chmeSem: n => n + " ce semestre",
   socTimeAsk: "Combien de temps ?", socTimeT2: "Combien de temps ? (modifiable)",
   crsBoard: "Classement du cours", crsChatN: (n, tn) => n + " messages dans le chat du cours" + (tn ? " · " + tn + " discussions de devoirs" : ""), crsChatNone: "Pas encore de message dans le chat du cours. Écrivez en premier.",
   chvTagCourse: "Chat du cours", chvTagTask: "Discussion du devoir", chvFAct: "Actives", chvFCourse: "Cours", chvFTask: "Devoirs", chvNoAct: "Pas encore de conversation. Ouvrez le chat d’un cours et écrivez en premier.", chvStart: "Aux chats des cours", chvNoMatch: "Aucun chat ne correspond",
@@ -180,6 +183,7 @@ async function overview(force) {
 const cdata = cid => (ST.ov && ST.ov.c && ST.ov.c[String(cid)]) || null;
 const muted = uid => (P.soc_mute || []).some(m => m.uid === uid);
 const isMe = uid => P.soc_id && P.soc_id.uid === uid;
+const isMeName = n => !!n && n === myName();
 
 /* ---------- labels ---------- */
 const degLabel = d => !d ? "" : d.startsWith("x:") ? d.slice(2) : I18N.he["dg_" + d] ? t("dg_" + d) : d;
@@ -409,6 +413,8 @@ function taskSoc(x) {
     const v = estV(x), mine = myRep(x.key);
     h += '<div class="tksest">' + ic("hourglass") + "<span>" + (v ? esc(t("tkEst", fmtH(v[0]), v[1])) : esc(t(mine !== undefined ? "tkEstMine" : "tkEstNone"))) + "</span></div>";
     const tb = timeBtn(x);
+    const all = cdata(x.cid), av = all && all.t && all.t[x.key];
+    if (av && av[1] > 0) h += '<button class="crsli" data-soctimes="' + esc(x.key) + '">' + ic("users") + '<span class="sw"><b>' + esc(t("tkWho", av[1])) + "</b><small>" + esc(t("tkWhoSub")) + "</small></span></button>";
     h += tb ? '<div class="tksrow">' + tb + '<span class="hint">' + esc(t(mine !== undefined ? "tkRepChange" : "tkRepAsk")) + "</span></div>" : '<p class="hint">' + esc(t("tkAfter")) + "</p>";
   }
   if (chattable(x)) {
@@ -417,6 +423,20 @@ function taskSoc(x) {
       (i.n && i.lt ? "<bdi>" + esc(i.lb ? i.lb + ": " : "") + esc(i.lt) + "</bdi>" : esc(t("tkChatNone"))) + "</small></span></button>";
   }
   return h;
+}
+/* who reported how long a task took, and what they said */
+async function openTimes(key) {
+  const x = V.data && V.data.tasks.find(y => y.key === key); if (!x) return;
+  useHit("socTimes");
+  const head = "<h3><span>" + esc(t("tmT")) + "</span>" + xbtn() + '</h3><div class="hint"><bdi>' + esc(x.name) + "</bdi> · <bdi>" + esc(shortName(x.course)) + "</bdi></div>";
+  sheet("socTimes", head + '<div class="hint">' + esc(t("socLoading")) + "</div>");
+  let r; try { r = await api("times", { cid: x.cid, aid: x.key }); } catch (e) { sheet("socTimes", head + '<p class="err">' + esc(t("socNet")) + "</p>"); return; }
+  const rows = (r.rows || []).filter(z => !muted(z.uid)), n = rows.length;
+  const bars = HOURS.map(hh => { const c = rows.filter(z => z.h === hh[0]).length;
+    return '<div class="tmb"><span class="l">' + hh[1] + " " + esc(t(hh[2])) + '</span><span class="b"><i style="width:' + (n ? Math.round(c / n * 100) : 0) + '%"></i></span><span class="n">' + c + "</span></div>"; }).join("");
+  const list = rows.map(z => '<div class="tmr"><div class="sw">' + (isMe(z.uid) ? "<b>" + esc(t("chatYou")) + "</b>" : nameBtn(z.uid, z.name)) + (profLine(z.deg, z.yr) ? '<small class="sprof">' + esc(profLine(z.deg, z.yr)) + "</small>" : "") + "</div>" +
+    '<span class="tma">' + esc(repLbl(z.h)) + "</span><small>" + esc(shortDate(Math.floor(z.at / 1000))) + "</small></div>").join("");
+  sheet("socTimes", head + (n ? '<div class="tmbars">' + bars + "</div>" + '<div class="stitle">' + esc(t("tmWho", n)) + "</div>" + list : '<p class="hint">' + esc(t("tkEstNone")) + "</p>"));
 }
 /* the community part of a course's page: its chat, its WhatsApp group and its leaderboard */
 function crsLinks(cid) {
@@ -473,7 +493,8 @@ function drawChat() {
       (m.del ? "" : '<div class="smf">' + m.re.map(r => '<button class="sre' + (r[2] ? " on" : "") + '" data-socemo="' + m.id + "|" + r[0] + '">' + r[0] + " " + r[1] + "</button>").join("") +
         (mine ? (m.stars ? '<span class="sstar on">' + ic("star") + m.stars + "</span>" : "") : '<button class="sstar' + (m.starred ? " on" : "") + '" data-socstar="' + m.id + '" title="' + esc(t("chatStarT")) + '">' + ic("star") + "<span>" + esc(t("chatStar")) + "</span>" + (m.stars ? " " + m.stars : "") + "</button>") +
         '<button class="sic" data-socpick="' + m.id + '" aria-label="' + esc(t("chatReact")) + '">' + ic("smile-plus") + '</button><button class="sic" data-socrep="' + m.id + '" aria-label="' + esc(t("chatReply")) + '">' + ic("reply") + "</button>" +
-        (mine ? '<button class="sic" data-socmdel="' + m.id + '" aria-label="delete">' + ic("trash-2") + "</button>" : "") + "</div>") + "</div>";
+        (mine ? '<button class="sic" data-socmdel="' + m.id + '" aria-label="delete">' + ic("trash-2") + "</button>" : "") + "</div>") +
+      (!m.del && m.stars && (m.sb || []).length ? '<div class="ssb">' + ic("star") + "<span>" + esc(t("chatStarBy", m.sb.map(n => isMeName(n) ? t("chatYou") : n || t("lgSomeone")).join(", "))) + "</span></div>" : "") + "</div>";
   }).join("") : '<div class="hint schempty">' + esc(t("chatEmpty")) + "</div>";
   el.dataset.drawn = "1";
   if (atEnd) el.scrollTop = el.scrollHeight;
@@ -533,7 +554,7 @@ function chatView() {
   };
   const chip = (k, lbl) => '<button class="chf' + (f === k ? " on" : "") + '" data-chf="' + k + '" aria-pressed="' + (f === k) + '">' + esc(lbl) + ' <span class="n">' + cnt(k) + "</span></button>";
   const empty = q ? t("chvNoMatch") : f === "act" ? t("chvNoAct") : t("chvNone");
-  el.innerHTML = '<div class="chvh"><h2>' + esc(t("chvT")) + (un ? ' <span class="scnt new">' + esc(t("chvUnread", un)) + "</span>" : "") + "</h2>" +
+  el.innerHTML = '<div class="chvh"><h2>' + esc(t("chvT")) + (un ? ' <span class="scnt new">' + esc(t("chvUnread", un)) + "</span>" : "") + "</h2>" + meBar() +
     '<input type="search" id="chq" placeholder="' + esc(t("chvSearch")) + '" value="' + esc(ST.chq || "") + '">' +
     (q ? "" : '<div class="chfs">' + chip("act", t("chvFAct")) + chip("course", t("chvFCourse")) + chip("task", t("chvFTask")) + "</div>") + "</div>" +
     (L.length ? '<div class="chlist">' + L.map(row).join("") + "</div>" : '<div class="chempty"><p>' + esc(empty) + "</p>" + (f === "act" && !q ? '<button class="primary" data-chf="course">' + esc(t("chvStart")) + "</button>" : "") + "</div>");
@@ -571,6 +592,13 @@ async function openUser(uid) {
     (r.log.length ? '<div class="slog">' + r.log.map(l => '<div class="sl"><b class="sp" dir="ltr">+' + l.pts + '</b><div><div><bdi>' + esc(desc(l)) + '</bdi></div><small class="hint">' + (l.cname ? "<bdi>" + esc(l.cname) + "</bdi> · " : "") + esc(day(l.at)) + "</small></div></div>").join("") + "</div>"
       : '<div class="hint">' + esc(t("socLogEmpty")) + "</div>") +
     (me ? "" : '<button class="link' + (muted(u.uid) ? "" : " danger") + '" data-socmute="' + esc(u.uid) + '" data-n="' + esc(u.name) + '" style="width:100%;margin-top:10px">' + esc(t(muted(u.uid) ? "socUnmute" : "socMute")) + "</button>");
+}
+/* my rank, points and how close the next rank is (the chats tab) */
+function meBar() {
+  const pts = (ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0), sem = (ST.ov && ST.ov.me && ST.ov.me.sem) || 0, n = myName();
+  return '<div class="chme"><div class="chme1"><span class="sav">' + esc((n || "?").charAt(0)) + '</span><div class="sw"><div>' + rankTag(pts) + ' <span class="spts">' + esc(t("socPts", pts)) + "</span>" +
+    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + "</div></div>" +
+    '<div class="sbtns"><button data-socboard>' + ic("trophy") + "<span>" + esc(t("socBoards")) + '</span></button><button data-socme>' + ic("award") + "<span>" + esc(t("socMyPts")) + "</span></button></div></div>";
 }
 function progress(pts) {
   const r = rankOf(pts); if (!r.next) return '<div class="hint">' + esc(t("socTop")) + "</div>";
@@ -615,7 +643,7 @@ function card() {
   const el = $("#socCard"); if (!el) return;
   if (!socOn()) { el.innerHTML = ""; return; }
   const pts = (ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0), n = myName(), pr = prof();
-  el.innerHTML = '<div class="sprofcard top"><div class="sav">' + esc((n || "?").charAt(0)) + '</div><div class="sw"><b><bdi>' + esc(n) + '</bdi></b><div class="hint">' + esc(profLine(pr.deg, pr.yr)) + "</div>" +
+  el.innerHTML = '<div class="sprofcard spc"><div class="sav">' + esc((n || "?").charAt(0)) + '</div><div class="sw"><b><bdi>' + esc(n) + '</bdi></b><div class="hint">' + esc(profLine(pr.deg, pr.yr)) + "</div>" +
     rankTag(pts) + ' <span class="spts">' + esc(t("socPts", pts)) + "</span>" + progress(pts) +
     '<div class="sbtns"><button data-socboard>' + ic("trophy") + "<span>" + esc(t("socBoards")) + '</span></button><button data-socme>' + ic("award") + "<span>" + esc(t("socMyPts")) + '</span></button><button data-socchats>' + ic("message-square") + "<span>" + esc(t("chatsBtn")) + "</span>" + (totalUnread() ? '<span class="scnt new">' + totalUnread() + "</span>" : "") + "</button></div></div></div>";
 }
@@ -707,6 +735,7 @@ document.addEventListener("click", e => {
   if ((b = g("[data-socjoinnow]"))) return join();
   if ((b = g("[data-socsh]"))) { const [k, id] = b.dataset.socsh.split("|"); close("socShare"); return shareItem(k, id); }
   if ((b = g("[data-socunsh]"))) { const [k, id] = b.dataset.socunsh.split("|"); return stopSharing(k, id); }
+  if ((b = g("[data-soctimes]"))) { e.preventDefault(); return openTimes(b.dataset.soctimes); }
   if ((b = g("[data-socchat]"))) { e.preventDefault(); close("socNote"); const i = b.dataset.socchat.indexOf("|"); return openChat(Number(b.dataset.socchat.slice(0, i)), b.dataset.socchat.slice(i + 1)); }
   if ((b = g("[data-socchats]"))) { $$(".sheet").forEach(x => x.hidden = true); setView("chat"); render(); window.scrollTo(0, 0); return; }
   if ((b = g("[data-chf]"))) { ST.chf = b.dataset.chf; LS.set("socChF", ST.chf); return chatView(); }
@@ -740,6 +769,11 @@ document.addEventListener("click", e => {
 /* ---------- looks ---------- */
 const css = document.createElement("style");
 css.textContent = `
+.ssb{display:flex;align-items:center;gap:4px;margin-top:4px;font-size:11.5px;color:#a26a12}.ssb .i{width:12px;height:12px;fill:#f6c34a;color:#f6c34a;flex:none}
+.tmbars{display:grid;gap:6px;margin:10px 0 14px}.tmb{display:grid;grid-template-columns:minmax(110px,auto) 1fr 24px;align-items:center;gap:8px;font-size:13px}
+.tmb .b{height:10px;border-radius:99px;background:var(--track);overflow:hidden}.tmb .b i{display:block;height:100%;background:var(--accent);border-radius:99px}.tmb .n{text-align:end;font-weight:700}
+.tmr{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.tmr .sw{flex:1;min-width:0;display:flex;flex-direction:column}.tmr .tma{font-weight:700;font-size:13.5px;white-space:nowrap}.tmr small{color:var(--muted);font-size:12px}
+.chme{margin:10px 0 4px;padding:12px;border-radius:16px;background:var(--row)}.chme1{display:flex;gap:12px;align-items:flex-start}.chme1 .sw{flex:1;min-width:0}.chme .sbtns{margin-top:8px}
 .snote{padding:10px 0;border-bottom:1px solid var(--line);font-size:14.5px;line-height:1.5}.snote:last-of-type{border-bottom:0}.snote .link{padding:0;margin-top:4px}
 .tksest{display:flex;align-items:center;gap:8px;font-size:14px;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--accent) 9%,var(--card));margin-bottom:8px}.tksest .i{width:18px;height:18px;color:var(--accent-t);flex:none}
 .tksrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}.tksrow .hint{margin:0}
@@ -769,7 +803,7 @@ css.textContent = `
 .srk.r0{background:#e6f6ea;color:#2b8a3e}.srk.r1{background:#e7f1fd;color:#1c63b7}.srk.r2{background:#f3e8ff;color:#7c3aed}
 .srk.r3{background:#fff4e0;color:#c05600}.srk.r4{background:#fff8d6;color:#9a6b00}.srk.r5{background:linear-gradient(90deg,#ffe9a8,#ffd1e8);color:#7a2e5a}
 .sprofcard{display:flex;gap:12px;align-items:flex-start;padding:4px 0 8px}
-.sprofcard.top{padding:12px;border-radius:16px;background:var(--row);margin-bottom:12px}
+.sprofcard.spc{padding:12px;border-radius:16px;background:var(--row);margin-bottom:12px}
 .sprofcard .sw{flex:1;min-width:0}
 .sav{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:800;color:#fff;background:linear-gradient(135deg,#5856d6,#af52de)}
 .spts{font-size:13px;color:var(--muted)}

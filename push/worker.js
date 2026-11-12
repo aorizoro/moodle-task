@@ -270,6 +270,11 @@ export class Community extends DurableObject {
       if (!old) this.award(me.uid, PTS.time, "time", "", cid, b.ref);
       this.cc.delete(cid); return [200, { ok: true, first: !old }];
     }
+    if (op === "times") {                                   // who reported how long a task took (names, degree, year, the answer, when)
+      const aid = clip(b.aid, 40); if (!cid || !aid) return [400, { error: "bad" }];
+      const rows = this.q(`SELECT t.uid, t.h, t.at, u.name, u.deg, u.yr FROM times t LEFT JOIN users u ON u.uid = t.uid WHERE t.cid = ? AND t.aid = ? ORDER BY t.at DESC LIMIT 200`, cid, aid);
+      return [200, { rows: rows.map(r => ({ uid: r.uid, h: r.h, at: r.at, name: r.name || "", deg: r.deg || "", yr: r.yr || "" })) }];
+    }
     if (op === "wa") {
       const url = String(b.url || "").trim();
       if (!cid || (url && !okWa(url))) return [400, { error: "bad" }];
@@ -314,7 +319,7 @@ export class Community extends DurableObject {
       if (b.ver !== undefined && Number(b.ver) === ver) return [200, { same: true, ver }];
       const ms = this.q(`SELECT m.id, m.uid, m.body, m.reply, m.at, m.del, m.stars, u.name, u.deg, u.yr, (SELECT pts FROM tot a WHERE a.uid = m.uid AND a.cid = '' AND a.per = 'all') AS total
         FROM msgs m LEFT JOIN users u ON u.uid = m.uid WHERE m.cid = ? AND m.tk = ? ORDER BY m.id DESC LIMIT 150`, cid, tk).reverse();
-      const ids = ms.map(m => m.id), re = {}, mine = new Set();
+      const ids = ms.map(m => m.id), re = {}, mine = new Set(), sb = {};
       if (ids.length) {
         const lo = ids[0], hi = ids[ids.length - 1], here = new Set(ids), agg = {};
         for (const r of this.q("SELECT mid, emo, uid FROM reacts WHERE mid >= ? AND mid <= ?", lo, hi)) {
@@ -323,9 +328,12 @@ export class Community extends DurableObject {
         }
         for (const a of Object.values(agg)) (re[a[0]] = re[a[0]] || []).push([a[1], a[2], a[3]]);
         for (const r of this.q("SELECT mid FROM stars WHERE uid = ? AND mid >= ? AND mid <= ?", me.uid, lo, hi)) mine.add(r.mid);
+        if (ms.some(m => m.stars > 0))                      // who starred each message (shown under it)
+          for (const r of this.q("SELECT s.mid, u.name FROM stars s LEFT JOIN users u ON u.uid = s.uid WHERE s.mid >= ? AND s.mid <= ?", lo, hi))
+            if (here.has(r.mid)) (sb[r.mid] = sb[r.mid] || []).length < 20 && sb[r.mid].push(r.name || "");
       }
       return [200, { ver, msgs: ms.map(m => ({ id: m.id, uid: m.uid, name: m.name || "", deg: m.deg || "", yr: m.yr || "", total: m.total || 0, body: m.del ? "" : m.body, del: !!m.del,
-        reply: m.reply || 0, at: m.at, stars: m.stars, starred: mine.has(m.id), re: re[m.id] || [] })) }];
+        reply: m.reply || 0, at: m.at, stars: m.stars, starred: mine.has(m.id), sb: sb[m.id] || [], re: re[m.id] || [] })) }];
     }
     if (op === "post") {
       const tk = b.tk, body = String(b.body || "").trim().slice(0, 2000);
