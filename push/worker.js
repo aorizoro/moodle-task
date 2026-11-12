@@ -165,6 +165,8 @@ const HOURS = [0.5, 2, 4.5, 8, 12];                       // the five "how long 
 const PTS = { add: 3, time: 1, wa: 1, star: 2 };
 const EMO = ["👍", "❤️", "🔥", "😂", "🙏"];
 const okTk = k => typeof k === "string" && /^(c|[a-z]+:[0-9A-Za-z_.-]{1,40})$/.test(k);   // a thread: "c" = the course chat, or a task key (assign:123)
+// [earlier id, id in use]: 12.11.2026 – Meir's account (177 points) was replaced when he joined on a second device before its sync arrived
+const REPAIRS = [["009e02b977552fd2f5bef065b4bc55ea", "d9d9ec43113385bd0af68794cd5f1e72"]];
 const okId = s => typeof s === "string" && /^[a-f0-9]{32}$/.test(s);
 const okSec = s => typeof s === "string" && /^[a-f0-9]{48}$/.test(s);
 const okCid = c => (typeof c === "string" || typeof c === "number") && /^[0-9]{1,12}$/.test(String(c));
@@ -227,7 +229,11 @@ export class Community extends DurableObject {
       const u = this.one("SELECT uid, sech FROM users WHERE uid = ?", o.uid);
       if (!u) { done.push(o.uid); continue; }                                    // never used on the server: nothing to bring over
       if (u.sech !== await sha256("soc:" + o.sec)) continue;
-      const a = o.uid, b = me.uid;
+      this.moveUser(o.uid, me.uid); done.push(o.uid);
+    }
+    return done;
+  }
+  moveUser(a, b) {
       this.ctx.storage.transactionSync(() => {
         this.sql.exec("UPDATE ledger SET uid = ? WHERE uid = ?", b, a);
         this.sql.exec("UPDATE ledger SET from_uid = ? WHERE from_uid = ?", b, a);
@@ -245,9 +251,15 @@ export class Community extends DurableObject {
         this.sql.exec("UPDATE courses SET wa_by = ? WHERE wa_by = ?", b, a);
         this.sql.exec("DELETE FROM users WHERE uid = ?", a);
       });
-      this.cc.clear(); done.push(a);
+      this.cc.clear();
+  }
+  /* one-time repairs: a person whose earlier id got replaced before the app kept old ids (1.7.0-beta.8). Moves only when both accounts exist and carry the same name. */
+  repairs() {
+    if (this.repaired) return; this.repaired = true;
+    for (const [a, b] of REPAIRS) {
+      const ua = this.one("SELECT name FROM users WHERE uid = ?", a), ub = this.one("SELECT name FROM users WHERE uid = ?", b);
+      if (ua && ub && ua.name && ua.name === ub.name) this.moveUser(a, b);
     }
-    return done;
   }
   course(cid, name) {                                       // remember a course's name (for boards and logs); a write only when it is new or renamed
     if (!name) return;
@@ -275,6 +287,7 @@ export class Community extends DurableObject {
     this.cc.set(cid, v); return v;
   }
   async handle(op, b) {
+    this.repairs();
     const me = await this.auth(b); if (!me) return [403, { error: "auth" }];
     const now = Date.now();
     if (op === "overview") {
