@@ -641,7 +641,7 @@ body.calm *,body.calm *::before,body.calm *::after{animation:none!important;tran
 .crsrow:last-child{border-bottom:0}.crsrow .dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
 .crsrow .sw{flex:1;min-width:0;display:flex;flex-direction:column}.crsrow b{font-weight:700;font-size:14.5px}.crsrow small{color:var(--muted);font-size:12.5px}.crsrow small.late{color:var(--err)}
 .crsrow .chev{width:16px;height:16px;color:var(--muted)}
-#crsSheet .box.crs,#tkSheet .box.crs{max-height:92vh;overflow:auto;padding-top:0}
+#crsSheet .box.crs,#tkSheet .box.crs,#grSheet .box.crs{max-height:92vh;overflow:auto;padding-top:0}
 .tkmeta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px;font-size:13px;color:var(--muted)}
 .tkmeta .crsl{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--c);filter:brightness(.8);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .tkdue{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--c) 10%,var(--card));border:1px solid color-mix(in srgb,var(--c) 30%,var(--line));margin:0 0 10px}
@@ -650,8 +650,20 @@ body.calm *,body.calm *::before,body.calm *::after{animation:none!important;tran
 .tkgr>span{display:inline-flex;align-items:center;gap:6px;font-weight:650}.tkgr .i{width:17px;height:17px;color:var(--ok)}.tkgr b{font-size:18px}.tkgr small{color:var(--muted);font-size:12.5px}.tkgr .grfb{flex-basis:100%;font-size:13px;white-space:pre-wrap}
 .grrow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line)}.grrow[data-crsgo]{cursor:pointer}.grrow>.i{width:18px;height:18px;color:var(--accent-t);flex:none}.grrow.att>.i{color:#8e5bd8}
 .grrow .sw{flex:1;min-width:0;display:flex;flex-direction:column}.grrow b{font-weight:650;font-size:14px}.grrow small{color:var(--muted);font-size:12px}.grrow .grfb{white-space:pre-wrap;margin-top:2px}
-.grv{font-size:15px;font-weight:800;white-space:nowrap}.grv.dim,.grt.dim{color:var(--muted);font-weight:600}
-.grtot{display:flex;align-items:baseline;justify-content:space-between;padding:10px 14px;border-radius:14px;background:var(--row);margin:4px 0 6px;font-weight:700}.grtot b{font-size:22px}.grtot small{font-size:13px;color:var(--muted)}
+.grv{display:flex;flex-direction:column;align-items:center;min-width:64px;padding:4px 8px;border-radius:10px;white-space:nowrap;background:var(--row)}.grv b{font-size:15px;font-weight:800}.grv small{font-size:11px;color:var(--muted)}
+.grv.dim{background:none;color:var(--muted);font-size:12px;font-weight:600}.grt.dim{color:var(--muted);font-weight:600}
+.g-hi{color:#1e8e3e}.grv.g-hi{background:color-mix(in srgb,#1e8e3e 13%,var(--card))}.g-mid{color:#b06000}.grv.g-mid{background:color-mix(in srgb,#f29900 15%,var(--card))}.g-lo{color:#c5221f}.grv.g-lo{background:color-mix(in srgb,#d93025 13%,var(--card))}
+.grrow.none{opacity:.7}.grsub{margin:12px 2px 2px;font-size:12.5px;font-weight:800;color:var(--muted)}
+.grsec{display:flex;align-items:center;gap:8px;margin:14px 2px 4px;font-weight:800;font-size:15.5px}.grsec .i{width:18px;height:18px;color:var(--accent-t)}
+.grrow[style*="--c"]{border-inline-start:3px solid var(--c);padding-inline-start:8px}
+.grc{border:1px solid var(--line);border-radius:14px;margin:8px 0;background:var(--card);overflow:hidden}.grc>summary{display:flex;align-items:center;gap:10px;padding:12px;cursor:pointer;list-style:none}.grc>summary::-webkit-details-marker{display:none}
+.grc>summary .dot{width:12px;height:12px;border-radius:50%;background:var(--c);flex:none}.grc>summary .sw{flex:1;min-width:0;display:flex;flex-direction:column}.grc>summary b{font-size:15px}.grc>summary small{color:var(--muted);font-size:12.5px}.grc>summary .grt{font-size:20px}
+.grc[open]>summary{border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--c) 8%,var(--card))}.grcb{padding:4px 12px 10px}
+.grhead .crsht .i{width:22px;height:22px;color:var(--accent-t)}
+.tgr{display:flex;align-items:center;gap:6px;margin:6px 0 2px;font-size:13px;color:var(--muted)}.tgr .i{width:15px;height:15px;flex:none}.tgr.has{color:var(--text)}.tgr.has b{font-weight:800}.tgr.g-hi b{color:#1e8e3e}.tgr.g-mid b{color:#b06000}.tgr.g-lo b{color:#c5221f}
+.tkgr.none{background:var(--row);border-color:var(--line)}.tkgr.none .i{color:var(--muted)}.tkgr .m{flex-basis:100%}.tkgr .link{padding:0;font-size:13px}.tkgr.g-mid{background:color-mix(in srgb,#f29900 10%,var(--card))}.tkgr.g-lo{background:color-mix(in srgb,#d93025 9%,var(--card))}
+.grtot>span small{display:block;font-size:11.5px;font-weight:400;color:var(--muted)}
+.grtot{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:14px;background:var(--row);margin:4px 0 6px;font-weight:700}.grtot b{font-size:22px}.grtot small{font-size:13px;color:var(--muted)}
 .grmore>summary{cursor:pointer;color:var(--muted);font-size:13px;padding:8px 2px}.grt{font-size:16px;font-weight:800;margin-inline-start:auto}.grfoot{margin-top:6px}
 .tkgone{font-size:13px;color:var(--muted);margin:-4px 0 10px;padding:8px 12px;border-radius:12px;background:var(--row)}
 .tkacts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}.tkacts>*{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:8px 10px;border-radius:12px;font-weight:650;font-size:14px;text-decoration:none}
@@ -1137,7 +1149,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       <div id="news"></div>
     </div>
     <div id="gradesCard" class="dcard crsc">
-      <div class="ch"><span data-i18n="grTitle" data-ic="graduation-cap"></span></div>
+      <div class="ch"><span data-i18n="grTitle" data-ic="award"></span><button class="link" data-grall data-i18n="grAllLink"></button></div>
       <div id="grades"></div>
     </div>
     <div id="coursesCard" class="dcard crsc">
@@ -1207,6 +1219,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       <div id="socCard"></div>
       <div class="sugw" id="sugW" hidden><div class="stitle" data-i18n="sugTitle"></div><div class="mgroup" id="sugList"></div></div>
       <div class="mgroup">
+        <button class="mrow" data-grall><span class="mi" style="--mc:#34a853"><svg class="i"><use href="#i-award"/></svg></span><span class="mt"><b data-i18n="grPageT"></b><small data-i18n="grMenuSub"></small></span></button>
         <button class="mrow" data-go="soc"><span class="mi" style="--mc:#5856d6"><svg class="i"><use href="#i-users"/></svg></span><span class="mt"><b data-i18n="sSoc"></b><small id="sumSoc"></small></span></button>
       </div>
       <div class="mgroup">
@@ -1493,6 +1506,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
 </div></div>
 <div class="sheet" id="crsSheet" hidden><div class="box crs" id="crsBox"></div></div>
 <div class="sheet" id="tkSheet" hidden><div class="box crs" id="tkBox"></div></div>
+<div class="sheet" id="grSheet" hidden><div class="box crs" id="grBox"></div></div>
 <div class="sheet" id="mineSheet" hidden>
   <div class="box">
     <h3><span id="mineTitle"></span> <button class="xbtn" id="mineClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
@@ -1586,6 +1600,9 @@ const I18N = {
     tkCrsSub: (o, l) => (o ? o + " פתוחות" : "אין מטלות פתוחות") + (l ? " · " + l + " באיחור" : ""), tkPageBtn: "עמוד המטלה",
     ex_task: "עמוד המטלה\nכל מה שקשור למטלה במקום אחד: מתי ההגשה, ההנחיות, הקבצים והחומרים מאותו נושא, כמה זמן זה לקח לאחרים והדיון עליה.\nמכאן אפשר לפתוח אותה במודל, לסמן שסיימת, להוסיף ליומן או לעבור לדף הקורס.",
     lgTask: "מטלה", lgMine: "משימה שלי", lgExam: "מבחן / בוחן", lgDone: "הוגש / בוצע", tkExpand: "פתיחת עמוד המטלה",
+    grPageT: "הציונים שלי", grMenuSub: "כל הציונים מכל הקורסים, במקום אחד", grAllLink: "כל הציונים ←", grAllBtn: "כל הציונים שלי", grAllCourse: "כל הציונים בקורס ←", grRecent: "ציונים חדשים (שבועיים אחרונים)", grByCourse: "לפי קורס",
+    grCnt: (a, b) => a + " מתוך " + b + " פריטים קיבלו ציון", grTasksH: n => "מטלות ובחנים (" + n + ")", grAttH: "נוכחות", grQuiz: "בוחן", grAssign: "מטלה", grManual: "ציון ידני", grNoYet: "עדיין אין", grNoYetLong: "עדיין אין ציון",
+    grWhen: x => "נבדק " + x, grFb: "הערות הבודק:", grWorth: w => "המטלה הזאת שווה " + w + "% מהציון בקורס", grCounted: w => "לפי " + w + "% מהקורס שכבר נבדקו",
     grTitle: "ציונים", dcGrades: "ציונים", grTitleC: "ציונים", grItem: "פריט ציון", grLoading: "טוען ציונים מהמודל…", grNone: "עוד לא נטענו ציונים. הם נטענים ברענון הבא.", grNoneYet: "עוד אין ציונים", grHidden: "המרצה לא מאפשר לראות ציונים בקורס הזה במודל.", grHiddenShort: "הציונים מוסתרים במודל",
     grAt: x => "עודכן " + x, grTotHint: "המספר בצד = הציון בקורס עד עכשיו, לפי מה שכבר נבדק", grMoodle: "טבלת הציונים במודל", grAtt: "נוכחות", grVpl: "בודק אוטומטי", grW: w => "משקל " + w + "%", grTotal: "הציון בקורס עד עכשיו", grNoGrade: n => n + " פריטים עוד בלי ציון",
     grWHint: "המשקלים מגיעים מהמודל ומראים כמה כל פריט שווה בציון של הקורס. לפריט שעוד לא נבדק המודל מראה \u20660%\u2069.", grTk: "ציון", grNotifT: n => n === 1 ? "🎓 ציון חדש" : "🎓 " + n + " ציונים חדשים", frGrade: "ציון חדש",
@@ -1819,6 +1836,9 @@ const I18N = {
     tkCrsSub: (o, l) => (o ? o + " open" : "No open tasks") + (l ? " · " + l + " overdue" : ""), tkPageBtn: "Task page",
     ex_task: "The task page\nEverything about the task in one place: when it's due, the instructions, its files and materials from the same topic, how long it took others and the discussion about it.\nFrom here you can open it in Moodle, mark it done, add it to your calendar or go to the course page.",
     lgTask: "Task", lgMine: "My own task", lgExam: "Exam / quiz", lgDone: "Submitted / done", tkExpand: "Open the task page",
+    grPageT: "My grades", grMenuSub: "All grades from every course, in one place", grAllLink: "All grades →", grAllBtn: "All my grades", grAllCourse: "All grades in this course →", grRecent: "New grades (last two weeks)", grByCourse: "By course",
+    grCnt: (a, b) => a + " of " + b + " items graded", grTasksH: n => "Assignments and quizzes (" + n + ")", grAttH: "Attendance", grQuiz: "Quiz", grAssign: "Assignment", grManual: "Manual grade", grNoYet: "Not yet", grNoYetLong: "No grade yet",
+    grWhen: x => "graded " + x, grFb: "Grader's note:", grWorth: w => "This task is worth " + w + "% of the course grade", grCounted: w => "from the " + w + "% of the course graded so far",
     grTitle: "Grades", dcGrades: "Grades", grTitleC: "Grades", grItem: "Grade item", grLoading: "Loading grades from Moodle…", grNone: "Grades haven't loaded yet. They load on the next refresh.", grNoneYet: "No grades yet", grHidden: "The lecturer doesn't let students see grades in this course in Moodle.", grHiddenShort: "Grades hidden in Moodle",
     grAt: x => "Updated " + x, grTotHint: "The number on the side = your grade in the course so far, from what's been graded", grMoodle: "Grades in Moodle", grAtt: "Attendance", grVpl: "Automatic checker", grW: w => "weight " + w + "%", grTotal: "Course grade so far", grNoGrade: n => n + " items not graded yet",
     grWHint: "Weights come from Moodle and show how much each item counts in the course grade. Moodle shows 0% for items not graded yet.", grTk: "Grade", grNotifT: n => n === 1 ? "🎓 New grade" : "🎓 " + n + " new grades", frGrade: "New grade",
@@ -2052,6 +2072,9 @@ const I18N = {
     tkCrsSub: (o, l) => (o ? o + " ouverts" : "Rien d’ouvert") + (l ? " · " + l + " en retard" : ""), tkPageBtn: "Page du devoir",
     ex_task: "La page du devoir\nTout sur le devoir au même endroit : l’échéance, les consignes, ses fichiers et les ressources du même thème, le temps qu’il a pris aux autres et la discussion.\nDe là, ouvrez-le dans Moodle, marquez-le fait, ajoutez-le à l’agenda ou allez à la page du cours.",
     lgTask: "Devoir", lgMine: "Ma tâche", lgExam: "Examen / test", lgDone: "Rendu / fait", tkExpand: "Ouvrir la page du devoir",
+    grPageT: "Mes notes", grMenuSub: "Toutes les notes de tous les cours, au même endroit", grAllLink: "Toutes les notes →", grAllBtn: "Toutes mes notes", grAllCourse: "Toutes les notes du cours →", grRecent: "Nouvelles notes (deux dernières semaines)", grByCourse: "Par cours",
+    grCnt: (a, b) => a + " sur " + b + " éléments notés", grTasksH: n => "Devoirs et tests (" + n + ")", grAttH: "Présence", grQuiz: "Test", grAssign: "Devoir", grManual: "Note manuelle", grNoYet: "Pas encore", grNoYetLong: "Pas encore de note",
+    grWhen: x => "noté " + x, grFb: "Remarque du correcteur :", grWorth: w => "Ce devoir vaut " + w + " % de la note du cours", grCounted: w => "sur les " + w + " % du cours déjà notés",
     grTitle: "Notes", dcGrades: "Notes", grTitleC: "Notes", grItem: "Élément noté", grLoading: "Chargement des notes depuis Moodle…", grNone: "Les notes ne sont pas encore chargées. Elles le seront à la prochaine actualisation.", grNoneYet: "Pas encore de notes", grHidden: "L’enseignant ne permet pas de voir les notes de ce cours dans Moodle.", grHiddenShort: "Notes masquées dans Moodle",
     grAt: x => "Mis à jour " + x, grTotHint: "Le nombre à droite = votre note dans le cours jusqu’ici, d’après ce qui est noté", grMoodle: "Notes dans Moodle", grAtt: "Présence", grVpl: "Correcteur automatique", grW: w => "poids " + w + " %", grTotal: "Note du cours jusqu’ici", grNoGrade: n => n + " éléments pas encore notés",
     grWHint: "Les poids viennent de Moodle et indiquent combien chaque élément compte dans la note du cours. Moodle affiche 0 % pour ce qui n’est pas encore noté.", grTk: "Note", grNotifT: n => n === 1 ? "🎓 Nouvelle note" : "🎓 " + n + " nouvelles notes", frGrade: "Nouvelle note",
@@ -2720,8 +2743,7 @@ function stChip(x, g) {
     : st === "draft" ? '<span class="st draft">' + esc(t("stDraft")) + "</span>"
     : st === "na" ? '<span class="st na">' + esc(t("stNa")) + "</span>" : st === "unknown" ? '<span class="st unknown">' + esc(t("stUnknown")) + "</span>"
     : (g === "late" || g === "old") ? '<span class="st late">' + esc(t("stLate")) + "</span>" : '<span class="st none">' + esc(t("stNone")) + "</span>";
-  if (x.grade) chip += '<span class="st grade">' + esc(t("grade", x.grade)) + "</span>";
-  else { const gr = gradeOfTask(x); if (gr) chip += '<span class="st grade">' + esc(t("grade", grTxt(gr))) + "</span>"; }
+  if (x.grade && !grOn()) chip += '<span class="st grade">' + esc(t("grade", x.grade)) + "</span>";
   return chip;
 }
 function card(x, now, g) {
@@ -2730,15 +2752,17 @@ function card(x, now, g) {
     : x.due ? "<b>" + esc(when(x.due)) + "</b><br>" + cdSpan(x.due, now) + (x.extended ? ' <span class="rel">· ' + esc(t("extended")) + "</span>" : "") : '<span class="rel">' + esc(t("noDue")) + "</span>";
   const extra = (x.from && x.from > now ? '<div class="sub">' + esc(t("opens", when(x.from))) + "</div>" : "") + (x.cutoff && !isDone(x) ? '<div class="sub">' + esc(t("cutoff", when(x.cutoff))) + "</div>" : "");
   const own = (x.files || []).filter(f => f.u).concat((x.links || []).map(l => ({ n: l.n, u: l.u, link: /\/pluginfile\.php\//.test(l.u) ? 0 : 1 })));
-  const files = own.length ? '<div class="files">' + own.map(fileLink).join("") + "</div>" : "";
+  const dn = st === "submitted" || isDone(x);                   // done: just what still matters (the grade, ⏳); the rest is on its page (⤢)
+  const files = own.length && !dn ? '<div class="files">' + own.map(fileLink).join("") + "</div>" : "";
   const rl = related(x);
-  const relHtml = rl.length ? "<details><summary>" + ic("book-open") + " " + esc(noEmo(t("related", rl.length))) + '</summary><div class="files">' + rl.map(fileLink).join("") + "</div></details>" : "";
-  const body = x.intro ? "<details><summary>" + esc(t("details")) + "</summary><pre>" + esc(x.intro) + "</pre></details>" : "";
+  const relHtml = rl.length && !dn ? "<details><summary>" + ic("book-open") + " " + esc(noEmo(t("related", rl.length))) + '</summary><div class="files">' + rl.map(fileLink).join("") + "</div></details>" : "";
+  const body = x.intro && !dn ? "<details><summary>" + esc(t("details")) + "</summary><pre>" + esc(x.intro) + "</pre></details>" : "";
   const acts = [];
-  if (/^https?:\/\//.test(x.url)) acts.push('<a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + '<span class="at">' + esc(noEmo(t("openSite")).replace(/\s*↗$/, "")) + "</span></a>");
-  if (x.due && x.due > now && !isDone(x)) acts.push('<a href="' + esc(gcalHref(x)) + '" target="_blank" rel="noopener noreferrer">' + ic("calendar-plus") + '<span class="at">' + esc(noEmo(t("toCal"))) + "</span></a>");
-  if (x.mine) acts.push('<button data-mine="' + esc(x.mine) + '">' + ic("square-pen") + '<span class="at">' + esc(noEmo(t("mineEdit"))) + "</span></button>");
-  { const sa = S("taskAct", x); if (sa) acts.push(sa); }
+  if (dn) { const tb = S("timeBtn", x); if (tb) acts.push(tb); }
+  else if (/^https?:\/\//.test(x.url)) acts.push('<a href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + '<span class="at">' + esc(noEmo(t("openSite")).replace(/\s*↗$/, "")) + "</span></a>");
+  if (!dn && x.due && x.due > now && !isDone(x)) acts.push('<a href="' + esc(gcalHref(x)) + '" target="_blank" rel="noopener noreferrer">' + ic("calendar-plus") + '<span class="at">' + esc(noEmo(t("toCal"))) + "</span></a>");
+  if (x.mine && !dn) acts.push('<button data-mine="' + esc(x.mine) + '">' + ic("square-pen") + '<span class="at">' + esc(noEmo(t("mineEdit"))) + "</span></button>");
+  if (!dn) { const sa = S("taskAct", x); if (sa) acts.push(sa); }
   for (let i = 0; i < acts.length; i++) { const m = /<span class="at">([^<]*)<\/span>/.exec(acts[i]); if (m) acts[i] = acts[i].replace(/^<(a|button) /, '<$1 title="' + m[1] + '" aria-label="' + m[1] + '" '); }
   return '<div class="task' + (g === "done" ? " done" : "") + (hid ? " hid" : "") + (V.hl === x.key ? " hl" : "") + '" data-key="' + esc(x.key) + '" style="--c:' + colorOf(x.cid) + '">' +
     '<button class="x" data-hide="' + esc(x.key) + '" aria-label="' + esc(hid ? t("restore") : t("hide")) + '">' + ic(hid ? "undo-2" : "x") + "</button>" +
@@ -2746,7 +2770,7 @@ function card(x, now, g) {
     (st === "submitted" ? '<span class="ck on" title="' + esc(t("stSubmitted")) + '">' + ic("check") + "</span>"
       : st === "na" ? "" : '<button class="ck' + (man ? " on" : "") + '" data-done="' + esc(x.key) + '" aria-pressed="' + man + '" aria-label="' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + '" title="' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + '">' + ic("check") + "</button>") +
     '<div class="tl"><span class="tname" data-tk="' + esc(x.key) + '" role="button" tabindex="0"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(typeLabel(x)) + " · " + (x.cid > 0 ? '<button class="crsl" data-crs="' + x.cid + '"><bdi>' + esc(shortName(x.course)) + "</bdi></button>" : "<bdi>" + esc(shortName(x.course)) + "</bdi>") + "</span>" + S("badge", x) + "</div>" +
-    '<div class="due">' + due + "</div>" + extra + files + relHtml + body + '<div class="act">' + acts.join("") + "</div></div>";
+    '<div class="due">' + due + "</div>" + extra + cardGrade(x) + files + relHtml + body + (acts.length ? '<div class="act">' + acts.join("") + "</div>" : "") + "</div>";
 }
 
 /* ---------- render: dashboard ---------- */
@@ -3451,7 +3475,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.7.0-beta.6";
+const APP_VERSION = "1.7.0-beta.7";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -3695,25 +3719,92 @@ function renderGradesCard() {
     const cg = g.c[c.id] || {}, its = (cg.items || []).filter(i => i.raw != null), last = its.slice().sort((a, b) => b.at - a.at)[0];
     const sub = cg.err === "hidden" ? t("grHiddenShort") : last ? last.n + " · " + grTxt(last) + (last.at ? " · " + ago(last.at) : "") : t("grNoneYet");
     const tot = cg.total ? '<b class="grt">' + esc(grNum(cg.total.raw / (cg.total.max || 100) * 100)) + "</b>" : '<b class="grt dim">—</b>';
-    return '<button class="crsrow" data-grcrs="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small><bdi>" + esc(sub) + "</bdi></small></span>" + tot + "</button>";
+    return '<button class="crsrow" data-grall="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small><bdi>" + esc(sub) + "</bdi></small></span>" + tot + "</button>";
   }).join("");
   el.innerHTML = (rows || '<p class="hint">' + esc(t("crsNone")) + "</p>") + '<p class="hint grfoot">' + esc(t("grAt", ago(Math.floor(g.at / 1000)))) + " · " + esc(t("grTotHint")) + "</p>";
 }
+const grPct = it => it.raw != null && it.max ? it.raw / it.max * 100 : null;
+const grCls = p => p == null ? "" : p >= 85 ? " g-hi" : p >= 60 ? " g-mid" : " g-lo";
+const grKind = it => grIsAtt(it) ? t("grAtt") : it.mod === "vpl" ? t("grVpl") : it.mod === "quiz" ? t("grQuiz") : it.mod === "assign" ? t("grAssign") : it.mod ? it.mod : t("grManual");
+const grIcon = it => grIsAtt(it) ? "users" : it.mod === "vpl" ? "file-code" : it.mod === "quiz" ? "circle-check" : it.mod === "assign" ? "file-up" : "award";
+/* one grade row: what it is, its weight and when it was graded, and the grade (coloured by how high it is). A tap opens its task, when it is one */
+function grRow(it, cid, showCourse) {
+  const x = it.cmid && V.data ? V.data.tasks.find(y => y.cid === cid && y.cmid === it.cmid) : null, p = grPct(it);
+  const sub = [showCourse ? shortName(courseName(cid)) : "", grKind(it), it.w ? t("grW", grNum(it.w)) : "", it.at ? ago(it.at) : ""].filter(Boolean).join(" · ");
+  return '<div class="grrow' + (grIsAtt(it) ? " att" : "") + (it.raw == null ? " none" : "") + '"' + (x ? ' data-tkgo="' + esc(x.key) + '" role="button" tabindex="0"' : "") + (showCourse ? ' style="--c:' + colorOf(cid) + '"' : "") + ">" + ic(grIcon(it)) +
+    '<span class="sw"><b><bdi>' + esc(it.n) + "</bdi></b><small>" + esc(sub) + "</small>" + (it.fb ? '<small class="grfb"><bdi>' + esc(it.fb) + "</bdi></small>" : "") + "</span>" +
+    (it.raw != null ? '<span class="grv' + grCls(p) + '"><b>' + esc(grTxt(it)) + "</b>" + (p != null && it.max !== 100 ? "<small>" + esc(grNum(p)) + "%</small>" : "") + "</span>" : '<span class="grv dim">' + esc(t("grNoYet")) + "</span>") + "</div>";
+}
+/* everything about grades in one course: the total, the graded items by kind, what's still waiting */
+function grCourseBody(cid, showLink) {
+  const cg = grAll().c[cid], gl = '<a class="btn crsmoodle grmoodle" href="' + esc(M.url + "/grade/report/user/index.php?id=" + cid) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + " " + esc(t("grMoodle")) + "</a>";
+  if (!cg) return '<p class="hint">' + esc(t("grNone")) + "</p>" + (showLink ? gl : "");
+  if (cg.err === "hidden") return '<p class="hint">' + esc(t("grHidden")) + "</p>" + (showLink ? gl : "");
+  const its = cg.items || [], got = its.filter(i => i.raw != null).sort((a, b) => b.at - a.at), none = its.filter(i => i.raw == null);
+  const tasks = got.filter(i => !grIsAtt(i)), att = got.filter(grIsAtt), wDone = got.reduce((n, i) => n + (i.w || 0), 0);
+  let h = cg.total ? '<div class="grtot"><span>' + esc(t("grTotal")) + (wDone ? "<small>" + esc(t("grCounted", grNum(wDone))) + "</small>" : "") + '</span><b class="' + grCls(cg.total.raw / (cg.total.max || 100) * 100).trim() + '">' + esc(grNum(cg.total.raw)) + "<small>/" + esc(grNum(cg.total.max)) + "</small></b></div>" : "";
+  if (tasks.length) h += '<div class="grsub">' + esc(t("grTasksH", tasks.length)) + "</div>" + tasks.map(i => grRow(i, cid)).join("");
+  if (att.length) h += '<div class="grsub">' + esc(t("grAttH")) + "</div>" + att.map(i => grRow(i, cid)).join("");
+  if (!got.length) h += '<p class="hint">' + esc(t("grNoneYet")) + "</p>";
+  if (none.length) h += '<details class="grmore"><summary>' + esc(t("grNoGrade", none.length)) + "</summary>" + none.map(i => grRow(i, cid)).join("") + "</details>";
+  return h + '<p class="hint">' + esc(t("grWHint")) + "</p>" + (showLink ? gl : "");
+}
 function grSection(cid) {
   if (!grOn()) return '<p class="hint">' + esc(t("grOffHint")) + "</p>";
-  const cg = grAll().c[cid], link = '<a class="btn crsmoodle grmoodle" href="' + esc(M.url + "/grade/report/user/index.php?id=" + cid) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + " " + esc(t("grMoodle")) + "</a>";
+  const cg = grAll().c[cid];
   const re = GR.busy ? '<p class="hint">' + esc(t("grLoading")) + "</p>" : '<p class="hint">' + (cg && cg.at ? esc(t("grAt", ago(Math.floor(cg.at / 1000)))) + " " : "") + '<button class="link" data-crsgr>' + esc(t("refresh")) + "</button></p>";
-  if (!cg) return '<p class="hint">' + esc(t("grNone")) + "</p>" + re + link;
-  if (cg.err === "hidden") return '<p class="hint">' + esc(t("grHidden")) + "</p>" + re + link;
-  const its = cg.items || [], got = its.filter(i => i.raw != null).sort((a, b) => b.at - a.at), none = its.filter(i => i.raw == null);
-  const row = it => { const x = it.cmid && V.data ? V.data.tasks.find(y => y.cid === cid && y.cmid === it.cmid) : null;
-    return '<div class="grrow' + (grIsAtt(it) ? " att" : "") + '"' + (x ? ' data-crsgo="' + esc(x.key) + '" role="button" tabindex="0"' : "") + ">" + ic(grIsAtt(it) ? "users" : MOD_IC[it.mod] || (it.mod === "vpl" ? "file-code" : "file-text")) +
-      '<span class="sw"><b><bdi>' + esc(it.n) + "</bdi></b><small>" + esc([grIsAtt(it) ? t("grAtt") : it.mod === "vpl" ? t("grVpl") : "", it.w ? t("grW", grNum(it.w)) : "", it.at ? ago(it.at) : ""].filter(Boolean).join(" · ")) + "</small>" +
-      (it.fb ? '<small class="grfb"><bdi>' + esc(it.fb) + "</bdi></small>" : "") + "</span>" + (it.raw != null ? '<b class="grv">' + esc(grTxt(it)) + "</b>" : '<span class="grv dim">—</span>') + "</div>"; };
-  return (cg.total ? '<div class="grtot"><span>' + esc(t("grTotal")) + '</span><b>' + esc(grNum(cg.total.raw)) + '<small>/' + esc(grNum(cg.total.max)) + "</small></b></div>" : "") +
-    (got.length ? got.map(row).join("") : '<p class="hint">' + esc(t("grNoneYet")) + "</p>") +
-    (none.length ? '<details class="grmore"><summary>' + esc(t("grNoGrade", none.length)) + "</summary>" + none.map(row).join("") + "</details>" : "") +
-    '<p class="hint">' + esc(t("grWHint")) + "</p>" + re + link;
+  return grCourseBody(cid, true) + re + '<div class="crsbtns"><button class="btn" data-grall>' + ic("award") + " " + esc(t("grAllBtn")) + "</button></div>";
+}
+/* the grades page: what's new, then every course with all its grades */
+const GP = { open: {} };
+function openGrades(cid) {
+  useHit("gradesPage"); $$(".sheet:not([hidden])").forEach(sh => { if (sh.id !== "grSheet") sh.hidden = true; });
+  if (cid) GP.open[cid] = true;
+  renderGrades(); $("#grSheet").hidden = false; $("#grBox").scrollTop = 0;
+  if (cid) setTimeout(() => { const el = $('#grBox [data-grc="' + cid + '"]'), hd = $("#grBox .grhead"); if (el) $("#grBox").scrollTop = el.offsetTop - (hd ? hd.offsetHeight : 0) - 8; }, 80);
+  if (V.data && Date.now() - (grAll().at || 0) > 5 * 60e3) gradeScan(V.data, true);
+}
+function renderGrades() {
+  const box = $("#grBox"); if (!box || !V.data) return;
+  const g = grAll(), now = nowS(), cs = V.data.courses.filter(c => !isOff(c.id) && courseCurrent(c, now));
+  let h = '<div class="crshead grhead"><div class="crsht">' + ic("award") + "<h3>" + esc(t("grPageT")) + '</h3><button class="xbtn" data-grx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button></div>" +
+    '<div class="hint">' + (g.at ? esc(t("grAt", ago(Math.floor(g.at / 1000)))) + " · " : "") + (GR.busy ? esc(t("grLoading")) : '<button class="link" data-grre>' + esc(t("refresh")) + "</button>") + "</div></div>";
+  if (!grOn()) { box.innerHTML = h + '<p class="hint">' + esc(t("grOffHint")) + "</p>"; return; }
+  const recent = [];
+  for (const c of cs) for (const it of ((g.c[c.id] || {}).items || [])) if (it.raw != null && it.at && now - it.at < 14 * DAY) recent.push([it, c.id]);
+  recent.sort((a, b) => b[0].at - a[0].at);
+  if (recent.length) h += '<div class="grsec">' + ic("sparkles") + "<span>" + esc(t("grRecent")) + "</span></div>" + recent.slice(0, 8).map(([it, cid]) => grRow(it, cid, true)).join("");
+  h += '<div class="grsec">' + ic("book-open") + "<span>" + esc(t("grByCourse")) + "</span></div>";
+  h += cs.map(c => {
+    const cg = g.c[c.id] || {}, got = (cg.items || []).filter(i => i.raw != null).length, tot = cg.total;
+    const sub = cg.err === "hidden" ? t("grHiddenShort") : !cg.at ? t("grNone") : t("grCnt", got, (cg.items || []).length);
+    return '<details class="grc" data-grc="' + c.id + '" style="--c:' + colorOf(c.id) + '"' + (GP.open[c.id] ? " open" : "") + '><summary><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small>" + esc(sub) + "</small></span>" +
+      (tot ? '<b class="grt' + grCls(tot.raw / (tot.max || 100) * 100) + '">' + esc(grNum(tot.raw)) + "</b>" : '<b class="grt dim">—</b>') + "</summary>" +
+      '<div class="grcb">' + grCourseBody(c.id, true) + '<div class="crsbtns"><button class="btn" data-grcrs="' + c.id + '">' + ic("book-open") + " " + esc(t("tkCourse")) + "</button></div></div></details>";
+  }).join("");
+  h += '<p class="hint">' + esc(t("grTotHint")) + "</p>";
+  const top = box.scrollTop; box.innerHTML = h; box.scrollTop = top;
+}
+$("#grSheet").addEventListener("click", e => {
+  const g = sel => e.target.closest(sel);
+  if (e.target.id === "grSheet" || g("[data-grx]")) { $("#grSheet").hidden = true; return; }
+  if (g("[data-grre]")) { useHit("gradeRefresh"); return gradeScan(V.data, true); }
+  const b = g("[data-grcrs]"); if (b) { $("#grSheet").hidden = true; return openCourse(Number(b.dataset.grcrs), "grades"); }
+});
+$("#grSheet").addEventListener("toggle", e => { const d = e.target.closest && e.target.closest("[data-grc]"); if (d) GP.open[d.dataset.grc] = d.open; }, true);
+document.addEventListener("click", e => { const b = e.target.closest("[data-grall]"); if (b) { e.preventDefault(); openGrades(b.dataset.grall ? Number(b.dataset.grall) : 0); } });
+/* the grade line on a submitted task's card: the grade, or "no grade yet", with its weight and kind */
+function cardGrade(x) {
+  if (!grOn() || !isAct(x)) return "";
+  const done = x.status === "submitted" || isDone(x), cg = grAll().c[x.cid];
+  if (!done && !(cg && x.cmid && (cg.items || []).some(i => i.cmid === x.cmid && i.raw != null))) return "";      // open tasks: only when there's already a grade
+  if (!cg || !cg.at) return x.grade ? '<div class="tgr has">' + ic("award") + "<span><b>" + esc(t("grade", x.grade)) + "</b></span></div>" : "";
+  if (cg.err === "hidden") return '<div class="tgr">' + ic("award") + "<span>" + esc(t("grHiddenShort")) + "</span></div>";
+  const it = x.cmid ? (cg.items || []).find(i => i.cmid === x.cmid) : null, vpl = (it && it.mod === "vpl") || x.mod === "vpl";
+  const extra = [it && it.w ? t("grW", grNum(it.w)) : "", vpl ? t("grVpl") : ""].filter(Boolean).join(" · ");
+  if (it && it.raw != null) return '<div class="tgr has' + grCls(grPct(it)) + '">' + ic("award") + "<span><b>" + esc(t("grade", grTxt(it))) + "</b>" + (extra ? " · " + esc(extra) : "") + "</span></div>";
+  if (x.grade) return '<div class="tgr has">' + ic("award") + "<span><b>" + esc(t("grade", x.grade)) + "</b></span></div>";
+  return '<div class="tgr">' + ic("award") + "<span>" + esc(t("grNoYetLong")) + (extra ? " · " + esc(extra) : "") + "</span></div>";
 }
 function freshSeen(ids) { const all = LS.get("fresh", []) || []; for (const x of all) if (!ids || ids.includes(x.id)) x.seen = 1; LS.set("fresh", all); }
 function renderFresh() {
@@ -3782,7 +3873,7 @@ function render() {
   { const now = nowS(); renderTT(now); renderAcad(now); renderToday(now); renderSem(d, now); renderExams(now); renderRemCard(); $("#bFb2").hidden = !fbReady(); }
   if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">' + esc(t("loadingTasks")) + "</div>" : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
   const now = nowS();
-  renderDash(d, now); renderNews(d); renderCrsList(d, now); renderGradesCard(); if (!$("#crsSheet").hidden) renderCourse(); if (!$("#tkSheet").hidden) renderTask();
+  renderDash(d, now); renderNews(d); renderCrsList(d, now); renderGradesCard(); if (!$("#crsSheet").hidden) renderCourse(); if (!$("#tkSheet").hidden) renderTask(); if (!$("#grSheet").hidden) renderGrades();
   // focus bar (a day / course / group picked on the dashboard)
   const f = V.focus, fb = $("#focus");
   if (f) {
@@ -4213,9 +4304,9 @@ function launchUrl(site) {
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
   { v: "1.7.0", at: "2026-11-12 16:30",
-    he: ["✏️ הסקירה פחות עמוסה: כפתור ״עריכת הסקירה״ בראש הסקירה – בוחרים מה מוצג ובאיזה סדר, עם הסבר קצר על כל כרטיס, או בלחיצה: מינימלית / מומלצת / הכל", "🎓 ציונים מהמודל: כרטיס בסקירה עם הציון בכל קורס, כל הציונים בדף הקורס (כולל נוכחות ובודק אוטומטי, עם המשקל של כל אחד), הציון על כל מטלה, והתראה כשמגיע ציון חדש", "📄 עמוד לכל מטלה: לחיצה על מטלה פותחת את כל מה שקשור אליה – מתי ההגשה, ההנחיות, הקבצים והחומרים מאותו נושא, כמה זמן זה לקח לאחרים והדיון עליה – ומשם לדף הקורס בלחיצה", "⏳ הזמן שלקח לאחרים מוצג כבר מהדיווח הראשון", "🤖 מטלות של הבודק האוטומטי (VPL) ומטלות קבוצתיות נחשבות ״הוגש״ אחרי ההגשה, ונשאלת השאלה ״כמה זמן לקח?״", "⭐ כשמישהו מסמן הודעה שלך כ״תשובה מועילה״, זה מופיע כשנכנסים לאפליקציה, ובצ'אט רק את/ה רואה מי סימן", "⏳ דיווח כמה זמן לקח נסגר 12 שעות אחרי מועד ההגשה", "👥 בעמוד המטלה: מי דיווח כמה זמן זה לקח לו", "🏆 בטאב הצ'אטים: הדרגה, הנקודות ופס עד הדרגה הבאה", "🗓 בשבוע ובחודש בסקירה, המשימות שלך נראות אחרת (מקווקו / יהלום) באותו צבע של הקורס"],
-    en: ["✏️ A calmer overview: an “Edit the overview” button at the top – choose what shows and in what order, with a short line about each card, or in one tap: minimal / recommended / everything", "🎓 Grades from Moodle: an overview card with your grade in each course, every grade on the course page (attendance and automatic checker included, with each one's weight), the grade on each task, and a notification when a new grade arrives", "📄 A page for every task: tap a task to see everything about it – when it's due, the instructions, its files and materials from the same topic, how long it took others and its discussion – and go to the course page from there", "⏳ How long a task took others shows from the first report", "🤖 Automatic checker (VPL) tasks and group assignments count as submitted once you submit, and you're asked how long they took", "⭐ When someone marks your message as a helpful answer, you see it when you open the app, and only you see who did in the chat", "⏳ Reporting how long a task took closes 12 hours after its deadline", "👥 On the task page: who reported how long it took them", "🏆 The chats tab shows your rank, points and a bar to the next rank", "🗓 In the week and month on the overview, your own tasks look different (dashed / diamond) in the course's colour"],
-    fr: ["✏️ Un aperçu plus léger : un bouton « Modifier l’aperçu » en haut – choisissez ce qui s’affiche et dans quel ordre, avec une ligne sur chaque carte, ou d’un geste : minimal / recommandé / tout", "🎓 Les notes de Moodle : une carte dans l’aperçu avec la note de chaque cours, toutes les notes sur la page du cours (présence et correcteur automatique compris, avec le poids de chacune), la note sur chaque devoir, et une notification à chaque nouvelle note", "📄 Une page pour chaque devoir : touchez un devoir pour tout voir – l’échéance, les consignes, ses fichiers et les ressources du même thème, le temps qu’il a pris aux autres et sa discussion – et allez de là à la page du cours", "⏳ Le temps pris par les autres s’affiche dès la première réponse", "🤖 Les devoirs du correcteur automatique (VPL) et les devoirs de groupe comptent comme rendus après le rendu, avec la question « Combien de temps ? »", "⭐ Quand quelqu’un marque votre message comme réponse utile, vous le voyez en ouvrant l’appli, et vous seul voyez qui dans le chat", "⏳ Indiquer le temps passé se ferme 12 h après l’échéance", "👥 Sur la page du devoir : qui a indiqué combien de temps", "🏆 L’onglet Chats montre votre rang, vos points et la barre vers le rang suivant", "🗓 Dans la semaine et le mois de l’aperçu, vos propres tâches ont un autre style (pointillés / losange), dans la couleur du cours"] },
+    he: ["✏️ הסקירה פחות עמוסה: כפתור ״עריכת הסקירה״ בראש הסקירה – בוחרים מה מוצג ובאיזה סדר, עם הסבר קצר על כל כרטיס, או בלחיצה: מינימלית / מומלצת / הכל", "🎓 ציונים מהמודל: דף ״הציונים שלי״ (מהסקירה ומההגדרות) עם הציונים החדשים וכל קורס בנפרד, כולל נוכחות ובודק אוטומטי והמשקל של כל אחד. הציונים גם בדף הקורס, בעמוד המטלה ועל כל מטלה שהוגשה (״עדיין אין ציון״ כשאין), והתראה כשמגיע ציון חדש", "✂️ מטלה שהוגשה מוצגת קצר: הציון ו-⏳ בלבד. כל השאר בעמוד המטלה", "📄 עמוד לכל מטלה: לחיצה על מטלה פותחת את כל מה שקשור אליה – מתי ההגשה, ההנחיות, הקבצים והחומרים מאותו נושא, כמה זמן זה לקח לאחרים והדיון עליה – ומשם לדף הקורס בלחיצה", "⏳ הזמן שלקח לאחרים מוצג כבר מהדיווח הראשון", "🤖 מטלות של הבודק האוטומטי (VPL) ומטלות קבוצתיות נחשבות ״הוגש״ אחרי ההגשה, ונשאלת השאלה ״כמה זמן לקח?״", "⭐ כשמישהו מסמן הודעה שלך כ״תשובה מועילה״, זה מופיע כשנכנסים לאפליקציה, ובצ'אט רק את/ה רואה מי סימן", "⏳ דיווח כמה זמן לקח נסגר 12 שעות אחרי מועד ההגשה", "👥 בעמוד המטלה: מי דיווח כמה זמן זה לקח לו", "🏆 בטאב הצ'אטים: הדרגה, הנקודות ופס עד הדרגה הבאה", "🗓 בשבוע ובחודש בסקירה, המשימות שלך נראות אחרת (מקווקו / יהלום) באותו צבע של הקורס"],
+    en: ["✏️ A calmer overview: an “Edit the overview” button at the top – choose what shows and in what order, with a short line about each card, or in one tap: minimal / recommended / everything", "🎓 Grades from Moodle: a “My grades” page (from the overview and settings) with new grades and every course, attendance and automatic checker included, with each one's weight. Grades also on the course page, the task page and every submitted task (“No grade yet” when there isn't one), and a notification when a new grade arrives", "✂️ Submitted tasks are shown short: just the grade and ⏳. Everything else is on the task page", "📄 A page for every task: tap a task to see everything about it – when it's due, the instructions, its files and materials from the same topic, how long it took others and its discussion – and go to the course page from there", "⏳ How long a task took others shows from the first report", "🤖 Automatic checker (VPL) tasks and group assignments count as submitted once you submit, and you're asked how long they took", "⭐ When someone marks your message as a helpful answer, you see it when you open the app, and only you see who did in the chat", "⏳ Reporting how long a task took closes 12 hours after its deadline", "👥 On the task page: who reported how long it took them", "🏆 The chats tab shows your rank, points and a bar to the next rank", "🗓 In the week and month on the overview, your own tasks look different (dashed / diamond) in the course's colour"],
+    fr: ["✏️ Un aperçu plus léger : un bouton « Modifier l’aperçu » en haut – choisissez ce qui s’affiche et dans quel ordre, avec une ligne sur chaque carte, ou d’un geste : minimal / recommandé / tout", "🎓 Les notes de Moodle : une page « Mes notes » (depuis l’aperçu et les paramètres) avec les nouvelles notes et chaque cours, présence et correcteur automatique compris, avec le poids de chacune. Les notes aussi sur la page du cours, la page du devoir et chaque devoir rendu (« Pas encore de note » sinon), et une notification à chaque nouvelle note", "✂️ Un devoir rendu s’affiche en court : la note et ⏳. Le reste est sur sa page", "📄 Une page pour chaque devoir : touchez un devoir pour tout voir – l’échéance, les consignes, ses fichiers et les ressources du même thème, le temps qu’il a pris aux autres et sa discussion – et allez de là à la page du cours", "⏳ Le temps pris par les autres s’affiche dès la première réponse", "🤖 Les devoirs du correcteur automatique (VPL) et les devoirs de groupe comptent comme rendus après le rendu, avec la question « Combien de temps ? »", "⭐ Quand quelqu’un marque votre message comme réponse utile, vous le voyez en ouvrant l’appli, et vous seul voyez qui dans le chat", "⏳ Indiquer le temps passé se ferme 12 h après l’échéance", "👥 Sur la page du devoir : qui a indiqué combien de temps", "🏆 L’onglet Chats montre votre rang, vos points et la barre vers le rang suivant", "🗓 Dans la semaine et le mois de l’aperçu, vos propres tâches ont un autre style (pointillés / losange), dans la couleur du cours"] },
   { v: "1.6.0", at: "2026-11-12 10:10",
     he: ["🤖 ״שליחה ל-AI שלי״: כל המטלות, המבחנים, המערכת ותאריכי הסמסטר כטקסט מסודר, בלחיצה אחת, להדביק ב-ChatGPT, Gemini, Claude או Grok", "📘 דף לכל קורס: מה פתוח ומה הבא, מבחנים, השיעורים, כל הקבצים והנושאים מהמודל עם חיפוש, והצבע שלו. נפתח מ״הקורסים שלי״ בסקירה או בלחיצה על שם הקורס", "✓ סימון ״בוצע״ בלחיצה אחת בצד של כל משימה (ואפשר לבטל)", "🗓 המשימות מסודרות לפי שבועות: היום, עוד השבוע, בשבוע הבא ובהמשך", "⏰ תזכורות בכל זמן שרוצים: ״+ זמן אחר״ לפני הגשה ומבחן, כמה דקות לפני שיעור, וסיכום בוקר בכל שעה", "🆕 התראה כשנפתחת מטלה או בוחן חדש, או כשמרצה מעלה קובץ או קישור חדש, ורשימת ״חדש בקורסים״ בסקירה", "📅 ביומן המתעדכן בוחרים מה נכנס: מטלות, מבחנים, שיעורים, ואילו קורסים", "✅ מטלה שהוגשה לא מסומנת יותר ״באיחור״, והמספר על אייקון האפליקציה = באיחור ולהיום, כמו בלשונית המשימות (אפשר לכבות)", "🏠 חוזרים לאפליקציה אחרי שעה? היא נפתחת בסקירה ובודקת אם יש גרסה חדשה", "🎨 בחירת לוגו, ״ערכות צבעים ולוגו״ ישר מההגדרות, ותצוגה רגועה בלי אנימציות", "💡 הסבר קצר בכל מקום שנפתח בפעם הראשונה", "📎 אפשר לצרף צילום מסך לפידבק", "👥 חדש: קהילת MoodlePro (אופציונלי, מפעילים פעם אחת): סטודנטים עוזרים לסטודנטים", "⏳ כמה זמן לוקחת כל מטלה – לפי דיווחים של סטודנטים אחרים, ומיון לפי הזמן המשוער", "📢 שיתוף בחנים ומשימות עם כל הקורס (כפתור גדול אחרי שמוסיפים, או אוטומטית), ו״הוסף לשלי״ בלחיצה אחת", "💬 טאב ״צ'אטים״: צ'אט לכל קורס ודיון לכל מטלה ברשימה אחת, וכל שורה אומרת לאן היא שייכת – תגובות, אימוג'ים ו״תשובה מועילה ⭐״", "⚙️ ההגדרות עברו לסרגל הטאבים", "💬 קבוצת הוואטסאפ של כל קורס במקום אחד", "🏆 נקודות, דרגות, יומן נקודות וטבלאות דירוג – כללית ולכל קורס", "🎓 פרופיל: התואר והשנה שלך"],
     en: ["🤖 “Send to my AI”: all your tasks, exams, timetable and semester dates as clear text in one tap, to paste into ChatGPT, Gemini, Claude or Grok", "📘 A page for every course: what’s open and next, exams, classes, all the files and topics from Moodle with search, and its colour. Open it from “My courses” on the overview or by tapping a course name", "✓ Mark a task done with one tap on its side (and undo)", "🗓 Tasks grouped by week: today, later this week, next week and later", "⏰ Reminders at any time: “+ Another time” before deadlines and exams, any minutes before class, and a morning summary at any hour", "🆕 An alert when a new assignment or quiz opens, or a lecturer uploads a new file or link, plus “New in your courses” on the overview", "📅 Choose what goes into the updating calendar: tasks, exams, classes, and which courses", "✅ A submitted task is no longer marked “overdue”, and the number on the app icon = overdue + due today, same as the Tasks tab (can be turned off)", "🏠 Back in the app after an hour? It opens on the overview and checks for a new version", "🎨 Pick a logo, “Colour themes and logo” right in settings, and a calm display with no animations", "💡 A short explanation everywhere the first time it opens", "📎 Attach a screenshot to feedback", "👥 New: the MoodlePro community (optional, switch it on once): students helping students", "⏳ How long each task takes – from other students’ reports, and sorting by estimated time", "📢 Share quizzes and tasks with the whole course (a big button after adding, or automatically), and “Add to mine” in one tap", "💬 A “Chats” tab: a chat for every course and a discussion for every task in one list, each row saying where it belongs – replies, emoji and “helpful answer ⭐”", "⚙️ Settings moved to the tab bar", "💬 Every course’s WhatsApp group in one place", "🏆 Points, ranks, a points log and leaderboards – overall and per course", "🎓 Profile: your degree and year"],
@@ -4679,7 +4770,6 @@ function renderCourse() {
   const qi = $("#crsQ"); if (qi) { qi.oninput = () => { CRS.q = qi.value; renderCourse(); }; if (keep !== null) { qi.focus(); try { qi.setSelectionRange(keep, keep); } catch (e) {} } }
 }
 document.addEventListener("click", e => {
-  const gc = e.target.closest("[data-grcrs]"); if (gc) { e.preventDefault(); useHit("gradesCard"); return openCourse(Number(gc.dataset.grcrs), "grades"); }
   const b = e.target.closest("[data-crs]"); if (b && !e.target.closest("#crsSheet")) { e.preventDefault(); openCourse(Number(b.dataset.crs)); }
 });
 $("#bFocusCrs").onclick = () => { if (V.focus && V.focus.kind === "course") openCourse(V.focus.cid); };
@@ -4730,9 +4820,16 @@ function renderTask() {
   h += '<div class="tkdue" style="--c:' + col + '">' + dl + (x.extended ? '<span class="sub">' + esc(t("extended")) + "</span>" : "") +
     (x.from && x.from > now ? '<span class="sub">' + esc(t("opens", when(x.from))) + "</span>" : "") + (x.cutoff && !done ? '<span class="sub">' + esc(t("cutoff", when(x.cutoff))) + "</span>" : "") + "</div>";
   if (x.gone) h += '<div class="tkgone">' + esc(t("tkGone")) + "</div>";
-  { const gr = gradeOfTask(x);
-    if (gr) h += '<div class="tkgr"><span>' + ic("graduation-cap") + esc(t("grTk")) + "</span><b>" + esc(grTxt(gr)) + "</b>" + '<small>' + esc([gr.w ? t("grW", grNum(gr.w)) : "", gr.at ? ago(gr.at) : ""].filter(Boolean).join(" · ")) + "</small>" +
-      (gr.fb ? '<div class="grfb"><bdi>' + esc(gr.fb) + "</bdi></div>" : "") + "</div>"; }
+  if (grOn() && isAct(x)) {
+    const cg = grAll().c[x.cid], it = cg && x.cmid ? (cg.items || []).find(i => i.cmid === x.cmid) : null, p = it ? grPct(it) : null;
+    const meta = it ? [grKind(it), it.w ? t("grW", grNum(it.w)) : "", it.at ? t("grWhen", ago(it.at)) : ""].filter(Boolean).join(" · ") : "";
+    if (it && it.raw != null) h += '<div class="tkgr' + grCls(p) + '"><span>' + ic("award") + esc(t("grTk")) + "</span><b>" + esc(grTxt(it)) + "</b>" + (p != null && it.max !== 100 ? "<small>" + esc(grNum(p)) + "%</small>" : "") + '<small class="m">' + esc(meta) + "</small>" +
+      (it.fb ? '<div class="grfb"><b>' + esc(t("grFb")) + "</b> <bdi>" + esc(it.fb) + "</bdi></div>" : "") + '<button class="link" data-grall="' + x.cid + '">' + esc(t("grAllCourse")) + "</button></div>";
+    else if (x.grade) h += '<div class="tkgr"><span>' + ic("award") + esc(t("grTk")) + "</span><b>" + esc(x.grade) + "</b></div>";
+    else if (cg && cg.err === "hidden") h += '<div class="tkgr none"><span>' + ic("award") + esc(t("grHidden")) + "</span></div>";
+    else if (cg && cg.at && (x.status === "submitted" || isDone(x))) h += '<div class="tkgr none"><span>' + ic("award") + esc(t("grNoYetLong")) + "</span>" + (meta ? '<small class="m">' + esc(meta) + "</small>" : "") + "</div>";
+    else if (it && it.w) h += '<div class="tkgr none"><span>' + ic("award") + esc(t("grWorth", grNum(it.w))) + "</span></div>";
+  }
   // what to do
   const acts = [];
   if (/^https?:\/\//.test(x.url)) acts.push('<a class="btn primary' + (x.due && x.due > now && !done ? "" : " wide") + '" href="' + esc(x.url) + '" target="_blank" rel="noopener noreferrer">' + ic("external-link") + "<span>" + esc(t("tkOpen")) + "</span></a>");
@@ -5511,7 +5608,7 @@ $("#fresh").addEventListener("click", e => {
   if (e.target.closest("[data-frseen]")) { freshSeen(null); renderFresh(); return; }
   const it = e.target.closest("[data-frid]"); if (!it) return;
   freshSeen([it.dataset.frid]); useHit("freshOpen");
-  if (it.dataset.frgo) { e.preventDefault(); openTask(it.dataset.frgo); } else if (it.dataset.frcrs) { e.preventDefault(); openCourse(Number(it.dataset.frcrs), "grades"); } else setTimeout(renderFresh, 300);
+  if (it.dataset.frgo) { e.preventDefault(); openTask(it.dataset.frgo); } else if (it.dataset.frcrs) { e.preventDefault(); openGrades(Number(it.dataset.frcrs)); } else setTimeout(renderFresh, 300);
 });
 $("#calm").onchange = e => { P.calm = e.target.checked; savePrefs(); render(); };
 $("#grOn").onchange = e => { P.grades = e.target.checked; savePrefs(); useHit("grades_" + (P.grades ? 1 : 0)); if (P.grades && V.data) gradeScan(V.data, true); render(); };
