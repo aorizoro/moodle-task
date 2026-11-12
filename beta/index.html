@@ -2384,7 +2384,9 @@ async function fetchAll() {
     if (e.modulename === "assign" || e.modulename === "quiz") continue;
     const c = e.course || {}, act = e.action || {};
     const zm = e.modulename === "zoom" || /zoom|זום/i.test(e.name || "");
-    tasks.push({ key: "event:" + e.id, type: zm ? "zoom" : "event", via: zm || !e.modulename ? "other" : "online", mod: zm ? "" : e.modulename || "", cid: Number(c.id) || 0, cmid: 0, course: names[c.id] || stripHtml(c.fullname || ""), name: stripHtml(e.name),
+    const cm = Number((/[?&]id=(\d+)/.exec(e.url || act.url || "") || [])[1]) || 0;      // a Moodle activity's page says which activity it is (for its course page row, materials and grade)
+    tasks.push({ key: "event:" + e.id, type: zm ? "zoom" : "event", via: zm || !e.modulename ? "other" : "online", mod: zm ? "" : e.modulename || "", cid: Number(c.id) || 0, cmid: e.modulename ? cm : 0, course: names[c.id] || stripHtml(c.fullname || ""),
+      name: stripHtml((e.modulename && e.activityname) || e.name),          // the activity's own name, not Moodle's "… submission" event title
       due: e.timestart || 0, extended: false, from: 0, cutoff: 0, status: act.actionable === false ? "unknown" : "none", grade: "",
       intro: stripHtml(e.description), links: introLinks(e.description), files: [], url: e.url || act.url || "" });
   }
@@ -3394,7 +3396,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.7.0-beta.2";
+const APP_VERSION = "1.7.0-beta.3";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
