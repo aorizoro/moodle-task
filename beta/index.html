@@ -5277,7 +5277,7 @@ function renderMini() {
     let m = null; try { m = d ? miniOf(card.id, d, now) : null; } catch (e) { console.error(e); }
     let box = el.querySelector(":scope > .dmini");
     if (!m) { if (box) box.remove(); continue; }
-    const html = '<span class="mh">' + ic(m.icn) + "<span>" + esc(m.lbl) + '</span></span><b class="mv' + (m.sm ? " sm" : "") + '"><bdi>' + esc(m.v) + "</bdi></b>" + (m.sub ? "<small><bdi>" + esc(m.sub) + "</bdi></small>" : "") + (m.bar != null ? '<span class="mbar"><i style="width:' + m.bar + '%"></i></span>' : "");
+    const html = '<span class="mh">' + ic(m.icn) + "<span>" + esc(String(m.lbl).replace(/\s*\([^)]*\)\s*$/, "")) + '</span></span><b class="mv' + (m.sm ? " sm" : "") + '"><bdi>' + esc(m.v) + "</bdi></b>" + (m.sub ? "<small><bdi>" + esc(m.sub) + "</bdi></small>" : "") + (m.bar != null ? '<span class="mbar"><i style="width:' + m.bar + '%"></i></span>' : "");
     if (!box) { box = document.createElement(m.attr ? "button" : "div"); el.appendChild(box); }
     else if ((box.tagName === "BUTTON") !== !!m.attr) { const nb = document.createElement(m.attr ? "button" : "div"); box.replaceWith(nb); box = nb; }
     box.className = "dmini" + (m.cls ? " " + m.cls : "");
