@@ -4,7 +4,7 @@
    the Moodle token never leaves the device. The server is the same Cloudflare worker as the notifications (/social/…). */
 (() => {
 "use strict";
-const SOC_V = "1.7.0";
+const SOC_V = "1.8.0-beta.1";
 const MIN_N = 1;                                                   // reports needed before an average is shown
 const HOURS = [[0.5, "⚡", "h1"], [2, "⏱️", "h2"], [4.5, "📚", "h3"], [8, "🔥", "h4"], [12, "💀", "h5"]];
 /* ranks coloured like loot in games: grey < green < blue < purple < orange < red < shining gold (the campus legend) */
@@ -543,6 +543,13 @@ async function sendMsg() {
     useHit(ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); $("#socChL").dataset.drawn = ""; await loadChat(true); }
   catch (e) { toast(t("socNet")); } finally { btn.disabled = false; }
 }
+/* a personal note from a task / course page, shared into that discussion (it earns points only if someone marks it ⭐, like any helpful answer) */
+async function postNote(cid, tk, txt) {
+  try {
+    await api("post", { cid, tk, body: (t("noteSharedPre") + "\n" + txt).slice(0, 2000), reply: 0, ref: tk === "c" ? "" : chatTitle(cid, tk), cname: courseOf(cid) ? shortName(courseOf(cid).name) : "" });
+    useHit("noteShare"); toast(t("noteShared")); openChat(cid, tk);
+  } catch (e) { toast(t("socNet")); }
+}
 async function chatAct(op, body) { try { await api(op, body); useHit(op === "star" ? "socStar" : op === "react" ? "socReact" : "socMsgDel"); if (op === "star") toast(t("chatStarred")); await loadChat(true); } catch (e) { toast(t("socNet")); } }
 function pickEmoji(id) {
   const old = $(".spick"); if (old) { const same = old.dataset.mid === String(id); old.remove(); if (same) return; }
@@ -628,13 +635,13 @@ async function openUser(uid) {
 function meBar() {
   const pts = (ST.ov && ST.ov.me && ST.ov.me.all) || LS.get("socPts", 0), sem = (ST.ov && ST.ov.me && ST.ov.me.sem) || 0, n = myName();
   return '<div class="chme"><div class="chme1"><span class="sav">' + esc((n || "?").charAt(0)) + '</span><div class="sw"><div>' + rankTag(pts) + ' <span class="spts">' + esc(t("socPts", pts)) + "</span>" +
-    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + "</div></div>" +
+    (sem && sem !== pts ? ' <small class="hint">' + esc(t("chmeSem", sem)) + "</small>" : "") + "</div>" + progress(pts) + '<details class="ptsh"><summary>' + esc(t("ft_points")) + "?</summary><p>" + esc(t("fd_points")) + "</p></details></div></div>" +
     '<div class="sbtns"><button data-socboard>' + ic("trophy") + "<span>" + esc(t("socBoards")) + '</span></button><button data-socme>' + ic("award") + "<span>" + esc(t("socMyPts")) + "</span></button></div></div>";
 }
 function progress(pts) {
   const r = rankOf(pts); if (!r.next) return '<div class="hint">' + esc(t("socTop")) + "</div>";
   const lo = RANKS[r.i][0], hi = r.next[0], p = Math.round((pts - lo) / (hi - lo) * 100);
-  return '<div class="sbar"><i style="width:' + p + '%"></i></div><div class="hint">' + esc(t("socToNext", hi - pts, r.next[1] + " " + t(r.next[2]))) + "</div>";
+  return '<div class="rkbar"><i style="width:' + p + '%"></i></div><div class="hint">' + esc(t("socToNext", hi - pts, r.next[1] + " " + t(r.next[2]))) + "</div>";
 }
 function toggleMute(uid, name) {
   if (muted(uid)) { P.soc_mute = P.soc_mute.filter(m => m.uid !== uid); toast(t("socUnmuted")); }
@@ -848,8 +855,11 @@ css.textContent = `
 .sav{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:800;color:#fff;background:linear-gradient(135deg,#5856d6,#af52de)}
 .spts{font-size:13px;color:var(--muted)}
 .spts b{color:var(--text)}
-.sbar{height:6px;border-radius:99px;background:var(--track);overflow:hidden;margin:8px 0 3px}
-.sbar i{display:block;height:100%;background:linear-gradient(90deg,#5856d6,#af52de);border-radius:99px}
+.ptsh{margin-top:4px;font-size:12.5px;color:var(--muted)}
+.ptsh summary{cursor:pointer;color:var(--accent-t);font-weight:600}
+.ptsh p{margin:4px 0 0;line-height:1.5}
+.rkbar{height:6px;border-radius:99px;background:var(--track);overflow:hidden;margin:8px 0 3px}
+.rkbar i{display:block;height:100%;background:linear-gradient(90deg,#5856d6,#af52de);border-radius:99px}
 .sbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .sbtns button{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:10px;font-size:13px;font-weight:600}
 .sbtns .i{width:16px;height:16px}
@@ -971,5 +981,5 @@ html[dir=ltr] .chhead{background:linear-gradient(to right,color-mix(in srgb,var(
 `;
 document.head.appendChild(css);
 
-window.SOC = { taskSoc, timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
+window.SOC = { postNote, taskSoc, timeBtn, crsLinks, chatView, v: SOC_V, est, badge, examOffers, render: renderTop, afterFetch, askTime, afterSave, unshare, xqShareBtn, mineShare, taskAct, openChat, openChats, card, page, intro, openBoard, openUser, overview };
 })();

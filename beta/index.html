@@ -11,6 +11,7 @@
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="theme-color" content="#3b5bdb">
+<meta name="color-scheme" content="light dark">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="MoodlePro">
@@ -459,10 +460,15 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .sg.x{background:color-mix(in srgb,var(--warn) 22%,var(--track))}
 .sg.x>b{background:var(--warn)}
 .sg.gap{height:2px;background:none;border-top:2px dotted var(--line)}
-.sg.cur{height:16px;box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 35%,transparent)}
-.sg.x.cur{box-shadow:0 0 0 2px color-mix(in srgb,var(--warn) 40%,transparent)}
-.sg.cur>b::after{content:"";position:absolute;inset-inline-end:-5px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--card);border:3px solid var(--accent)}
-.sg.x.cur>b::after{border-color:var(--warn)}
+/* this week: a solid frame and "you are here" above it – flat colours only, nothing that a phone's own dark mode can repaint into something else */
+.sbar.here{margin-top:22px}
+.sg.cur{height:18px;border-radius:5px;outline:2px solid var(--accent);outline-offset:2px}
+.sg.x.cur{outline-color:var(--warn)}
+.sg.cur::before{content:attr(data-here);position:absolute;bottom:calc(100% + 6px);inset-inline-start:50%;transform:translateX(50%);white-space:nowrap;font-size:11.5px;font-weight:800;line-height:1;color:var(--accent-t)}
+html[dir=ltr] .sg.cur::before{transform:translateX(-50%)}
+.sg.cur.es::before{inset-inline-start:-2px;transform:none}
+.sg.cur.ee::before{inset-inline-start:auto;inset-inline-end:-2px;transform:none}
+.sg.x.cur::before{color:var(--warn)}
 .snum{display:flex;gap:4px;margin-top:4px;font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums}
 .snum span{text-align:center;min-width:3px;overflow:hidden}
 .snum span.cur{color:var(--accent-t);font-weight:800}
@@ -627,7 +633,60 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .task,.grp,.chip,.tr{--ct:color-mix(in srgb,var(--c) var(--mixp),var(--mixk))}
 .grp.cg{color:var(--ct);border-inline-start:5px solid var(--c);padding-inline-start:8px}
 .task{--c:var(--line);position:relative;background:var(--card);border:1px solid var(--line);border-inline-start:5px solid var(--c);border-radius:14px;padding:12px 14px;margin-bottom:9px}
-.task.done{opacity:.85}
+/* submitted: clearly quieter than what is still open (no extra colours), full strength again on hover / when opened */
+.task.done{opacity:.6}
+.ssearch{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--row)}
+.ssearch .i{width:17px;height:17px;color:var(--muted);flex:none}
+.ssearch input{flex:1;border:0;background:none;padding:10px 0;font-size:15px;outline:none;color:var(--text);min-width:0}
+.fsrow{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:start;padding:10px 12px;margin-bottom:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text)}
+.fsrow small{color:var(--muted);font-size:12.5px;line-height:1.4}
+.fbsug{margin:-4px 0 10px;padding:10px;border-radius:12px;background:var(--accent-soft)}
+.fbsug .fsh{display:flex;align-items:center;gap:6px;font-weight:700;margin-bottom:6px;color:var(--accent-t)}
+.fbsug .fsh .i,.dyk>.i{width:18px;height:18px;flex:none}
+.fbsug .hint{margin:2px 0 0}
+.dyk{display:flex;align-items:flex-start;gap:10px;margin:0 0 12px;padding:10px 12px;border-radius:14px;background:var(--accent-soft);color:var(--text)}
+.dyk[hidden]{display:none}
+.dyk>.i{color:var(--accent-t);margin-top:2px}
+.dykb{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.dykb small{color:var(--accent-t);font-weight:700;font-size:12px}
+.dykb span{font-size:13.5px;color:var(--muted);line-height:1.45}
+.dykb .link{align-self:flex-start;padding:4px 0 0;font-weight:700}
+.dyk .xbtn{margin:-6px -6px 0 0}
+.tprog{height:3px;margin:8px 0 -2px;border-radius:99px;background:var(--track);overflow:hidden}
+.tprog i{display:block;height:100%;background:var(--c,var(--accent));border-radius:99px}
+.tkprog{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0 4px;font-size:13.5px;color:var(--muted)}
+.pchips{display:flex;gap:4px;flex-wrap:wrap}
+.pchips button{padding:5px 10px;border-radius:99px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:13px;font-variant-numeric:tabular-nums}
+.pchips button.on{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.nbox{margin:10px 0 6px}
+.nbox textarea{width:100%;box-sizing:border-box;resize:none;padding:8px 10px;border:1px dashed var(--line);border-radius:10px;background:transparent;color:var(--text);font:inherit;font-size:14px;line-height:1.45}
+.nbox textarea:focus{border-style:solid;border-color:var(--accent);outline:none;background:var(--row)}
+.nbox .nact{display:none;align-items:center;justify-content:space-between;gap:8px;margin-top:4px;font-size:12px;color:var(--muted)}
+.nbox.has .nact,.nbox:focus-within .nact{display:flex}
+.nbox .nact .link{display:inline-flex;align-items:center;gap:5px;font-size:13px;padding:2px 0}
+.nbox .nact .i{width:14px;height:14px}
+#ttSheet .box.bulkmode > :not(h3):not(#ttBulk),#ttSheet .box:not(.bulkmode) #ttBulk{display:none!important}
+.ttbk{display:block;margin:-4px 0 10px;padding:2px 0;font-weight:700}
+#ttBulkTx{width:100%;box-sizing:border-box;font:inherit;font-size:14.5px;line-height:1.6;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--row);color:var(--text);resize:vertical}
+.ttbprev{margin:8px 0 12px;font-size:13.5px;line-height:1.7}
+.ttbprev .err{margin-top:4px}
+.dagrip{display:none;color:var(--muted);cursor:grab;flex:none}
+.dagrip .i{width:16px;height:16px}
+@media (pointer:fine){ .dagrip{display:inline-flex} #daList .darow[draggable=true]{cursor:grab} }
+#daList .darow.drag{opacity:.4}
+#daList .darow.dropb{box-shadow:inset 0 3px 0 var(--accent)}
+#daList .darow.dropa{box-shadow:inset 0 -3px 0 var(--accent)}
+.dysec{margin:6px 0 14px}
+.pvsec{padding:10px 12px;margin:8px 0;border:1px solid var(--line);border-radius:12px;background:var(--row)}
+.pvsec p{margin:4px 0 0;font-size:14px;line-height:1.5;color:var(--text)}
+.dysec h4{margin:0 0 6px;font-size:13px;color:var(--muted);font-weight:700}
+.dyrow{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:10px 12px;margin-bottom:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text)}
+.dyrow .dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
+.dyrow .n{display:flex;flex-direction:column;gap:2px;min-width:0}
+.dyrow small{color:var(--muted);font-size:12.5px}
+.dyrow.done{opacity:.6}
+.task.done .tname{color:var(--muted)}
+.task.done:hover,.task.done:focus-within{opacity:1}
 .task.hid{opacity:.45}
 .task.hl{box-shadow:0 0 0 3px var(--accent)}
 .task .x{position:absolute;inset-block-start:4px;inset-inline-end:4px;width:40px;height:40px;padding:0;border:0;background:none;color:var(--muted);font-size:15px}
@@ -637,11 +696,20 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 body.calm *,body.calm *::before,body.calm *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
 
 .task .tc .crsl{border:0;background:none;padding:0;font:inherit;color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 40%,transparent);text-underline-offset:3px;cursor:pointer}
+.crsw{position:relative;border-bottom:1px solid var(--line)}
+.crsw:last-child{border-bottom:0}
+.crsw .crsrow{border-bottom:0!important}
+.crsw .crsrow .sw{padding-inline-end:36px}
+.crsmore{position:absolute;inset-inline-end:28px;top:11px;width:34px;height:34px;padding:0;border:0;background:none;color:var(--muted);opacity:.7}
+.crsmore .i{width:18px;height:18px}
+.crsmenu{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:0 4px 10px}
+.crsmenu .btn{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;padding:6px 12px}
+.crsmenu .i{width:16px;height:16px}
 .crsrow{display:flex;align-items:center;gap:10px;width:100%;text-align:start;padding:10px 4px;border:0;border-bottom:1px solid var(--line);border-radius:0;background:none}
 .crsrow:last-child{border-bottom:0}.crsrow .dot{width:10px;height:10px;border-radius:50%;background:var(--c);flex:none}
 .crsrow .sw{flex:1;min-width:0;display:flex;flex-direction:column}.crsrow b{font-weight:700;font-size:14.5px}.crsrow small{color:var(--muted);font-size:12.5px}.crsrow small.late{color:var(--err)}
 .crsrow .chev{width:16px;height:16px;color:var(--muted)}
-#crsSheet .box.crs,#tkSheet .box.crs,#grSheet .box.crs{max-height:92vh;overflow:auto;padding-top:0}
+#crsSheet .box.crs,#tkSheet .box.crs,#grSheet .box.crs,#dySheet .box.crs{max-height:92vh;overflow:auto;padding-top:0}
 .tkmeta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px;font-size:13px;color:var(--muted)}
 .tkmeta .crsl{border:0;background:none;padding:0;font:inherit;font-weight:700;color:var(--c);filter:brightness(.8);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .tkdue{display:flex;flex-direction:column;gap:2px;padding:12px 14px;border-radius:16px;background:color-mix(in srgb,var(--c) 10%,var(--card));border:1px solid color-mix(in srgb,var(--c) 30%,var(--line));margin:0 0 10px}
@@ -1056,7 +1124,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
 </style>
 </head>
 <body>
-<svg id="icons" width="0" height="0" style="position:absolute" aria-hidden="true"><!-- icons: Lucide (ISC license) --><defs><symbol id="i-users" viewBox="0 0 24 24"><svg class="lucide lucide-users" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><svg class="lucide lucide-trophy" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></symbol><symbol id="i-hourglass" viewBox="0 0 24 24"><svg class="lucide lucide-hourglass" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></symbol><symbol id="i-volume-x" viewBox="0 0 24 24"><svg class="lucide lucide-volume-x" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg></symbol><symbol id="i-volume-2" viewBox="0 0 24 24"><svg class="lucide lucide-volume-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><svg class="lucide lucide-share-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg></symbol><symbol id="i-award" viewBox="0 0 24 24"><svg class="lucide lucide-award" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg></symbol><symbol id="i-layout-dashboard" viewBox="0 0 24 24"><svg class="lucide lucide-layout-dashboard" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1"/> <rect width="7" height="5" x="14" y="3" rx="1"/> <rect width="7" height="9" x="14" y="12" rx="1"/> <rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-days" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v4"/> <path d="M16 2v4"/> <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M3 10h18"/> <path d="M8 14h.01"/> <path d="M12 14h.01"/> <path d="M16 14h.01"/> <path d="M8 18h.01"/> <path d="M12 18h.01"/> <path d="M16 18h.01"/></symbol><symbol id="i-list-checks" viewBox="0 0 24 24"><svg class="lucide lucide-list-checks" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m3 17 2 2 4-4"/> <path d="m3 7 2 2 4-4"/> <path d="M13 6h8"/> <path d="M13 12h8"/> <path d="M13 18h8"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><svg class="lucide lucide-settings" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><svg class="lucide lucide-refresh-cw" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/> <path d="M21 3v5h-5"/> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/> <path d="M8 16H3v5"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><svg class="lucide lucide-bell" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/> <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><svg class="lucide lucide-palette" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/> <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/> <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/> <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/> <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><svg class="lucide lucide-sliders-horizontal" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <line x1="21" x2="14" y1="4" y2="4"/> <line x1="10" x2="3" y1="4" y2="4"/> <line x1="21" x2="12" y1="12" y2="12"/> <line x1="8" x2="3" y1="12" y2="12"/> <line x1="21" x2="16" y1="20" y2="20"/> <line x1="12" x2="3" y1="20" y2="20"/> <line x1="14" x2="14" y1="2" y2="6"/> <line x1="8" x2="8" y1="10" y2="14"/> <line x1="16" x2="16" y1="18" y2="22"/></symbol><symbol id="i-book-open" viewBox="0 0 24 24"><svg class="lucide lucide-book-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 7v14"/> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol><symbol id="i-calendar-range" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-range" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M16 2v4"/> <path d="M3 10h18"/> <path d="M8 2v4"/> <path d="M17 14h-6"/> <path d="M13 18H7"/> <path d="M7 14h.01"/> <path d="M17 18h.01"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><svg class="lucide lucide-cloud" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol><symbol id="i-life-buoy" viewBox="0 0 24 24"><svg class="lucide lucide-life-buoy" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <path d="m4.93 4.93 4.24 4.24"/> <path d="m14.83 9.17 4.24-4.24"/> <path d="m14.83 14.83 4.24 4.24"/> <path d="m9.17 14.83-4.24 4.24"/> <circle cx="12" cy="12" r="4"/></symbol><symbol id="i-layers" viewBox="0 0 24 24"><svg class="lucide lucide-layers" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/> <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/> <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol><symbol id="i-file-up" viewBox="0 0 24 24"><svg class="lucide lucide-file-up" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M12 12v6"/> <path d="m15 15-3-3-3 3"/></symbol><symbol id="i-monitor-check" viewBox="0 0 24 24"><svg class="lucide lucide-monitor-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m9 10 2 2 4-4"/> <rect width="20" height="14" x="2" y="3" rx="2"/> <path d="M12 17v4"/> <path d="M8 21h8"/></symbol><symbol id="i-ellipsis" viewBox="0 0 24 24"><svg class="lucide lucide-ellipsis" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="1"/> <circle cx="19" cy="12" r="1"/> <circle cx="5" cy="12" r="1"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><svg class="lucide lucide-user" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><svg class="lucide lucide-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14"/> <path d="M12 5v14"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><svg class="lucide lucide-clock" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <polyline points="12 6 12 12 16 14"/></symbol><symbol id="i-calendar-plus" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v4"/> <path d="M16 2v4"/> <path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/> <path d="M3 10h18"/> <path d="M16 19h6"/> <path d="M19 16v6"/></symbol><symbol id="i-layout-grid" viewBox="0 0 24 24"><svg class="lucide lucide-layout-grid" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="7" x="3" y="3" rx="1"/> <rect width="7" height="7" x="14" y="3" rx="1"/> <rect width="7" height="7" x="14" y="14" rx="1"/> <rect width="7" height="7" x="3" y="14" rx="1"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><svg class="lucide lucide-compass" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/> <circle cx="12" cy="12" r="10"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><svg class="lucide lucide-download" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/> <polyline points="7 10 12 15 17 10"/> <line x1="12" x2="12" y1="15" y2="3"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><svg class="lucide lucide-message-circle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol><symbol id="i-history" viewBox="0 0 24 24"><svg class="lucide lucide-history" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/> <path d="M3 3v5h5"/> <path d="M12 7v5l4 2"/></symbol><symbol id="i-log-out" viewBox="0 0 24 24"><svg class="lucide lucide-log-out" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/> <polyline points="16 17 21 12 16 7"/> <line x1="21" x2="9" y1="12" y2="12"/></symbol><symbol id="i-graduation-cap" viewBox="0 0 24 24"><svg class="lucide lucide-graduation-cap" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/> <path d="M22 10v6"/> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m15 18-6-6 6-6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m9 18 6-6-6-6"/></symbol><symbol id="i-maximize-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></symbol><symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><svg class="lucide lucide-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><svg class="lucide lucide-search" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><svg class="lucide lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="4"/> <path d="M12 2v2"/> <path d="M12 20v2"/> <path d="m4.93 4.93 1.41 1.41"/> <path d="m17.66 17.66 1.41 1.41"/> <path d="M2 12h2"/> <path d="M20 12h2"/> <path d="m6.34 17.66-1.41 1.41"/> <path d="m19.07 4.93-1.41 1.41"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><svg class="lucide lucide-video" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/> <rect x="2" y="6" width="14" height="12" rx="2"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><svg class="lucide lucide-sparkles" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/> <path d="M20 3v4"/> <path d="M22 5h-4"/> <path d="M4 17v2"/> <path d="M5 18H3"/></symbol><symbol id="i-square-pen" viewBox="0 0 24 24"><svg class="lucide lucide-square-pen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/> <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></symbol><symbol id="i-eye-off" viewBox="0 0 24 24"><svg class="lucide lucide-eye-off" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/> <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/> <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/> <path d="m2 2 20 20"/></symbol><symbol id="i-trash-2" viewBox="0 0 24 24"><svg class="lucide lucide-trash-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 6h18"/> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/> <line x1="10" x2="10" y1="11" y2="17"/> <line x1="14" x2="14" y1="11" y2="17"/></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><svg class="lucide lucide-external-link" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 3h6v6"/> <path d="M10 14 21 3"/> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><svg class="lucide lucide-circle-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <path d="m9 12 2 2 4-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><svg class="lucide lucide-flag" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/> <line x1="4" x2="4" y1="22" y2="15"/></symbol><symbol id="i-alarm-clock" viewBox="0 0 24 24"><svg class="lucide lucide-alarm-clock" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="13" r="8"/> <path d="M12 9v4l2 2"/> <path d="M5 3 2 6"/> <path d="m22 6-3-3"/> <path d="M6.38 18.7 4 21"/> <path d="M17.64 18.67 20 21"/></symbol><symbol id="i-undo-2" viewBox="0 0 24 24"><svg class="lucide lucide-undo-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9 14 4 9l5-5"/> <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></symbol><symbol id="i-megaphone" viewBox="0 0 24 24"><svg class="lucide lucide-megaphone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m3 11 18-5v12L3 14v-3z"/> <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><svg class="lucide lucide-chart-column" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 3v16a2 2 0 0 0 2 2h16"/> <path d="M18 17V9"/> <path d="M13 17V5"/> <path d="M8 17v-3"/></symbol><symbol id="i-file-text" viewBox="0 0 24 24"><svg class="lucide lucide-file-text" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M10 9H8"/> <path d="M16 13H8"/> <path d="M16 17H8"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><svg class="lucide lucide-link" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/> <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol><symbol id="i-presentation" viewBox="0 0 24 24"><svg class="lucide lucide-presentation" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2 3h20"/> <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/> <path d="m7 21 5-5 5 5"/></symbol><symbol id="i-sheet" viewBox="0 0 24 24"><svg class="lucide lucide-sheet" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/> <line x1="3" x2="21" y1="9" y2="9"/> <line x1="3" x2="21" y1="15" y2="15"/> <line x1="9" x2="9" y1="9" y2="21"/> <line x1="15" x2="15" y1="9" y2="21"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><svg class="lucide lucide-image" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/> <circle cx="9" cy="9" r="2"/> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol><symbol id="i-file-archive" viewBox="0 0 24 24"><svg class="lucide lucide-file-archive" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 12v-1"/> <path d="M10 18v-2"/> <path d="M10 7V6"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M15.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 .274 1.01"/> <circle cx="10" cy="20" r="2"/></symbol><symbol id="i-file-code" viewBox="0 0 24 24"><svg class="lucide lucide-file-code" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 12.5 8 15l2 2.5"/> <path d="m14 12.5 2 2.5-2 2.5"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/></symbol><symbol id="i-languages" viewBox="0 0 24 24"><svg class="lucide lucide-languages" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m5 8 6 6"/> <path d="m4 14 6-6 2-3"/> <path d="M2 5h12"/> <path d="M7 2h1"/> <path d="m22 22-5-10-5 10"/> <path d="M14 18h6"/></symbol><symbol id="i-rows-3" viewBox="0 0 24 24"><svg class="lucide lucide-rows-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/> <path d="M21 9H3"/> <path d="M21 15H3"/></symbol><symbol id="i-rows-4" viewBox="0 0 24 24"><svg class="lucide lucide-rows-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/> <path d="M21 7.5H3"/> <path d="M21 12H3"/> <path d="M21 16.5H3"/></symbol><symbol id="i-bot" viewBox="0 0 24 24"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></symbol><symbol id="i-copy" viewBox="0 0 24 24"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg></symbol><symbol id="i-square" viewBox="0 0 24 24"><svg class="lucide lucide-square" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/></symbol></defs></svg>
+<svg id="icons" width="0" height="0" style="position:absolute" aria-hidden="true"><!-- icons: Lucide (ISC license) --><defs><symbol id="i-users" viewBox="0 0 24 24"><svg class="lucide lucide-users" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></symbol><symbol id="i-trophy" viewBox="0 0 24 24"><svg class="lucide lucide-trophy" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></symbol><symbol id="i-hourglass" viewBox="0 0 24 24"><svg class="lucide lucide-hourglass" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg></symbol><symbol id="i-volume-x" viewBox="0 0 24 24"><svg class="lucide lucide-volume-x" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><line x1="22" x2="16" y1="9" y2="15"/><line x1="16" x2="22" y1="9" y2="15"/></svg></symbol><symbol id="i-volume-2" viewBox="0 0 24 24"><svg class="lucide lucide-volume-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><svg class="lucide lucide-share-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg></symbol><symbol id="i-award" viewBox="0 0 24 24"><svg class="lucide lucide-award" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg></symbol><symbol id="i-layout-dashboard" viewBox="0 0 24 24"><svg class="lucide lucide-layout-dashboard" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="9" x="3" y="3" rx="1"/> <rect width="7" height="5" x="14" y="3" rx="1"/> <rect width="7" height="9" x="14" y="12" rx="1"/> <rect width="7" height="5" x="3" y="16" rx="1"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-days" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v4"/> <path d="M16 2v4"/> <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M3 10h18"/> <path d="M8 14h.01"/> <path d="M12 14h.01"/> <path d="M16 14h.01"/> <path d="M8 18h.01"/> <path d="M12 18h.01"/> <path d="M16 18h.01"/></symbol><symbol id="i-list-checks" viewBox="0 0 24 24"><svg class="lucide lucide-list-checks" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m3 17 2 2 4-4"/> <path d="m3 7 2 2 4-4"/> <path d="M13 6h8"/> <path d="M13 12h8"/> <path d="M13 18h8"/></symbol><symbol id="i-settings" viewBox="0 0 24 24"><svg class="lucide lucide-settings" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/> <circle cx="12" cy="12" r="3"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><svg class="lucide lucide-refresh-cw" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/> <path d="M21 3v5h-5"/> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/> <path d="M8 16H3v5"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><svg class="lucide lucide-bell" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/> <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-palette" viewBox="0 0 24 24"><svg class="lucide lucide-palette" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/> <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/> <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/> <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/> <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></symbol><symbol id="i-sliders-horizontal" viewBox="0 0 24 24"><svg class="lucide lucide-sliders-horizontal" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <line x1="21" x2="14" y1="4" y2="4"/> <line x1="10" x2="3" y1="4" y2="4"/> <line x1="21" x2="12" y1="12" y2="12"/> <line x1="8" x2="3" y1="12" y2="12"/> <line x1="21" x2="16" y1="20" y2="20"/> <line x1="12" x2="3" y1="20" y2="20"/> <line x1="14" x2="14" y1="2" y2="6"/> <line x1="8" x2="8" y1="10" y2="14"/> <line x1="16" x2="16" y1="18" y2="22"/></symbol><symbol id="i-book-open" viewBox="0 0 24 24"><svg class="lucide lucide-book-open" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 7v14"/> <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol><symbol id="i-calendar-range" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-range" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="4" rx="2"/> <path d="M16 2v4"/> <path d="M3 10h18"/> <path d="M8 2v4"/> <path d="M17 14h-6"/> <path d="M13 18H7"/> <path d="M7 14h.01"/> <path d="M17 18h.01"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24"><svg class="lucide lucide-cloud" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol><symbol id="i-life-buoy" viewBox="0 0 24 24"><svg class="lucide lucide-life-buoy" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <path d="m4.93 4.93 4.24 4.24"/> <path d="m14.83 9.17 4.24-4.24"/> <path d="m14.83 14.83 4.24 4.24"/> <path d="m9.17 14.83-4.24 4.24"/> <circle cx="12" cy="12" r="4"/></symbol><symbol id="i-layers" viewBox="0 0 24 24"><svg class="lucide lucide-layers" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/> <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/> <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></symbol><symbol id="i-file-up" viewBox="0 0 24 24"><svg class="lucide lucide-file-up" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M12 12v6"/> <path d="m15 15-3-3-3 3"/></symbol><symbol id="i-monitor-check" viewBox="0 0 24 24"><svg class="lucide lucide-monitor-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m9 10 2 2 4-4"/> <rect width="20" height="14" x="2" y="3" rx="2"/> <path d="M12 17v4"/> <path d="M8 21h8"/></symbol><symbol id="i-ellipsis" viewBox="0 0 24 24"><svg class="lucide lucide-ellipsis" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="1"/> <circle cx="19" cy="12" r="1"/> <circle cx="5" cy="12" r="1"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><svg class="lucide lucide-user" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/> <circle cx="12" cy="7" r="4"/></symbol><symbol id="i-plus" viewBox="0 0 24 24"><svg class="lucide lucide-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M5 12h14"/> <path d="M12 5v14"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><svg class="lucide lucide-clock" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <polyline points="12 6 12 12 16 14"/></symbol><symbol id="i-calendar-plus" viewBox="0 0 24 24"><svg class="lucide lucide-calendar-plus" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M8 2v4"/> <path d="M16 2v4"/> <path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/> <path d="M3 10h18"/> <path d="M16 19h6"/> <path d="M19 16v6"/></symbol><symbol id="i-layout-grid" viewBox="0 0 24 24"><svg class="lucide lucide-layout-grid" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="7" height="7" x="3" y="3" rx="1"/> <rect width="7" height="7" x="14" y="3" rx="1"/> <rect width="7" height="7" x="14" y="14" rx="1"/> <rect width="7" height="7" x="3" y="14" rx="1"/></symbol><symbol id="i-compass" viewBox="0 0 24 24"><svg class="lucide lucide-compass" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/> <circle cx="12" cy="12" r="10"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><svg class="lucide lucide-download" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/> <polyline points="7 10 12 15 17 10"/> <line x1="12" x2="12" y1="15" y2="3"/></symbol><symbol id="i-message-circle" viewBox="0 0 24 24"><svg class="lucide lucide-message-circle" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol><symbol id="i-history" viewBox="0 0 24 24"><svg class="lucide lucide-history" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/> <path d="M3 3v5h5"/> <path d="M12 7v5l4 2"/></symbol><symbol id="i-log-out" viewBox="0 0 24 24"><svg class="lucide lucide-log-out" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/> <polyline points="16 17 21 12 16 7"/> <line x1="21" x2="9" y1="12" y2="12"/></symbol><symbol id="i-graduation-cap" viewBox="0 0 24 24"><svg class="lucide lucide-graduation-cap" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/> <path d="M22 10v6"/> <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24"><svg class="lucide lucide-chevron-left" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m15 18-6-6 6-6"/></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><svg class="lucide lucide-chevron-right" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m9 18 6-6-6-6"/></symbol><symbol id="i-maximize-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" x2="14" y1="3" y2="10"/><line x1="3" x2="10" y1="21" y2="14"/></symbol><symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></symbol><symbol id="i-x" viewBox="0 0 24 24"><svg class="lucide lucide-x" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M18 6 6 18"/> <path d="m6 6 12 12"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><svg class="lucide lucide-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M20 6 9 17l-5-5"/></symbol><symbol id="i-search" viewBox="0 0 24 24"><svg class="lucide lucide-search" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="11" cy="11" r="8"/> <path d="m21 21-4.3-4.3"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><svg class="lucide lucide-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="4"/> <path d="M12 2v2"/> <path d="M12 20v2"/> <path d="m4.93 4.93 1.41 1.41"/> <path d="m17.66 17.66 1.41 1.41"/> <path d="M2 12h2"/> <path d="M20 12h2"/> <path d="m6.34 17.66-1.41 1.41"/> <path d="m19.07 4.93-1.41 1.41"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><svg class="lucide lucide-video" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5"/> <rect x="2" y="6" width="14" height="12" rx="2"/></symbol><symbol id="i-sparkles" viewBox="0 0 24 24"><svg class="lucide lucide-sparkles" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/> <path d="M20 3v4"/> <path d="M22 5h-4"/> <path d="M4 17v2"/> <path d="M5 18H3"/></symbol><symbol id="i-square-pen" viewBox="0 0 24 24"><svg class="lucide lucide-square-pen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/> <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/></symbol><symbol id="i-eye-off" viewBox="0 0 24 24"><svg class="lucide lucide-eye-off" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/> <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/> <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/> <path d="m2 2 20 20"/></symbol><symbol id="i-trash-2" viewBox="0 0 24 24"><svg class="lucide lucide-trash-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 6h18"/> <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/> <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/> <line x1="10" x2="10" y1="11" y2="17"/> <line x1="14" x2="14" y1="11" y2="17"/></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><svg class="lucide lucide-external-link" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 3h6v6"/> <path d="M10 14 21 3"/> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol><symbol id="i-circle-check" viewBox="0 0 24 24"><svg class="lucide lucide-circle-check" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="12" r="10"/> <path d="m9 12 2 2 4-4"/></symbol><symbol id="i-flag" viewBox="0 0 24 24"><svg class="lucide lucide-flag" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/> <line x1="4" x2="4" y1="22" y2="15"/></symbol><symbol id="i-alarm-clock" viewBox="0 0 24 24"><svg class="lucide lucide-alarm-clock" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <circle cx="12" cy="13" r="8"/> <path d="M12 9v4l2 2"/> <path d="M5 3 2 6"/> <path d="m22 6-3-3"/> <path d="M6.38 18.7 4 21"/> <path d="M17.64 18.67 20 21"/></symbol><symbol id="i-undo-2" viewBox="0 0 24 24"><svg class="lucide lucide-undo-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M9 14 4 9l5-5"/> <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></symbol><symbol id="i-megaphone" viewBox="0 0 24 24"><svg class="lucide lucide-megaphone" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m3 11 18-5v12L3 14v-3z"/> <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><svg class="lucide lucide-chart-column" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M3 3v16a2 2 0 0 0 2 2h16"/> <path d="M18 17V9"/> <path d="M13 17V5"/> <path d="M8 17v-3"/></symbol><symbol id="i-file-text" viewBox="0 0 24 24"><svg class="lucide lucide-file-text" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M10 9H8"/> <path d="M16 13H8"/> <path d="M16 17H8"/></symbol><symbol id="i-link" viewBox="0 0 24 24"><svg class="lucide lucide-link" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/> <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol><symbol id="i-presentation" viewBox="0 0 24 24"><svg class="lucide lucide-presentation" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M2 3h20"/> <path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/> <path d="m7 21 5-5 5 5"/></symbol><symbol id="i-sheet" viewBox="0 0 24 24"><svg class="lucide lucide-sheet" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/> <line x1="3" x2="21" y1="9" y2="9"/> <line x1="3" x2="21" y1="15" y2="15"/> <line x1="9" x2="9" y1="9" y2="21"/> <line x1="15" x2="15" y1="9" y2="21"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><svg class="lucide lucide-image" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2" ry="2"/> <circle cx="9" cy="9" r="2"/> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></symbol><symbol id="i-file-archive" viewBox="0 0 24 24"><svg class="lucide lucide-file-archive" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 12v-1"/> <path d="M10 18v-2"/> <path d="M10 7V6"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M15.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v16a2 2 0 0 0 .274 1.01"/> <circle cx="10" cy="20" r="2"/></symbol><symbol id="i-file-code" viewBox="0 0 24 24"><svg class="lucide lucide-file-code" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="M10 12.5 8 15l2 2.5"/> <path d="m14 12.5 2 2.5-2 2.5"/> <path d="M14 2v4a2 2 0 0 0 2 2h4"/> <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/></symbol><symbol id="i-languages" viewBox="0 0 24 24"><svg class="lucide lucide-languages" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <path d="m5 8 6 6"/> <path d="m4 14 6-6 2-3"/> <path d="M2 5h12"/> <path d="M7 2h1"/> <path d="m22 22-5-10-5 10"/> <path d="M14 18h6"/></symbol><symbol id="i-rows-3" viewBox="0 0 24 24"><svg class="lucide lucide-rows-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/> <path d="M21 9H3"/> <path d="M21 15H3"/></symbol><symbol id="i-rows-4" viewBox="0 0 24 24"><svg class="lucide lucide-rows-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/> <path d="M21 7.5H3"/> <path d="M21 12H3"/> <path d="M21 16.5H3"/></symbol><symbol id="i-bot" viewBox="0 0 24 24"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></symbol><symbol id="i-copy" viewBox="0 0 24 24"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></symbol><symbol id="i-share-2" viewBox="0 0 24 24"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg></symbol><symbol id="i-square" viewBox="0 0 24 24"><svg class="lucide lucide-square" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" > <rect width="18" height="18" x="3" y="3" rx="2"/></symbol><symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></symbol><symbol id="i-sticky-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></symbol><symbol id="i-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></symbol><symbol id="i-grip-vertical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></symbol><symbol id="i-share-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></symbol></defs></svg>
 <header class="top">
   <img class="logo" src="icon-any-192.png" alt="" width="34" height="34">
   <div class="ttl"><span><b class="wm" dir="ltr">Moodle<span>Pro</span></b> <span class="betatag" id="betaTag" hidden>BETA</span></span><span class="hint by" data-i18n="byHii"></span><span class="hint" id="upd"></span></div>
@@ -1127,6 +1195,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
 <div id="app" hidden>
   <div id="exView" class="exslot"></div>
   <div class="dtop"><button id="bDashEdit" class="dedit"><svg class="i"><use href="#i-square-pen"/></svg><span data-i18n="daEditBtn"></span></button></div>
+  <div id="dykTip" class="dyk" hidden></div>
   <section id="dash">
     <div id="hero" class="dcard hero"></div>
     <div id="aiCard" class="dcard aicard"><button id="bAi" class="aibtn"><svg class="i"><use href="#i-bot"/></svg><span data-i18n="aiBtn"></span></button></div>
@@ -1224,6 +1293,8 @@ body.app:not([data-view=dash]) .dfoot{display:none}
   <div class="box">
     <h3><span class="sh"><button class="link sback" id="sBack" hidden data-i18n-aria="back"></button><span id="sTitle"></span></span> <button class="xbtn" id="bClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
     <div id="sMenu">
+      <div class="ssearch"><svg class="i"><use href="#i-search"/></svg><input type="search" id="sQ" autocomplete="off" data-i18n-ph="fsPh"></div>
+      <div id="sRes" hidden></div>
       <div id="socCard"></div>
       <div class="sugw" id="sugW" hidden><div class="stitle" data-i18n="sugTitle"></div><div class="mgroup" id="sugList"></div></div>
       <div class="mgroup">
@@ -1241,6 +1312,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       </div>
       <div class="mgroup">
         <button class="mrow" data-go="acct"><span class="mi" style="--mc:#32ade6"><svg class="i"><use href="#i-cloud"/></svg></span><span class="mt"><b data-i18n="sAcct"></b><small id="sumAcct"></small></span></button>
+        <button class="mrow" data-go="priv"><span class="mi" style="--mc:#30a46c"><svg class="i"><use href="#i-shield"/></svg></span><span class="mt"><b data-i18n="sPriv"></b><small data-i18n="sumPriv"></small></span></button>
         <button class="mrow" data-go="help"><span class="mi" style="--mc:#8e8e93"><svg class="i"><use href="#i-life-buoy"/></svg></span><span class="mt"><b data-i18n="sHelp"></b><small id="sumHelp"></small></span></button>
       </div>
       <div class="byset hint by" data-i18n="byHii"></div>
@@ -1327,6 +1399,17 @@ body.app:not([data-view=dash]) .dfoot{display:none}
       <button id="bLogout" class="prow" style="color:var(--err)" data-i18n="logout" data-ic="log-out"></button>
     </div>
 
+    <div class="spage" data-page="priv" hidden>
+      <p class="hint" data-i18n="pvIntro"></p>
+      <div class="pvsec"><b data-i18n="pv1T"></b><p data-i18n="pv1"></p></div>
+      <div class="pvsec"><b data-i18n="pv2T"></b><p data-i18n="pv2"></p></div>
+      <div class="pvsec"><b data-i18n="pv3T"></b><p data-i18n="pv3"></p></div>
+      <div class="pvsec"><b data-i18n="pv4T"></b><p data-i18n="pv4"></p></div>
+      <div class="pvsec"><b data-i18n="pv5T"></b><p data-i18n="pv5"></p></div>
+      <div class="pvsec"><b data-i18n="pv6T"></b><p data-i18n="pv6"></p></div>
+      <div class="pvsec"><b data-i18n="pv7T"></b><p data-i18n="pv7"></p></div>
+    </div>
+
     <div class="spage" data-page="help" hidden>
       <button id="bTour" class="prow" data-i18n="tourOpen" data-ic="compass"></button>
       <button id="bInst" class="prow" hidden data-i18n="instTitle" data-ic="download"></button>
@@ -1361,6 +1444,18 @@ body.app:not([data-view=dash]) .dfoot{display:none}
 <div class="sheet" id="ttSheet" hidden>
   <div class="box form">
     <h3><span id="ttFormTitle"></span> <button class="xbtn" id="ttClose" data-i18n-aria="close" aria-label="סגירה"><svg class="i"><use href="#i-x"/></svg></button></h3>
+    <button class="link ttbk" id="ttBulkGo" data-i18n="ttBulkGo"></button>
+    <div id="ttBulk">
+      <p class="hint" data-i18n="ttBulkHint"></p>
+      <textarea id="ttBulkTx" rows="7" dir="auto" autocomplete="off" spellcheck="false"></textarea>
+      <div class="two">
+        <label><span data-i18n="ttKind"></span><select id="ttBulkKind"></select></label>
+        <label class="chk" style="align-self:end"><input type="checkbox" id="ttBulkPriv"><span data-i18n="ttPriv"></span></label>
+      </div>
+      <div id="ttBulkPrev" class="ttbprev"></div>
+      <button class="primary" id="ttBulkSave" style="width:100%" disabled></button>
+      <button class="link" id="ttBulkBack" style="width:100%;margin-top:6px" data-i18n="ttBulkOne"></button>
+    </div>
     <label><span data-i18n="ttCourse"></span><select id="fCourse"></select></label>
     <label><span data-i18n="ttName"></span><input type="text" id="fTitle" maxlength="60" autocomplete="off"></label>
     <div class="two">
@@ -1418,6 +1513,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
     <div class="hint fbmore" data-i18n="fbMore"></div>
     <label><span data-i18n="fbKind"></span><select id="fbKind"></select></label>
     <label><span data-i18n="fbMsg"></span><textarea id="fbMsg" rows="5" maxlength="2000"></textarea></label>
+    <div id="fbSug" class="fbsug" hidden></div>
     <div class="fbshot"><label class="btn" id="fbShotBtn"><svg class="i"><use href="#i-image"/></svg> <span data-i18n="fbShot"></span><input type="file" id="fbShot" accept="image/*" hidden></label>
       <span class="fbprev" id="fbPrev" hidden><img id="fbPrevImg" alt=""><button class="xbtn" id="fbShotX" data-i18n-aria="fbShotDel"><svg class="i"><use href="#i-x"/></svg></button></span></div>
     <div class="hint" data-i18n="fbShotHint"></div>
@@ -1518,6 +1614,7 @@ body.app:not([data-view=dash]) .dfoot{display:none}
 </div></div>
 <div class="sheet" id="crsSheet" hidden><div class="box crs" id="crsBox"></div></div>
 <div class="sheet" id="tkSheet" hidden><div class="box crs" id="tkBox"></div></div>
+<div class="sheet" id="dySheet" hidden><div class="box crs" id="dyBox"></div></div>
 <div class="sheet" id="grSheet" hidden><div class="box crs" id="grBox"></div></div>
 <div class="sheet" id="mineSheet" hidden>
   <div class="box">
@@ -1626,7 +1723,7 @@ const I18N = {
     grWHint: "המשקלים מגיעים מהמודל ומראים כמה כל פריט שווה בציון של הקורס. לפריט שעוד לא נבדק המודל מראה \u20660%\u2069.", grTk: "ציון", grNotifT: n => n === 1 ? "🎓 ציון חדש" : "🎓 " + n + " ציונים חדשים", frGrade: "ציון חדש",
     grLbl: "ציונים מהמודל", grHint: "מציג את הציונים מטבלת הציונים במודל (מטלות, בחנים, בודק אוטומטי ונוכחות) בכרטיס בסקירה, בדף הקורס ובכל מטלה, ומודיע כשמגיע ציון חדש. נבדק לכל היותר כל רבע שעה.", grOffHint: "הציונים כבויים. אפשר להפעיל בהגדרות ← התראות ויומן.",
     daEditBtn: "עריכת הסקירה", daWelT: "👋 איך אתה רוצה לראות את הסקירה שלך?", daWelIntro: "בחרו מה יופיע במסך הסקירה. אפשר לשנות את זה בכל רגע מהכפתור ״עריכת הסקירה״ שבראש הסקירה.", daWelOk: "סיימתי", daWelDone: "הסקירה מוכנה ✓ אפשר לשנות מ״עריכת הסקירה״",
-    daHide: "הסתרה מהסקירה", daHideS: "הסתרה", daFixed: "תמיד מוצג", daAdd: "הוספה", daShownT: n => "מוצג בסקירה (" + n + ")", daHiddenT: n => "מוסתר (" + n + ")", daOrderHint: "↑ ↓ משנים את הסדר. בטאבלט ובמחשב הסדר נקבע לפי המקום על המסך.",
+    daHide: "הסתרה מהסקירה", daHideS: "הסתרה", daFixed: "תמיד מוצג", daAdd: "הוספה", daShownT: n => "מוצג בסקירה (" + n + ")", daHiddenT: n => "מוסתר (" + n + ")", daOrderHint: "↑ ↓ משנים את הסדר, ובמחשב אפשר גם לגרור. בטאבלט ובמחשב הסדר נקבע לפי המקום על המסך.",
     daPre_min: "מינימלית", daPre_rec: "מומלצת", daPre_all: "הכל", daPreD_min: "רק העיקר", daPreD_rec: "מה שרוב הסטודנטים צריכים", daPreD_all: "כל הכרטיסים",
     dd_hero: "המטלה הבאה שצריך להגיש וכמה זמן נשאר", dd_stats: "כמה באיחור, כמה להיום, כמה ב-7 הימים הקרובים ומה הגשת השבוע", dd_todayCard: "השיעורים של היום לפי המערכת שלך", dd_examCard: "המבחנים והבחנים הקרובים, עם ספירה לאחור",
     dd_semCard: "באיזה שבוע בסמסטר ומתי מתחילים המבחנים", dd_weekCard: "7 הימים הקרובים: מה מוגש בכל יום", dd_monthCard: "לוח חודש עם נקודה לכל הגשה ומבחן", dd_newsCard: "הודעות מהמרצים וחדש בקורסים (מטלות, קבצים, ציונים)",
@@ -1806,7 +1903,7 @@ const I18N = {
     ttCopied: "הקישור הועתק. מי שיפתח אותו יתבקש לאשר, ויקבל רק את השיעורים שלא סימנת כפרטיים (בלי הטוקן ובלי המשימות).", ttNothing: "אין עדיין מה לשתף",
     todayClasses: "השיעורים היום", ttSetup: "🗓 הוסף את המערכת השבועית שלך", noClassesToday: "אין שיעורים היום", dayOver: "סיימת להיום 🙌",
     nextClass: (d, s, n) => "הבא: <b>" + d + " " + s + "</b> · " + n, nowLbl: "עכשיו", endsIn: x => "נגמר בעוד " + x, startsIn: x => "בעוד " + x, durHM: (h, m) => (h ? h + " שע׳ " : "") + m + " דק׳",
-    semTitle: "התקדמות הסמסטר", weekOf: (a, b) => "שבוע " + a + " <small>מתוך " + b + "</small>",
+    semHere: "אתה כאן", dyExams: "מבחנים ובחנים", dyTasks: "להגשה ביום הזה", dyAll: "לרשימת המשימות של היום ←", dyAcad: "בלוח האקדמי", dyLev: "מהלב נט", dyEmpty: "אין הגשות או מבחנים ביום הזה.", backSet: "חזרה להגדרות", sPriv: "פרטיות ושקיפות", sumPriv: "מה האפליקציה יודעת, ומה יוצא מהמכשיר", pvIntro: "כאן הכל כתוב בפשטות: מה האפליקציה רואה, איפה זה נשמר ומה נשלח החוצה. אין פרסומות, ושום דבר לא נמכר או מועבר לאף אחד.", pv1T: "🔑 החיבור ל-Moodle", pv1: "הטוקן נשמר רק במכשיר הזה ונשלח רק לאתר ה-Moodle של המוסד. אין לאפליקציה את הסיסמה שלך. היא רואה מה שאתה רואה במודל: הקורסים, המטלות ומצב ההגשה, הבחנים, אירועי היומן, ההודעות בקורסים והציונים. היא לא מגישה, לא שולחת הודעות ולא משנה כלום במודל, חוץ מקובץ הסנכרון ואירועי התזכורות אם הפעלת אותם.", pv2T: "📱 נשאר במכשיר", pv2: "כל מה שנטען מהמודל (כולל הציונים), הסימונים שלך, המערכת, ההערות האישיות וההגדרות נשמרים בדפדפן של המכשיר הזה.", pv3T: "🔄 סנכרון בין מכשירים (אם הפעלת)", pv3: "ההגדרות והסימונים נשמרים ב-Moodle שלך עצמו: בקובץ ב״הקבצים הפרטיים שלי״ או באירוע פרטי ביומן שרק אתה רואה. הם לא עוברים לשרת אחר.", pv4T: "👥 הקהילה (רק אם הצטרפת)", pv4: "מה שאתה בוחר לשתף נשמר בשרת של האפליקציה וגלוי לסטודנטים באותו קורס: השם שלך מ-Moodle, התואר והשנה אם מילאת, ההודעות, הדיווחים כמה זמן לקחה מטלה, בחנים וקבוצות ששיתפת, הערות ששיתפת והנקודות. ציונים, מטלות והגשות לא נשלחים לשם. אפשר לצאת מהקהילה בכל רגע בהגדרות.", pv5T: "🔔 התראות בטלפון (אם הפעלת)", pv5: "כדי שהתזכורת תגיע גם כשהאפליקציה סגורה, שרת ההתראות מקבל רק את רשימת התזכורות של המכשיר: זמן, כותרת ושורה קצרה. בלי שם, בלי טוקן ובלי ציונים.", pv6T: "📊 פידבק ונתוני שימוש", pv6: "פעם ביום נשלח למפתח אות שימוש קצר, כדי לדעת מה עובד ומה לשפר: השם שלך מ-Moodle, רשימת הקורסים הנוכחיים, גרסת האפליקציה, סוג המכשיר ואילו אפשרויות בשימוש (מספרים בלבד). פידבק שאתה שולח מגיע לאותו מקום. לא נשלחים ציונים, מטלות, הודעות או הטוקן.", pv7T: "🤖 שליחה ל-AI שלי", pv7: "הכפתור רק מעתיק טקסט. האפליקציה לא שולחת אותו לשום AI. אתה מחליט איפה להדביק.", fsPh: "חיפוש בהגדרות ובאפשרויות…", fsNone: "לא נמצא. נסה מילה אחרת, או ספר לנו בפידבק מה חסר.", fbSugT: "אולי זה כבר קיים?", fbSugSub: "לחיצה פותחת את זה. מה שכתבת נשמר כאן.", dykT: "💡 הידעת?", dykGo: "להראות לי ←", ft_hideCourse: "הסתרת קורס", fd_hideCourse: "הגדרות ← קורסים וצבעים: מכבים קורס (למשל קורס קדם) והוא נעלם מהמשימות, מהסקירה ומהתזכורות. אפשר גם מ־⋯ ליד הקורס ב״הקורסים שלי״.", ft_density: "צפיפות התצוגה", fd_density: "הגדרות ← מראה ותצוגה: מפורטת, קומפקטית או נקייה. כרטיסים קצרים יותר, עם פחות פרטים.", ft_showDone: "לראות גם מה שהוגש", fd_showDone: "ברשימת המשימות, ״הוגשו״ או ״הכל״ למעלה: רואים מה כבר הגשת, כדי לוודא שלא פספסת.", ft_logo: "החלפת הלוגו", fd_logo: "הגדרות ← מראה ותצוגה ← ערכות צבעים ולוגו: איזה לוגו מופיע בראש האפליקציה.", ft_theme: "ערכות צבעים", fd_theme: "הגדרות ← מראה ותצוגה: יותר מ-20 ערכות, בהירות וכהות, או אחת שבונים לבד.", ft_dashEdit: "עריכת הסקירה", fd_dashEdit: "הכפתור ״עריכת הסקירה״ בראש המסך: מה מוצג, באיזה סדר ומה מוסתר. במחשב אפשר גם לגרור.", ft_rem: "תזכורות", fd_rem: "הגדרות ← התראות ויומן: תזכורת לפני הגשות, מבחנים ושיעורי זום, בזמנים שבוחרים.", ft_cal: "ההגשות ביומן שלך", fd_cal: "הגדרות ← התראות ויומן: ההגשות והמבחנים ביומן של הטלפון או ב-Google Calendar, ומתעדכנים לבד.", ft_levnet: "ייבוא המערכת מהלב נט", fd_levnet: "בלשונית לו״ז: מעלים את קובץ המערכת מהלב נט וכל השיעורים נכנסים בדקה.", ft_bulkTT: "כמה שיעורים בבת אחת", fd_bulkTT: "בלשונית לו״ז ← ״+ הוסף״ ← ״כמה שיעורים בבת אחת״: שורה לכל שיעור (למשל לימודי קודש), והכל נכנס במכה.", ft_exams: "מבחנים ובחנים", fd_exams: "בכרטיס ״מבחנים״ בסקירה: המועדים מהלב נט, ובחנים שמוסיפים לבד או שאחרים שיתפו. לחיצה על היום בלוח מראה מה יש בו.", ft_grades: "הציונים שלי", fd_grades: "הגדרות ← הציונים שלי, או הכרטיס ״ציונים״ בסקירה: כל הציונים מהמודל, עם משקל והערות הבודק.", ft_ai: "שליחה ל-AI שלי", fd_ai: "בסקירה: כפתור אחד מעתיק את כל המטלות, המבחנים והמערכת כטקסט, להדביק ב-ChatGPT, Gemini או Claude.", ft_sync: "סנכרון בין מכשירים", fd_sync: "הגדרות ← סנכרון וחשבון: אותן הגדרות וסימונים בטלפון ובמחשב. (סידור הסקירה נפרד לטלפון ולמסך רחב.)", ft_sem: "התקדמות הסמסטר", fd_sem: "בסקירה: באיזה שבוע אנחנו, כמה נשאר ומתי המבחנים. ״עריכה״ משנה את התאריכים.", ft_points: "איך מרוויחים נקודות", fd_points: "רק על עזרה לאחרים: שיתוף בוחן, דיווח כמה זמן לקחה מטלה, הוספת קבוצת וואטסאפ, ותשובה או הערה ששיתפת שקיבלה ⭐. הדרגה והטבלה בלשונית הצ׳אטים.", ft_priv: "פרטיות ושקיפות", fd_priv: "הגדרות ← פרטיות ושקיפות: מה האפליקציה רואה, מה נשאר במכשיר ומה נשלח.", ft_notes: "הערות אישיות", fd_notes: "בדף כל מטלה ובדף כל קורס: תיבה קטנה להערות לעצמך, ואפשר לשתף הערה עם מי שיש לו אותו קורס.", ft_progress: "התקדמות בתוך מטלה", fd_progress: "בדף המטלה: מסמנים כמה כבר עשית (25%, 50%, 75%), ופס דק מופיע על הכרטיס.", ft_lang: "העתקים בשפות", fd_lang: "כשמטלה מופיעה בעברית ובאנגלית או בצרפתית, מוצג ההעתק בשפה של האפליקציה. בדף הקורס אפשר לבחור אחרת.", ft_zoom: "קישורי זום שמופיעים כמטלה", fd_zoom: "הגדרות ← סינון מטלות: להציג אותם כשיעור זום, כמטלה רגילה, או להסתיר.", ft_kw: "הסתרה לפי מילה", fd_kw: "הגדרות ← סינון מטלות: מטלות שהשם שלהן מכיל מילה מסוימת לא יופיעו.", ft_mine: "משימות משלך", fd_mine: "״➕ משימה משלי״: משימה עם תאריך שמתנהגת כמו מטלה מהמודל (ספירה לאחור, תזכורות, סימון בוצע).", progLbl: "כמה כבר עשיתי", prog0: "לא התחלתי", prog100: "סיימת לעבוד עליה 💪 לא לשכוח להגיש במודל.", notePh: "✏️ הערה לעצמי…", noteMine: "נשמר רק אצלך", noteShareT: "לשתף עם הקורס", noteShareC: "לשתף בצ׳אט הקורס", noteNeedSoc: "כדי לשתף הערה צריך להצטרף לקהילה (בחינם, ואפשר לצאת בכל רגע).", noteSharedPre: "📝 הערה ששיתפתי:", noteShared: "ההערה שותפה בדיון ✓", ttBulkGo: "＋ כמה שיעורים בבת אחת ←", ttBulkT: "כמה שיעורים בבת אחת", ttBulkHint: "שורה לכל שיעור: יום, שעות ושם. מקום אפשר אחרי פסיק. כמה ימים: ״א-ה״ או ״א,ג״.", ttBulkPh: "א-ה 09:00-12:30 סדר בוקר, בית המדרש\nב 13:00-14:00 הלכה\nד׳ 19:00-20:30 שיעור כללי", ttBulkAdd: n => n ? "הוספת " + n + " שיעורים" : "הוספה", ttBulkBad: l => "לא הבנתי את שורה " + l + ". צריך יום, שעות ושם, למשל: ב 09:00-10:30 גמרא", ttBulkMax: "יותר מדי שיעורים (עד 120 במערכת)", ttBulkDone: n => "נוספו " + n + " שיעורים למערכת ✓", ttBulkOne: "שיעור אחד בטופס הרגיל", logo_ocean: "אוקיינוס", logo_sunset: "שקיעה", logo_forest: "יער", logo_night: "לילה", crsMoreA: "עוד אפשרויות לקורס", crsHideBtn: "הסתרת הקורס", crsHideSub: "נעלם מהמשימות, מהסקירה ומהתזכורות. מחזירים בהגדרות ← קורסים וצבעים.", updReadyL: l => "✨ גרסה חדשה: " + l, semTitle: "התקדמות הסמסטר", weekOf: (a, b) => "שבוע " + a + " <small>מתוך " + b + "</small>",
     weeksLeft: n => n === 0 ? "<b>השבוע האחרון!</b>" : n === 1 ? "נשאר <b>שבוע אחד</b>" : "נותרו <b>" + n + " שבועות</b>", toExams: n => n === 1 ? "<b>יום אחד</b> למבחנים" : "<b>" + n + " ימים</b> למבחנים",
     examsNow: "תקופת המבחנים", examsLeft: n => "נותרו <b>" + n + " ימים</b> עד סוף המבחנים", semBefore: n => "הסמסטר מתחיל בעוד " + n + " ימים", semOver: "הסמסטר נגמר 🎉", semEnded: "הסמסטר נגמר",
     pctSem: n => n + "% מהסמסטר", examsLbl: "📝 מבחנים",
@@ -1868,7 +1965,7 @@ const I18N = {
     grWHint: "Weights come from Moodle and show how much each item counts in the course grade. Moodle shows 0% for items not graded yet.", grTk: "Grade", grNotifT: n => n === 1 ? "🎓 New grade" : "🎓 " + n + " new grades", frGrade: "New grade",
     grLbl: "Grades from Moodle", grHint: "Shows the grades from Moodle's gradebook (assignments, quizzes, automatic checker and attendance) in a card on the overview, on the course page and on each task, and tells you when a new grade arrives. Checked at most every 15 minutes.", grOffHint: "Grades are off. Turn them on in Settings → Notifications & calendar.",
     daEditBtn: "Edit the overview", daWelT: "👋 How would you like your overview to look?", daWelIntro: "Choose what shows on the overview. You can change it any time with the “Edit the overview” button at the top of the overview.", daWelOk: "Done", daWelDone: "Your overview is ready ✓ Change it with “Edit the overview”",
-    daHide: "Hide from the overview", daHideS: "Hide", daFixed: "Always shown", daAdd: "Add", daShownT: n => "Shown on the overview (" + n + ")", daHiddenT: n => "Hidden (" + n + ")", daOrderHint: "↑ ↓ change the order. On a tablet or computer the order follows the place on the screen.",
+    daHide: "Hide from the overview", daHideS: "Hide", daFixed: "Always shown", daAdd: "Add", daShownT: n => "Shown on the overview (" + n + ")", daHiddenT: n => "Hidden (" + n + ")", daOrderHint: "↑ ↓ change the order; on a computer you can also drag. On a tablet or computer the order follows the place on the screen.",
     daPre_min: "Minimal", daPre_rec: "Recommended", daPre_all: "Everything", daPreD_min: "Just the essentials", daPreD_rec: "What most students need", daPreD_all: "All the cards",
     dd_hero: "The next task to hand in and how long is left", dd_stats: "How many are late, due today, due in the next 7 days, and what you handed in this week", dd_todayCard: "Today's classes from your timetable", dd_examCard: "Upcoming exams and quizzes, with a countdown",
     dd_semCard: "Which week of the semester it is and when exams start", dd_weekCard: "The next 7 days: what's due each day", dd_monthCard: "A month calendar with a dot for every deadline and exam", dd_newsCard: "Announcements from lecturers and what's new in your courses (tasks, files, grades)",
@@ -2048,7 +2145,7 @@ const I18N = {
     ttCopied: "Link copied. Whoever opens it is asked to confirm and gets only the classes you didn’t mark private (not your token or tasks).", ttNothing: "Nothing to share yet",
     todayClasses: "Today’s classes", ttSetup: "🗓 Add your weekly timetable", noClassesToday: "No classes today", dayOver: "Done for today 🙌",
     nextClass: (d, s, n) => "Next: <b>" + d + " " + s + "</b> · " + n, nowLbl: "Now", endsIn: x => "ends in " + x, startsIn: x => "in " + x, durHM: (h, m) => (h ? h + " h " : "") + m + " min",
-    semTitle: "Semester progress", weekOf: (a, b) => "Week " + a + " <small>of " + b + "</small>",
+    semHere: "You are here", dyExams: "Exams and quizzes", dyTasks: "Due this day", dyAll: "This day in the task list →", dyAcad: "In the academic calendar", dyLev: "from Levnet", dyEmpty: "No deadlines or exams on this day.", backSet: "Back to settings", sPriv: "Privacy & transparency", sumPriv: "What the app knows, and what leaves your device", pvIntro: "Everything in plain words: what the app sees, where it is kept and what is sent out. No ads, and nothing is sold or passed on to anyone.", pv1T: "🔑 The Moodle connection", pv1: "The token is kept only on this device and sent only to your institution’s Moodle. The app does not have your password. It sees what you see in Moodle: courses, assignments and submission status, quizzes, calendar events, course announcements and grades. It does not submit, send messages or change anything in Moodle, except the sync file and reminder events if you turned them on.", pv2T: "📱 Stays on the device", pv2: "Everything loaded from Moodle (grades included), your marks, timetable, personal notes and settings are kept in this device’s browser.", pv3T: "🔄 Sync between devices (if on)", pv3: "Settings and marks are kept in your own Moodle: a file in “My private files” or a private calendar event only you can see. They do not go to any other server.", pv4T: "👥 The community (only if you joined)", pv4: "What you choose to share is kept on the app’s server and visible to students in the same course: your Moodle name, degree and year if you filled them in, messages, time reports, quizzes and groups you shared, notes you shared and points. Grades, assignments and submissions are never sent there. You can leave the community any time in settings.", pv5T: "🔔 Phone notifications (if on)", pv5: "So a reminder arrives even when the app is closed, the notification server gets only this device’s reminder list: time, title and a short line. No name, no token, no grades.", pv6T: "📊 Feedback and usage data", pv6: "Once a day a short usage signal goes to the developer, to know what works and what to improve: your Moodle name, current course list, app version, device type and which options are in use (counts only). Feedback you send goes to the same place. No grades, assignments, messages or token are sent.", pv7T: "🤖 Send to my AI", pv7: "The button only copies text. The app never sends it to any AI; you decide where to paste it.", fsPh: "Search settings and features…", fsNone: "Nothing found. Try another word, or tell us in feedback what’s missing.", fbSugT: "Maybe it’s already there?", fbSugSub: "Tap to open it. What you wrote stays here.", dykT: "💡 Did you know?", dykGo: "Show me →", ft_hideCourse: "Hide a course", fd_hideCourse: "Settings → Courses & colours: switch a course off (say, a prep course) and it leaves tasks, the overview and reminders. Also from ⋯ next to it in “My courses”.", ft_density: "Display density", fd_density: "Settings → Look & display: detailed, compact or clean. Shorter cards with fewer details.", ft_showDone: "See what you submitted", fd_showDone: "In the task list, “Submitted” or “All” at the top shows what you already handed in.", ft_logo: "Change the logo", fd_logo: "Settings → Look & display → Colour themes and logo: which logo shows at the top.", ft_theme: "Colour themes", fd_theme: "Settings → Look & display: 20+ themes, light and dark, or build your own.", ft_dashEdit: "Edit the overview", fd_dashEdit: "The “Edit the overview” button at the top: what shows, in what order, what’s hidden. On a computer you can drag too.", ft_rem: "Reminders", fd_rem: "Settings → Reminders & calendar: before deadlines, exams and Zoom classes, at the times you choose.", ft_cal: "Deadlines in your calendar", fd_cal: "Settings → Reminders & calendar: deadlines and exams in your phone calendar or Google Calendar, kept up to date.", ft_levnet: "Import your timetable from Levnet", fd_levnet: "In the Schedule tab: upload the Levnet timetable file and every class is in within a minute.", ft_bulkTT: "Several classes at once", fd_bulkTT: "Schedule tab → “+ Add” → “Several at once”: one line per class (e.g. Torah studies), all added in one go.", ft_exams: "Exams and quizzes", fd_exams: "The “Exams” card on the overview: dates from Levnet, and quizzes you add or others shared. Tap a day in the calendar to see what’s on.", ft_grades: "My grades", fd_grades: "Settings → My grades, or the “Grades” card: every grade from Moodle, with weight and feedback.", ft_ai: "Send to my AI", fd_ai: "On the overview: one button copies all tasks, exams and timetable as text to paste into ChatGPT, Gemini or Claude.", ft_sync: "Sync between devices", fd_sync: "Settings → Sync & account: the same settings and marks on phone and computer. (The overview layout is separate for phone and wide screens.)", ft_sem: "Semester progress", fd_sem: "On the overview: which week it is, how much is left and when exams start. “Edit” changes the dates.", ft_points: "How to earn points", fd_points: "Only for helping others: sharing a quiz, reporting how long a task took, adding a WhatsApp group, and an answer or shared note that got ⭐. Rank and board are in the Chats tab.", ft_priv: "Privacy & transparency", fd_priv: "Settings → Privacy & transparency: what the app sees, what stays on the device and what is sent.", ft_notes: "Personal notes", fd_notes: "On every task page and course page: a small box for notes to yourself; you can share a note with others in the course.", ft_progress: "Progress inside a task", fd_progress: "On the task page: mark how far you got (25%, 50%, 75%), and a thin bar shows on the card.", ft_lang: "Language copies", fd_lang: "When a task comes in Hebrew and English or French, the copy in the app’s language is shown. Pick another on the course page.", ft_zoom: "Zoom links posted as tasks", fd_zoom: "Settings → Task filters: show them as a Zoom class, as a normal task, or hide them.", ft_kw: "Hide by keyword", fd_kw: "Settings → Task filters: tasks whose name contains a word you choose are hidden.", ft_mine: "Your own tasks", fd_mine: "“➕ Add my own task”: a task with a date that behaves like a Moodle one (countdown, reminders, done).", progLbl: "How far I got", prog0: "Not started", prog100: "Done working on it 💪 Don’t forget to submit in Moodle.", notePh: "✏️ A note to myself…", noteMine: "Only you see this", noteShareT: "Share with the course", noteShareC: "Share in the course chat", noteNeedSoc: "To share a note, join the community (free, and you can leave any time).", noteSharedPre: "📝 A note I’m sharing:", noteShared: "Note shared in the discussion ✓", ttBulkGo: "＋ Several classes at once →", ttBulkT: "Several classes at once", ttBulkHint: "One line per class: day, hours and name. A place after a comma. Several days: “Mon-Thu” or “Mon,Wed”.", ttBulkPh: "Mon-Thu 09:00-12:30 Morning seder, Beit Midrash\nTue 13:00-14:00 Halacha\nWed 19:00-20:30 General shiur", ttBulkAdd: n => n ? "Add " + n + " classes" : "Add", ttBulkBad: l => "Couldn’t read line " + l + ". It needs a day, hours and a name, e.g. Tue 09:00-10:30 Talmud", ttBulkMax: "Too many classes (120 at most)", ttBulkDone: n => n + " classes added ✓", ttBulkOne: "One class with the regular form", logo_ocean: "Ocean", logo_sunset: "Sunset", logo_forest: "Forest", logo_night: "Night", crsMoreA: "More for this course", crsHideBtn: "Hide this course", crsHideSub: "Leaves tasks, the overview and reminders. Bring it back in Settings → Courses & colours.", updReadyL: l => "✨ New version: " + l, semTitle: "Semester progress", weekOf: (a, b) => "Week " + a + " <small>of " + b + "</small>",
     weeksLeft: n => n === 0 ? "<b>Last week!</b>" : n === 1 ? "<b>1 week</b> left" : "<b>" + n + " weeks</b> left", toExams: n => n === 1 ? "<b>1 day</b> to exams" : "<b>" + n + " days</b> to exams",
     examsNow: "Exam period", examsLeft: n => "<b>" + n + " days</b> until the end of exams", semBefore: n => "The semester starts in " + n + " days", semOver: "Semester over 🎉", semEnded: "Semester over",
     pctSem: n => n + "% of the semester", examsLbl: "📝 Exams",
@@ -2110,7 +2207,7 @@ const I18N = {
     grWHint: "Les poids viennent de Moodle et indiquent combien chaque élément compte dans la note du cours. Moodle affiche 0 % pour ce qui n’est pas encore noté.", grTk: "Note", grNotifT: n => n === 1 ? "🎓 Nouvelle note" : "🎓 " + n + " nouvelles notes", frGrade: "Nouvelle note",
     grLbl: "Notes depuis Moodle", grHint: "Affiche les notes du carnet de notes de Moodle (devoirs, tests, correcteur automatique et présence) dans une carte de l’aperçu, sur la page du cours et sur chaque devoir, et prévient quand une nouvelle note arrive. Vérifié au plus tous les quarts d’heure.", grOffHint: "Les notes sont désactivées. Activez-les dans Paramètres → Notifications et agenda.",
     daEditBtn: "Modifier l’aperçu", daWelT: "👋 Comment voulez-vous voir votre aperçu ?", daWelIntro: "Choisissez ce qui s’affiche dans l’aperçu. Vous pouvez le changer à tout moment avec le bouton « Modifier l’aperçu » en haut de l’aperçu.", daWelOk: "Terminé", daWelDone: "Votre aperçu est prêt ✓ Modifiable avec « Modifier l’aperçu »",
-    daHide: "Masquer de l’aperçu", daHideS: "Masquer", daFixed: "Toujours affiché", daAdd: "Ajouter", daShownT: n => "Affiché dans l’aperçu (" + n + ")", daHiddenT: n => "Masqué (" + n + ")", daOrderHint: "↑ ↓ changent l’ordre. Sur tablette ou ordinateur, l’ordre suit la place à l’écran.",
+    daHide: "Masquer de l’aperçu", daHideS: "Masquer", daFixed: "Toujours affiché", daAdd: "Ajouter", daShownT: n => "Affiché dans l’aperçu (" + n + ")", daHiddenT: n => "Masqué (" + n + ")", daOrderHint: "↑ ↓ changent l’ordre ; sur ordinateur, on peut aussi glisser. Sur tablette ou ordinateur, l’ordre suit la place à l’écran.",
     daPre_min: "Minimal", daPre_rec: "Recommandé", daPre_all: "Tout", daPreD_min: "L’essentiel", daPreD_rec: "Ce dont la plupart ont besoin", daPreD_all: "Toutes les cartes",
     dd_hero: "Le prochain devoir à rendre et le temps restant", dd_stats: "En retard, pour aujourd’hui, dans les 7 jours, et ce que vous avez rendu cette semaine", dd_todayCard: "Les cours du jour selon votre emploi du temps", dd_examCard: "Les examens et tests à venir, avec compte à rebours",
     dd_semCard: "La semaine du semestre et le début des examens", dd_weekCard: "Les 7 prochains jours : ce qui est à rendre chaque jour", dd_monthCard: "Un calendrier du mois avec un point par échéance et examen", dd_newsCard: "Les annonces des enseignants et les nouveautés des cours (devoirs, fichiers, notes)",
@@ -2290,7 +2387,7 @@ const I18N = {
     ttCopied: "Lien copié. Celui qui l’ouvre doit confirmer et ne reçoit que les cours non privés (ni votre jeton ni vos devoirs).", ttNothing: "Rien à partager pour l’instant",
     todayClasses: "Cours d’aujourd’hui", ttSetup: "🗓 Ajoutez votre emploi du temps", noClassesToday: "Pas de cours aujourd’hui", dayOver: "Fini pour aujourd’hui 🙌",
     nextClass: (d, s, n) => "Prochain : <b>" + d + " " + s + "</b> · " + n, nowLbl: "En cours", endsIn: x => "fin dans " + x, startsIn: x => "dans " + x, durHM: (h, m) => (h ? h + " h " : "") + m + " min",
-    semTitle: "Avancement du semestre", weekOf: (a, b) => "Semaine " + a + " <small>sur " + b + "</small>",
+    semHere: "Vous êtes ici", dyExams: "Examens et quiz", dyTasks: "À rendre ce jour-là", dyAll: "Ce jour dans la liste des tâches →", dyAcad: "Au calendrier académique", dyLev: "depuis Levnet", dyEmpty: "Aucune échéance ni examen ce jour-là.", backSet: "Retour aux réglages", sPriv: "Confidentialité et transparence", sumPriv: "Ce que l’app sait, et ce qui quitte l’appareil", pvIntro: "Tout en clair : ce que l’app voit, où c’est gardé et ce qui est envoyé. Pas de pub, et rien n’est vendu ni transmis à qui que ce soit.", pv1T: "🔑 La connexion à Moodle", pv1: "Le jeton reste sur cet appareil et n’est envoyé qu’au Moodle de l’établissement. L’app n’a pas votre mot de passe. Elle voit ce que vous voyez dans Moodle : cours, devoirs et état de remise, quiz, événements du calendrier, annonces et notes. Elle ne remet rien, n’envoie pas de messages et ne modifie rien dans Moodle, sauf le fichier de synchro et les rappels si vous les avez activés.", pv2T: "📱 Reste sur l’appareil", pv2: "Tout ce qui vient de Moodle (notes comprises), vos marques, l’emploi du temps, les notes perso et les réglages restent dans le navigateur de cet appareil.", pv3T: "🔄 Synchro entre appareils (si activée)", pv3: "Réglages et marques sont gardés dans votre propre Moodle : un fichier dans « Mes fichiers personnels » ou un événement privé que vous seul voyez. Ils ne vont sur aucun autre serveur.", pv4T: "👥 La communauté (seulement si vous l’avez rejointe)", pv4: "Ce que vous choisissez de partager est gardé sur le serveur de l’app et visible des étudiants du même cours : votre nom Moodle, filière et année si remplies, messages, temps déclarés, quiz et groupes partagés, notes partagées et points. Notes, devoirs et remises n’y sont jamais envoyés. Vous pouvez quitter la communauté à tout moment.", pv5T: "🔔 Notifications (si activées)", pv5: "Pour qu’un rappel arrive app fermée, le serveur de notifications reçoit seulement la liste des rappels : heure, titre et une ligne. Ni nom, ni jeton, ni notes.", pv6T: "📊 Avis et données d’usage", pv6: "Une fois par jour, un court signal d’usage part chez le développeur, pour savoir quoi améliorer : votre nom Moodle, la liste des cours actuels, la version, le type d’appareil et les options utilisées (des nombres). Vos avis arrivent au même endroit. Ni notes, ni devoirs, ni messages, ni jeton.", pv7T: "🤖 Envoyer à mon IA", pv7: "Le bouton copie seulement du texte. L’app ne l’envoie à aucune IA ; vous choisissez où le coller.", fsPh: "Chercher dans les réglages…", fsNone: "Rien trouvé. Essayez un autre mot, ou dites-nous ce qui manque.", fbSugT: "C’est peut-être déjà là ?", fbSugSub: "Touchez pour l’ouvrir. Votre texte reste ici.", dykT: "💡 Le saviez-vous ?", dykGo: "Me montrer →", ft_hideCourse: "Masquer un cours", fd_hideCourse: "Réglages → Cours et couleurs : désactivez un cours (un cours de mise à niveau…) et il disparaît partout. Aussi via ⋯ dans « Mes cours ».", ft_density: "Densité d’affichage", fd_density: "Réglages → Apparence : détaillée, compacte ou épurée. Des cartes plus courtes.", ft_showDone: "Voir ce qui est rendu", fd_showDone: "Dans la liste, « Rendus » ou « Tout » en haut montre ce qui est déjà rendu.", ft_logo: "Changer le logo", fd_logo: "Réglages → Apparence → Thèmes et logo : le logo affiché en haut.", ft_theme: "Thèmes de couleurs", fd_theme: "Réglages → Apparence : plus de 20 thèmes, clairs ou sombres, ou le vôtre.", ft_dashEdit: "Modifier l’aperçu", fd_dashEdit: "Le bouton « Modifier l’aperçu » : quoi afficher, dans quel ordre. Sur ordinateur, on peut aussi glisser.", ft_rem: "Rappels", fd_rem: "Réglages → Rappels et agenda : avant les échéances, examens et cours Zoom.", ft_cal: "Échéances dans votre agenda", fd_cal: "Réglages → Rappels et agenda : échéances et examens dans l’agenda du téléphone ou Google Agenda.", ft_levnet: "Importer l’emploi du temps (Levnet)", fd_levnet: "Onglet Agenda : importez le fichier Levnet et tous les cours sont ajoutés.", ft_bulkTT: "Plusieurs cours d’un coup", fd_bulkTT: "Onglet Agenda → « + Ajouter » → « Plusieurs d’un coup » : une ligne par cours.", ft_exams: "Examens et quiz", fd_exams: "La carte « Examens » : dates Levnet et quiz ajoutés ou partagés. Touchez un jour du calendrier pour voir.", ft_grades: "Mes notes", fd_grades: "Réglages → Mes notes, ou la carte « Notes » : toutes les notes Moodle.", ft_ai: "Envoyer à mon IA", fd_ai: "Sur l’aperçu : un bouton copie devoirs, examens et emploi du temps pour ChatGPT, Gemini ou Claude.", ft_sync: "Synchro entre appareils", fd_sync: "Réglages → Synchro et compte : mêmes réglages sur téléphone et ordinateur.", ft_sem: "Avancement du semestre", fd_sem: "Sur l’aperçu : la semaine en cours, ce qui reste et les examens.", ft_points: "Comment gagner des points", fd_points: "Seulement en aidant les autres : partager un quiz, déclarer un temps, ajouter un groupe WhatsApp, une réponse ou note partagée qui reçoit ⭐. Rang et classement : onglet Chats.", ft_priv: "Confidentialité et transparence", fd_priv: "Réglages → Confidentialité : ce que l’app voit, garde et envoie.", ft_notes: "Notes perso", fd_notes: "Sur chaque page de devoir et de cours : une petite zone de notes, partageable avec le cours.", ft_progress: "Avancement d’un devoir", fd_progress: "Sur la page du devoir : indiquez où vous en êtes (25 %, 50 %…), une barre apparaît sur la carte.", ft_lang: "Copies dans d’autres langues", fd_lang: "Quand un devoir existe en hébreu et en anglais ou français, la copie dans la langue de l’app est affichée. Changez-la sur la page du cours.", ft_zoom: "Liens Zoom affichés comme devoirs", fd_zoom: "Réglages → Filtres : comme cours Zoom, comme devoir, ou masqués.", ft_kw: "Masquer par mot-clé", fd_kw: "Réglages → Filtres : les devoirs contenant un mot choisi sont masqués.", ft_mine: "Vos propres tâches", fd_mine: "« ➕ Ajouter ma propre tâche » : une tâche datée qui se comporte comme celles de Moodle.", progLbl: "Où j’en suis", prog0: "Pas commencé", prog100: "Travail terminé 💪 N’oubliez pas de rendre sur Moodle.", notePh: "✏️ Une note pour moi…", noteMine: "Visible par vous seul", noteShareT: "Partager avec le cours", noteShareC: "Partager dans le chat du cours", noteNeedSoc: "Pour partager une note, rejoignez la communauté (gratuit, on peut partir quand on veut).", noteSharedPre: "📝 Une note que je partage :", noteShared: "Note partagée dans la discussion ✓", ttBulkGo: "＋ Plusieurs cours d’un coup →", ttBulkT: "Plusieurs cours d’un coup", ttBulkHint: "Une ligne par cours : jour, heures et nom. Un lieu après une virgule. Plusieurs jours : « lun-jeu » ou « lun,mer ».", ttBulkPh: "lun-jeu 09:00-12:30 Séder du matin, Beit Midrash\nmar 13:00-14:00 Halakha\nmer 19:00-20:30 Cours général", ttBulkAdd: n => n ? "Ajouter " + n + " cours" : "Ajouter", ttBulkBad: l => "Ligne " + l + " illisible. Il faut un jour, des heures et un nom, ex. mar 09:00-10:30 Talmud", ttBulkMax: "Trop de cours (120 au maximum)", ttBulkDone: n => n + " cours ajoutés ✓", ttBulkOne: "Un seul cours avec le formulaire", logo_ocean: "Océan", logo_sunset: "Coucher de soleil", logo_forest: "Forêt", logo_night: "Nuit", crsMoreA: "Plus pour ce cours", crsHideBtn: "Masquer ce cours", crsHideSub: "Disparaît des devoirs, de l’aperçu et des rappels. À rétablir dans Réglages → Cours et couleurs.", updReadyL: l => "✨ Nouvelle version : " + l, semTitle: "Avancement du semestre", weekOf: (a, b) => "Semaine " + a + " <small>sur " + b + "</small>",
     weeksLeft: n => n === 0 ? "<b>Dernière semaine !</b>" : n === 1 ? "plus qu’<b>1 semaine</b>" : "encore <b>" + n + " semaines</b>", toExams: n => n === 1 ? "<b>1 jour</b> avant les examens" : "<b>" + n + " jours</b> avant les examens",
     examsNow: "Période d’examens", examsLeft: n => "encore <b>" + n + " jours</b> d’examens", semBefore: n => "Le semestre commence dans " + n + " jours", semOver: "Semestre terminé 🎉", semEnded: "Semestre terminé",
     pctSem: n => n + " % du semestre", examsLbl: "📝 Examens",
@@ -2566,18 +2663,20 @@ async function fetchContents(d) {
 
 /* ---------- state ---------- */
 const DAY = 86400;
-const LOGOS = ["", "m", "🎓", "📚", "🚀", "⭐", "🦉", "☕", "🌱", "🔥"];
+const LOGOS = ["", "ocean", "sunset", "forest", "night"];
+/* the original logo (M + gold spark on a glossy square) in four more colours */
+const LOGO_C = { ocean: ["#4dd4e6", "#1c7ed6", "#0b2f5a"], sunset: ["#ffb35c", "#f0567a", "#5f1b5c"], forest: ["#7ee08a", "#2b8a3e", "#0b3d2a"], night: ["#5c6079", "#23263a", "#0b0c14"] };
 const WAS_CONN = (() => { try { return !!JSON.parse(localStorage.getItem(PFX + "token") || '""'); } catch (e) { return false; } })();
-const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [], kw: [], campus: "", zl: "zoom", cdx: false, old_hide: false, xq: [], density: "detailed", logo: "", calm: false, away: 60, appBadge: true, newAl: true, calf: null }, LS.get("prefs", {}));
+const P = Object.assign({ off: [], hidden: [], old_days: 14, sort: "urgency", colors: {}, filter: "open", manual: [], tt: [], sem: {}, exams: {}, ccode: {}, mine: [], kw: [], campus: "", zl: "zoom", cdx: false, old_hide: false, xq: [], density: "detailed", logo: "", calm: false, away: 60, appBadge: true, newAl: true, calf: null, prog: {}, notes: {} }, LS.get("prefs", {}));
 if (!Array.isArray(P.manual)) P.manual = [];
 if (!Array.isArray(P.mine)) P.mine = [];
 if (!Array.isArray(P.tt)) P.tt = [];
-for (const k of ["sem", "exams", "ccode", "colors"]) if (!P[k] || typeof P[k] !== "object" || Array.isArray(P[k])) P[k] = {};
+for (const k of ["sem", "exams", "ccode", "colors", "prog", "notes"]) if (!P[k] || typeof P[k] !== "object" || Array.isArray(P[k])) P[k] = {};
 P.ccode = cleanColors(P.ccode, /^\d{5,7}$/); P.colors = cleanColors(P.colors, /^\d+$/);
 function cleanColors(o, keyRe) { const out = {}; for (const [k, v] of Object.entries(o || {})) if (keyRe.test(k) && /^#[0-9a-f]{6}$/i.test(v)) out[k] = v; return out; }
 const V = { data: LS.get("cache", null), q: "", cat: ({ assign: "file", quiz: "online" })[LS.get("cat", "all")] || LS.get("cat", "all"), showHid: false, openG: {}, loading: false, err: null, view: LS.get("view", "dash"), focus: null, monthOff: 0, hl: null, newsAll: false, newsOpen: new Set(), exAll: false, exSug: [], scan: [] };
 /* every synced setting carries the time it last changed on this device; sync keeps the newer one per setting */
-const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf", "grades", "soc_old", "dash_w", "lang_keep", "grp"];
+const SYNC_KEYS = ["tt", "exams", "sem", "manual", "hidden", "off", "colors", "ccode", "old_days", "sort", "rem", "theme", "mine", "dash", "feed", "kw", "campus", "zl", "cdx", "old_hide", "xq", "density", "soc_on", "soc_id", "soc_prof", "soc_mute", "soc_ign", "soc_asked", "soc_rep", "soc_auto", "logo", "calm", "away", "appBadge", "newAl", "calf", "grades", "soc_old", "dash_w", "lang_keep", "grp", "prog", "notes"];
 if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
 let syncSnap = null;
 const snapAll = () => { syncSnap = Object.fromEntries(SYNC_KEYS.map(k => [k, JSON.stringify(P[k])])); };
@@ -2711,7 +2810,19 @@ function applyZl(tasks, now) {                   // a "zoom link" assignment sho
 }
 /* the same exercise in several languages (עברית / English / Français) and tasks per lecturer group: found per course, one choice hides the rest */
 const langOf = n => /[\u0590-\u05FF]/.test(n) ? "he" : /[éèêàçùâîôœ]|\b(exercice|devoir|récurrence|fonctions?|ensembles|cardinalité|relations d)/i.test(n) ? "fr" : /[a-z]/i.test(n) ? "en" : "";
+/* which language copy a course shows: the one picked, else (for English / French users) the app's language when the course has it, else Hebrew; Hebrew users see all until they pick */
+function langKeep(cid) {
+  const pk = (P.lang_keep || {})[cid]; if (pk) return pk;
+  if (LANG === "he") return "";
+  const L = langsIn(cid); if (!L) return "";
+  return L[LANG] >= 2 ? LANG : L.he >= 2 ? "he" : "";
+}
 function langsIn(cid) {
+  const d = V.data, mc = langsIn.m; if (mc && mc.d === d && mc.n === (d && d.tasks.length) && cid in mc.r) return mc.r[cid];
+  if (!mc || mc.d !== d || mc.n !== (d && d.tasks.length)) langsIn.m = { d, n: d && d.tasks.length, r: {} };
+  return (langsIn.m.r[cid] = langsIn0(cid));
+}
+function langsIn0(cid) {
   const c = {}; for (const x of ((V.data && V.data.tasks) || [])) if (x.cid === cid && isAct(x)) { const l = langOf(x.name || ""); if (l) c[l] = (c[l] || 0) + 1; }
   return Object.keys(c).filter(l => c[l] >= 2).length >= 2 ? c : null;           // at least two languages with 2+ tasks each
 }
@@ -2723,7 +2834,7 @@ function groupsIn(cid) {
 }
 function ruleHidden(x, now) {
   if (x.type === "mine") return false;
-  if (isAct(x)) { const lk = (P.lang_keep || {})[x.cid]; if (lk && lk !== "all" && langOf(x.name || "") && langOf(x.name || "") !== lk) return true;
+  if (isAct(x)) { const lk = langKeep(x.cid); if (lk && lk !== "all" && langOf(x.name || "") && langOf(x.name || "") !== lk) return true;
     const gk = (P.grp || {})[x.cid]; if (gk && gk !== "all") { const k = grpOf(x.name); if (k && k !== gk) return true; } }
   if (P.zl === "hide" && zlIs(x)) return true;
   if (P.old_hide && groupOf(x, now) === "old") return true;
@@ -2790,6 +2901,37 @@ function stChip(x, g) {
   if (x.grade && !grOn()) chip += '<span class="st grade">' + esc(t("grade", x.grade)) + "</span>";
   return chip;
 }
+/* how far along a task is (marked on its page): 0 = not marked */
+const progOf = x => (P.prog && P.prog[x.key]) || 0;
+/* personal notes on a task (t:key) or a course (c:id): a small box; "share" posts the note to that task's / course's discussion */
+function noteBox(nk, cid, tk) {
+  const v = (P.notes || {})[nk] || "", canShare = cid > 0;
+  return '<div class="nbox' + (v ? " has" : "") + '"><textarea data-note="' + esc(nk) + '" rows="' + Math.min(8, Math.max(1, v.split("\n").length)) + '" maxlength="2000" placeholder="' + esc(t("notePh")) + '">' + esc(v) + "</textarea>" +
+    '<div class="nact"><small>' + esc(t("noteMine")) + "</small>" + (canShare ? '<button class="link" data-noteshare="' + esc(nk) + '" data-ncid="' + cid + '" data-ntk="' + esc(tk) + '">' + ic("share-2") + "<span>" + esc(t(tk === "c" ? "noteShareC" : "noteShareT")) + "</span></button>" : "") + "</div></div>";
+}
+/* a page re-drawn while someone types in its note box keeps the cursor where it was */
+function keepNote(box, draw) {
+  const ae = document.activeElement, nk = ae && box.contains(ae) && ae.dataset ? ae.dataset.note : "", a = nk ? ae.selectionStart : 0, b = nk ? ae.selectionEnd : 0;
+  draw();
+  if (nk) { const el = [...box.querySelectorAll("[data-note]")].find(x => x.dataset.note === nk); if (el) { el.focus(); try { el.setSelectionRange(a, b); } catch (e) {} } }
+}
+let noteT;
+document.addEventListener("input", e => {
+  const el = e.target.closest && e.target.closest("[data-note]"); if (!el) return;
+  el.rows = Math.min(8, Math.max(1, el.value.split("\n").length)); el.closest(".nbox").classList.toggle("has", !!el.value.trim());
+  clearTimeout(noteT); noteT = setTimeout(() => {
+    const k = el.dataset.note, v = el.value.trim(); P.notes = Object.assign({}, P.notes); if (v) P.notes[k] = el.value.slice(0, 2000); else delete P.notes[k];
+    savePrefs(); if (!noteBox.used) { noteBox.used = true; useHit("note"); }
+  }, 500);
+});
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-noteshare]"); if (!b) return;
+  const nk = b.dataset.noteshare, ta = [...document.querySelectorAll("[data-note]")].find(x => x.dataset.note === nk), txt = (ta ? ta.value : (P.notes || {})[nk] || "").trim();
+  if (!txt) return;
+  const cid = Number(b.dataset.ncid), tk = b.dataset.ntk;
+  if (!socOn()) { toast(t("noteNeedSoc"), 5000); return socEnsure(() => SOC.intro(true)); }
+  socEnsure(() => SOC.postNote && SOC.postNote(cid, tk, txt));
+});
 function card(x, now, g) {
   const st = x.status, hid = P.hidden.includes(x.key), man = isManual(x), chip = stChip(x, g);
   const due = x.due && isDone(x) ? "<b>" + esc(when(x.due)) + '</b><br><span class="rel">' + esc(x.due < now ? t("dueWas", rel(x.due, now)) : rel(x.due, now)) + "</span>"      // done: no countdown, never "overdue"
@@ -2814,7 +2956,8 @@ function card(x, now, g) {
     (st === "submitted" ? '<span class="ck on" title="' + esc(t("stSubmitted")) + '">' + ic("check") + "</span>"
       : st === "na" ? "" : '<button class="ck' + (man ? " on" : "") + '" data-done="' + esc(x.key) + '" aria-pressed="' + man + '" aria-label="' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + '" title="' + esc(noEmo(man ? t("unmarkDone") : t("markDone"))) + '">' + ic("check") + "</button>") +
     '<div class="tl"><span class="tname" data-tk="' + esc(x.key) + '" role="button" tabindex="0"><bdi>' + esc(x.name) + "</bdi></span>" + chip + '<span class="tc">' + esc(typeLabel(x)) + " · " + (x.cid > 0 ? '<button class="crsl" data-crs="' + x.cid + '"><bdi>' + esc(shortName(x.course)) + "</bdi></button>" : "<bdi>" + esc(shortName(x.course)) + "</bdi>") + "</span>" + S("badge", x) + "</div>" +
-    '<div class="due">' + due + "</div>" + extra + cardGrade(x) + files + relHtml + body + (acts.length ? '<div class="act">' + acts.join("") + "</div>" : "") + "</div>";
+    '<div class="due">' + due + "</div>" + extra + cardGrade(x) + files + relHtml + body + (acts.length ? '<div class="act">' + acts.join("") + "</div>" : "") +
+    (!dn && progOf(x) ? '<div class="tprog" title="' + esc(t("progLbl") + " " + progOf(x) + "%") + '"><i style="width:' + progOf(x) + '%"></i></div>' : "") + "</div>";
 }
 
 /* ---------- render: dashboard ---------- */
@@ -2946,7 +3089,8 @@ function renderSem(d, now) {
   const fl = x => Math.max(1, daysBetween(x.a, x.b));
   const bar = segs.map(x => {
     const f = Math.max(0, Math.min(1, (now - x.a) / (x.b - x.a)));
-    return '<i class="sg ' + x.k + (x === cur ? " cur" : "") + '" style="flex:' + fl(x) + '">' + (x.k !== "gap" && f > 0 ? '<b style="width:' + (f * 100).toFixed(1) + '%"></b>' : "") + "</i>";
+    const ci = segs.indexOf(x), edge = ci < 2 ? " es" : ci > segs.length - 3 ? " ee" : "";
+    return '<i class="sg ' + x.k + (x === cur ? " cur" + edge + '" data-here="' + esc(t("semHere")) : "") + '" style="flex:' + fl(x) + '">' + (x.k !== "gap" && f > 0 ? '<b style="width:' + (f * 100).toFixed(1) + '%"></b>' : "") + "</i>";
   }).join("");
   const nums = segs.map(x => '<span style="flex:' + fl(x) + '"' + (x === cur && x.k === "w" ? ' class="cur"' : "") + ">" + (x.k === "w" ? x.n : "") + "</span>").join("");
   let big = "", sub = "";
@@ -2959,7 +3103,7 @@ function renderSem(d, now) {
   else if (D.xs && now < D.xe) { big = esc(t("examsNow")); sub = t("examsLeft", daysBetween(now, D.xe)); }
   else big = esc(t("semOver"));
   $("#sem").innerHTML = '<div class="big">' + big + '</div><div class="sub">' + sub + "</div>" +
-    '<div class="sbar" role="img" aria-label="' + esc(stripTags(big + " " + sub)) + '">' + bar + '</div><div class="snum" aria-hidden="true">' + nums + "</div>" +
+    '<div class="sbar' + (cur ? " here" : "") + '" role="img" aria-label="' + esc(stripTags(big + " " + sub)) + '">' + bar + '</div><div class="snum" aria-hidden="true">' + nums + "</div>" +
     '<div class="slbl"><span><bdi dir="ltr">' + esc(shortDate(D.s) + "–" + shortDate(addD(D.e, -1))) + "</bdi></span>" +
     (D.xs ? '<span class="xl">' + esc(t(D.xl)) + ' <bdi dir="ltr">' + esc(shortDate(D.xs) + "–" + shortDate(addD(D.xe, -1))) + "</bdi></span>" : "") + "</div>" +
     '<div class="guess">' + esc(t(D.src)) + "</div>";
@@ -2990,7 +3134,7 @@ const ttKind = x => x.kname || t((KINDS.find(k => k[0] === x.kind) || KINDS[3])[
 function cleanTT(list) {
   if (!Array.isArray(list)) return null;
   const out = [];
-  for (const x of list.slice(0, 80)) {
+  for (const x of list.slice(0, 120)) {
     if (!x || typeof x !== "object") continue;
     const day = Number(x.day), s = hm(x.s), e = hm(x.e);
     if (!(day >= 0 && day <= 6 && Number.isInteger(day)) || !(s < e)) continue;
@@ -3055,8 +3199,8 @@ function renderToday(now) {
   el.innerHTML = h;
 }
 let ttEditId = null;
-function openTT(id) {
-  ttEditId = id || null;
+function openTT(id, bulk) {
+  ttEditId = id || null; ttBulkMode(false); $("#ttBulkGo").hidden = !!id;
   const x = P.tt.find(y => y.id === id) || { day: new Date().getDay() <= 4 ? new Date().getDay() : 0, s: "08:30", e: "10:10", kind: "lec", title: "", place: "" };
   const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id) || c.id === ttCid(x));
   $("#fCourse").innerHTML = cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + '<option value="0">' + esc(t("ttOtherCourse")) + "</option>";
@@ -3066,8 +3210,60 @@ function openTT(id) {
   $("#fDay").innerHTML = [0, 1, 2, 3, 4, 5, 6].map(i => '<option value="' + i + '">' + esc(dayName(i)) + "</option>").join(""); $("#fDay").value = String(x.day);
   ttTitlePh();
   $("#ttFormTitle").textContent = t(id ? "ttEditTitle" : "ttNewTitle"); $("#fDel").hidden = !id; $("#fErr").textContent = "";
+  if (!id && bulk === true) ttBulkMode(true);
   $("#ttSheet").hidden = false;
 }
+/* many classes at once: one line each – day(s), hours, name, and a place after a comma ("א-ה 09:00-12:00 סדר בוקר, בית המדרש") */
+const TT_DAYS = { "א": 0, "ב": 1, "ג": 2, "ד": 3, "ה": 4, "ו": 5, "ש": 6, "ראשון": 0, "שני": 1, "שלישי": 2, "רביעי": 3, "חמישי": 4, "שישי": 5, "שבת": 6,
+  sun: 0, mon: 1, tue: 2, wed: 3, thu: 4, fri: 5, sat: 6, sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6,
+  dim: 0, lun: 1, mar: 2, mer: 3, jeu: 4, ven: 5, sam: 6, dimanche: 0, lundi: 1, mardi: 2, mercredi: 3, jeudi: 4, vendredi: 5, samedi: 6 };
+const ttDay = w => { w = String(w || "").toLowerCase().replace(/[׳'"״.]/g, "").replace(/^יום\s*/, "").trim(); return w in TT_DAYS ? TT_DAYS[w] : -1; };
+function ttParseLine(line) {
+  let L = line.trim(); if (!L) return null;
+  const tm = /(\d{1,2})(?:[:.](\d{2}))?\s*[-–—עד]+\s*(\d{1,2})(?:[:.](\d{2}))?/.exec(L);
+  if (!tm) return { err: true };
+  const s = Number(tm[1]) * 60 + Number(tm[2] || 0), e = Number(tm[3]) * 60 + Number(tm[4] || 0);
+  const before = L.slice(0, tm.index).trim(), after = L.slice(tm.index + tm[0].length).trim();
+  // the days: at the start (or right before the hours): "א", "א׳", "יום ב", "א-ה", "א,ג,ה", "ראשון ושלישי", "Mon"
+  const dm = /^((?:יום\s*)?[^\s\d,]+(?:\s*(?:[-–,]|\sו)\s*(?:יום\s*)?[^\s\d,]+)*)/.exec(before || after);
+  if (!dm) return { err: true };
+  const days = [], parts = dm[1].replace(/יום\s*/g, "").trim().split(/\s*,\s*|\s+ו(?=\S)|\s+(?=[^-–])/).filter(Boolean);
+  for (const p of parts) {
+    const r = p.split(/\s*[-–]\s*/);
+    if (r.length === 2 && ttDay(r[0]) >= 0 && ttDay(r[1]) >= 0) { for (let d = ttDay(r[0]); d <= ttDay(r[1]); d++) days.push(d); }
+    else if (ttDay(p) >= 0) days.push(ttDay(p)); else if (!days.length) return { err: true }; else break;
+  }
+  if (!days.length) return { err: true };
+  let rest = (before ? after : after.slice(dm[0].length)).replace(/^[\s:\-–|]+/, "").trim();
+  if (!before && !rest) rest = "";
+  const [title, place] = rest.split(/\s*[,|]\s*/);
+  if (!(s < e) || e > 24 * 60 || !title) return { err: true };
+  return { days: [...new Set(days)], s, e, title: title.slice(0, 60), place: (place || "").slice(0, 60) };
+}
+function ttBulkParse() {
+  const lines = $("#ttBulkTx").value.split(/\n/), ok = [], bad = [];
+  lines.forEach((l, i) => { const r = ttParseLine(l); if (!r) return; if (r.err) bad.push(i + 1); else ok.push(r); });
+  return { ok, bad, n: ok.reduce((a, r) => a + r.days.length, 0) };
+}
+function ttBulkDraw() {
+  const r = ttBulkParse(), b = $("#ttBulkSave");
+  $("#ttBulkPrev").innerHTML = r.ok.map(x => '<div><b><bdi>' + esc(x.title) + "</bdi></b> · " + esc(x.days.map(d => dayName(d)).join(", ")) + ' · <bdi dir="ltr">' + fmtHM(x.s) + "–" + fmtHM(x.e) + "</bdi>" + (x.place ? " · <bdi>" + esc(x.place) + "</bdi>" : "") + "</div>").join("") +
+    (r.bad.length ? '<div class="err">' + esc(t("ttBulkBad", r.bad.join(", "))) + "</div>" : "");
+  b.disabled = !r.n || P.tt.length + r.n > 120; b.textContent = P.tt.length + r.n > 120 ? t("ttBulkMax") : t("ttBulkAdd", r.n);
+}
+function ttBulkMode(on) {
+  $("#ttSheet .box").classList.toggle("bulkmode", on); $("#ttFormTitle").textContent = t(on ? "ttBulkT" : ttEditId ? "ttEditTitle" : "ttNewTitle");
+  if (on) { $("#ttBulkKind").innerHTML = KINDS.map(k => '<option value="' + k[0] + '">' + esc(t(k[1])) + "</option>").join(""); $("#ttBulkKind").value = "other"; $("#ttBulkTx").placeholder = t("ttBulkPh"); ttBulkDraw(); }
+}
+$("#ttBulkGo").onclick = () => { useHit("ttBulkOpen"); ttBulkMode(true); $("#ttBulkTx").focus(); };
+$("#ttBulkBack").onclick = () => ttBulkMode(false);
+$("#ttBulkTx").addEventListener("input", ttBulkDraw);
+$("#ttBulkSave").onclick = () => {
+  const r = ttBulkParse(); if (!r.n) return;
+  const kind = $("#ttBulkKind").value, priv = $("#ttBulkPriv").checked, add = [];
+  for (const x of r.ok) for (const d of x.days) add.push({ cid: 0, code: "", title: x.title, kind, day: d, s: fmtHM(x.s), e: fmtHM(x.e), place: x.place, color: "", priv, att: false, who: "" });
+  P.tt = cleanTT([...P.tt, ...add]) || P.tt; savePrefs(); useHit("ttBulk"); $("#ttBulkTx").value = ""; $("#ttSheet").hidden = true; render(); toast(t("ttBulkDone", add.length));
+};
 function ttTitlePh() { const c = ((V.data && V.data.courses) || []).find(y => y.id === Number($("#fCourse").value)); $("#fTitle").placeholder = c ? shortName(c.name) : ""; }
 function saveTT() {
   const cid = Number($("#fCourse").value) || 0, c = cid && V.data && V.data.courses.find(y => y.id === cid);
@@ -3370,6 +3566,8 @@ function cleanKey(k, v) {
     case "off": return Array.isArray(v) ? v.filter(Number.isInteger).slice(0, 500) : [];
     case "xq": return Array.isArray(v) ? v.filter(q => obj(q) && typeof q.id === "string" && /^[\w-]{1,16}$/.test(q.id) && XQ_KINDS.includes(q.k) && (parseDT(q.at) || /^\d{4}-\d{2}-\d{2}$/.test(q.at || "")))
       .map(q => Object.assign({ id: q.id, cid: Number.isInteger(q.cid) && q.cid > 0 ? q.cid : 0, n: typeof q.n === "string" ? q.n.slice(0, 60) : "", k: q.k, at: q.at, note: typeof q.note === "string" ? q.note.slice(0, 80) : "" }, socRef(q))).slice(0, 150) : [];
+    case "prog": return obj(v) ? Object.fromEntries(Object.entries(v).filter(([k, x]) => k.length < 120 && [25, 50, 75, 100].includes(x)).slice(-3000)) : {};
+    case "notes": return obj(v) ? Object.fromEntries(Object.entries(v).filter(([k, x]) => /^(t:.{1,120}|c:\d+)$/.test(k) && typeof x === "string" && x.trim()).map(([k, x]) => [k, x.slice(0, 2000)]).slice(-1500)) : {};
     case "density": return ["detailed", "compact", "clean"].includes(v) ? v : "detailed";
     case "logo": return LOGOS.includes(v) ? v : "";
     case "calm": return v === true;
@@ -3532,7 +3730,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.7.0";
+const APP_VERSION = "1.8.0-beta.1";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -3865,7 +4063,7 @@ function cardGrade(x) {
   return '<div class="tgr">' + ic("award") + "<span>" + esc(t("grNoYetLong")) + (extra ? " · " + esc(extra) : "") + "</span></div>";
 }
 function tipFor(cid) {
-  const L = langsIn(cid); if (L && !(P.lang_keep || {})[cid]) return { kind: "lang", cid, opts: Object.keys(L).filter(l => L[l] >= 2) };
+  const L = langsIn(cid); if (L && !langKeep(cid)) return { kind: "lang", cid, opts: Object.keys(L).filter(l => L[l] >= 2) };
   const G = groupsIn(cid); if (G && !(P.grp || {})[cid]) return { kind: "grp", cid, opts: Object.keys(G).sort() };
   return null;
 }
@@ -3952,7 +4150,7 @@ function render() {
   if (V.err) { bn.hidden = false; bn.className = "banner err"; bn.textContent = V.err + (d ? t("lastData") : ""); }
   else bn.hidden = true;
   themeSync();
-  { const now = nowS(); renderTT(now); renderAcad(now); renderToday(now); renderSem(d, now); renderExams(now); renderRemCard(); $("#bFb2").hidden = !fbReady(); }
+  { const now = nowS(); renderTT(now); renderAcad(now); renderToday(now); renderSem(d, now); renderExams(now); renderRemCard(); renderDyk(); $("#bFb2").hidden = !fbReady(); }
   if (!d) { $("#list").innerHTML = V.loading ? '<div class="empty">' + esc(t("loadingTasks")) + "</div>" : ""; $("#sum").textContent = ""; $("#chips").innerHTML = ""; return; }
   const now = nowS();
   renderDash(d, now); renderNews(d); renderCrsList(d, now); renderGradesCard(); if (!$("#crsSheet").hidden) renderCourse(); if (!$("#tkSheet").hidden) renderTask(); if (!$("#grSheet").hidden) renderGrades();
@@ -4028,7 +4226,7 @@ function render() {
   explainDraw(V.view, $("#exView"));
   $("#diag").innerHTML = d.diag && d.diag.length ? "<details><summary>" + esc(t("diag", d.diag.length)) + "</summary>" + d.diag.map(x => "<div>" + esc(x) + "</div>").join("") + "</details>" : "";
 }
-const SET_PAGES = { soc: "sSoc", notif: "sNotif", look: "sLook", filter: "sFilter", courses: "sCourses", sem: "sSem", acct: "sAcct", help: "sHelp" };
+const SET_PAGES = { soc: "sSoc", notif: "sNotif", look: "sLook", filter: "sFilter", courses: "sCourses", sem: "sSem", acct: "sAcct", priv: "sPriv", help: "sHelp" };
 function setPage(p) {                         // "" = the menu, a name = that page, "all" = every page at once (for tests)
   V.spage = p || ""; const all = p === "all";
   $("#sMenu").hidden = !!p; $$(".spage").forEach(el => el.hidden = !(all || el.dataset.page === p));
@@ -4187,8 +4385,9 @@ function acTitleMonth(ym) {
   return { g, heb, hs: !ha ? "" : ha.m === hb.m ? ha.m : ha.m + "–" + hb.m };
 }
 /* the short label shown inside a day cell: what starts that day (or continues into a new week) */
+const acZoom = e => /zoom/i.test(e[4]);      // classes on Zoom: marked on every day of the stretch, not only the first (they matter each day)
 function acCellLabel(k, dow) {
-  const ev = acEvs(k).filter(e => e[0] === k || dow === 0);
+  const ev = acEvs(k).filter(e => e[0] === k || dow === 0 || acZoom(e)).sort((a, b) => acZoom(b) - acZoom(a));
   return ev.map(acName).join(" · ");
 }
 function acSoon(now) {
@@ -4385,6 +4584,10 @@ function launchUrl(site) {
 }
 /* ---------- versions: what changed, shown once after an update ---------- */
 const CHANGES = [
+  { v: "1.8.0", at: "2026-11-13 18:00", th: ["נועם", "פנינה", "יעל", "אבינועם", "יהושע", "אלעזר"],
+    he: ["📅 לחיצה על יום בלוח החודש או בשבוע מראה מה יש בו: מבחנים ובחנים, הגשות והלוח האקדמי (קודם הופיע ״אין משימות״ כשהיה רק מבחן)", "🔎 חיפוש בהגדרות: כותבים מה מחפשים (״להסתיר קורס״, ״לוגו״, ״ציונים״) ומגיעים ישר למקום. ובטופס הפידבק – ״אולי זה כבר קיים?״", "📈 בדף המטלה: ״כמה כבר עשיתי״ (25%, 50%, 75%), ופס דק על הכרטיס", "✏️ הערות לעצמך בדף כל מטלה ובדף כל קורס, ואפשר לשתף הערה עם הקורס", "🗓 כמה שיעורים בבת אחת במערכת: שורה לכל שיעור (למשל לימודי קודש), והכל נכנס במכה", "🔒 ״פרטיות ושקיפות״ בהגדרות: מה האפליקציה רואה, מה נשאר במכשיר ומה נשלח", "↩️ חלון שנפתח מההגדרות (צבעים, תזכורות, ציונים…) מקבל חץ חזרה להגדרות", "🎨 ארבעה לוגואים חדשים בסגנון המקורי, ⋯ ליד כל קורס ב״הקורסים שלי״ להסתרה מהירה, גרירה בעריכת הסקירה במחשב, ומה שהוגש נראה שקט יותר", "🌐 מטלה בכמה שפות: באנגלית או בצרפתית מוצג ההעתק בשפה שלך. פס הסמסטר חזר להיות נקי עם ״אתה כאן״, וימי הזום בחנוכה מסומנים בכל יום"],
+    en: ["📅 Tap a day in the month or week view to see what’s on: exams and quizzes, deadlines and the academic calendar (it used to say “no tasks” when there was only an exam)", "🔎 Search in settings: type what you’re looking for (“hide course”, “logo”, “grades”) and go straight there. And in the feedback form – “maybe it’s already there?”", "📈 On a task page: “how far I got” (25%, 50%, 75%), with a thin bar on the card", "✏️ Notes to yourself on every task and course page, and you can share a note with the course", "🗓 Several classes at once in the timetable: one line each (e.g. Torah studies), all added in one go", "🔒 “Privacy & transparency” in settings: what the app sees, what stays on the device and what is sent", "↩️ A window opened from settings (colours, reminders, grades…) has an arrow back to settings", "🎨 Four new logos in the original style, ⋯ next to each course in “My courses” to hide it fast, drag to reorder the overview on a computer, and submitted tasks look quieter", "🌐 Tasks in several languages: in English or French you see the copy in your language. The semester bar is clean again with “You are here”, and the Hanukkah Zoom days are marked on each day"],
+    fr: ["📅 Touchez un jour du mois ou de la semaine pour voir ce qu’il y a : examens et quiz, échéances et calendrier académique (avant : « aucune tâche » s’il n’y avait qu’un examen)", "🔎 Recherche dans les réglages : tapez ce que vous cherchez (« masquer un cours », « logo », « notes ») et allez-y directement. Et dans le formulaire d’avis – « c’est peut-être déjà là ? »", "📈 Sur la page d’un devoir : « où j’en suis » (25 %, 50 %, 75 %), avec une fine barre sur la carte", "✏️ Des notes pour vous sur chaque page de devoir et de cours, partageables avec le cours", "🗓 Plusieurs cours d’un coup dans l’emploi du temps : une ligne par cours, tout est ajouté d’un coup", "🔒 « Confidentialité et transparence » dans les réglages : ce que l’app voit, garde et envoie", "↩️ Une fenêtre ouverte depuis les réglages (couleurs, rappels, notes…) a une flèche de retour", "🎨 Quatre nouveaux logos dans le style d’origine, ⋯ à côté de chaque cours pour le masquer vite, glisser pour réordonner l’aperçu sur ordinateur, et les devoirs rendus sont plus discrets", "🌐 Devoirs en plusieurs langues : en anglais ou en français, vous voyez la copie dans votre langue. La barre du semestre est de nouveau nette avec « Vous êtes ici »"] },
   { v: "1.7.0", at: "2026-11-12 23:14", th: ["תמר", "יעל", "איתן", "שרה", "יואל", "דוד"],
     he: ["✏️ הסקירה פחות עמוסה: כפתור ״עריכת הסקירה״ בראש הסקירה – בוחרים מה מוצג ובאיזה סדר, עם הסבר קצר על כל כרטיס, או בלחיצה: מינימלית / מומלצת / הכל", "🎓 ציונים מהמודל: דף ״הציונים שלי״ (מהסקירה ומההגדרות) עם הציונים החדשים וכל קורס בנפרד, כולל נוכחות ובודק אוטומטי והמשקל של כל אחד. הציונים גם בדף הקורס, בעמוד המטלה ועל כל מטלה שהוגשה (״עדיין אין ציון״ כשאין), והתראה כשמגיע ציון חדש", "✂️ מטלה שהוגשה מוצגת קצר: הציון ו-⏳ בלבד. כל השאר בעמוד המטלה", "🌐 קורס שבו כל תרגיל מופיע בכמה שפות, או מטלות לכמה קבוצות: בוחרים פעם אחת מה שלך, והשאר מוסתר", "📱 סידור סקירה נפרד לטלפון ולמסך רחב", "📋 אחוז הנוכחות מהמודל בדף הקורס וברשימת הקורסים", "🏆 דרגות חדשות בקהילה, בצבעים כמו במשחקים (אפור → ירוק → כחול → סגול → כתום → אדום), עד ״👑 אגדת הקמפוס״ ב-2000 נקודות", "📄 עמוד לכל מטלה: לחיצה על מטלה פותחת את כל מה שקשור אליה – מתי ההגשה, ההנחיות, הקבצים והחומרים מאותו נושא, כמה זמן זה לקח לאחרים והדיון עליה – ומשם לדף הקורס בלחיצה", "⏳ הזמן שלקח לאחרים מוצג כבר מהדיווח הראשון", "🤖 מטלות של הבודק האוטומטי (VPL) ומטלות קבוצתיות נחשבות ״הוגש״ אחרי ההגשה, ונשאלת השאלה ״כמה זמן לקח?״", "⭐ כשמישהו מסמן הודעה שלך כ״תשובה מועילה״, זה מופיע כשנכנסים לאפליקציה, ובצ'אט רק את/ה רואה מי סימן", "⏳ דיווח כמה זמן לקח נסגר 12 שעות אחרי מועד ההגשה", "👥 בעמוד המטלה: מי דיווח כמה זמן זה לקח לו", "🏆 בטאב הצ'אטים: הדרגה, הנקודות ופס עד הדרגה הבאה", "🗓 בשבוע ובחודש בסקירה, המשימות שלך נראות אחרת (מקווקו / יהלום) באותו צבע של הקורס"],
     en: ["✏️ A calmer overview: an “Edit the overview” button at the top – choose what shows and in what order, with a short line about each card, or in one tap: minimal / recommended / everything", "🎓 Grades from Moodle: a “My grades” page (from the overview and settings) with new grades and every course, attendance and automatic checker included, with each one's weight. Grades also on the course page, the task page and every submitted task (“No grade yet” when there isn't one), and a notification when a new grade arrives", "✂️ Submitted tasks are shown short: just the grade and ⏳. Everything else is on the task page", "🌐 A course where every exercise comes in several languages, or tasks for several groups: choose yours once and the rest is hidden", "📱 Separate overview layouts for the phone and for big screens", "📋 Your attendance percentage from Moodle on the course page and in the course list", "🏆 New community ranks, coloured like loot in games (grey → green → blue → purple → orange → red), up to “👑 Campus Legend” at 2000 points", "📄 A page for every task: tap a task to see everything about it – when it's due, the instructions, its files and materials from the same topic, how long it took others and its discussion – and go to the course page from there", "⏳ How long a task took others shows from the first report", "🤖 Automatic checker (VPL) tasks and group assignments count as submitted once you submit, and you're asked how long they took", "⭐ When someone marks your message as a helpful answer, you see it when you open the app, and only you see who did in the chat", "⏳ Reporting how long a task took closes 12 hours after its deadline", "👥 On the task page: who reported how long it took them", "🏆 The chats tab shows your rank, points and a bar to the next rank", "🗓 In the week and month on the overview, your own tasks look different (dashed / diamond) in the course's colour"],
@@ -4732,9 +4935,17 @@ function renderCrsList(d, now) {
     const s = crsSummary(c.id, now);
     const at = grItems(c.id).filter(i => grIsAtt(i) && i.raw != null && i.max), ap = at.length ? Math.round(at.reduce((n, i) => n + i.raw / i.max * 100, 0) / at.length) : null;
     const sub = [s.open.length ? t("crsOpenN", s.open.length) : t("crsNoOpen"), s.late.length ? t("sumLate", s.late.length) : "", s.next ? t("crsNextShort", shortDate(s.next.due)) : "", ap != null ? t("attPctShort", ap) : ""].filter(Boolean).join(" · ");
-    return '<button class="crsrow" data-crs="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small" + (s.late.length ? ' class="late"' : "") + ">" + esc(sub) + "</small></span>" + ic(t("dir") === "rtl" ? "chevron-left" : "chevron-right", "chev") + "</button>";
+    return '<div class="crsw' + (V.crsMore === c.id ? " more" : "") + '"><button class="crsrow" data-crs="' + c.id + '" style="--c:' + colorOf(c.id) + '"><i class="dot"></i><span class="sw"><b><bdi>' + esc(shortName(c.name)) + "</bdi></b><small" + (s.late.length ? ' class="late"' : "") + ">" + esc(sub) + "</small></span>" + ic(t("dir") === "rtl" ? "chevron-left" : "chevron-right", "chev") + "</button>" +
+      '<button class="crsmore" data-crsmore="' + c.id + '" aria-label="' + esc(t("crsMoreA")) + '" title="' + esc(t("crsMoreA")) + '">' + ic("ellipsis") + "</button>" +
+      (V.crsMore === c.id ? '<div class="crsmenu"><button class="btn" data-crshide="' + c.id + '">' + ic("eye-off") + "<span>" + esc(t("crsHideBtn")) + '</span></button><span class="hint">' + esc(t("crsHideSub")) + "</span></div>" : "") + "</div>";
   }).join("") : '<div class="hint">' + esc(t("crsNone")) + "</div>";
 }
+document.addEventListener("click", e => {
+  const m = e.target.closest("[data-crsmore]"); if (m) { const id = Number(m.dataset.crsmore); V.crsMore = V.crsMore === id ? null : id; useHit("crsMore"); return renderCrsList(V.data, nowS()); }
+  const h = e.target.closest("[data-crshide]"); if (!h) return;
+  const cid = Number(h.dataset.crshide); V.crsMore = null; P.off = [...new Set([...P.off, cid])]; savePrefs(); useHit("crsHideList"); render();
+  toastUndo(t("crsHidden"), () => { P.off = P.off.filter(x => x !== cid); savePrefs(); render(); });
+});
 function openCourse(cid, part) {
   if (!crsOf(cid)) return;
   if (part) CRS.open[part] = true;
@@ -4805,8 +5016,9 @@ function renderCourse() {
   if (s.exam) nx.push(row("graduation-cap", exLbl(s.exam), esc(t("crsNextExam")) + " · " + esc(s.exam.allDay ? dayDate(s.exam.ts) : when(s.exam.ts)) + (s.exam.lev ? " · " + esc(t("exLev")) : ""), " data-crsexams"));
   if (s.cls) nx.push(row("clock", ttKind(s.cls.x) + (s.cls.x.place ? " · " + s.cls.x.place : ""), esc(t("crsNextClass")) + " · " + esc(dayName(s.cls.x.day) + " " + s.cls.x.s), " data-crstt"));
   if (nx.length) h += '<div class="crsnext">' + nx.join("") + "</div>";
+  h += noteBox("c:" + cid, cid, "c");
   { const tp = tipFor(cid); if (tp) h += tipHtml(tp, true); }
-  { const L = langsIn(cid), G = groupsIn(cid), lk = (P.lang_keep || {})[cid], gk = (P.grp || {})[cid], chips = [];
+  { const L = langsIn(cid), G = groupsIn(cid), lk = langKeep(cid), gk = (P.grp || {})[cid], chips = [];
     if (L && lk) chips.push('<button class="chf' + (lk !== "all" ? " on" : "") + '" data-crsunpick="lang_keep">' + ic("languages") + " " + esc(lk === "all" ? t("tipShowAllL") : t("lang_" + lk)) + " ✕</button>");
     if (G && gk) chips.push('<button class="chf' + (gk !== "all" ? " on" : "") + '" data-crsunpick="grp">' + ic("users") + " " + esc(gk === "all" ? t("tipShowAllG") : t("grpN", gk)) + " ✕</button>");
     if (chips.length) h += '<div class="crspick"><span class="hint">' + esc(t("crsPickH")) + "</span>" + chips.join("") + "</div>"; }
@@ -4857,7 +5069,7 @@ function renderCourse() {
     '<div class="srow"><span>' + esc(t("crsShow")) + '</span><input type="checkbox" data-crsoff' + (isOff(cid) ? "" : " checked") + "></div>" +
     '<p class="hint">' + esc(t("crsShowHint")) + "</p>", isOpenS("set", false));
   const keep = document.activeElement && document.activeElement.id === "crsQ" ? document.activeElement.selectionStart : null, top = box.scrollTop;
-  box.innerHTML = h; box.scrollTop = top;
+  keepNote(box, () => { box.innerHTML = h; }); box.scrollTop = top;
   explainDraw("crs", $("#crsExplain"));
   const qi = $("#crsQ"); if (qi) { qi.oninput = () => { CRS.q = qi.value; renderCourse(); }; if (keep !== null) { qi.focus(); try { qi.setSelectionRange(keep, keep); } catch (e) {} } }
 }
@@ -4877,7 +5089,8 @@ $("#crsSheet").addEventListener("click", e => {
   if (g("[data-crsexams]")) { close(); return openExams(); }
   if (g("[data-crstt]")) { close(); return crsClasses(cid).length ? goTT() : openTT(); }
   if (g("[data-crsre]")) { CRS.c[cid] && (CRS.c[cid].at = 0); return crsLoad(cid); }
-  { const up = g("[data-crsunpick]"); if (up) { const k = up.dataset.crsunpick; P[k] = Object.assign({}, P[k] || {}); delete P[k][cid]; savePrefs(); render(); return renderCourse(); } }
+  { const up = g("[data-crsunpick]"); if (up) { const k = up.dataset.crsunpick; P[k] = Object.assign({}, P[k] || {});
+    if (k === "lang_keep" && LANG !== "he" && P[k][cid] !== "all") P[k][cid] = "all"; else delete P[k][cid]; savePrefs(); render(); return renderCourse(); } }
   if (g("[data-crsgr]")) { useHit("gradeRefresh"); return gradeScan(V.data, true, cid); }
   if (g("[data-crssoc]")) { close(); return socEnsure(() => SOC.intro(true)); }
 });
@@ -4888,6 +5101,132 @@ $("#crsSheet").addEventListener("change", e => {
   toast(t(e.target.checked ? "crsShown" : "crsHidden"));
 });
 
+
+/* ---------- what the app can do, in one list: the search in settings, "maybe it already exists?" in the feedback form, and "did you know?" on the overview ----------
+   k = words people use when they ask for it (parts of words are fine), go = where it is (none = the line says where) */
+function openSetPage(pg) { $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true); renderSheet(); setPage(pg); $("#sheet").hidden = false; }
+const FEATS = [
+  { id: "hideCourse", k: "הסתר הסתי להוריד קורס להוריד את הקורס להעלים קורס קורס ישן קורסים ישנים קדם אלול רק הקורסים סמסטר הנוכחי hide course old course cacher cours", go: () => openSetPage("courses"), used: () => P.off.length > 0 },
+  { id: "density", k: "צפיפ קומפקט צרים צרות מלבנ קטן יותר עמוס פחות פרטים רק השם compact dense density smaller", go: () => openSetPage("look"), used: () => !!P.density && P.density !== "detailed" },
+  { id: "showDone", k: "שהוגש שהגשתי שבוצע שסיימתי הוגשו מה הגשנו submitted done finished rendus", go: () => { P.filter = "done"; savePrefs(); setView("tasks"); render(); }, used: () => P.filter !== "open" },
+  { id: "logo", k: "לוגו אייקון של האפליקציה logo icône", go: () => openThemes(), used: () => !!P.logo },
+  { id: "theme", k: "ערכת נושא ערכות צבע מצב כהה מצב לילה dark mode theme colour color couleur thème", go: () => openThemes(), used: () => !!(P.theme && P.theme.id && P.theme.id !== "auto") },
+  { id: "dashEdit", k: "סקירה ווידג וידג כרטיסים להזיז לסדר את סדר מסך הבית אריח dashboard widget rearrange tableau", go: () => openDashArr(), used: () => !!(P.dash || P.dash_w) },
+  { id: "rem", k: "תזכור התרא להזכיר שיזכיר reminder notif rappel", go: () => openRem(), used: () => !!(P.rem && P.rem.on) },
+  { id: "cal", k: "יומן גוגל גוגל קלנדר ליומן ביומן אאוטלוק calendar outlook agenda", go: () => openCal(), used: () => !!(P.feed && P.feed.on) },
+  { id: "levnet", k: "לב נט לבנט מערכת שעות המערכת שלי שיעורים timetable schedule emploi", go: () => openLevnet(), used: () => P.tt.length > 0 },
+  { id: "bulkTT", k: "קודש לימודי קודש שיעורי קודש הרבה שיעורים בבת אחת במכה גמרא הלכה bulk many classes", go: () => openTT(null, true), used: () => P.tt.length > 6 },
+  { id: "exams", k: "מבחן מבחנים בוחן בחנים מועד א מועדי exam quiz examen", go: () => openExams(), used: () => (P.xq || []).length > 0 || Object.keys(P.exams || {}).length > 0 },
+  { id: "grades", k: "ציון ציונים grade note", go: () => openGrades(), used: () => false },
+  { id: "ai", k: "gpt גיפיטי ג'יפיטי צ'אט ג'י בינה מלאכותית ai  ג'מיני gemini claude קלוד פלאגין plugin ia ", go: () => openAi(), used: () => false },
+  { id: "sync", k: "סנכרון מסונכרן בין מכשירים מחשב וטלפון בטלפון ובמחשב sync synchro", go: () => openSetPage("acct"), used: () => syncOnNow() },
+  { id: "sem", k: "תאריכי הסמסטר התקדמות הסמסטר כמה שבועות semester semestre", go: () => openSemSettings(), used: () => !!(P.sem && P.sem.s) },
+  { id: "points", k: "נקודות דרגה דרגות תגית תגיות לצבור points rank badge", go: () => { setView("chat"); render(); window.scrollTo(0, 0); }, used: () => false },
+  { id: "priv", k: "פרטיות שקיפות אילו נתונים איזה מידע מה אתה יודע privacy data confidentialité", go: () => openSetPage("priv"), used: () => false },
+  { id: "notes", k: "הערה הערות פתק פנקס לרשום לעצמי note notes", used: () => Object.keys(P.notes || {}).length > 0 },
+  { id: "progress", k: "התקדמות במטלה אחוז אחוזים שלבים כמה עשיתי progress avancement", used: () => Object.keys(P.prog || {}).length > 0 },
+  { id: "lang", k: "אנגלית english צרפתית français french שפה esp", used: () => false },
+  { id: "zoom", k: "זום zoom", go: () => openSetPage("filter"), used: () => false },
+  { id: "kw", k: "מילה מסוימת לסנן סינון להסתיר מטלות filter keyword", go: () => openSetPage("filter"), used: () => (P.kw || []).length > 0 },
+  { id: "mine", k: "משימה משלי משימות משלי להוסיף משימה משימה אישית personal task", go: () => openMine(), used: () => (P.mine || []).length > 0 },
+];
+const fNorm = s => " " + String(s || "").toLowerCase().replace(/[\u0591-\u05C7]/g, "").replace(/[״"׳'`]/g, "'").replace(/[^\p{L}\p{N}']+/gu, " ") + " ";
+function fScore(f, text, title) {
+  const T = fNorm(text); let n = 0;
+  for (const w of f.k.split(" ").filter(x => x.length >= 3)) if (/[a-z]/i.test(w) ? T.includes(" " + w.toLowerCase()) : T.includes(w)) n++;      // Latin words from their start ("own" is not in "download")
+  // two-word phrases count once more (e.g. "להוריד קורס")
+  const ws = f.k.split(" "); for (let i = 0; i < ws.length - 1; i++) { const ph = (ws[i] + " " + ws[i + 1]).toLowerCase(); if (ws[i].length > 1 && ws[i + 1].length > 1 && T.includes(" " + ph)) n += 2; }
+  if (title && fNorm(t("ft_" + f.id)).includes(fNorm(text).trim())) n += 3;
+  return n;
+}
+function fMatch(text, max, title) {
+  if (fNorm(text).trim().length < 2) return [];
+  return FEATS.map(f => ({ f, n: fScore(f, text, title) })).filter(x => x.n > 0).sort((a, b) => b.n - a.n).slice(0, max).map(x => x.f);
+}
+const fRow = (f, attr) => '<button class="fsrow" ' + attr + '="' + f.id + '"><b>' + esc(t("ft_" + f.id)) + "</b><small>" + esc(t("fd_" + f.id)) + "</small></button>";
+function fGo(id) {
+  const f = FEATS.find(x => x.id === id); if (!f) return; useHit("feat_" + id);
+  if (f.go) f.go(); else toast(t("fd_" + id), 7000);
+}
+// settings: search
+$("#sQ").addEventListener("input", e => {
+  const q = e.target.value.trim(), res = q ? fMatch(q, 6, true) : [];
+  $("#sRes").hidden = !q; $$("#sMenu > .mgroup, #sMenu > .sugw, #sMenu > #socCard").forEach(el => el.style.display = q ? "none" : "");
+  $("#sRes").innerHTML = res.length ? res.map(f => fRow(f, "data-fgo")).join("") : '<div class="hint">' + esc(t("fsNone")) + "</div>";
+});
+$("#sRes").addEventListener("click", e => { const b = e.target.closest("[data-fgo]"); if (b) { useHit("setSearch"); fGo(b.dataset.fgo); } });
+// feedback: "maybe it already exists?" while typing
+let fbST; $("#fbMsg").addEventListener("input", e => { clearTimeout(fbST); fbST = setTimeout(() => fbSuggest(e.target.value), 350); });
+function fbSuggest(txt) {
+  const res = fMatch(txt, 2), box = $("#fbSug"); box.hidden = !res.length;
+  box.innerHTML = res.length ? '<div class="fsh">' + ic("lightbulb") + "<span>" + esc(t("fbSugT")) + "</span></div>" + res.map(f => fRow(f, "data-fbgo")).join("") + '<div class="hint">' + esc(t("fbSugSub")) + "</div>" : "";
+}
+$("#fbSug").addEventListener("click", e => { const b = e.target.closest("[data-fbgo]"); if (b) { useHit("fbSugGo"); $("#fbSheet").hidden = true; fGo(b.dataset.fbgo); } });
+// overview: one "did you know?" a day, about something this person doesn't use yet; each one once (✕ or "show me" = done)
+function renderDyk() {
+  const el = $("#dykTip"); if (!el) return;
+  if (V.view !== "dash" || !V.data || navigator.webdriver && !LS.get("exTest", false)) { el.hidden = true; return; }
+  const seen = LS.get("dykSeen", {}), today = dayKey(new Date());
+  let id = LS.get("dykDay", "") === today ? LS.get("dykId", "") : "";
+  if (id && seen[id] && seen[id] !== today) id = "";
+  if (!id && LS.get("dykDay", "") !== today && (LS.get("opens", 0) >= 4 || LS.get("dykTest", false))) {
+    const c = FEATS.filter(f => !seen[f.id] && !f.used() && I18N.he["fd_" + f.id]);
+    if (c.length) { id = c[Math.floor(Math.random() * c.length)].id; LS.set("dykDay", today); LS.set("dykId", id); }
+  }
+  if (!id || (seen[id] && seen[id] !== today)) { el.hidden = true; return; }
+  const f = FEATS.find(x => x.id === id), done = seen[id] === today;
+  if (done) { el.hidden = true; return; }
+  el.hidden = false;
+  const html = ic("lightbulb") + '<div class="dykb"><small>' + esc(t("dykT")) + "</small><b>" + esc(t("ft_" + id)) + "</b><span>" + esc(t("fd_" + id)) + "</span>" +
+    (f.go ? '<button class="link" data-dykgo="' + id + '">' + esc(t("dykGo")) + "</button>" : "") + '</div><button class="xbtn" data-dykx="' + id + '" aria-label="' + esc(t("close")) + '">' + ic("x") + "</button>";
+  if (el.innerHTML !== html) el.innerHTML = html;
+}
+$("#dykTip").addEventListener("click", e => {
+  const g = e.target.closest("[data-dykgo]"), x = e.target.closest("[data-dykx]"), id = (g || x || {}).dataset ? (g ? g.dataset.dykgo : x ? x.dataset.dykx : "") : "";
+  if (!id) return; const seen = LS.get("dykSeen", {}); seen[id] = dayKey(new Date()); LS.set("dykSeen", seen); useHit(g ? "dykGo" : "dykX");
+  $("#dykTip").hidden = true; if (g) fGo(id);
+});
+
+/* ---------- one day (from the week strip or the month calendar): exams and quizzes too, not only tasks ---------- */
+const DY = { k: "" };
+const dyTime = ts => { const x = new Date(ts * 1000); return String(x.getHours()).padStart(2, "0") + ":" + String(x.getMinutes()).padStart(2, "0"); };
+function dayItems(k) {
+  const tasks = V.data ? V.data.tasks.filter(counted).filter(x => x.due && dueDay(x) === k).sort((a, b) => isDone(a) - isDone(b) || a.due - b.due) : [];
+  const exams = examList().filter(x => dayKey(new Date(x.ts * 1000)) === k);
+  return { tasks, exams };
+}
+function openDay(k) {
+  const it = dayItems(k);
+  if (it.tasks.length && !it.exams.length) return goTasks({ kind: "day", d: k });       // only tasks: the task list for that day, as before
+  useHit("daySheet"); DY.k = k; renderDay(); $("#dySheet").hidden = false; $("#dyBox").scrollTop = 0;
+}
+function renderDay() {
+  const k = DY.k, [y, m, dd] = k.split("-").map(Number), day = new Date(y, m - 1, dd), ts = day.getTime() / 1000, it = dayItems(k), now = nowS();
+  let full = ""; try { full = day.toLocaleDateString(t("locale"), { weekday: "long", day: "numeric", month: "long" }); } catch (e) { full = k; }
+  let h = '<div class="crshead" style="--c:var(--accent)"><div class="crsht">' + ic("calendar-days") + "<h3>" + esc(full) + '</h3><button class="xbtn" data-dyx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button></div>" +
+    '<div class="tkmeta">' + esc(hebFull(ts)) + "</div></div>";
+  if (it.exams.length) h += '<div class="dysec"><h4>' + esc(t("dyExams")) + "</h4>" + it.exams.map(x =>
+    '<button class="dyrow" ' + (x.cid ? 'data-dycrs="' + x.cid + '"' : "") + ' style="--c:' + colorOf(x.cid) + '"><i class="dot"></i><span class="n"><b>📝 <bdi>' + esc(exName(x)) + "</bdi></b><small>" +
+    esc(exLbl(x) + (x.allDay ? "" : " · " + dyTime(x.ts)) + (x.lev ? " · " + t("dyLev") : "")) + "</small></span></button>").join("") + "</div>";
+  if (it.tasks.length) h += '<div class="dysec"><h4>' + esc(t("dyTasks")) + "</h4>" + it.tasks.map(x =>
+    '<button class="dyrow' + (isDone(x) ? " done" : "") + '" data-tk="' + esc(x.key) + '" style="--c:' + colorOf(x.cid) + '"><i class="dot"></i><span class="n"><b><bdi>' + esc(x.name) + "</bdi></b><small><bdi>" +
+    esc(shortName(x.course)) + "</bdi> · " + esc(dyTime(x.due)) + (isDone(x) ? " · " + esc(t("stSubmitted")) : x.due < now ? " · " + esc(t("gLate")) : "") + "</small></span></button>").join("") +
+    '<button class="link" data-dyall style="margin-top:4px">' + esc(t("dyAll")) + "</button></div>";
+  if (acOn()) {
+    const c = acCat(k), evs = acEvs(k);
+    if (c || evs.length) h += '<div class="dysec"><h4>' + esc(t("dyAcad")) + "</h4>" + (c ? '<span class="acpill c-' + c + " k-" + c + '">' + esc(t("ac_" + c)) + "</span> " : "") +
+      evs.map(e => "<b>" + esc(acName(e)) + "</b>").join(" · ") + "</div>";
+  }
+  if (!it.exams.length && !it.tasks.length) h += '<div class="empty">' + esc(t("dyEmpty")) + "</div>";
+  $("#dyBox").innerHTML = h;
+}
+$("#dySheet").addEventListener("click", e => {
+  const g = sel => e.target.closest(sel), close = () => { $("#dySheet").hidden = true; };
+  if (e.target.id === "dySheet" || g("[data-dyx]")) return close();
+  const tk = g("[data-tk]"); if (tk) { close(); return openTask(tk.dataset.tk); }
+  const cr = g("[data-dycrs]"); if (cr) { close(); return openCourse(Number(cr.dataset.dycrs)); }
+  if (g("[data-dyall]")) { close(); return goTasks({ kind: "day", d: DY.k }); }
+});
 
 /* ---------- the task page: everything about one task, and the way to its course ---------- */
 const TK = { key: null, more: false };
@@ -4932,6 +5271,9 @@ function renderTask() {
   if (crs) acts.push('<button class="btn" data-tkcrs="' + x.cid + '">' + ic("book-open") + "<span>" + esc(t("tkCourse")) + "</span></button>");
   if (acts.length % 2 && acts.length > 1) acts[acts.length - 1] = acts[acts.length - 1].replace('class="btn', 'class="wide btn');
   h += '<div class="tkacts">' + acts.join("") + "</div>";
+  if (!done && x.type !== "zoom" && st !== "na") { const pv = progOf(x);
+    h += '<div class="tkprog"><span>' + esc(t("progLbl")) + '</span><div class="pchips">' + [0, 25, 50, 75, 100].map(n => '<button data-tkprog="' + n + '"' + (pv === n ? ' class="on"' : "") + ">" + (n ? n + "%" : esc(t("prog0"))) + "</button>").join("") + "</div></div>"; }
+  h += noteBox("t:" + x.key, x.mine ? 0 : x.cid, x.key);
   // the community: how long it took others, my report, the discussion
   if (x.cid > 0 && !x.mine) {
     const sc = socOn() ? S("taskSoc", x) : "";
@@ -4949,7 +5291,7 @@ function renderTask() {
   if (crs) { const s = crsSummary(x.cid, now);
     h += '<button class="crsli" data-tkcrs="' + x.cid + '" style="margin-top:8px">' + ic("book-open") + '<span class="sw"><b><bdi>' + esc(shortName(x.course)) + "</bdi></b><small>" + esc(t("tkCrsSub", s.open.length, s.late.length)) + "</small></span>" + ic(t("dir") === "rtl" ? "chevron-left" : "chevron-right") + "</button>"; }
   h += '<div class="tkfoot"><button class="link" data-tklist>' + esc(t("tkList")) + '</button><button class="link" data-tkhide>' + esc(t(hid ? "tkUnhide" : "tkHide")) + "</button></div>";
-  const top = box.scrollTop; box.innerHTML = h; box.scrollTop = top;
+  const top = box.scrollTop; keepNote(box, () => { box.innerHTML = h; }); box.scrollTop = top;
   explainDraw("task", $("#tkExplain"));
 }
 document.addEventListener("click", e => { const b = e.target.closest("[data-tkgo]"); if (b) { e.preventDefault(); openTask(b.dataset.tkgo); } });
@@ -4959,6 +5301,8 @@ $("#tkSheet").addEventListener("click", e => {
   let b;
   if ((b = g("[data-tkcrs]"))) { close(); return openCourse(Number(b.dataset.tkcrs)); }
   if (g("[data-tkdone]")) return toggleDone(k, "doneTask");
+  if ((b = g("[data-tkprog]"))) { const n = Number(b.dataset.tkprog); P.prog = Object.assign({}, P.prog); if (n) P.prog[k] = n; else delete P.prog[k]; savePrefs(); useHit("prog"); render(); renderTask();
+    if (n === 100 && !isDone(tkFind(k) || {})) toast(t("prog100"), 5000); return; }
   if (g("[data-tkmore]")) { TK.more = true; return renderTask(); }
   if (g("[data-tklist]")) { close(); return gotoTask(k); }
   if (g("[data-tkhide]")) { const was = P.hidden.includes(k); P.hidden = was ? P.hidden.filter(y => y !== k) : [...P.hidden, k]; savePrefs(); render(); if (!was) { close(); toastUndo(t("hidDone"), () => { P.hidden = P.hidden.filter(y => y !== k); savePrefs(); render(); }); } return; }
@@ -5130,7 +5474,7 @@ function renderDashArr() {
   $("#daTitleT").textContent = t(DA.welcome ? "daWelT" : "daTitle"); $("#daIntroT").textContent = t(DA.welcome ? "daWelIntro" : "daIntro") + " " + t(bigScreen() ? "daForBig" : "daForPhone");
   $("#daDone").hidden = !DA.welcome; $("#daReset").hidden = DA.welcome;
   const row = (id, i, on) => { const d = DASH_CARDS.find(x => x.id === id);
-    return '<div class="darow' + (on ? "" : " off") + '" data-da="' + id + '"><span class="daic">' + ic(d.ic) + '</span><span class="dat"><b>' + esc(noEmo(t(d.k))) + "</b><small>" + esc(t("dd_" + id)) + "</small></span>" +
+    return '<div class="darow' + (on ? "" : " off") + '" data-da="' + id + '"' + (on && id !== "hero" ? ' draggable="true"' : "") + ">" + (on && id !== "hero" ? '<span class="dagrip" aria-hidden="true">' + ic("grip-vertical") + "</span>" : "") + '<span class="daic">' + ic(d.ic) + '</span><span class="dat"><b>' + esc(noEmo(t(d.k))) + "</b><small>" + esc(t("dd_" + id)) + "</small></span>" +
       (on ? '<span class="dab">' + (id === "hero" ? '<span class="dafix">' + esc(t("daFixed")) + "</span>" : '<button class="dahide" data-hide title="' + esc(t("daHide")) + '">' + ic("eye-off") + "<span>" + esc(t("daHideS")) + "</span></button>") +
         '<span class="daud"><button class="mv" data-up aria-label="' + esc(t("daUp")) + '"' + (i ? "" : " disabled") + '>↑</button><button class="mv" data-down aria-label="' + esc(t("daDown")) + '"' + (i < shown.length - 1 ? "" : " disabled") + ">↓</button></span></span>"
         : '<button class="daadd" data-add>' + ic("plus") + "<span>" + esc(t("daAdd")) + "</span></button>") + "</div>"; };
@@ -5156,6 +5500,17 @@ $("#daList").addEventListener("click", e => {
   const sel = e.target.closest("[data-up]") ? "[data-up]" : e.target.closest("[data-down]") ? "[data-down]" : null;
   const b = sel && $("#daList [data-da=" + id + "] " + sel); if (b && !b.disabled) b.focus();
 });
+/* on a computer: drag a shown card to a new place in the list (↑ ↓ stay for phones and keyboards) */
+{ const L = $("#daList"), clr = () => $$("#daList .darow").forEach(r => r.classList.remove("dropb", "dropa", "drag"));
+  L.addEventListener("dragstart", e => { const r = e.target.closest(".darow:not(.off)"); if (!r) return; e.dataTransfer.effectAllowed = "move"; e.dataTransfer.setData("text/plain", r.dataset.da); DA.drag = r.dataset.da; r.classList.add("drag"); });
+  L.addEventListener("dragover", e => { const r = e.target.closest(".darow:not(.off)"); if (!r || !DA.drag) return; e.preventDefault();
+    const after = e.clientY > r.getBoundingClientRect().top + r.offsetHeight / 2; $$("#daList .darow").forEach(x => x.classList.remove("dropb", "dropa")); if (r.dataset.da !== DA.drag) r.classList.add(after ? "dropa" : "dropb"); });
+  L.addEventListener("drop", e => { const r = e.target.closest(".darow:not(.off)"), id = DA.drag; e.preventDefault(); clr(); DA.drag = null; if (!r || !id || r.dataset.da === id) return;
+    const after = e.clientY > r.getBoundingClientRect().top + r.offsetHeight / 2, c = dashCfg();
+    c.order = c.order.filter(x => x !== id); c.order.splice(c.order.indexOf(r.dataset.da) + (after ? 1 : 0), 0, id);
+    if (c.order[0] !== "hero" && c.order.includes("hero")) { c.order = ["hero"].concat(c.order.filter(x => x !== "hero")); }
+    P[DK()] = c; savePrefs(); applyDash(); renderDashArr(); useHit("dashDrag"); });
+  L.addEventListener("dragend", () => { clr(); DA.drag = null; }); }
 $("#daReset").onclick = () => { P[DK()] = null; savePrefs(); applyDash(); renderDashArr(); };
 const daClose = () => { $("#daSheet").hidden = true; if (DA.welcome) { DA.welcome = false; toast(t("daWelDone")); setTimeout(maybeAskRem, 600); } };
 $("#daClose").onclick = daClose; $("#daDone").onclick = daClose;
@@ -5415,11 +5770,15 @@ function setTheme(th) {
 function openThemes() { useHit("themes"); $("#sheet").hidden = true; $("#wnSheet").hidden = true; renderThemes(); renderLogos(); $("#thSheet").hidden = false; }
 /* the logo inside the app (the header, the side bar and the browser tab); the home-screen icon is set when installing and stays */
 function logoSrc(k) {
-  if (!k) return "icon-any-192.png";
-  const cs = getComputedStyle(document.body), acc = (cs.getPropertyValue("--accent") || "#5b4bdb").trim(), card = (cs.getPropertyValue("--card") || "#fff").trim();
-  const glyph = k === "m" ? '<text x="48" y="66" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="56" text-anchor="middle" fill="' + card + '">M</text>'
-    : '<text x="48" y="68" font-size="54" text-anchor="middle">' + k + "</text>";
-  return "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><rect width="96" height="96" rx="22" fill="' + acc + '"/>' + glyph + "</svg>");
+  const c = LOGO_C[k]; if (!c) return "icon-any-192.png";
+  return "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><defs>' +
+    '<linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c[0] + '"/><stop offset=".45" stop-color="' + c[1] + '"/><stop offset="1" stop-color="' + c[2] + '"/></linearGradient>' +
+    '<radialGradient id="g" cx=".3" cy=".08" r=".9"><stop offset="0" stop-color="#fff" stop-opacity=".28"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
+    '<linearGradient id="o" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a3"/><stop offset=".5" stop-color="#f7c948"/><stop offset="1" stop-color="#e0a020"/></linearGradient>' +
+    '<filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#0a0a1e" flood-opacity=".35"/></filter></defs>' +
+    '<rect width="512" height="512" rx="112" fill="url(#b)"/><rect width="512" height="512" rx="112" fill="url(#g)"/><rect x="3" y="3" width="506" height="506" rx="110" fill="none" stroke="#fff" stroke-opacity=".14" stroke-width="4"/>' +
+    '<g filter="url(#s)"><path d="M150 362 V186 L252 300 L366 168 V362" fill="none" stroke="#fff" stroke-width="58" stroke-linecap="round" stroke-linejoin="round"/></g>' +
+    '<path d="M404 76 C404 107.2 412.8 116 444 116 C412.8 116 404 124.8 404 156 C404 124.8 395.2 116 364 116 C395.2 116 404 107.2 404 76 Z" fill="url(#o)"/></svg>');
 }
 let logoLast = "";
 function applyLogo() {
@@ -5428,7 +5787,7 @@ function applyLogo() {
   const fav = document.querySelector('link[rel="icon"]'); if (fav) { fav.type = k ? "image/svg+xml" : "image/svg+xml"; fav.href = k ? src : "logo.svg"; }
 }
 function renderLogos() {
-  $("#logoGrid").innerHTML = LOGOS.map(k => '<button class="lg' + ((P.logo || "") === k ? " on" : "") + '" data-logo="' + esc(k) + '" aria-pressed="' + ((P.logo || "") === k) + '" aria-label="' + esc(k ? (k === "m" ? "M" : k) : t("logoOrig")) + '"><img src="' + esc(logoSrc(k)) + '" alt="" width="40" height="40"></button>').join("");
+  $("#logoGrid").innerHTML = LOGOS.map(k => '<button class="lg' + ((P.logo || "") === k ? " on" : "") + '" data-logo="' + esc(k) + '" aria-pressed="' + ((P.logo || "") === k) + '" aria-label="' + esc(t(k ? "logo_" + k : "logoOrig")) + '"><img src="' + esc(logoSrc(k)) + '" alt="" width="40" height="40"></button>').join("");
 }
 let thLast = "";
 function themeSync() {
@@ -5572,6 +5931,27 @@ if ($("#vid")) {
 }
 /* Back: every window that opens is a step in the browser's history, and so is every change of tab */
 const NAV = { ready: false, skip: 0, open: [] };
+/* a window opened from settings (reminders, colours, timetable, grades…) gets a ← that goes back to the same settings page, instead of only ✕ (which closes everything) */
+const SB = { id: "", page: "", mo: null };
+function setBackMark() {
+  const sh = SB.id && document.getElementById(SB.id); if (!sh || sh.hidden) return;
+  const head = sh.querySelector(".crsht, h3"); if (!head || head.querySelector(".setbk")) return;
+  const b = document.createElement("button"); b.className = "link sback setbk"; b.type = "button";
+  b.textContent = t("dir") === "rtl" ? "→" : "←"; b.setAttribute("aria-label", t("backSet")); b.title = t("backSet");
+  head.insertBefore(b, head.firstChild);
+}
+function setBackFrom(id, page) {
+  setBackEnd(); SB.id = id; SB.page = page || "";
+  const sh = document.getElementById(id); if (!sh) return;
+  SB.mo = new MutationObserver(() => setBackMark()); SB.mo.observe(sh, { childList: true, subtree: true }); setBackMark();
+}
+function setBackEnd() { if (SB.mo) SB.mo.disconnect(); SB.mo = null; const sh = SB.id && document.getElementById(SB.id); if (sh) sh.querySelectorAll(".setbk").forEach(b => b.remove()); SB.id = ""; }
+document.addEventListener("click", e => {
+  if (!e.target.closest(".setbk")) return;
+  e.stopPropagation(); const id = SB.id, page = SB.page; setBackEnd();
+  const sh = document.getElementById(id); if (sh) sh.hidden = true;
+  renderSheet(); setPage(page); $("#sheet").hidden = false;
+}, true);
 function navInit() {
   if (NAV.ready) return; NAV.ready = true;
   history.replaceState({ v: V.view }, "");
@@ -5581,6 +5961,8 @@ function navInit() {
       if (!el.hidden && !NAV.open.includes(id)) { NAV.open.push(id); opened.push(id); }
       else if (el.hidden && NAV.open.includes(id)) { NAV.open = NAV.open.filter(x => x !== id); closed.push(id); } }
     let step = history.state && closed.includes(history.state.w);       // the window on top was closed by its own button
+    if (closed.includes("sheet") && opened.length && opened[0] !== "sheet") setBackFrom(opened[0], V.spage);   // opened from settings: it gets a ← back to settings
+    else if (SB.id && closed.includes(SB.id)) setBackEnd();
     for (const id of opened) {
       if (step) { history.replaceState({ v: V.view, w: id }, ""); step = false; }   // one window replaced by the next (settings → reminders)
       else history.pushState({ v: V.view, w: id }, "");
@@ -5790,7 +6172,7 @@ function toggleDone(k, hit) {
   if (!was) { toastUndo(t("doneToast"), () => { P.manual = P.manual.filter(y => y !== k); savePrefs(); render(); }); if (socOn()) socEnsure(() => SOC.askTime(k, "done")); }
 }
 $("#dash").addEventListener("click", e => {
-  const day = e.target.closest("[data-day]"); if (day) return goTasks({ kind: "day", d: day.dataset.day });
+  const day = e.target.closest("[data-day]"); if (day) return openDay(day.dataset.day);
   const fg = e.target.closest("[data-fg]"); if (fg) return goTasks({ kind: "group", g: fg.dataset.fg });
   const fc = e.target.closest("[data-fc]"); if (fc) return goTasks({ kind: "course", cid: Number(fc.dataset.fc) });
   const go = e.target.closest("[data-goto]"); if (go) return gotoTask(go.dataset.goto);
@@ -5934,14 +6316,22 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
   navigator.serviceWorker.addEventListener("message", e => { if (e.data && e.data.type === "updated") showUpd(); });
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadSw) showUpd(); });
 }
-function showUpd() { if (!$("#updBar").hidden) return; useHit("updBar"); $("#updBar").hidden = false; }
+function showUpd(line) {
+  if (line) { const sp = $("#updBar span"); sp.textContent = t("updReadyL", line.length > 110 ? line.slice(0, 108) + "…" : line); }
+  if (!$("#updBar").hidden) return; useHit("updBar"); $("#updBar").hidden = false;
+}
+/* the first "what's new" line of the waiting version, read from its page, so the update bar says what the update brings */
+function updLine(txt, v) {
+  try { const m = new RegExp('\\{ v: "' + String(v).replace(/-.*/, "").replace(/\./g, "\\.") + '"[\\s\\S]{0,1500}?\\b' + LANG + ': \\["((?:[^"\\\\]|\\\\.)*)"').exec(txt);
+    return m ? JSON.parse('"' + m[1] + '"') : ""; } catch (e) { return ""; }
+}
 /* the stored copy of the page is refreshed in the background on every open: if it's a newer version than the one running, say so */
 async function updWaiting() {
   try {
     if (!window.caches || !navigator.serviceWorker || !navigator.serviceWorker.controller) return;
     const here = location.href.split("#")[0].split("?")[0], r = await caches.match(here) || await caches.match(new URL("index.html", here).href);
-    const v = r && (/const APP_VERSION = "([^"]+)"/.exec(await r.text()) || [])[1];
-    if (v && v !== APP_VERSION) showUpd();
+    const txt = r ? await r.text() : "", v = (/const APP_VERSION = "([^"]+)"/.exec(txt) || [])[1];
+    if (v && v !== APP_VERSION) showUpd(updLine(txt, v));
   } catch (e) {}
 }
 [4000, 12000].forEach(ms => setTimeout(updWaiting, ms));
