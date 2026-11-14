@@ -348,15 +348,17 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 @container (max-height:440px){ #monthCard .md{min-height:0;padding:2px 1px;gap:1px;border-radius:8px} #monthCard .md .d{width:20px;height:20px;font-size:12px} #monthCard .month{gap:3px} #monthCard .ch{margin-bottom:6px} }
 @container (max-height:250px){ #semCard .guess,#semCard .slbl{display:none} #weekCard .wlg,#monthCard .wlg{display:none} }
 /* opened: the card on top of everything, full size, scrolling inside */
-#dExpBg{position:fixed;inset:0;z-index:85;background:#0007;display:none}
+#dExpBg{position:fixed;inset:0;z-index:24;background:#0007;display:none}
 body.dexpo #dExpBg{display:block}
-#dash > .dexp{position:fixed!important;z-index:86;inset:max(16px,env(safe-area-inset-top)) 12px calc(16px + env(safe-area-inset-bottom));margin:auto!important;max-width:760px;max-height:calc(100dvh - 32px);height:auto!important;overflow:auto!important;container-type:normal!important;box-shadow:0 20px 60px #0008}
+body.dexpo .tabbar{z-index:27}
+#dash > .dexp{position:fixed!important;z-index:25;inset:max(16px,env(safe-area-inset-top)) 12px calc(84px + env(safe-area-inset-bottom));margin:auto!important;max-width:760px;max-height:calc(100dvh - 32px);height:auto!important;overflow:auto!important;container-type:normal!important;box-shadow:0 20px 60px #0008}
 #dash > .dexp > .dw,#dash > .dexp > .dmore{display:none!important}
 #dash > .dexp > :not(.dw):not(.dtool):not(.drsz):not(.dmore){display:revert}
 #dash > .dexp > *{pointer-events:auto}
 #dash > .dexp .dxx{display:flex}
-.dxx{display:none;position:sticky;top:0;float:inline-end;z-index:3;margin:-6px -6px 4px 8px;width:34px;height:34px;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
-.dxx .i{width:17px;height:17px}
+.dxx{display:none;position:sticky;top:0;float:left;z-index:3;margin:-6px -6px 4px 8px;width:40px;height:40px;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+.dxx .i{width:18px;height:18px}
+html[dir=ltr] .dxx{float:right;margin:-6px -6px 4px 8px}
 /* editing right on the overview: a small bar on each card (size, move, hide), a corner to drag the size, "done" at the bottom */
 .dtool,.drsz{display:none}
 body.dashed #dash > .dcard,body.dashed #dash > .stats{outline:2px dashed color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px;overflow:visible}
@@ -383,6 +385,7 @@ body.dashed main{padding-bottom:150px}
 #dEditBar .hint{flex:1;font-size:12.5px;margin:0}
 #dEditBar button{white-space:nowrap}
 @media (max-width:520px){ #dEditBar{flex-wrap:wrap} #dEditBar .hint{flex-basis:100%} #dEditBar button{flex:1} }
+@media (min-width:1000px){ #dash > .dexp{inset-inline-start:calc(var(--sbw) + 24px);bottom:20px} }
 @media (min-width:1000px){ #dEditBar{inset-inline-start:calc(var(--sbw) + 24px);bottom:20px;max-width:720px} }
 /* the size picker: every size that makes sense for this card, drawn to scale */
 #szPick{position:fixed;z-index:90;inset-inline:12px;bottom:calc(84px + env(safe-area-inset-bottom));max-width:520px;margin-inline:auto;padding:12px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:0 16px 50px #0006}
@@ -3893,7 +3896,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.5";
+const APP_VERSION = "1.8.0-beta.6";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4281,6 +4284,7 @@ function renderNews(d) {
 /* ---------- render: everything ---------- */
 function setView(v, fromHistory) {
   const prev = V.view;
+  if (v !== "dash" && typeof DX !== "undefined" && DX.id) dExpClose(true);          // leaving the overview: an opened card closes with it
   V.view = v === "tasks" || v === "tt" || v === "chat" ? v : "dash";
   if (!fromHistory && NAV.ready && V.view !== prev) history.pushState({ v: V.view }, ""); LS.set("view", V.view); document.body.dataset.view = V.view; useHit("v_" + V.view);
   $$("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.v === V.view));
@@ -5660,7 +5664,8 @@ function dExp(id) {
   if (id === "stats" || id === "aiCard") el.style.background = "var(--bg)";
 }
 function dExpClose(fromPop) {
-  const el = DX.id && document.getElementById(DX.id); if (!el) return;
+  const el = DX.id && document.getElementById(DX.id);
+  if (!el) { DX.id = ""; document.body.classList.remove("dexpo"); $$("#dash > .dexp").forEach(x => { x.classList.remove("dexp"); x.style.background = ""; }); return; }
   el.classList.remove("dexp"); el.dataset.mode = DX.mode; el.style.background = ""; document.body.classList.remove("dexpo"); DX.id = "";
   if (!fromPop && history.state && history.state.dexp) { NAV.skip++; history.back(); }
   requestAnimationFrame(dashOvf);
