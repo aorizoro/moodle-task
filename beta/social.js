@@ -286,6 +286,7 @@ function notesCheck(L) {
   clearTimeout(noteTimer);
   noteTimer = setTimeout(function tryShow() {             // when nothing else is open (the "how long did it take?" question goes first)
     if ($$(".sheet").some(s => !s.hidden) || !$("#tour").hidden || !$("#setup").hidden || document.hidden || ST.queue.length) { noteTimer = setTimeout(tryShow, 3000); return; }
+    if (window.popTake && !window.popTake("notes")) return;      // another window already opened by itself this visit: the note waits for next time
     showNotes(fresh);
   }, 1800);
 }
