@@ -257,7 +257,7 @@ summary{cursor:pointer;padding:4px 0;font-weight:600}
 .dmini small{font-size:11.5px;color:var(--muted);line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .dmini .mgo{display:none;align-self:flex-start;margin-top:2px;font-size:12px;font-weight:700;color:var(--accent-t)}
 @container (min-width:150px){ .dmini .mgo{display:inline} }
-@container (max-height:110px){ .dmini small{-webkit-line-clamp:1} .dmini .mbar{display:none} }
+@container (max-height:110px){ .dmini small{-webkit-line-clamp:1} .dmini .mbar,.dmini .mgo{display:none!important} .dmini .mv{font-size:19px;-webkit-line-clamp:1} .dmini .mv.sm{font-size:14px} }
 .dmini .mbar{height:4px;border-radius:99px;background:var(--track);overflow:hidden;margin-top:4px}
 .dmini .mbar i{display:block;height:100%;background:var(--accent)}
 .dmini.late .mv{color:var(--err)}
