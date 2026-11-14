@@ -3896,7 +3896,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.8.0-beta.6";
+const APP_VERSION = "1.8.0-beta.7";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -6541,6 +6541,12 @@ function navInit() {
     if (step) { NAV.skip++; history.back(); }                                      // take its step out of the history too
   });
   $$(".sheet, #tour").forEach(el => watch.observe(el, { attributes: true, attributeFilter: ["hidden"] }));
+  /* windows the community makes on the fly (a chat, "how long did it take?", sharing…) join the same history: iPhone's swipe back and the ✕ behave like everywhere else */
+  new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) {
+    if (!(n instanceof HTMLElement) || !n.classList.contains("sheet")) continue;
+    watch.observe(n, { attributes: true, attributeFilter: ["hidden"] });
+    if (!n.hidden && !NAV.open.includes(n.id)) { NAV.open.push(n.id); history.pushState({ v: V.view, w: n.id }, ""); }
+  } }).observe(document.body, { childList: true });
   window.addEventListener("popstate", e => {
     if (NAV.skip) { NAV.skip--; return; }
     const top = NAV.open[NAV.open.length - 1];
