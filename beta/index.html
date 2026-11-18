@@ -2269,7 +2269,7 @@ const I18N = {
     tAssign: "מטלה", tQuiz: "בוחן", tEvent: "אירוע", viaFile: "הגשת קובץ", viaPdf: "הגשת PDF", viaOnline: "מענה במודל", viaNone: "בלי הגשה במודל",
     stSubmitted: "הוגש ✓", stManual: "בוצע (סימון שלי) ✓", stDraft: "טיוטה, לא הוגש", stNa: "ללא הגשה אונליין", stUnknown: "סטטוס לא ידוע", stLate: "באיחור", stNone: "לא הוגש", grade: x => "ציון: " + x,
     extended: "הארכה אישית", noDue: "אין מועד הגשה", opens: x => "נפתח להגשה: " + x, cutoff: x => "נעילה סופית: " + x, details: "תוכן המטלה", openSite: "פתח באתר ↗", hide: "הסתר", restore: "החזר",
-    loading: "טוען…", refreshing: "מרענן…", updated: x => "עודכן " + x, lastData: " (מוצגים הנתונים האחרונים)", loadingTasks: "טוען משימות…",
+    aiSoon: "בהכנה AI", aiBtn: "צ׳אט AI", loading: "טוען…", refreshing: "מרענן…", updated: x => "עודכן " + x, lastData: " (מוצגים הנתונים האחרונים)", loadingTasks: "טוען משימות…",
     noMatch: "אין משימות בסינון הזה", noTasks: "לא נמצאו משימות", sumOpen: n => "<b>" + n + "</b> לא הוגשו", sumLate: n => n + " באיחור", next: "הקרובה:",
     diag: n => "אבחון: " + n + " פונקציות לא עבדו",
     badLink: "לא הצלחתי לפענח את הקישור. הדבק רק את הטוקן עצמו.", offline: "אין חיבור לאינטרנט", unreachable: "לא הצלחתי להגיע לאתר: אין אינטרנט, או שהאתר חוסם גישה מדפדפן.",
@@ -2514,7 +2514,7 @@ const I18N = {
     tAssign: "Assignment", tQuiz: "Quiz", tEvent: "Event", viaFile: "Upload a file", viaPdf: "Upload a PDF", viaOnline: "Answer in Moodle", viaNone: "No Moodle submission",
     stSubmitted: "Submitted ✓", stManual: "Done (marked by me) ✓", stDraft: "Draft, not submitted", stNa: "No online submission", stUnknown: "Status unknown", stLate: "Overdue", stNone: "Not submitted", grade: x => "Grade: " + x,
     extended: "personal extension", noDue: "No due date", opens: x => "Opens: " + x, cutoff: x => "Final cutoff: " + x, details: "Assignment details", openSite: "Open on site ↗", hide: "Hide", restore: "Restore",
-    loading: "Loading…", refreshing: "Refreshing…", updated: x => "Updated " + x, lastData: " (showing last data)", loadingTasks: "Loading tasks…",
+    aiSoon: "AI – in preparation", aiBtn: "AI chat", loading: "Loading…", refreshing: "Refreshing…", updated: x => "Updated " + x, lastData: " (showing last data)", loadingTasks: "Loading tasks…",
     noMatch: "No tasks match this filter", noTasks: "No tasks found", sumOpen: n => "<b>" + n + "</b> not submitted", sumLate: n => n + " overdue", next: "Next:",
     diag: n => "Diagnostics: " + n + " functions failed",
     badLink: "Couldn’t decode the link. Paste just the token.", offline: "No internet connection", unreachable: "Couldn’t reach the site: no internet, or the site blocks browser access.",
@@ -2759,7 +2759,7 @@ const I18N = {
     tAssign: "Devoir", tQuiz: "Test", tEvent: "Événement", viaFile: "Déposer un fichier", viaPdf: "Déposer un PDF", viaOnline: "Réponse sur Moodle", viaNone: "Sans dépôt Moodle",
     stSubmitted: "Rendu ✓", stManual: "Fait (marqué par moi) ✓", stDraft: "Brouillon, non rendu", stNa: "Pas de remise en ligne", stUnknown: "Statut inconnu", stLate: "En retard", stNone: "Non rendu", grade: x => "Note : " + x,
     extended: "prolongation personnelle", noDue: "Pas de date limite", opens: x => "Ouverture : " + x, cutoff: x => "Clôture définitive : " + x, details: "Contenu du devoir", openSite: "Ouvrir sur le site ↗", hide: "Masquer", restore: "Rétablir",
-    loading: "Chargement…", refreshing: "Actualisation…", updated: x => "Mis à jour " + x, lastData: " (dernières données affichées)", loadingTasks: "Chargement des devoirs…",
+    aiSoon: "IA – en préparation", aiBtn: "Chat IA", loading: "Chargement…", refreshing: "Actualisation…", updated: x => "Mis à jour " + x, lastData: " (dernières données affichées)", loadingTasks: "Chargement des devoirs…",
     noMatch: "Aucun devoir pour ce filtre", noTasks: "Aucun devoir trouvé", sumOpen: n => "<b>" + n + "</b> non rendus", sumLate: n => n + " en retard", next: "Prochain :",
     diag: n => "Diagnostic : " + n + " fonctions ont échoué",
     badLink: "Impossible de décoder le lien. Collez seulement le jeton.", offline: "Pas de connexion Internet", unreachable: "Site injoignable : pas d’Internet, ou le site bloque l’accès depuis un navigateur.",
@@ -4289,6 +4289,15 @@ function socEnsure(cb) {
   const el = document.createElement("script"); el.src = "social.js?v=" + encodeURIComponent(APP_VERSION);
   el.onload = () => { const list = socEnsure.q; socEnsure.q = []; for (const f of list) try { if (f) f(); } catch (e) { console.error(e); } };
   el.onerror = () => { socEnsure.q = []; el.remove(); };
+  document.head.appendChild(el);
+}
+/* ---------- the AI chat: chat.js, loaded once the student is connected (the floating button and the chat window) ---------- */
+function aiEnsure(cb) {
+  if (window.AIChat) { try { if (cb) cb(window.AIChat); } catch (e) { console.error(e); } return; }
+  const q = aiEnsure.q = aiEnsure.q || []; q.push(cb); if (q.length > 1) return;
+  const el = document.createElement("script"); el.src = "chat.js?v=" + encodeURIComponent(APP_VERSION);
+  el.onload = () => { const list = aiEnsure.q; aiEnsure.q = []; for (const f of list) try { if (f) f(window.AIChat); } catch (e) { console.error(e); } };
+  el.onerror = () => { aiEnsure.q = []; el.remove(); };
   document.head.appendChild(el);
 }
 // the chats tab: the community's chats by course; an invitation while the community is off
@@ -7146,7 +7155,7 @@ function guideError(msg) {
   st.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 function showSetup(err) {
-  document.body.classList.remove("app"); $("#tabbar").hidden = true;
+  document.body.classList.remove("app"); $("#tabbar").hidden = true; if (window.AIChat) window.AIChat.hide();
   $("#setup").hidden = false; $("#app").hidden = true; $("#bRefresh").hidden = true; $("#bSet").hidden = true;
   $("#site").value = LS.get("site", DEFAULT_SITE); $("#setupErr").textContent = err || ""; $("#upd").textContent = "";
   $("#bGet").href = launchUrl($("#site").value);
@@ -7158,6 +7167,7 @@ function showMain() {
   $("#setup").hidden = true; $("#app").hidden = false; $("#bRefresh").hidden = false; $("#bSet").hidden = false;
   render(); refresh(); useHit("open"); navInit(); masonInit();
   if (socOn()) socEnsure(() => render());
+  aiEnsure(a => a.show());
   if (!P.calm) { document.body.classList.add("intro"); setTimeout(() => document.body.classList.remove("intro"), 1400); }
   if (!showMain.counted) { showMain.counted = true; LS.set("opens", LS.get("opens", 0) + 1); }
   $("#bInst").hidden = isStandalone();
@@ -7414,7 +7424,7 @@ $("#dens").addEventListener("click", e => { const b = e.target.closest("[data-dn
 $("#clist").addEventListener("input", e => { if (e.target.dataset.cc) { P.colors[e.target.dataset.cc] = e.target.value; savePrefs(); render(); } });
 $("#bLogout").onclick = () => {
   if (!confirm(t("logoutConfirm"))) return;
-  ["token", "cache", "seen", "syncOn", "syncUid", "syncState", "uid", "syncStore"].forEach(k => LS.del(k)); V.data = null; M.token = ""; $("#sheet").hidden = true;
+  ["token", "cache", "seen", "syncOn", "syncUid", "syncState", "uid", "syncStore", "aiSess", "aiConv", "aiLeft"].forEach(k => LS.del(k)); V.data = null; M.token = ""; $("#sheet").hidden = true;
   try { navigator.clearAppBadge && navigator.clearAppBadge(); } catch (e) {}
   showSetup();
 };
