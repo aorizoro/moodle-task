@@ -114,6 +114,11 @@ export class Device extends DurableObject {
     await this.ctx.storage.put(put);
     return { count: keep.length, next: await this.rearm({ items: keep, test: await this.ctx.storage.get("test") || null }) };
   }
+  async drop(pre) {
+    const items = (await this.ctx.storage.get("items")) || [], keep = items.filter(x => !String(x.tag || "").startsWith(pre));
+    if (keep.length === items.length) return { dropped: 0 };
+    await this.ctx.storage.put("items", keep); await this.rearm(); return { dropped: items.length - keep.length };
+  }
   async forget() { await this.ctx.storage.delete(["sub", "lang", "seen", "items", "test"]); await this.ctx.storage.deleteAlarm(); }
   async test(msg, delay) {
     const sub = await this.ctx.storage.get("sub"); if (!sub) return 404;
@@ -753,6 +758,10 @@ export default {
       return out(await dev.sync({ endpoint: b.sub.endpoint, keys: { p256dh: b.sub.keys.p256dh, auth: b.sub.keys.auth } }, b.items, clip(b.lang, 5)));
     }
     if (path === "/unsub") { await dev.forget(); return out({ ok: true }); }
+    if (path === "/drop") {        // the app's service worker found a task already submitted: its later reminders go too (Michal)
+      const pre = clip(b.prefix, 80); if (!/^t:[^:]+:\d+:$/.test(pre)) return out({ error: "bad request" }, 400);
+      return out(await dev.drop(pre));
+    }
     if (path === "/test") return out({ status: await dev.test({ title: clip(b.title, 120) || "🔔", body: clip(b.body, 240), tag: "test" }, Math.min(Math.max(Number(b.delay) || 0, 0), 120)) });
     return out({ error: "not found" }, 404);
   },
