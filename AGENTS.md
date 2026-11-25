@@ -26,6 +26,12 @@ guide; the rules below are binding for you. (`CLAUDE.md` holds the same rules fo
 - Storage: `LS` (localStorage, `mtb_` prefix in beta). Settings live in `P` and are saved with `savePrefs()`.
 - Rendering: `render()`; the overview is a grid of cards (`DASH_CARDS`, `CARD_SZ`, `widgetOf`, `layoutDash`).
 
+## Design decisions (read `DESIGN.md` first – binding)
+- Before ANY change to how something looks, read `DESIGN.md` (Hebrew): almost every look in the app was asked for by students, with who and when.
+- Never undo a decision listed there (e.g. the timetable blocks: line order name → hours → type → place, the "view and order" options, ttFit so nothing is cut, big blocks by default).
+  If you think one is wrong, stop and ask the owner (Meir) with before/after screenshots. A pull request that silently reverses one is sent back.
+- Improve, don't replace: keep the layout, places of buttons and features students already know.
+
 ## Design work (the usual job on this fork)
 - Colours are CSS variables on `:root` (`--bg`, `--card`, `--text`, `--muted`, `--line`, `--accent`, `--accent-d`,
   `--accent-soft`, `--ok`, `--warn`, `--err`, …) with a dark set under `@media (prefers-color-scheme: dark)`.
