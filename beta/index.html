@@ -99,7 +99,7 @@ button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--lin
 button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:600}
 button.link{border:0;background:none;color:var(--accent-t);padding:6px 4px}
 button:disabled{opacity:.5}
-input[type=text],input[type=search],input[type=password],input[type=tel],input[type=email],select{font:inherit;font-size:16px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
+input[type=text],input[type=search],input[type=password],input[type=tel],input[type=email],input[type=number],select{font:inherit;font-size:16px;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text)}
 select{width:auto}
 .hint{color:var(--muted);font-size:13px}
 .err{color:var(--err)}
@@ -1018,7 +1018,7 @@ input[type=date],input[type=time]{font:inherit;font-size:16px;padding:8px 10px;b
 .task.done{opacity:.6}
 .ssearch{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--row)}
 .ssearch .i{width:17px;height:17px;color:var(--muted);flex:none}
-.ssearch input{flex:1;border:0;background:none;padding:10px 0;font-size:15px;outline:none;color:var(--text);min-width:0}
+.ssearch input{flex:1;border:0;background:none;padding:10px 0;font-size:16px;outline:none;color:var(--text);min-width:0}
 .fsrow{display:flex;flex-direction:column;align-items:flex-start;gap:2px;width:100%;text-align:start;padding:10px 12px;margin-bottom:6px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--text)}
 .fsrow small{color:var(--muted);font-size:12.5px;line-height:1.4}
 .fbsug{margin:-4px 0 10px;padding:10px;border-radius:12px;background:var(--accent-soft)}
@@ -2177,8 +2177,8 @@ const OFFICIAL = location.origin === "https://aorizoro.github.io" || /^(localhos
 if (CHANNEL === "beta") { try { if (localStorage.getItem("mtb_init") === null) { for (const k of Object.keys(localStorage)) if (k.startsWith("mt_")) localStorage.setItem("mtb_" + k.slice(3), localStorage.getItem(k)); localStorage.setItem("mtb_init", "1"); } } catch (e) {} }
 const LS = {
   get(k, d) { try { const v = localStorage.getItem(PFX + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem(PFX + k, JSON.stringify(v)); } catch (e) {} },
-  del(k) { try { localStorage.removeItem(PFX + k); } catch (e) {} },
+  set(k, v) { if (LS.frozen) return; try { localStorage.setItem(PFX + k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { if (LS.frozen) return; try { localStorage.removeItem(PFX + k); } catch (e) {} },
 };
 function toast(m, ms) { const t = $("#toast"); t.textContent = m; t.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = "none", ms || 3500); }
 /* a message with a "Undo" button */
@@ -2379,7 +2379,7 @@ const I18N = {
     loading: "טוען…", refreshing: "מרענן…", updated: x => "עודכן " + x, lastData: " (מוצגים הנתונים האחרונים)", loadingTasks: "טוען משימות…",
     noMatch: "אין משימות בסינון הזה", noTasks: "לא נמצאו משימות", sumOpen: n => "<b>" + n + "</b> לא הוגשו", sumLate: n => n + " באיחור", next: "הקרובה:",
     diag: n => "אבחון: " + n + " פונקציות לא עבדו",
-    badLink: "לא הצלחתי לפענח את הקישור. הדבק רק את הטוקן עצמו.", offline: "אין חיבור לאינטרנט", unreachable: "לא הצלחתי להגיע לאתר: אין אינטרנט, או שהאתר חוסם גישה מדפדפן.",
+    badLink: "לא הצלחתי לפענח את הקישור. הדבק רק את הטוקן עצמו.", offline: "אין חיבור לאינטרנט", slowMoodle: "המודל לא עונה כרגע. ננסה שוב עוד מעט.", unreachable: "לא הצלחתי להגיע לאתר: אין אינטרנט, או שהאתר חוסם גישה מדפדפן.",
     badResp: n => "האתר החזיר תשובה לא צפויה (" + n + ")", invalidToken: "הטוקן לא תקף. קבל טוקן חדש (כפתור 1 במסך החיבור) ונסה שוב.", error: "שגיאה", other: "אחר",
     missingToken: "חסר טוקן. העתק את הקישור מעמוד Moodle ונסה שוב.",
     notToken: "זה לא נראה כמו טוקן. צריך להעתיק את כתובת הקישור (לחיצה ארוכה ← העתק כתובת קישור), לא את הטקסט שלו.",
@@ -2633,7 +2633,7 @@ const I18N = {
     loading: "Loading…", refreshing: "Refreshing…", updated: x => "Updated " + x, lastData: " (showing last data)", loadingTasks: "Loading tasks…",
     noMatch: "No tasks match this filter", noTasks: "No tasks found", sumOpen: n => "<b>" + n + "</b> not submitted", sumLate: n => n + " overdue", next: "Next:",
     diag: n => "Diagnostics: " + n + " functions failed",
-    badLink: "Couldn’t decode the link. Paste just the token.", offline: "No internet connection", unreachable: "Couldn’t reach the site: no internet, or the site blocks browser access.",
+    badLink: "Couldn’t decode the link. Paste just the token.", offline: "No internet connection", slowMoodle: "Moodle isn’t answering right now. We’ll try again soon.", unreachable: "Couldn’t reach the site: no internet, or the site blocks browser access.",
     badResp: n => "Unexpected response from the site (" + n + ")", invalidToken: "The token is no longer valid. Get a new one (button 1 on the connect screen) and try again.", error: "Error", other: "Other",
     missingToken: "No token. Copy the link from the Moodle page and try again.",
     notToken: "That doesn’t look like a token. Copy the link address (long-press → Copy link address), not its text.",
@@ -2887,7 +2887,7 @@ const I18N = {
     loading: "Chargement…", refreshing: "Actualisation…", updated: x => "Mis à jour " + x, lastData: " (dernières données affichées)", loadingTasks: "Chargement des devoirs…",
     noMatch: "Aucun devoir pour ce filtre", noTasks: "Aucun devoir trouvé", sumOpen: n => "<b>" + n + "</b> non rendus", sumLate: n => n + " en retard", next: "Prochain :",
     diag: n => "Diagnostic : " + n + " fonctions ont échoué",
-    badLink: "Impossible de décoder le lien. Collez seulement le jeton.", offline: "Pas de connexion Internet", unreachable: "Site injoignable : pas d’Internet, ou le site bloque l’accès depuis un navigateur.",
+    badLink: "Impossible de décoder le lien. Collez seulement le jeton.", offline: "Pas de connexion Internet", slowMoodle: "Moodle ne répond pas pour le moment. Nouvel essai bientôt.", unreachable: "Site injoignable : pas d’Internet, ou le site bloque l’accès depuis un navigateur.",
     badResp: n => "Réponse inattendue du site (" + n + ")", invalidToken: "Le jeton n’est plus valide. Obtenez-en un nouveau (bouton 1 de l’écran de connexion) et réessayez.", error: "Erreur", other: "Autre",
     missingToken: "Aucun jeton. Copiez le lien depuis la page Moodle et réessayez.",
     notToken: "Ce n’est pas un jeton. Copiez l’adresse du lien (appui long → Copier l’adresse du lien), pas son texte.",
@@ -3006,20 +3006,24 @@ function extractToken(raw) {
   return f ? f[1] : raw;
 }
 class MErr extends Error { constructor(msg, code) { super(msg); this.code = code; } }
-const M = { url: "", token: "" };
+const M = { url: "", token: "", wait: 45000 };     // wait: a Moodle request that hasn't answered by then counts as failed (else updating could stay stuck until the app restarts)
 /* a task's name as Moodle has it, without a dangling separator at the end ("תיבת הגשה - תרגיל בית מספר 3 -") */
 const tName = n => { const v = stripHtml(n); return v.replace(/[\s\-–—:|·,]+$/u, "") || v; };
+/* fetch that gives up after a while (M.wait): a request that never answers would otherwise hold its feature "busy" until the app restarts */
+const tfetch = (u, o, ms) => { const ac = new AbortController(), tm = setTimeout(() => ac.abort(), ms || M.wait); return fetch(u, Object.assign({}, o, { signal: ac.signal })).finally(() => clearTimeout(tm)); };
 async function call(fn, params) {
   const body = new URLSearchParams({ wstoken: M.token, wsfunction: fn, moodlewsrestformat: "json" });
   for (const [k, v] of Object.entries(params || {})) {
     if (Array.isArray(v)) v.forEach((x, i) => body.append(k + "[" + i + "]", x));
     else body.append(k, v);
   }
-  let r;
-  try { r = await fetch(M.url + "/webservice/rest/server.php", { method: "POST", body, cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer" }); }
-  catch (e) { throw new MErr(navigator.onLine === false ? t("offline") : t("unreachable"), "network"); }
-  let j;
-  try { j = await r.json(); } catch (e) { throw new MErr(t("badResp", r.status), "bad"); }
+  let r, j, late = false;
+  const ctl = typeof AbortController === "function" ? new AbortController() : null, tm = ctl && setTimeout(() => { late = true; ctl.abort(); }, M.wait);
+  try {
+    try { r = await fetch(M.url + "/webservice/rest/server.php", { method: "POST", body, cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer", signal: ctl ? ctl.signal : undefined }); }
+    catch (e) { throw new MErr(navigator.onLine === false ? t("offline") : late ? t("slowMoodle") : t("unreachable"), "network"); }
+    try { j = await r.json(); } catch (e) { throw late ? new MErr(t("slowMoodle"), "network") : new MErr(t("badResp", r.status), "bad"); }
+  } finally { clearTimeout(tm); }
   if (j && j.exception) {
     if (j.errorcode === "invalidtoken") throw new MErr(t("invalidToken"), "invalidtoken");
     throw new MErr(stripHtml(j.message || "") || j.errorcode || t("error"), j.errorcode || "error");
@@ -3060,6 +3064,19 @@ function fileHref(u) {
   return url.toString();
 }
 
+/* a different student signed in on this device (after "Log out", or with a new connection link): nothing of the one before stays –
+   not their timetable, notes, hidden tasks, grades, course pages, drafts or community account. The same student signing in again keeps everything. */
+const OWN_KEEP = ["token", "site", "owner", "init", "lang", "pushUrl", "pushKey", "pushOn", "iid", "installAsked", "seenVer", "tourDone"], OWN_KEEP_P = ["lang", "theme", "density", "cdx", "logo", "calm"];
+function ownerSwitched(uid) {
+  const who = M.url + "#" + uid, was = LS.get("owner", "");
+  if (!uid || was === who) return false;
+  LS.set("owner", who); if (!was) return false;            // first time it's written down (versions before this one): keep everything
+  const old = LS.get("prefs", {}) || {}, keepP = {}; for (const k of OWN_KEEP_P) if (old[k] !== undefined) keepP[k] = old[k];
+  try { for (const k of Object.keys(localStorage)) if (k.startsWith(PFX) && !OWN_KEEP.includes(k.slice(PFX.length))) localStorage.removeItem(k); } catch (e) {}
+  LS.set("prefs", keepP); swPut(null); useHit("acctSwitch");
+  LS.frozen = true;                                          // until the reload, nothing in memory from the one before is written back
+  return true;
+}
 async function fetchAll() {
   const diag = new Set();
   const safe = async (fn, p) => {
@@ -3067,6 +3084,7 @@ async function fetchAll() {
     catch (e) { if (e.code === "invalidtoken" || e.code === "network") throw e; diag.add(fn + ": " + String(e.message).slice(0, 160)); return null; }
   };
   const info = await call("core_webservice_get_site_info");
+  if (ownerSwitched(info.userid)) { location.reload(); await new Promise(() => {}); }
   const raw = await call("core_enrol_get_users_courses", { userid: info.userid });
   const courses = raw.map(c => ({ id: Number(c.id), name: stripHtml(c.fullname || c.shortname || String(c.id)), start: Number(c.startdate) || 0, end: Number(c.enddate) || 0, seen: Number(c.lastaccess) || 0 }));
   const ids = courses.map(c => c.id), names = Object.fromEntries(courses.map(c => [c.id, c.name]));
@@ -4339,7 +4357,7 @@ async function filesDownload() {
   if (u.origin !== base.origin) throw new MErr(t("error"), "sync");                   // the token only ever goes to the same Moodle site
   u.pathname = u.pathname.replace(/\/(webservice\/)?pluginfile\.php\//, "/webservice/pluginfile.php/");
   u.searchParams.set("token", M.token); u.searchParams.set("v", String(f.timemodified || Date.now()));
-  let res; try { res = await fetch(u.href, { cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer" }); } catch (e) { throw new MErr(t("unreachable"), "network"); }
+  let res; try { res = await tfetch(u.href, { cache: "no-store", credentials: "omit", referrerPolicy: "no-referrer" }); } catch (e) { throw new MErr(t("unreachable"), "network"); }
   if (!res.ok) throw new MErr(t("badResp", res.status), "sync");
   try { const j = await res.json(); return j && j.app === "moodle-tasks" ? j : null; } catch (e) { return null; }
 }
@@ -4351,9 +4369,9 @@ async function filesUpload(obj) {
   fd.append("file_1", new Blob([JSON.stringify(obj)], { type: "application/json" }), SYNC_FILE);
   if (itemid) {
     // Moodle's upload page may not let another site read its answer (CORS). The draft id is already known, so the answer is not needed.
-    try { await fetch(url, { method: "POST", body: fd, mode: "no-cors", credentials: "omit", referrerPolicy: "no-referrer" }); } catch (e) { throw new MErr(t("unreachable"), "network"); }
+    try { await tfetch(url, { method: "POST", body: fd, mode: "no-cors", credentials: "omit", referrerPolicy: "no-referrer" }); } catch (e) { throw new MErr(t("unreachable"), "network"); }
   } else {
-    let r; try { r = await (await fetch(url, { method: "POST", body: fd, credentials: "omit", referrerPolicy: "no-referrer" })).json(); } catch (e) { throw new MErr(t("syncNoUpload"), "sync"); }
+    let r; try { r = await (await tfetch(url, { method: "POST", body: fd, credentials: "omit", referrerPolicy: "no-referrer" })).json(); } catch (e) { throw new MErr(t("syncNoUpload"), "sync"); }
     if (!Array.isArray(r) || !r[0] || !r[0].itemid) throw new MErr((r && (r.error || r.message)) || t("syncNoUpload"), "sync");
     itemid = r[0].itemid;
   }
@@ -4474,7 +4492,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.6";
+const APP_VERSION = "1.9.4-beta.7";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -6672,7 +6690,37 @@ function dExpClose(fromPop) {
   requestAnimationFrame(dashOvf);
 }
 addEventListener("popstate", () => { if (DX.id) { if (NAV.skip) NAV.skip--; dExpClose(true); } }, true);
-addEventListener("keydown", e => { if (e.key === "Escape" && DX.id) dExpClose(); });
+/* Enter, like in any form: in a search box it opens the first result (or just closes the phone keyboard); in a one-line field of a form it saves */
+const ENTER_SAVE = { fTitle: "#fSave", fPlace: "#fSave", fWho: "#fSave", xqName: "#xqSave", xqNote: "#xqSave" };
+document.addEventListener("keydown", e => {
+  const a = e.target; if (e.key !== "Enter" || e.isComposing || e.shiftKey || e.ctrlKey || e.metaKey || e.altKey || !a || a.tagName !== "INPUT") return;
+  if (a.type === "search") {
+    const first = a.id === "dQ" ? $("#dQRes:not([hidden]) .dqr") : a.id === "sQ" ? $("#sRes [data-fgo]") : null;
+    e.preventDefault(); a.blur(); if (first) first.click(); return;
+  }
+  const btn = ENTER_SAVE[a.id] ? $(ENTER_SAVE[a.id]) : a.id === "socWaIn" ? a.closest(".sheet") && a.closest(".sheet").querySelector("[data-socwasave]") : null;
+  if (btn && !btn.disabled && btn.offsetParent) { e.preventDefault(); btn.click(); }
+});
+/* computer: the mouse wheel over an open window (its dimmed part, or a part that has nothing more to scroll) no longer scrolls the page behind it */
+addEventListener("wheel", e => {
+  const sh = e.target.closest && e.target.closest(".sheet"); if (!sh || sh.hidden || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+  for (let el = e.target; el && el !== sh; el = el.parentElement) {
+    if (/(auto|scroll)/.test(getComputedStyle(el).overflowY) && el.scrollHeight > el.clientHeight + 1 && (e.deltaY < 0 ? el.scrollTop > 0 : el.scrollTop + el.clientHeight < el.scrollHeight - 1)) return;
+  }
+  e.preventDefault();
+}, { passive: false });
+/* Esc closes what's on top, like in any app on a computer: the top window (the same step as Back), else the enlarged card.
+   A search box with text in it is cleared first (as browsers do); the tour has its own keys */
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape" || e.isComposing || !$("#tour").hidden) return;
+  const a = document.activeElement; if (a && a.type === "search" && a.value) return;
+  if (a && (a.tagName === "TEXTAREA" || a.tagName === "INPUT" && /^(text|url|email|tel|number|)$/.test(a.type)) && a.value.trim()) { e.preventDefault(); a.blur(); return; }   // something typed: the first Esc only leaves the box, nothing is lost
+  const vis = $$(".sheet:not([hidden])"); if (!vis.length) { if (DX.id) { e.preventDefault(); dExpClose(); } return; }
+  e.preventDefault(); e.stopPropagation();
+  const top = NAV.open[NAV.open.length - 1];
+  if (NAV.ready && top && document.getElementById(top) && !document.getElementById(top).hidden) history.back();
+  else { const z = el => +getComputedStyle(el).zIndex || 0; vis.sort((x, y) => z(x) - z(y)).pop().hidden = true; }
+}, true);
 document.addEventListener("click", e => {
   if (document.body.classList.contains("dashed")) return;
   if (e.target.closest("#dash [data-mini-ai]")) return openAi();
@@ -7294,8 +7342,9 @@ async function pushSub() {
   const reg = await navigator.serviceWorker.ready;
   return (await reg.pushManager.getSubscription()) || reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: unb64u(await pushKey()) });
 }
-const pushPost = (path, body) => fetch(pushUrl() + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
-  .then(r => { if (!r.ok) throw new Error(path + " " + r.status); return r.json(); });
+const pushPost = (path, body) => { const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 20000);     // a request left hanging would hold up every later sync (they go one at a time)
+  return fetch(pushUrl() + path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: ac.signal })
+    .then(r => { if (!r.ok) throw new Error(path + " " + r.status); return r.json(); }).finally(() => clearTimeout(tm)); };
 /* Michal (22.11): "reminders for tasks I already submitted". A reminder is set when the app was last opened; if the task was submitted on the
    Moodle site since, the server didn't know. So at the moment a reminder arrives, the service worker asks Moodle first (with the student's own
    token, kept on this device next to the app's other data, sent only to the student's own Moodle) and stays quiet if it's done.
@@ -7513,6 +7562,7 @@ function guideError(msg) {
   st.scrollIntoView({ block: "center", behavior: "smooth" });
 }
 function showSetup(err) {
+  $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true); try { if (DX.id) dExpClose(true); if (!$("#tour").hidden) closeTour(); } catch (e) {}   // the token ran out while a window was open: the sign-in screen and its message must be what's seen
   document.body.classList.remove("app"); $("#tabbar").hidden = true;
   $("#setup").hidden = false; $("#app").hidden = true; $("#bRefresh").hidden = true; $("#bSet").hidden = true;
   $("#site").value = LS.get("site", DEFAULT_SITE); $("#setupErr").textContent = err || ""; $("#upd").textContent = "";
@@ -7673,6 +7723,7 @@ $("#remGo").onclick = () => {
 $("#remStop").onclick = () => { $("#remSheet").hidden = true; pushDisable(); };
 $("#instGo").onclick = async () => { const ev = INST.ev; if (!ev) return; INST.ev = null; ev.prompt(); try { const r = await ev.userChoice; useHit(r && r.outcome === "accepted" ? "installYes" : "installNo"); } catch (e) {} $("#instSheet").hidden = true; };
 $("#instLater").onclick = $("#instX").onclick = () => { $("#instSheet").hidden = true; };
+$("#instSheet").addEventListener("click", e => { if (e.target.id === "instSheet") $("#instSheet").hidden = true; });     // a tap outside closes it, like every other window
 $("#bMineAdd").onclick = () => openMine(null);
 $("#mineSave").onclick = saveMine; $("#mineDel").onclick = deleteMine; $("#mineClose").onclick = () => { $("#mineSheet").hidden = true; };
 $("#mineName").addEventListener("keydown", e => { if (e.key === "Enter") saveMine(); });
@@ -7702,6 +7753,7 @@ $("#thEdit").addEventListener("change", e => { if (e.target.dataset.thf) setThem
 $("#thReset").onclick = () => { setTheme({ id: "auto" }); renderThemes(); };
 $("#thClose").onclick = () => { $("#thSheet").hidden = true; };
 $("#wnOk").onclick = wnDone; $("#wnClose").onclick = wnDone;
+$("#wnSheet").addEventListener("click", e => { if (e.target.id === "wnSheet") wnDone(); });
 $("#betaTag").hidden = CHANNEL !== "beta" && OFFICIAL; if (!OFFICIAL) $("#betaTag").textContent = "DEV";
 $("#tourNext").onclick = () => tourStep(1);
 $("#tourBack").onclick = () => tourStep(-1);

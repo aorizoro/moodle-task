@@ -2,7 +2,7 @@
 // הבקשות ל-Moodle לא עוברות כאן ולא נשמרות במטמון.
 // the beta (…/beta/) and the regular app share one site: each keeps and cleans only its own cache
 const CH = /\/beta\/$/.test(self.registration.scope) ? "beta-" : "";
-const CACHE = "moodle-tasks-" + CH + "v108";
+const CACHE = "moodle-tasks-" + CH + "v109";
 const SHELL = ["./", "index.html", "manifest.json", "icon-192.png", "icon-512.png", "icon-any-192.png", "icon-any-512.png", "apple-touch-icon.png", "favicon-64.png", "badge-96.png", "logo.svg"];
 self.addEventListener("install", e => {
   // "reload": straight from the site, not from the browser's own 10-minute cache (else a new version could install an old page)
@@ -60,7 +60,10 @@ async function doneAlready(tag, s) {
       return ((a.submission && a.submission.status) || (a.teamsubmission && a.teamsubmission.status)) === "submitted"; }
     if (x.ty === "quiz") { const j = await mcall(s, "mod_quiz_get_user_attempts", { quizid: x.id, status: "finished" }); return !!(j.attempts && j.attempts.length); }
     if (x.ty === "event") {        // Moodle drops an activity's deadline from the student's list once it's done (an automatic checker: on submission)
-      const j = await mcall(s, "core_calendar_get_action_events_by_timesort", { timesortfrom: x.due - 3600, timesortto: x.due + 3600, limitnum: 50 });
+      // look where the deadline is NOW: a lecturer may have moved it since the app was last opened (an extension is not a submission)
+      const ev = (await mcall(s, "core_calendar_get_calendar_event_by_id", { eventid: x.id })).event, ts = ev && Number(ev.timestart);
+      if (!ts) return false;
+      const j = await mcall(s, "core_calendar_get_action_events_by_timesort", { timesortfrom: ts - 3600, timesortto: ts + 3600, limitnum: 50 });
       return Array.isArray(j.events) && j.events.length < 50 && !j.events.some(e => e.id === x.id); }
   } catch (e) {}
   return false;

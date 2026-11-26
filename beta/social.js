@@ -600,8 +600,9 @@ function setReply(id) {
   if (m) $("#socTx").focus();
 }
 async function sendMsg() {
-  const ch = ST.chat, tx = $("#socTx"), body = (tx.value || "").trim(); if (!ch) return; if (!body && !ch.file) { tx.focus(); return; }   // nothing written yet: the box, ready to type
-  const btn = $("[data-socsend]"); btn.disabled = true;
+  const ch = ST.chat, tx = $("#socTx"); let body = (tx.value || "").trim(); if (!ch || ST.sending) return; if (!body && !ch.file) { tx.focus(); return; }   // nothing written yet: the box, ready to type
+  const btn = $("[data-socsend]"); btn.disabled = true; ST.sending = true;       // Enter pressed again while it's going out (slow network) doesn't send it twice
+  try {
   let att = "";
   if (ch.file) {                                              // the file goes up first, then the message carries it
     if (!ch.file.id) { drawPend(true); try { ch.file.id = await uploadFile(ch, ch.file); } catch (e) { drawPend(false); btn.disabled = false; toast(e.msg || t("fErr_net"), 6000); return; } }
@@ -611,6 +612,7 @@ async function sendMsg() {
   try { await api("post", Object.assign({ cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") }, att ? { att } : {}));
     useHit(att ? "socFile_" + ch.file.kind : ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); setFile(null); $("#socChL").dataset.drawn = ""; await loadChat(true); }
   catch (e) { toast(t("socNet")); drawPend(false); } finally { btn.disabled = false; }
+  } finally { ST.sending = false; }
 }
 /* ---------- summaries and solutions: a file attached to a chat message (kept on the community server, up to 10 MB) ---------- */
 const F_MAXB = 10 * 1024 * 1024, F_ACCEPT = ".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,image/*";
