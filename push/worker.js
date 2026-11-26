@@ -207,6 +207,8 @@ const REPAIRS = [["009e02b977552fd2f5bef065b4bc55ea", "d9d9ec43113385bd0af68794c
 const okId = s => typeof s === "string" && /^[a-f0-9]{32}$/.test(s);
 const okSec = s => typeof s === "string" && /^[a-f0-9]{48}$/.test(s);
 const okCid = c => (typeof c === "string" || typeof c === "number") && /^[0-9]{1,12}$/.test(String(c));
+/* a Moodle token in a message (a file link copied with "?token=…", or the login link) is cut out, also from older apps (security review, 27.11) */
+const noTok = s => s.replace(/([?&](?:ws)?token=)[0-9a-f]{32}(?![0-9a-f])/gi, "$1…").replace(/moodlemobile:\/\/token=[A-Za-z0-9+/=_-]+/gi, "moodlemobile://token=…");
 const okWa = u => typeof u === "string" && /^https:\/\/chat\.whatsapp\.com\/[A-Za-z0-9]{10,40}$/.test(u);
 // the semester a moment belongs to: Sep–Feb = A (of the year it started), Mar–Aug = B
 function semKey(ms) { const d = new Date(ms), y = d.getUTCFullYear(), m = d.getUTCMonth() + 1; return m >= 9 ? y + "A" : m <= 2 ? (y - 1) + "A" : (y - 1) + "B"; }
@@ -494,7 +496,7 @@ export class Community extends DurableObject {
         reply: m.reply || 0, at: m.at, stars: m.stars, starred: mine.has(m.id), sb: sb[m.id] || [], re: re[m.id] || [], att: m.del || !m.att ? null : JSON.parse(m.att) })) }];
     }
     if (op === "post") {
-      const tk = b.tk, body = String(b.body || "").trim().slice(0, 2000);
+      const tk = b.tk, body = noTok(String(b.body || "").trim().slice(0, 2000));
       // a file uploaded just before (POST /sfile): mine, in this course, finished, and not attached to another message
       const f = b.att ? this.one("SELECT id, name, size, type, kind FROM files WHERE id = ? AND uid = ? AND cid = ? AND ok = 1 AND del = 0 AND mid = 0", okFid(b.att) ? b.att : "", me.uid, cid) : null;
       if (b.att && !f) return [400, { error: "file" }];

@@ -607,6 +607,7 @@ async function sendMsg() {
     if (!ch.file.id) { drawPend(true); try { ch.file.id = await uploadFile(ch, ch.file); } catch (e) { drawPend(false); btn.disabled = false; toast(e.msg || t("fErr_net"), 6000); return; } }
     att = ch.file.id;
   }
+  body = noTok(body);                                         // a file link with the student's token in it stays out of the chat (security review)
   try { await api("post", Object.assign({ cid: ch.cid, tk: ch.tk, body, reply: ch.reply || 0, ref: ch.tk === "c" ? "" : ch.title, cname: (courseOf(ch.cid) ? shortName(courseOf(ch.cid).name) : "") }, att ? { att } : {}));
     useHit(att ? "socFile_" + ch.file.kind : ch.tk === "c" ? "socMsgCourse" : "socMsgTask"); tx.value = ""; tx.style.height = "auto"; setReply(0); setFile(null); $("#socChL").dataset.drawn = ""; await loadChat(true); }
   catch (e) { toast(t("socNet")); drawPend(false); } finally { btn.disabled = false; }
@@ -694,7 +695,7 @@ function drawFiles() {
 /* a personal note from a task / course page, shared into that discussion (it earns points only if someone marks it ⭐, like any helpful answer) */
 async function postNote(cid, tk, txt) {
   try {
-    await api("post", { cid, tk, body: (t("noteSharedPre") + "\n" + txt).slice(0, 2000), reply: 0, ref: tk === "c" ? "" : chatTitle(cid, tk), cname: courseOf(cid) ? shortName(courseOf(cid).name) : "" });
+    await api("post", { cid, tk, body: noTok(t("noteSharedPre") + "\n" + txt).slice(0, 2000), reply: 0, ref: tk === "c" ? "" : chatTitle(cid, tk), cname: courseOf(cid) ? shortName(courseOf(cid).name) : "" });
     useHit("noteShare"); toast(t("noteShared")); openChat(cid, tk);
   } catch (e) { toast(t("socNet")); }
 }

@@ -2092,6 +2092,9 @@ html.kb .schc{padding-bottom:8px}
   <div class="thgrp" data-i18n="aiWhat"></div>
   <div class="aiopts" id="aiOpts"></div>
   <div class="aiprev"><button type="button" class="link" id="aiPrevBtn" aria-expanded="false" aria-controls="aiText"><span class="aipv">▸</span> <span data-i18n="aiPrev"></span></button><pre id="aiText" hidden></pre></div>
+  <!-- TODO (privacy, before the built-in AI ships): update aiPriv here and the "Privacy and transparency" page (priv) in he/en/fr –
+       say exactly what goes to the AI server (which tasks/course files/messages, for how long it is kept, by whom it is seen) and how API keys are kept
+       (never in this file or in the repository; server-side only). Today nothing is sent: "Send to my AI" only copies text for the student to paste. -->
   <p class="hint" data-i18n="aiPriv"></p>
 </div></div>
 <div class="sheet" id="crsSheet" hidden><div class="box crs" id="crsBox"></div></div>
@@ -2161,6 +2164,10 @@ const DEFAULT_SITE = "https://moodle.jct.ac.il";
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+/* a Moodle token never leaves in text the student writes (security review, 27.11): a file link copied from the app carries "?token=…" so it opens
+   without signing in – pasted into a chat or a feedback it would hand that student's Moodle to whoever reads it. Also the login link itself */
+const noTok = s => { s = String(s == null ? "" : s).replace(/([?&](?:ws)?token=)[0-9a-f]{32}(?![0-9a-f])/gi, "$1…").replace(/moodlemobile:\/\/token=[A-Za-z0-9+/=_-]+/gi, "moodlemobile://token=…");
+  return M.token && M.token.length >= 20 ? s.split(M.token).join("…") : s; };
 /* the beta (…/beta/) keeps its own copy of the data, started once from the regular app's data on this device */
 const CHANNEL = /\/beta\//.test(location.pathname) ? "beta" : "stable";
 const PFX = CHANNEL === "beta" ? "mtb_" : "mt_";
@@ -4467,7 +4474,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.5";
+const APP_VERSION = "1.9.4-beta.6";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4595,7 +4602,7 @@ $("#fbShotBtn").onclick = () => { useHit("fbShotBtn"); $("#fbShot").click(); }; 
 /* most feedback came with no phone, so there was no way to answer: an empty phone gets one clear question before sending ("send without" is right there) */
 const FB_PH = { asked: false };
 async function sendFb(noPhone) {
-  const msg = $("#fbMsg").value.trim();
+  const msg = noTok($("#fbMsg").value.trim());
   if (msg.length < 3) return $("#fbErr").textContent = t("fbEmpty");
   const phone = $("#fbContact").value.trim();
   if (phone && !/^[+\d][\d\s\-()]{6,20}$/.test(phone)) return $("#fbErr").textContent = t("fbBadPhone");
