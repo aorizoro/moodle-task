@@ -7670,9 +7670,16 @@ function showMain() {
   else if (!navigator.webdriver) setTimeout(() => { if ($("#tour").hidden && !whatsNew()) setTimeout(maybeSocIntro, 2500); }, 900);
   else if (LS.get("seenVer", null) === null) LS.set("seenVer", APP_VERSION);
 }
+/* a reminder was tapped: its task's page, once the data is there (proposal) */
+function openTaskSoon(key, tries) {
+  if (typeof key !== "string" || key.length > 120) return;
+  if (V.data && V.data.tasks.some(x => x.key === key)) { $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true); if (V.view !== "dash" && V.view !== "tasks") { setView("dash"); render(); } openTask(key); useHit("notifOpen"); return; }
+  if ((tries || 0) < 40) setTimeout(() => openTaskSoon(key, (tries || 0) + 1), 500);
+}
 function importFromHash() {
   const h = location.hash.slice(1); if (!h) return false;
   const q = new URLSearchParams(h), tk = q.get("t");
+  if (q.get("tk") && !tk) { history.replaceState(null, "", location.pathname + location.search); openTaskSoon(q.get("tk")); return false; }
   history.replaceState(null, "", location.pathname + location.search);   // the token does not stay in the address bar or history
   if (q.get("tt") || q.get("cc")) importShared(q);
   { const ad = q.get("admin"); if (ad && /^[\w-]{10,100}$/.test(ad)) setTimeout(() => socOn() ? socEnsure(() => SOC.adminClaim(ad)) : toast(t("adJoinFirst"), 6000), 1500); }   // a one-time code that makes this community account an admin
@@ -8202,7 +8209,7 @@ window.addEventListener("online", () => { if (M.token) refresh(); });
 if ("serviceWorker" in navigator && location.protocol !== "file:") {
   const hadSw = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.register("sw.js").catch(() => {});
-  navigator.serviceWorker.addEventListener("message", e => { if (e.data && e.data.type === "updated") showUpd(); });
+  navigator.serviceWorker.addEventListener("message", e => { if (e.data && e.data.type === "updated") showUpd(); if (e.data && e.data.type === "openTask") openTaskSoon(e.data.key); });
   navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadSw) showUpd(); });
 }
 function showUpd(line) {

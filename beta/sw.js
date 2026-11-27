@@ -93,8 +93,11 @@ self.addEventListener("push", e => {
 });
 self.addEventListener("notificationclick", e => {
   e.notification.close();
+  // a reminder about a task opens that task's page (proposal), not just the app
+  const m = /^t:(.+):[^:]+$/.exec((e.notification.data && e.notification.data.tag) || ""), key = m ? m[1] : "";
   e.waitUntil(self.clients.matchAll({ type: "window", includeUncontrolled: true }).then(cs => {
     const c = cs.find(w => w.url.startsWith(self.registration.scope));
-    return c ? c.focus() : self.clients.openWindow(self.registration.scope);
+    if (c) { if (key) c.postMessage({ type: "openTask", key }); return c.focus(); }
+    return self.clients.openWindow(self.registration.scope + (key ? "#tk=" + encodeURIComponent(key) : ""));
   }));
 });
