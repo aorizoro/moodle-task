@@ -3279,6 +3279,16 @@ function savePrefs() {
   if (ch) { syncSoon(); pingSoon(); }
 }
 const pingSoon = () => { clearTimeout(pingSoon.t); pingSoon.t = setTimeout(() => ping(), 30000); };
+/* the app open in two tabs (or the installed app and a browser tab on Android/computer): a change saved in one shows in the other at once,
+   so the other can't later save its old copy over it (a ✓ in one tab used to vanish when something was hidden in the other) */
+addEventListener("storage", e => {
+  if (e.key === PFX + "owner" && e.oldValue && e.newValue !== e.oldValue) { LS.frozen = true; return location.reload(); }   // another student signed in in the other tab: this one starts over too
+  if (e.key !== PFX + "prefs" || !e.newValue || LS.frozen) return;
+  let n; try { n = JSON.parse(e.newValue); } catch (x) { return; }
+  if (!n || typeof n !== "object" || Array.isArray(n)) return;
+  Object.assign(P, n); if (!P._ts || typeof P._ts !== "object" || Array.isArray(P._ts)) P._ts = {};
+  snapAll(); try { render(); } catch (x) {}
+});
 const isOff = cid => P.off.includes(cid);
 function hslHex(h, s, l) { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return "#" + [f(0), f(8), f(4)].map(x => Math.round(x * 255).toString(16).padStart(2, "0")).join(""); }
 /* course colours. The six courses of the calendar palette (chosen by the owner from his calendar, by course code) always get their calendar colour.
@@ -4503,7 +4513,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.9";
+const APP_VERSION = "1.9.4-beta.10";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
