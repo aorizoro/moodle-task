@@ -152,6 +152,8 @@ body.app[data-view=chat] #dash,body.app[data-view=chat] #tasks,body.app[data-vie
 .sech{display:none}
 /* phone (Peri): "More" instead of the settings button; settings are the first thing inside "More" */
 @media (max-width:599px){ .tabbar [data-v=more]:not([hidden]){display:flex!important} .tabbar .sbset{display:none!important} }
+/* very narrow phones (320–355px, a small Android or a folding phone's front screen): the five tabs shrink to fit instead of the last one going off the edge */
+@media (max-width:355px){ .tabbar button{min-width:0;padding-inline:0} .tabbar button b{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap} }
 .ptitle{display:none}
 .tabbar{position:fixed;inset-inline:0;bottom:0;z-index:12;display:flex;gap:4px;padding:6px 10px max(8px,env(safe-area-inset-bottom));
   background:color-mix(in srgb,var(--card) 86%,transparent);-webkit-backdrop-filter:saturate(1.8) blur(20px);backdrop-filter:saturate(1.8) blur(20px);border-top:1px solid var(--line)}
@@ -1473,6 +1475,8 @@ body[data-density=clean] .task .due b{color:var(--text);font-weight:600}
 /* X instead of "סגירה" */
 .xbtn{width:32px;height:32px;border-radius:50%;border:0;background:var(--row);color:var(--muted);display:grid;place-items:center;padding:0;flex:none}
 .xbtn .i{width:18px;height:18px;stroke-width:2.4}
+/* bigger finger target, same look (DESIGN 10: 40px+): an invisible ring around the small round ✕ and the ✓ circle on a task */
+.xbtn{position:relative}.xbtn::after,.task .ck::after{content:"";position:absolute;inset:-6px;border-radius:50%}
 .xbtn:hover{color:var(--text)}
 /* every window: a fixed size that scrolls inside, the title row and the X stay on top */
 .sheet .box{max-height:88vh;max-height:88dvh;overscroll-behavior:contain}
@@ -3321,7 +3325,8 @@ function when(ts) {
 }
 function dayLabel(d) { try { return d.toLocaleDateString(t("locale"), { weekday: "long", day: "numeric", month: "numeric" }); } catch (e) { return d.toDateString(); } }
 const dayKey = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
-const dueDay = x => dayKey(new Date(x.due * 1000));
+/* a deadline at exactly 00:00 is the end of the day before ("by Monday 00:00" = Sunday night): it belongs to that day, in "today", the week and the month */
+const dueDay = x => { const d = new Date(x.due * 1000); if (!d.getHours() && !d.getMinutes() && !d.getSeconds()) d.setSeconds(-1); return dayKey(d); };
 function rel(ts, now) {
   const d = ts - now, a = Math.abs(d), days = Math.floor(a / 86400), hrs = Math.floor(a / 3600);
   let x;
@@ -3368,11 +3373,11 @@ function groupOf(x, now) {
   if (!x.due) return "nodue";
   if (x.due < now) return P.old_days && now - x.due > P.old_days * 86400 ? "old" : "late";
   const nextDay = new Date(now * 1000); nextDay.setHours(24, 0, 0, 0);
-  if (x.due < nextDay.getTime() / 1000) return "today";
+  if (x.due <= nextDay.getTime() / 1000) return "today";        // 00:00 tonight included (see dueDay)
   // calendar weeks (Sunday to Saturday): the rest of this week, next week, and later
   const ws = weekStartDate(now).getTime() / 1000, wEnd = new Date(ws * 1000); wEnd.setDate(wEnd.getDate() + 7);
   const nEnd = new Date(wEnd); nEnd.setDate(nEnd.getDate() + 7);
-  return x.due < wEnd.getTime() / 1000 ? "week" : x.due < nEnd.getTime() / 1000 ? "next" : "later";
+  return x.due <= wEnd.getTime() / 1000 ? "week" : x.due <= nEnd.getTime() / 1000 ? "next" : "later";
 }
 const GROUPS = [["late", "gLate"], ["today", "gToday"], ["week", "gWeek"], ["next", "gNext"], ["later", "gLater"], ["nodue", "gNodue"], ["old", "gOld"], ["done", "gDone"]];
 const G_OPEN = { late: true, today: true, week: true, next: true, later: true, nodue: false, old: false, done: false };
@@ -3618,7 +3623,7 @@ function renderDash(d, now) {
   const next = open.filter(x => x.due >= now && !snzUntil(x, now)).sort((a, b) => a.due - b.due)[0];
   /* the other deadlines of that same day (Tohar, 24.11: "several tasks end the same day – show them all"), as many as fit (heroFit) */
   function heroSame(nx, open, now) {
-    const dk = dayKey(new Date(nx.due * 1000)), L = open.filter(x => x !== nx && x.due >= now && !snzUntil(x, now) && dayKey(new Date(x.due * 1000)) === dk).sort((a, b) => a.due - b.due);
+    const dk = dueDay(nx), L = open.filter(x => x !== nx && x.due >= now && !snzUntil(x, now) && dueDay(x) === dk).sort((a, b) => a.due - b.due);
     if (!L.length) return "";
     const tm = ts => { const x = new Date(ts * 1000); return String(x.getHours()).padStart(2, "0") + ":" + String(x.getMinutes()).padStart(2, "0"); };
     return '<div class="hsame"><div class="hsh">' + esc(t("heroSame", L.length)) + "</div>" + L.map(x => '<button class="hsr" data-tk="' + esc(x.key) + '"><bdi>' + esc(x.name) + '</bdi><small><bdi>' + esc(shortName(x.course)) + "</bdi> · " + esc(tm(x.due)) + "</small></button>").join("") +
@@ -4498,7 +4503,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.8";
+const APP_VERSION = "1.9.4-beta.9";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4551,7 +4556,7 @@ async function fbPost(kind, msg, contact, meta, who) {
   if (who && F.name) body.append("entry." + F.name, who.name);
   if (who && F.courses) body.append("entry." + F.courses, who.courses);
   // Google Forms does not let other sites read its answer, so the request is sent "no-cors"; it still arrives
-  await fetch(FEEDBACK.url.replace(/\/(viewform|edit)?(\?.*)?$/, "") + "/formResponse", { method: "POST", mode: "no-cors", body, credentials: "omit", referrerPolicy: "no-referrer" });
+  await tfetch(FEEDBACK.url.replace(/\/(viewform|edit)?(\?.*)?$/, "") + "/formResponse", { method: "POST", mode: "no-cors", body, credentials: "omit", referrerPolicy: "no-referrer" }, 30000);   // a hanging send would leave "Send" greyed out; it waits in the queue instead
 }
 /* feedback written while offline waits on the device and goes out later */
 async function fbFlush() {
@@ -4642,7 +4647,7 @@ async function sendFb(noPhone) {
   $("#fbSend").disabled = true;
   for (const blob of FBSHOT.blobs) {            // each screenshot goes to the app's server first; the message carries its link
     try {
-      const r = await fetch(pushUrl() + "/fbimg", { method: "POST", headers: { "Content-Type": blob.type }, body: blob, credentials: "omit" });
+      const r = await tfetch(pushUrl() + "/fbimg", { method: "POST", headers: { "Content-Type": blob.type }, body: blob, credentials: "omit" }, 30000);
       const j = r.ok ? await r.json() : null; if (j && j.url) { x.msg += "\n📎 " + j.url; useHit("fbShot"); } else throw new Error(r.status);
     } catch (e) { x.msg += "\n📎 (" + t("fbShotFail") + ")"; }
   }
@@ -4972,6 +4977,7 @@ function setView(v, fromHistory) {
   if (!fromHistory && NAV.ready && V.view !== prev) history.pushState({ v: V.view }, ""); LS.set("view", V.view); document.body.dataset.view = V.view; useHit("v_" + V.view);
   $$("#tabbar button").forEach(b => b.classList.toggle("on", b.dataset.v === V.view));
   $("#pTitle").textContent = t(V.view === "tasks" ? "viewTasks" : V.view === "tt" ? "viewTT" : V.view === "chat" ? "viewChat" : XTABS.includes(V.view) ? XT_T[V.view] : "viewDash");
+  if (V.view === "dash" && applyDash.stale) applyDash();
   if (XTABS.includes(V.view) && V.view !== prev) { PG.enter = 1; if (V.view === "grades" && V.data && grOn() && Date.now() - (grAll().at || 0) > 5 * 60e3) gradeScan(V.data, true); }
 }
 /* ---------- tablet & computer: more tabs. There's room for them, so grades, courses, announcements and exams – which on a phone are windows – get a page each ---------- */
@@ -7134,7 +7140,7 @@ function dashCfg() {
   return { order: order.concat(ids.filter(x => !order.includes(x))), off: (Array.isArray(v.off) ? v.off : []).filter(x => ids.includes(x) && x !== "hero"), sz };
 }
 let daLast = "";
-function applyDash() { layoutDash(); }
+function applyDash() { if (V.view !== "dash" && document.body.classList.contains("app")) { applyDash.stale = true; return; } applyDash.stale = false; layoutDash(); }   // the overview's grid only while it's on screen (the tasks tab drew it on every render: slow phones felt it); done on the way back
 /* "edit the overview": what's shown (in order, with ↑ ↓ and "hide") and what's hidden (with "+ add"), each card with its icon and a line about what it shows */
 const DA = { welcome: false };
 /* a phone and a big screen each keep their own overview (little on the phone, more on a tablet or computer) – both synced, so a new phone gets the phone one */
@@ -7339,7 +7345,7 @@ function morningItems(at, now) {
     const ds = day.getTime() / 1000, de = new Date(day.getFullYear(), day.getMonth(), day.getDate() + 1).getTime() / 1000;
     const fire = new Date(day.getFullYear(), day.getMonth(), day.getDate(), hh, mm).getTime() / 1000;
     if (fire <= now + 60) continue;
-    const due = tasks.filter(x => x.due >= ds && x.due < de).sort((a, b) => a.due - b.due);
+    const due = tasks.filter(x => x.due > ds && x.due <= de).sort((a, b) => a.due - b.due);      // 00:00 belongs to the day before (dueDay): Sunday's morning tells about "Monday 00:00", not Monday's, when it's already over
     const ex = exams.filter(x => x.ts >= ds && x.ts < de);
     const inSem = !D || (ds >= dayStart(D.s) && ds < D.e);
     const cls = inSem ? P.tt.filter(x => ttOn(x, day)).sort((a, b) => hm(a.s) - hm(b.s)) : [];
@@ -7356,7 +7362,7 @@ const unb64u = s => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")
 function strHash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36) + ":" + s.length; }
 async function pushKey() {
   const k = LS.get("pushKey", null); if (k && k.u === pushUrl()) return k.k;
-  const r = await fetch(pushUrl() + "/key"); if (!r.ok) throw new Error("key " + r.status);
+  const r = await tfetch(pushUrl() + "/key", {}, 20000); if (!r.ok) throw new Error("key " + r.status);
   const j = await r.json(); LS.set("pushKey", { u: pushUrl(), k: j.key }); return j.key;
 }
 async function pushSub() {

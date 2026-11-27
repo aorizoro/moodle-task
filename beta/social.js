@@ -900,6 +900,7 @@ function campAsk() {
   if (!socOn() || !P.soc_id || prof().camp) return;
   if (Date.now() - (Number(LS.get("socCampAsk", 0)) || 0) < 20 * 3600e3) return;
   if (!$("#tour").hidden || $$(".sheet").some(x => !x.hidden)) return;
+  if (window.popTake && !window.popTake("camp")) return;            // only one window opens by itself per visit (Mendi): another one already did, so next time
   LS.set("socCampAsk", Date.now()); useHit("socCampAsk");
   sheet("socCamp", "<h3><span>" + esc(t("cmAskT")) + "</span>" + xbtn() + '</h3><div class="hint">' + esc(t("cmAskP")) + '</div><div class="scamps">' +
     CAMPS.map(c => '<button class="btn" data-soccamp="' + c + '">' + esc(t(CAMPL[c])) + "</button>").join("") + '</div><button class="link" data-socx style="width:100%;margin-top:6px">' + esc(t("cmLater")) + "</button>");
