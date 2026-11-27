@@ -1223,6 +1223,8 @@ body[data-density=compact] .task .ck{inset-block-start:6px;width:24px;height:24p
 .st.draft{background:var(--updbg);color:var(--warn)}
 .st.none{background:var(--newbg);color:var(--new)}
 .st.late{background:var(--updbg);color:var(--err)}
+/* proposal (DESIGN 6, 4.5:1): the small status chips' text, a little toward the text colour – same hue, readable in every theme (was ~3:1) */
+.st.draft{color:color-mix(in srgb,var(--warn) 62%,var(--text))}.st.none{color:color-mix(in srgb,var(--new) 62%,var(--text))}.st.late{color:color-mix(in srgb,var(--err) 62%,var(--text))}
 .st.na,.st.unknown{background:var(--track);color:var(--muted)}
 .st.grade{background:var(--accent-soft);color:var(--accent-t)}
 .empty{padding:34px 10px;text-align:center;color:var(--muted)}
