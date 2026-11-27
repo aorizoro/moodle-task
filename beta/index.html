@@ -3874,7 +3874,7 @@ function renderTT(now) {
     for (const it of items) { if (grp.length && it.s >= end) { groups.push(grp); grp = []; end = -1; } grp.push(it); end = Math.max(end, it.e); }
     if (grp.length) groups.push(grp);
     for (const g of groups) { const lanes = []; for (const it of g) { let k = lanes.findIndex(e => e <= it.s); if (k < 0) { k = lanes.length; lanes.push(0); } lanes[k] = it.e; it.lane = k; } g.forEach(it => it.n = lanes.length); }
-    h += '<div class="ttc' + (d === td ? " on" : "") + '">' + items.map(it => {
+    h += '<div class="ttc' + (d === td ? " on" : "") + '" data-ttday="' + d + '" data-tth0="' + h0 + '">' + items.map(it => {
       const x = it.x, live = d === td && nowM >= it.s && nowM < it.e;
       const head = '<button class="tte' + (live ? " now" : "") + (x.att ? " att" : "") + (x.wk2 && !ttBwThis(x) ? " off2" : "") + '" data-tte="' + esc(x.id) + '" style="--c:' + ttColor(x) + ";top:" + pos(it.s) + ";height:calc(" + pos(it.e) + " - " + pos(it.s) + " - 2px);inset-inline-start:" +
         (100 * it.lane / it.n).toFixed(2) + "%;width:calc(" + (100 / it.n).toFixed(2) + '% - 2px)" title="' + esc(ttName(x)) + '">', nmH = '<b dir="' + hDir(ttName(x)) + '">' + esc(blockName(ttName(x))) + "</b>",   // dir=auto: a Hebrew name in the English app is cut at its end, not its start
@@ -3972,9 +3972,9 @@ function renderToday(now) {
   el.innerHTML = h;
 }
 let ttEditId = null;
-function openTT(id, bulk) {
+function openTT(id, bulk, at) {
   ttEditId = id || null; ttBulkMode(false); $("#ttBulkGo").hidden = !!id;
-  const x = P.tt.find(y => y.id === id) || { day: new Date().getDay() <= 4 ? new Date().getDay() : 0, s: "08:30", e: "10:10", kind: "lec", title: "", place: "" };
+  const x = P.tt.find(y => y.id === id) || Object.assign({ day: new Date().getDay() <= 4 ? new Date().getDay() : 0, s: "08:30", e: "10:10", kind: "lec", title: "", place: "" }, at || {});
   const cs = ((V.data && V.data.courses) || []).filter(c => !isOff(c.id) || c.id === ttCid(x));
   $("#fCourse").innerHTML = cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + '<option value="0">' + esc(t("ttOtherCourse")) + "</option>";
   $("#fCourse").value = String(id ? ttCid(x) : (cs[0] ? cs[0].id : 0));
@@ -8075,6 +8075,13 @@ $("#bNewsRead").onclick = () => { markRead(((V.data && V.data.news) || []).map(n
 $("#bTtGo").onclick = goTT;
 $("#bSemEdit").onclick = openSemSettings;
 $("#bTtAdd").onclick = () => openTT();
+/* a tap on an empty spot of the week = a new class right there, that day at that hour (as in a calendar app; proposal) */
+document.addEventListener("click", e => {
+  const col = e.target.closest && e.target.closest(".ttc[data-ttday]"); if (!col || e.target.closest(".tte")) return;
+  const pph = col.getBoundingClientRect().height / Math.max(1, Number(getComputedStyle(col.parentElement).getPropertyValue("--rows")) || 1);
+  const m = Number(col.dataset.tth0) + Math.floor((e.clientY - col.getBoundingClientRect().top) / pph) * 60, f = n => String(Math.floor(n / 60) % 24).padStart(2, "0") + ":" + String(n % 60).padStart(2, "0");
+  useHit("ttTapAdd"); openTT(null, false, { day: Number(col.dataset.ttday), s: f(m), e: f(Math.min(m + 60, 23 * 60 + 55)) });
+});
 $("#bTtShare").onclick = shareTT;
 $("#bTtScan").onclick = scanTT;
 function openLevnet() {
