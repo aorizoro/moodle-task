@@ -49,7 +49,7 @@ Object.assign(I18N.he, {
   lgAdd: (f, r) => f + " הוסיף אצלו את ״" + r + "״", lgTime: r => "דיווח זמן על ״" + r + "״", lgWa: "קישור לקבוצת הוואטסאפ", lgSomeone: "מישהו",
   socMute: "השתק משתמש זה 🔇", socUnmute: "בטל השתקה", socMuted: n => n + " הושתק. לא תראה יותר את מה שהוא משתף.", socUnmuted: "ההשתקה בוטלה",
   socOnLbl: "הקהילה פעילה", socOnHint: "כשכבוי – אין שום חיבור לשרת הקהילה ושום דבר מזה לא מוצג.", socProfT: "הפרופיל שלי", socWaT: "קבוצות וואטסאפ לפי קורס",
-  socMuteT: "משתמשים מושתקים", socMuteNone: "אין", socPtsU: "נק׳", socHere: "את/ה כאן", adT: "ניהול הקהילה", lgAdmin: r => "🎁 בונוס מהצוות" + (r ? ": " + r : ""), svT: "השמורים שלי", svBtn: "שמירה לאחר כך", svDone: "נשמר 🔖 בצ׳אטים ← השמורים שלי", svOff: "הוסר מהשמורים", svNone: "עוד אין כאן כלום. 🔖 ליד הודעה בצ׳אט שומר אותה כאן, ואפשר גם לכתוב פתק לעצמך.", svNotePh: "פתק לעצמי…", svNoteAdd: "שמירה", svNoteT: "פתק שלי", svTo: "לצ׳אט ←", svDel: "הסרה", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
+  socMuteT: "משתמשים מושתקים", svGone: "הוסר מהשמורים", socMuteNone: "אין", socPtsU: "נק׳", socHere: "את/ה כאן", adT: "ניהול הקהילה", lgAdmin: r => "🎁 בונוס מהצוות" + (r ? ": " + r : ""), svT: "השמורים שלי", svBtn: "שמירה לאחר כך", svDone: "נשמר 🔖 בצ׳אטים ← השמורים שלי", svOff: "הוסר מהשמורים", svNone: "עוד אין כאן כלום. 🔖 ליד הודעה בצ׳אט שומר אותה כאן, ואפשר גם לכתוב פתק לעצמך.", svNotePh: "פתק לעצמי…", svNoteAdd: "שמירה", svNoteT: "פתק שלי", svTo: "לצ׳אט ←", svDel: "הסרה", socHowT: "איך צוברים נקודות", socHow: ["\u2066+3\u2069 – מישהו הוסיף לשלו בוחן או משימה ששיתפת", "\u2066+1\u2069 – דיווח כמה זמן לקחה לך מטלה", "\u2066+1\u2069 – הוספת קישור לקבוצת הוואטסאפ של קורס", "\u2066+2\u2069 – מישהו סימן תשובה שלך בדיון כמועילה ⭐"],
   shT: "נוסף ללוח שלך ✓", shBig: "שתף עם כל הסטודנטים בקורס", shAudT: "למי?", shAud_all: "כל הקורס", shAud_camp: "הקמפוס שלי", shAud_cdy: "הקמפוס, התואר והשנה שלי", shAudNo: "כדי לשתף רק לקמפוס או לשנה שלך, צריך למלא קמפוס, תואר ושנה בפרופיל הקהילה", shBigSub: "כולם יוכלו להוסיף לעצמם בלחיצה אחת · \u2066+3\u2069 נק׳ על כל מי שמוסיף", shAuto: "לשתף אוטומטית כל בוחן ומשימה שאוסיף לקורס",
   shAutoOn: "שיתוף אוטומטי פעיל ✓", shLater: "לא עכשיו", shBtn: "שתף", shShared: "משותף", shUnshare: "הסר שיתוף", shNoCourse: "אפשר לשתף רק פריט ששייך לקורס",
   shTaskT: "המשימה נשמרה ✓", shMineArea: "שיתוף עם הקורס", shAutoT: "שיתוף אוטומטי",
@@ -98,7 +98,7 @@ Object.assign(I18N.en, {
   lgAdd: (f, r) => f + " added “" + r + "” to theirs", lgTime: r => "Time report on “" + r + "”", lgWa: "WhatsApp group link", lgSomeone: "Someone",
   socMute: "Mute this user 🔇", socUnmute: "Unmute", socMuted: n => n + " is muted. You won’t see what they share.", socUnmuted: "Unmuted",
   socOnLbl: "Community on", socOnHint: "When off, nothing connects to the community server and none of this is shown.", socProfT: "My profile", socWaT: "WhatsApp groups by course",
-  socMuteT: "Muted users", socMuteNone: "None", socPtsU: "pts", socHere: "You’re here", adT: "Community admin", lgAdmin: r => "🎁 Bonus from the team" + (r ? ": " + r : ""), svT: "My saved", svBtn: "Save for later", svDone: "Saved 🔖 Chats → My saved", svOff: "Removed from saved", svNone: "Nothing here yet. 🔖 next to a chat message saves it here, and you can write yourself a note.", svNotePh: "A note to myself…", svNoteAdd: "Save", svNoteT: "My note", svTo: "To the chat →", svDel: "Remove", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
+  socMuteT: "Muted users", svGone: "Removed from saved", socMuteNone: "None", socPtsU: "pts", socHere: "You’re here", adT: "Community admin", lgAdmin: r => "🎁 Bonus from the team" + (r ? ": " + r : ""), svT: "My saved", svBtn: "Save for later", svDone: "Saved 🔖 Chats → My saved", svOff: "Removed from saved", svNone: "Nothing here yet. 🔖 next to a chat message saves it here, and you can write yourself a note.", svNotePh: "A note to myself…", svNoteAdd: "Save", svNoteT: "My note", svTo: "To the chat →", svDel: "Remove", socHowT: "How to earn points", socHow: ["+3 – someone added a quiz or task you shared", "+1 – reporting how long a task took you", "+1 – adding a course’s WhatsApp group link", "+2 – someone marked your answer in a discussion helpful ⭐"],
   shT: "Added to your board ✓", shBig: "Share with everyone in the course", shAudT: "For whom?", shAud_all: "The whole course", shAud_camp: "My campus", shAud_cdy: "My campus, degree and year", shAudNo: "To share only with your campus or year, fill in campus, degree and year in your community profile", shBigSub: "They can add it in one tap · +3 pts for each one who does", shAuto: "Share every quiz and task I add to a course automatically",
   shAutoOn: "Auto-share is on ✓", shLater: "Not now", shBtn: "Share", shShared: "Shared", shUnshare: "Stop sharing", shNoCourse: "Only items that belong to a course can be shared",
   shTaskT: "Task saved ✓", shMineArea: "Share with the course", shAutoT: "Auto-share",
@@ -148,7 +148,7 @@ Object.assign(I18N.fr, {
   lgAdd: (f, r) => f + " a ajouté « " + r + " » chez lui", lgTime: r => "Durée indiquée pour « " + r + " »", lgWa: "Lien du groupe WhatsApp", lgSomeone: "Quelqu’un",
   socMute: "Masquer cet utilisateur 🔇", socUnmute: "Ne plus masquer", socMuted: n => n + " est masqué. Vous ne verrez plus ses partages.", socUnmuted: "Plus masqué",
   socOnLbl: "Communauté activée", socOnHint: "Désactivée : aucune connexion au serveur de la communauté, et rien de tout cela n’est affiché.", socProfT: "Mon profil", socWaT: "Groupes WhatsApp par cours",
-  socMuteT: "Utilisateurs masqués", socMuteNone: "Aucun", socPtsU: "pts", socHere: "Vous êtes ici", adT: "Gestion de la communauté", lgAdmin: r => "🎁 Bonus de l’équipe" + (r ? " : " + r : ""), svT: "Mes enregistrés", svBtn: "Garder pour plus tard", svDone: "Enregistré 🔖 Chats → Mes enregistrés", svOff: "Retiré", svNone: "Rien pour l’instant. 🔖 à côté d’un message l’enregistre ici, et vous pouvez écrire une note pour vous.", svNotePh: "Une note pour moi…", svNoteAdd: "Enregistrer", svNoteT: "Ma note", svTo: "Vers le chat →", svDel: "Retirer", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
+  socMuteT: "Utilisateurs masqués", svGone: "Retiré des enregistrés", socMuteNone: "Aucun", socPtsU: "pts", socHere: "Vous êtes ici", adT: "Gestion de la communauté", lgAdmin: r => "🎁 Bonus de l’équipe" + (r ? " : " + r : ""), svT: "Mes enregistrés", svBtn: "Garder pour plus tard", svDone: "Enregistré 🔖 Chats → Mes enregistrés", svOff: "Retiré", svNone: "Rien pour l’instant. 🔖 à côté d’un message l’enregistre ici, et vous pouvez écrire une note pour vous.", svNotePh: "Une note pour moi…", svNoteAdd: "Enregistrer", svNoteT: "Ma note", svTo: "Vers le chat →", svDel: "Retirer", socHowT: "Comment gagner des points", socHow: ["+3 – quelqu’un a ajouté un quiz ou devoir que vous avez partagé", "+1 – indiquer combien de temps un devoir vous a pris", "+1 – ajouter le lien du groupe WhatsApp d’un cours", "+2 – quelqu’un a marqué votre réponse utile ⭐"],
   shT: "Ajouté à votre tableau ✓", shBig: "Partager avec tout le cours", shAudT: "Pour qui ?", shAud_all: "Tout le cours", shAud_camp: "Mon campus", shAud_cdy: "Mon campus, ma filière et mon année", shAudNo: "Pour partager seulement avec votre campus ou votre année, indiquez campus, filière et année dans votre profil", shBigSub: "Chacun peut l’ajouter en un geste · +3 pts par ajout", shAuto: "Partager automatiquement chaque quiz et devoir que j’ajoute à un cours",
   shAutoOn: "Partage automatique activé ✓", shLater: "Pas maintenant", shBtn: "Partager", shShared: "Partagé", shUnshare: "Ne plus partager", shNoCourse: "Seuls les éléments liés à un cours peuvent être partagés",
   shTaskT: "Devoir enregistré ✓", shMineArea: "Partager avec le cours", shAutoT: "Partage automatique",
@@ -549,7 +549,7 @@ function openChat(cid, tk) {
     '<span class="sep">›</span>' + (tk === "c" ? "<span>" + esc(t("chBread")) + "</span>" : "<span>" + esc(x ? typeLabel(x) : t("chDisc")) + "</span>" + (x && x.due ? '<span class="sep">·</span><span>' + esc(t("chvDue", shortDate(x.due))) + "</span>" : "") + (x ? '<button class="link schtk" data-tkgo="' + esc(x.key) + '">' + esc(t("tkPageBtn")) + "</button>" : "")) + '<button class="link schfl" data-socfiles="' + cid + '">' + esc("📚 " + t("fList")) + "</button>" +
     '</div><div class="schl" id="socChL"><div class="hint">' + esc(t("socLoading")) + "</div></div>" +
     '<div class="schc"><div class="schrep" id="socRep" hidden></div><div class="satt-pend" id="socAtt" hidden></div><div class="schin"><button class="sic sattb" data-socfile aria-label="' + esc(t("fAttach")) + '" title="' + esc(t("fAttach")) + '">' + ic("file-up") + '</button><input type="file" id="socFile" hidden accept="' + F_ACCEPT + '"><textarea id="socTx" rows="1" maxlength="2000" placeholder="' + esc(t("chatPh")) + '"></textarea>' +
-    '<button class="primary" data-socsend aria-label="send">' + ic("send") + "</button></div></div>");
+    '<button class="primary" data-socsend aria-label="' + esc(t("fbSend")) + '" title="' + esc(t("fbSend")) + '">' + ic("send") + "</button></div></div>");
   el.classList.add("chat");
   $("#socFile").onchange = e => { const f = e.target.files && e.target.files[0]; e.target.value = ""; if (f) pickFile(f); };
   const tx = $("#socTx");
@@ -587,7 +587,7 @@ function drawChat() {
         (mine || isMeName(m.name) ? (m.stars ? '<span class="sstar on">' + ic("star") + m.stars + "</span>" : "") : '<button class="sstar' + (m.starred ? " on" : "") + '" data-socstar="' + m.id + '" title="' + esc(t("chatStarT")) + '">' + ic("star") + "<span>" + esc(t("chatStar")) + "</span>" + (m.stars ? " " + m.stars : "") + "</button>") +
         '<button class="sic" data-socpick="' + m.id + '" aria-label="' + esc(t("chatReact")) + '">' + ic("smile-plus") + '</button><button class="sic" data-socrep="' + m.id + '" aria-label="' + esc(t("chatReply")) + '">' + ic("reply") + "</button>" +
         '<button class="sic ssv' + (isSaved(ch.cid, ch.tk, m.id) ? " on" : "") + '" data-socsave="' + m.id + '" aria-pressed="' + isSaved(ch.cid, ch.tk, m.id) + '" aria-label="' + esc(t("svBtn")) + '" title="' + esc(t("svBtn")) + '">' + ic("bookmark") + "</button>" +
-        (mine ? '<button class="sic" data-socmdel="' + m.id + '" aria-label="delete">' + ic("trash-2") + "</button>" : "") + "</div>") +
+        (mine ? '<button class="sic" data-socmdel="' + m.id + '" aria-label="' + esc(t("del")) + '" title="' + esc(t("del")) + '">' + ic("trash-2") + "</button>" : "") + "</div>") +
       (!m.del && m.stars && (m.sb || []).length ? '<div class="ssb">' + ic("star") + "<span>" + esc(t("chatStarBy", m.sb.map(n => isMeName(n) ? t("chatYou") : n || t("lgSomeone")).join(", "))) + "</span></div>" : "") + "</div>";
   }).join("") : '<div class="hint schempty">' + esc(t("chatEmpty")) + "</div>";
   el.dataset.drawn = "1";
@@ -596,7 +596,7 @@ function drawChat() {
 function setReply(id) {
   const ch = ST.chat, m = ch && ch.msgs.find(x => x.id === id), el = $("#socRep"); if (!el) return;
   ch.reply = m ? id : 0; el.hidden = !m;
-  el.innerHTML = m ? "<span>" + esc(t("chatReplyTo", m.name || t("lgSomeone"))) + ": <i>" + esc((m.body || (m.att ? "📎 " + m.att.n : "")).slice(0, 60)) + '</i></span><button class="sic" data-socrepx aria-label="x">' + ic("x") + "</button>" : "";
+  el.innerHTML = m ? "<span>" + esc(t("chatReplyTo", m.name || t("lgSomeone"))) + ": <i>" + esc((m.body || (m.att ? "📎 " + m.att.n : "")).slice(0, 60)) + '</i></span><button class="sic" data-socrepx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button>" : "";
   if (m) $("#socTx").focus();
 }
 async function sendMsg() {
@@ -652,7 +652,7 @@ function drawPend(busy) {
   const el = $("#socAtt"), f = ST.chat && ST.chat.file; if (!el) return;
   el.hidden = !f; if (!f) { el.innerHTML = ""; return; }
   el.innerHTML = '<div class="sap">' + ic(fIcon(f.type)) + '<span class="sapn"><bdi>' + esc(f.name) + "</bdi><small>" + esc(fSize(f.size)) + (busy ? " · " + esc(t("fUp")) : "") + "</small></span>" +
-    (busy ? '<span class="sspin"></span>' : '<button class="sic" data-socfx aria-label="x">' + ic("x") + "</button>") + "</div>" +
+    (busy ? '<span class="sspin"></span>' : '<button class="sic" data-socfx aria-label="' + esc(t("close")) + '">' + ic("x") + "</button>") + "</div>" +
     '<div class="sak"><span>' + esc(t("fKindQ")) + "</span>" + ["sum", "sol", "other"].map(k => '<button class="chip' + (f.kind === k ? " on" : "") + '" data-socfk="' + k + '"' + (busy ? " disabled" : "") + ">" + esc(t("fKind_" + k)) + "</button>").join("") + "</div>" +
     '<div class="sanote">' + esc(t("fNote")) + "</div>";
 }
@@ -822,9 +822,9 @@ function openBoard(cid) {
   if (cid !== undefined) ST.board.cid = String(cid || "");
   const cs = myCourses(), b = ST.board;
   sheet("socBoard", "<h3><span>" + esc(t("socBoardT")) + "</span>" + xbtn() + "</h3>" +
-    '<select id="socBc" aria-label="course"><option value="">' + esc(t("socAll")) + "</option>" + cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + "</select>" +
+    '<select id="socBc" aria-label="' + esc(t("ttCourse")) + '"><option value="">' + esc(t("socAll")) + "</option>" + cs.map(c => '<option value="' + c.id + '">' + esc(shortName(c.name)) + "</option>").join("") + "</select>" +
     '<div class="seg" id="socBp" style="display:flex;margin:8px 0"><button data-per="sem">' + esc(t("socSem")) + '</button><button data-per="all">' + esc(t("socEver")) + "</button></div>" +
-    '<select id="socBd" aria-label="degree">' + degOptions(b.deg, true) + "</select>" + '<div id="socBl" class="sboard"><div class="hint">' + esc(t("socLoading")) + "</div></div>");
+    '<select id="socBd" aria-label="' + esc(t("socPickDeg")) + '">' + degOptions(b.deg, true) + "</select>" + '<div id="socBl" class="sboard"><div class="hint">' + esc(t("socLoading")) + "</div></div>");
   $("#socBc").value = b.cid; $("#socBd").value = b.deg;
   $$("#socBp button").forEach(x => x.classList.toggle("on", x.dataset.per === b.per));
   $("#socBc").onchange = () => { b.cid = $("#socBc").value; loadBoard(); };
@@ -967,7 +967,12 @@ function addNote() {
   const ta = $("#svNote"), v = ta ? ta.value.trim() : ""; if (!v) { if (ta) ta.focus(); return; }
   P.soc_saved = [{ k: "note:" + Date.now().toString(36), note: true, b: v.slice(0, 500), sv: Date.now() }].concat(P.soc_saved || []).slice(0, 80); savePrefs(); useHit("socNote2"); openSaved(); if (V.view === "chat") chatView();
 }
-function delSaved(k) { P.soc_saved = (P.soc_saved || []).filter(x => x.k !== k); savePrefs(); openSaved(); if (V.view === "chat") chatView(); if (ST.chat && !$("#socChat").hidden) drawChat(); }
+function delSaved(k) {
+  const old = P.soc_saved || [], i = old.findIndex(x => x.k === k), it = old[i];
+  const redraw = () => { savePrefs(); if (!$("#socSaved") || !$("#socSaved").hidden) openSaved(); if (V.view === "chat") chatView(); if (ST.chat && !$("#socChat").hidden) drawChat(); };
+  P.soc_saved = old.filter(x => x.k !== k); redraw();
+  if (it) toastUndo(t("svGone"), () => { if ((P.soc_saved || []).some(x => x.k === k)) return; const a = (P.soc_saved || []).slice(); a.splice(Math.min(i, a.length), 0, it); P.soc_saved = a; redraw(); });   // a note you wrote, gone in one tap: one tap brings it back
+}
 
 /* ---------- community management: only for an account the SERVER lists as admin. The screen itself is in admin.js, downloaded only after the server
    says so, and locked behind a passkey (Face ID / fingerprint) that the server checks too. Nobody else's app loads it or shows a way in ---------- */

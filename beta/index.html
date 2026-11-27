@@ -111,6 +111,7 @@ select{width:auto}
 .top .ttl{flex:1;min-width:0;display:flex;flex-direction:column}
 .top .ttl b{font-size:18px}
 .top .logo{flex:none;width:34px;height:34px;border-radius:9px;box-shadow:0 2px 8px #2a186833}
+body.app .top .logo,body.app .top .ttl b.wm,body.app .sbrand{cursor:pointer}
 .wm{font-weight:800;letter-spacing:-.01em;unicode-bidi:isolate}
 .wm span{margin-inline-start:1px;background:linear-gradient(120deg,var(--accent-t),#7b5cff 60%,#e0a020);-webkit-background-clip:text;background-clip:text;color:transparent}
 .brand{display:flex;align-items:center;gap:12px;margin:2px 0 12px}
@@ -1228,6 +1229,8 @@ body[data-density=compact] .task .ck{inset-block-start:6px;width:24px;height:24p
 
 /* ---------- settings sheet ---------- */
 .sheet{position:fixed;inset:0;background:#0007;z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.sheet .box:focus{outline:none}
+button,a,label,summary,select,[role=button],[data-tk],[data-key]{touch-action:manipulation}   /* two quick taps on a button = two taps, not a zoom (iPhone) */
 .sheet .box{background:var(--card);width:100%;max-width:720px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px max(20px,env(safe-area-inset-bottom))}
 @media (min-width:760px){ .sheet{align-items:center} .sheet .box{border-radius:18px;max-width:560px} }
 .sheet h3{margin:0 0 10px;display:flex;justify-content:space-between;align-items:center}
@@ -1335,6 +1338,9 @@ body.app[data-lz=acad] #ttCard{display:none}
 .srow .cn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #toast{position:fixed;bottom:calc(90px + env(safe-area-inset-bottom));inset-inline:0;margin:auto;width:fit-content;max-width:90%;background:#222;color:#fff;padding:10px 16px;border-radius:12px;display:none;z-index:40;white-space:pre-line;font-size:14px}
 @media (min-width:760px){ #toast{bottom:24px} }
+/* phones: with a window open there's no tab bar to stay above, and at 90px the message sat right on the window's lower buttons
+   (marking a task done: "סומן כבוצע · בטל" covered "דלג" of "how long did it take?" – a tap meant to skip undid the ✓). So it goes to the bottom edge */
+@media (max-width:759px){ html:has(.sheet:not([hidden])) #toast{bottom:calc(12px + env(safe-area-inset-bottom))} }
 
 /* ---------- 1.5 design refresh: system-app look (iOS / macOS / Material 3) ---------- */
 .i{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
@@ -1963,7 +1969,7 @@ html.kb .schc{padding-bottom:8px}
       <div class="hint" data-i18n="xqHint"></div>
       <div id="xqList"></div>
       <div class="xqform" id="xqForm">
-        <div class="xqrow"><select id="xqCourse" aria-label="course"></select><select id="xqKind" aria-label="kind"></select></div>
+        <div class="xqrow"><select id="xqCourse" aria-label="course" data-i18n-aria="ttCourse"></select><select id="xqKind" aria-label="kind" data-i18n-aria="ttKind"></select></div>
         <input type="text" id="xqName" maxlength="60" hidden data-i18n-ph="xqNamePh">
         <div class="xqrow"><label><span data-i18n="xqDate"></span><input type="date" id="xqDate"></label><label><span data-i18n="xqTime"></span><input type="time" id="xqTime"></label></div>
         <input type="text" id="xqNote" maxlength="80" data-i18n-ph="xqNotePh">
@@ -2297,7 +2303,7 @@ const I18N = {
     dcWeek: "השבוע", dcMonth: "לוח החודש", dcNews: "הודעות מהקורסים", dcLoad: "עומס בשבועות הקרובים", dcRem: "תזכורות",
     catMine: "שלי", tMine: "משימה שלי", mineCourse: "משימה שלי", mineAdd: "➕ משימה משלי", mineNewTitle: "➕ משימה חדשה", mineEditTitle: "✏️ עריכת משימה", mineEdit: "✏️ עריכה",
     mineName: "מה צריך לעשות", mineNamePh: "למשל: לסכם פרק 3", mineDate: "עד תאריך", mineTime: "שעה", mineCid: "קורס", mineNoCourse: "בלי קורס", mineNote: "הערה (לא חובה)",
-    mineDelete: "🗑 מחיקת המשימה", mineNeedName: "צריך לכתוב מה המשימה", mineNeedDate: "צריך לבחור תאריך", mineAdded: "המשימה נוספה", mineSaved: "נשמר", mineDeleted: "המשימה נמחקה",
+    mineDelete: "🗑 מחיקת המשימה", mineNeedName: "צריך לכתוב מה המשימה", mineNeedDate: "צריך לבחור תאריך", mineAdded: "המשימה נוספה", mineSaved: "נשמר", mineDeleted: "המשימה נמחקה", xqDeleted: "נמחק מהרשימה",
     ttNoneTxt: "המערכת שלך עוד לא כאן. איתה רואים פה כל יום את השיעורים, ומקבלים תזכורת לפני שיעורי זום.", ttNoneBtn: "📄 ייבוא מהלב נט (דקה)", ttNoneManual: "✏️ או הוספה ידנית",
     instTitle: "📲 להתקין את MoodlePro במסך הבית", instWhy: "ככה היא נפתחת מהמסך הראשי כמו אפליקציה רגילה, במסך מלא, בלי שורת כתובת.",
     instWhyIos: "ככה היא נפתחת מהמסך הראשי כמו אפליקציה רגילה, ובאייפון רק ככה אפשר לקבל ממנה התראות.", instBtn: "📲 התקנה",
@@ -2551,7 +2557,7 @@ const I18N = {
     dcWeek: "This week", dcMonth: "Month calendar", dcNews: "Course announcements", dcLoad: "Workload in the coming weeks", dcRem: "Reminders",
     catMine: "Mine", tMine: "My task", mineCourse: "My task", mineAdd: "➕ Add my own task", mineNewTitle: "➕ New task", mineEditTitle: "✏️ Edit task", mineEdit: "✏️ Edit",
     mineName: "What needs doing", mineNamePh: "e.g. summarise chapter 3", mineDate: "Due date", mineTime: "Time", mineCid: "Course", mineNoCourse: "No course", mineNote: "Note (optional)",
-    mineDelete: "🗑 Delete this task", mineNeedName: "Write what the task is", mineNeedDate: "Pick a date", mineAdded: "Task added", mineSaved: "Saved", mineDeleted: "Task deleted",
+    mineDelete: "🗑 Delete this task", mineNeedName: "Write what the task is", mineNeedDate: "Pick a date", mineAdded: "Task added", mineSaved: "Saved", mineDeleted: "Task deleted", xqDeleted: "Removed from the list",
     ttNoneTxt: "Your timetable isn’t here yet. With it you see today’s classes here, and get a reminder before Zoom classes.", ttNoneBtn: "📄 Import from Levnet (1 minute)", ttNoneManual: "✏️ or add it by hand",
     instTitle: "📲 Install MoodlePro on your home screen", instWhy: "It then opens from your home screen like a regular app, full screen, with no address bar.",
     instWhyIos: "It then opens from your home screen like a regular app, and on iPhone that is the only way to get its notifications.", instBtn: "📲 Install",
@@ -2805,7 +2811,7 @@ const I18N = {
     dcWeek: "Cette semaine", dcMonth: "Calendrier du mois", dcNews: "Annonces des cours", dcLoad: "Charge des semaines à venir", dcRem: "Rappels",
     catMine: "Les miens", tMine: "Ma tâche", mineCourse: "Ma tâche", mineAdd: "➕ Ajouter ma propre tâche", mineNewTitle: "➕ Nouvelle tâche", mineEditTitle: "✏️ Modifier la tâche", mineEdit: "✏️ Modifier",
     mineName: "Ce qu’il faut faire", mineNamePh: "ex. résumer le chapitre 3", mineDate: "Pour le", mineTime: "Heure", mineCid: "Cours", mineNoCourse: "Sans cours", mineNote: "Note (facultatif)",
-    mineDelete: "🗑 Supprimer la tâche", mineNeedName: "Écrivez la tâche", mineNeedDate: "Choisissez une date", mineAdded: "Tâche ajoutée", mineSaved: "Enregistré", mineDeleted: "Tâche supprimée",
+    mineDelete: "🗑 Supprimer la tâche", mineNeedName: "Écrivez la tâche", mineNeedDate: "Choisissez une date", mineAdded: "Tâche ajoutée", mineSaved: "Enregistré", mineDeleted: "Tâche supprimée", xqDeleted: "Retiré de la liste",
     ttNoneTxt: "Votre emploi du temps n’est pas encore là. Avec lui, vous voyez ici les cours du jour et recevez un rappel avant les cours Zoom.", ttNoneBtn: "📄 Importer depuis Levnet (1 minute)", ttNoneManual: "✏️ ou l’ajouter à la main",
     instTitle: "📲 Installer MoodlePro sur l’écran d’accueil", instWhy: "Elle s’ouvre alors depuis l’écran d’accueil comme une vraie app, en plein écran, sans barre d’adresse.",
     instWhyIos: "Elle s’ouvre alors depuis l’écran d’accueil comme une vraie app, et sur iPhone c’est la seule façon de recevoir ses notifications.", instBtn: "📲 Installer",
@@ -4492,7 +4498,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.7";
+const APP_VERSION = "1.9.4-beta.8";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -6690,6 +6696,21 @@ function dExpClose(fromPop) {
   requestAnimationFrame(dashOvf);
 }
 addEventListener("popstate", () => { if (DX.id) { if (NAV.skip) NAV.skip--; dExpClose(true); } }, true);
+/* the logo and name at the top go home – to the overview, at its top – as in most apps and sites */
+document.addEventListener("click", e => {
+  const h = e.target.closest && e.target.closest(".top .logo, .top .ttl b.wm, .sbrand"); if (!h || !M.token || !document.body.classList.contains("app")) return;
+  $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true); if (DX.id) dExpClose();
+  V.focus = null; V.hl = null; setView("dash"); render(); window.scrollTo({ top: 0, behavior: P.calm ? "auto" : "smooth" }); useHit("logoHome");
+});
+/* computer: text cut with "…" shows all of it when the mouse rests on it (a course or task name that didn't fit) */
+document.addEventListener("mouseover", e => {
+  if (!matchMedia("(hover: hover)").matches) return;
+  for (let el = e.target, i = 0; el && el.nodeType === 1 && i < 4; el = el.parentElement, i++) {
+    if (el.title || el.closest("[title]")) return;
+    const cs = getComputedStyle(el), cut = cs.textOverflow === "ellipsis" && el.scrollWidth > el.clientWidth + 1 || cs.webkitLineClamp !== "none" && cs.webkitLineClamp && el.scrollHeight > el.clientHeight + 1;
+    if (cut) { const txt = el.innerText.trim(); if (txt) el.title = txt.slice(0, 300); return; }
+  }
+}, { passive: true });
 /* Enter, like in any form: in a search box it opens the first result (or just closes the phone keyboard); in a one-line field of a form it saves */
 const ENTER_SAVE = { fTitle: "#fSave", fPlace: "#fSave", fWho: "#fSave", xqName: "#xqSave", xqNote: "#xqSave" };
 document.addEventListener("keydown", e => {
@@ -7645,6 +7666,22 @@ document.addEventListener("click", e => {
   const sh = document.getElementById(id); if (sh) sh.hidden = true;
   renderSheet(); setPage(page); $("#sheet").hidden = false;
 }, true);
+/* keyboard focus follows the windows, as in any app: a window that opens takes it (unless something in it already has it, like a text box),
+   and when it closes, focus goes back to what opened it – so Tab and Enter keep working where the person is looking */
+const FOCUS_BACK = {};
+function sheetFocus(opened, closed) {
+  for (const id of closed) { const el = document.getElementById(id), fb = FOCUS_BACK[id]; delete FOCUS_BACK[id]; if (!fb) continue;
+    const back = fb.el.isConnected ? fb.el : fb.sel ? document.querySelector(fb.sel) : null;      // the list may have been drawn again meanwhile: the same item
+    if (back && /^(INPUT|TEXTAREA|SELECT)$/.test(back.tagName) && matchMedia("(pointer: coarse)").matches) continue;   // a phone: no keyboard popping up by itself
+    if ((!el || el.hidden) && (!el || el.contains(document.activeElement) || document.activeElement === document.body || !document.activeElement) && back && back.offsetParent && !back.closest(".sheet[hidden]")) try { back.focus({ preventScroll: true }); } catch (e) {} }
+  for (const id of opened) { const el = document.getElementById(id); if (!el || el.hidden) continue;
+    const ae = document.activeElement; if (ae && ae !== document.body && !el.contains(ae)) {
+      const d = Object.keys(ae.dataset || {}).find(k => k !== "qa"), sel = ae.id ? "#" + CSS.escape(ae.id) : d ? ae.tagName.toLowerCase() + "[data-" + d.replace(/[A-Z]/g, c => "-" + c.toLowerCase()) + '="' + CSS.escape(ae.dataset[d]) + '"]' : "";
+      FOCUS_BACK[id] = { el: ae, sel }; }
+    if (el.contains(ae)) continue;
+    const box = el.querySelector(".box") || el; if (!box.hasAttribute("tabindex")) box.setAttribute("tabindex", "-1");
+    try { box.focus({ preventScroll: true }); } catch (e) {} }
+}
 function navInit() {
   if (NAV.ready) return; NAV.ready = true;
   history.replaceState({ v: V.view }, "");
@@ -7653,6 +7690,7 @@ function navInit() {
     for (const m of ms) { const el = m.target, id = el.id;
       if (!el.hidden && !NAV.open.includes(id)) { NAV.open.push(id); opened.push(id); }
       else if (el.hidden && NAV.open.includes(id)) { NAV.open = NAV.open.filter(x => x !== id); closed.push(id); } }
+    sheetFocus(opened, ms.filter(m => m.target.hidden).map(m => m.target.id));        // closed by any way (✕, Back, Esc, tap outside)
     let step = history.state && closed.includes(history.state.w);       // the window on top was closed by its own button
     if (closed.includes("sheet") && opened.length && opened[0] !== "sheet") setBackFrom(opened[0], V.spage);   // opened from settings: it gets a ← back to settings
     else if (SB.id && closed.includes(SB.id)) setBackEnd();
@@ -7667,7 +7705,7 @@ function navInit() {
   new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) {
     if (!(n instanceof HTMLElement) || !n.classList.contains("sheet")) continue;
     watch.observe(n, { attributes: true, attributeFilter: ["hidden"] });
-    if (!n.hidden && !NAV.open.includes(n.id)) { NAV.open.push(n.id); history.pushState({ v: V.view, w: n.id }, ""); }
+    if (!n.hidden && !NAV.open.includes(n.id)) { NAV.open.push(n.id); history.pushState({ v: V.view, w: n.id }, ""); sheetFocus([n.id], []); }
   } }).observe(document.body, { childList: true });
   window.addEventListener("popstate", e => {
     if (NAV.skip) { NAV.skip--; return; }
@@ -8004,7 +8042,8 @@ $("#xqSave").onclick = xqSave;
 $("#xqCancel").onclick = () => xqFill(null);
 $("#xqList").addEventListener("click", e => {
   const ed = e.target.closest("[data-xqe]"); if (ed) { xqFill((P.xq || []).find(q => q.id === ed.dataset.xqe)); $("#xqForm").scrollIntoView({ block: "nearest" }); return; }
-  const dl = e.target.closest("[data-xqd]"); if (dl) { const gone = (P.xq || []).find(q => q.id === dl.dataset.xqd); if (gone) S("unshare", gone); P.xq = (P.xq || []).filter(q => q.id !== dl.dataset.xqd); if (V.xqEdit === dl.dataset.xqd) V.xqEdit = ""; savePrefs(); render(); renderXq(); }
+  const dl = e.target.closest("[data-xqd]"); if (dl) { const gone = (P.xq || []).find(q => q.id === dl.dataset.xqd); if (gone) { S("unshare", gone); delete gone.sid; } P.xq = (P.xq || []).filter(q => q.id !== dl.dataset.xqd); if (V.xqEdit === dl.dataset.xqd) V.xqEdit = ""; savePrefs(); render(); renderXq();
+    if (gone) toastUndo(t("xqDeleted"), () => { if (!(P.xq || []).some(q => q.id === gone.id)) { P.xq = (P.xq || []).concat(gone); savePrefs(); render(); renderXq(); } }); }      // deleted by one tap: one tap brings it back, like an own task
 });
 $("#bExScan").onclick = scanExams;
 $("#exClose").onclick = () => $("#exSheet").hidden = true;
