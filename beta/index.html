@@ -7367,13 +7367,22 @@ const OFF_S = new Proxy({}, { get: (o, k) => offOk(k) ? offSec(k) : 0 });
 const PS = { p: null, err: null, timer: 0 };
 const clockTxt = ts => { const d = new Date(ts * 1000); try { return d.toLocaleString(t("locale"), { weekday: "short", day: "numeric", month: "numeric", hour: "2-digit", minute: "2-digit" }); } catch (e) { return d.toLocaleString(); } };
 /* every notification this device should get, by the chosen offsets: one per offset per item */
+/* a reminder "a day (or days) before" a 23:59 deadline used to ring at 23:59 the night before. Days-before reminders that fall between 22:00 and 08:00
+   ring at 20:00 instead (the same evening, or the evening before when it was after midnight). Hours-before reminders stay exact (proposal) */
+function nightSafe(at, k) {
+  if (!/d$/.test(k)) return at;
+  const d = new Date(at * 1000), h = d.getHours();
+  if (h >= 8 && h < 22) return at;
+  if (h < 8) d.setDate(d.getDate() - 1);
+  d.setHours(20, 0, 0, 0); return d.getTime() / 1000;
+}
 function pushItems() {
   const c = remCfg(), now = nowS(), d = V.data, out = [];
   const add = (at, title, body, tag) => { if (at > now) out.push({ at: at * 1000, title, body, tag }); };
   if (d) for (const x of d.tasks) {
     if (!counted(x) || isDone(x) || !x.due || x.due < now) continue;
     if (x.type === "zoom") { if (c.cls !== "none") add(x.due - c.clsMin * 60, "📹 " + shortName(x.course) + ": " + x.name, t("pushClass", c.clsMin), "z:" + x.key); continue; }
-    for (const k of c.task) add(x.due - OFF_S[k], "⏰ " + shortName(x.course) + ": " + x.name, t("pushDue", offTxt(k), clockTxt(x.due)), "t:" + x.key + ":" + k);
+    for (const k of c.task) add(nightSafe(x.due - OFF_S[k], k), "⏰ " + shortName(x.course) + ": " + x.name, t("pushDue", offTxt(k), clockTxt(x.due)), "t:" + x.key + ":" + k);
   }
   for (const x of examList()) for (const k of c.exam) {
     const at = x.allDay ? dayStart(x.ts) - OFF_S[k] + 9 * 3600 : x.ts - OFF_S[k];      // an all-day exam: at 09:00 that many days before
