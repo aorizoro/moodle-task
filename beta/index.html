@@ -2190,6 +2190,8 @@ const LS = {
   set(k, v) { if (LS.frozen) return; try { localStorage.setItem(PFX + k, JSON.stringify(v)); } catch (e) {} },
   del(k) { if (LS.frozen) return; try { localStorage.removeItem(PFX + k); } catch (e) {} },
 };
+/* scrolling that glides – unless "calm" is on or the phone asks for less motion (CSS can't stop a scroll asked for in code) */
+function smoothB() { try { return P.calm || matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"; } catch (e) { return "auto"; } }
 function toast(m, ms) { const t = $("#toast"); t.textContent = m; t.style.display = "block"; clearTimeout(toast.t); toast.t = setTimeout(() => t.style.display = "none", ms || 3500); }
 /* a message with a "Undo" button */
 function toastUndo(m, undo) {
@@ -4513,7 +4515,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.10";
+const APP_VERSION = "1.9.4-beta.11";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4647,7 +4649,7 @@ async function sendFb(noPhone) {
   if (phone && !/^[+\d][\d\s\-()]{6,20}$/.test(phone)) return $("#fbErr").textContent = t("fbBadPhone");
   if (!phone && noPhone !== true) {
     $("#fbErr").textContent = ""; $("#fbPhAsk").hidden = false; $("#fbPhL").classList.add("need");
-    $("#fbPhL").scrollIntoView({ block: "center", behavior: "smooth" }); if (!FB_PH.asked) { FB_PH.asked = true; useHit("fbPhAsk"); setTimeout(() => $("#fbContact").focus(), 250); }
+    $("#fbPhL").scrollIntoView({ block: "center", behavior: smoothB() }); if (!FB_PH.asked) { FB_PH.asked = true; useHit("fbPhAsk"); setTimeout(() => $("#fbContact").focus(), 250); }
     return;
   }
   if (phone) { LS.set("fbPhone", phone); if (FB_PH.asked) useHit("fbPhAdded"); } else useHit("fbNoPh");
@@ -4998,7 +5000,7 @@ function goGrades(cid) {
   $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true);
   if (cid) GP.open[cid] = true;
   setView("grades"); render(); window.scrollTo(0, 0);
-  if (cid) setTimeout(() => { const el = $('#pgv [data-grc="' + cid + '"]'); if (el) el.scrollIntoView({ block: "center", behavior: "smooth" }); }, 80);
+  if (cid) setTimeout(() => { const el = $('#pgv [data-grc="' + cid + '"]'); if (el) el.scrollIntoView({ block: "center", behavior: smoothB() }); }, 80);
 }
 function xtBadges() {
   const d = V.data; if (!d) return;
@@ -5544,7 +5546,7 @@ function renderAcad(now) {
 function goAcad(ymdS) {
   V.lz = "acad"; LS.set("lz", "acad"); useHit("acad");
   if (ymdS) { V.acMode = "month"; V.acM = ymdS.slice(0, 7); V.acSel = ymdS; }
-  if (wide()) { render(); $("#acadCard").scrollIntoView({ block: "start", behavior: "smooth" }); } else { setView("tt"); render(); window.scrollTo(0, 0); }
+  if (wide()) { render(); $("#acadCard").scrollIntoView({ block: "start", behavior: smoothB() }); } else { setView("tt"); render(); window.scrollTo(0, 0); }
 }
 
 /* ---------- actions ---------- */
@@ -6716,7 +6718,7 @@ addEventListener("popstate", () => { if (DX.id) { if (NAV.skip) NAV.skip--; dExp
 document.addEventListener("click", e => {
   const h = e.target.closest && e.target.closest(".top .logo, .top .ttl b.wm, .sbrand"); if (!h || !M.token || !document.body.classList.contains("app")) return;
   $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true); if (DX.id) dExpClose();
-  V.focus = null; V.hl = null; setView("dash"); render(); window.scrollTo({ top: 0, behavior: P.calm ? "auto" : "smooth" }); useHit("logoHome");
+  V.focus = null; V.hl = null; setView("dash"); render(); window.scrollTo({ top: 0, behavior: smoothB() }); useHit("logoHome");
 });
 /* computer: text cut with "…" shows all of it when the mouse rests on it (a course or task name that didn't fit) */
 document.addEventListener("mouseover", e => {
@@ -7116,7 +7118,7 @@ $("#aiCopy").onclick = async () => { const txt = aiText(); useHit("aiCopy"); try
 /* the text preview: a real button (a <details> toggle did nothing on some iPhones), and it scrolls to the text it opens */
 function aiPrevShow(on) {
   const pre = $("#aiText"), b = $("#aiPrevBtn"); pre.hidden = !on; b.setAttribute("aria-expanded", String(on));
-  if (on) { useHit("aiPrev"); requestAnimationFrame(() => { try { pre.scrollIntoView({ block: "nearest", behavior: "smooth" }); } catch (e) { pre.scrollIntoView(false); } }); }
+  if (on) { useHit("aiPrev"); requestAnimationFrame(() => { try { pre.scrollIntoView({ block: "nearest", behavior: smoothB() }); } catch (e) { pre.scrollIntoView(false); } }); }
 }
 $("#aiPrevBtn").onclick = () => aiPrevShow($("#aiText").hidden);
 $("#aiShare").onclick = async () => { useHit("aiShare"); try { await navigator.share({ title: t("aiH"), text: aiText() }); } catch (e) {} };
@@ -7206,7 +7208,7 @@ $("#daReset").onclick = () => { P[DK()] = null; savePrefs(); applyDash(); render
 const daClose = () => { $("#daSheet").hidden = true; if (DA.welcome) { DA.welcome = false; toast(t("daWelDone")); setTimeout(maybeAskRem, 600); } };
 $("#daClose").onclick = daClose; $("#daDone").onclick = daClose;
 $("#daSheet").addEventListener("click", e => { if (e.target.id === "daSheet") daClose(); });
-$("#bDashEdit").onclick = $("#bDashEdit2").onclick = () => { deOn(!document.body.classList.contains("dashed")); if (document.body.classList.contains("dashed")) window.scrollTo({ top: 0, behavior: "smooth" }); };
+$("#bDashEdit").onclick = $("#bDashEdit2").onclick = () => { deOn(!document.body.classList.contains("dashed")); if (document.body.classList.contains("dashed")) window.scrollTo({ top: 0, behavior: smoothB() }); };
 /* like a phone's home screen: a long press on a card starts editing */
 { let lp = null;
   $("#dash").addEventListener("pointerdown", e => {
@@ -7493,7 +7495,7 @@ function setTheme(th) {
 }
 { const box = document.querySelector("#thSheet .box"), into = $("#thInline");
   if (box && into) for (const n of [...box.children]) if (n.tagName !== "H3") into.appendChild(n); }
-function openThemes() { useHit("themes"); openSetPage("look"); renderThemes(); renderLogos(); setTimeout(() => { const g = $("#logoGrid"); if (g) g.scrollIntoView({ block: "start", behavior: "smooth" }); }, 60); }
+function openThemes() { useHit("themes"); openSetPage("look"); renderThemes(); renderLogos(); setTimeout(() => { const g = $("#logoGrid"); if (g) g.scrollIntoView({ block: "start", behavior: smoothB() }); }, 60); }
 function openThemesOld() { useHit("themes"); $("#sheet").hidden = true; $("#wnSheet").hidden = true; renderThemes(); renderLogos(); $("#thSheet").hidden = false; }
 /* the logo inside the app (the header, the side bar and the browser tab); the home-screen icon is set when installing and stays */
 function logoSrc(k) {
@@ -7596,7 +7598,7 @@ function renderGuide() {
 function guideError(msg) {
   $("#setupErr").textContent = msg;
   const st = $("#gStep2"); st.classList.remove("flash"); void st.offsetWidth; st.classList.add("flash");
-  st.scrollIntoView({ block: "center", behavior: "smooth" });
+  st.scrollIntoView({ block: "center", behavior: smoothB() });
 }
 function showSetup(err) {
   $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true); try { if (DX.id) dExpClose(true); if (!$("#tour").hidden) closeTour(); } catch (e) {}   // the token ran out while a window was open: the sign-in screen and its message must be what's seen
@@ -7696,6 +7698,8 @@ function sheetFocus(opened, closed) {
       FOCUS_BACK[id] = { el: ae, sel }; }
     if (el.contains(ae)) continue;
     const box = el.querySelector(".box") || el; if (!box.hasAttribute("tabindex")) box.setAttribute("tabindex", "-1");
+    if (!el.hasAttribute("role")) { el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); }      // screen readers: a window, with its title as its name
+    { const h = el.querySelector("h3"); const nm = h && h.textContent.trim(); if (nm) el.setAttribute("aria-label", nm.slice(0, 80)); }
     try { box.focus({ preventScroll: true }); } catch (e) {} }
 }
 function navInit() {
@@ -7734,7 +7738,7 @@ function navInit() {
   });
 }
 $("#tok").addEventListener("keydown", e => { if (e.key === "Enter") connectWith($("#tok").value); });
-const fixOpen = () => { const d = $("#gFix"); if (!d) return; d.open = true; d.classList.remove("flash"); void d.offsetWidth; d.classList.add("flash"); d.scrollIntoView({ block: "center", behavior: "smooth" }); useHit("loginFix"); };
+const fixOpen = () => { const d = $("#gFix"); if (!d) return; d.open = true; d.classList.remove("flash"); void d.offsetWidth; d.classList.add("flash"); d.scrollIntoView({ block: "center", behavior: smoothB() }); useHit("loginFix"); };
 let getTaps = 0;
 $("#bGet").addEventListener("click", () => { if (++getTaps === 2) setTimeout(fixOpen, 400); });   // a second tap = the first one didn't give the link (usually the Moodle app took it)
 $("#gFix").addEventListener("toggle", e => { if (e.target.open) useHit("loginFixOpen"); });
@@ -7993,7 +7997,7 @@ $("#dash").addEventListener("click", e => {
   const go = e.target.closest("[data-goto]"); if (go) return gotoTask(go.dataset.goto);
   const tk = e.target.closest("[data-tk]"); if (tk) return openTask(tk.dataset.tk);
 });
-function goTT() { V.lz = "tt"; LS.set("lz", "tt"); if (wide()) $("#ttCard").scrollIntoView({ block: "start", behavior: "smooth" }); else { setView("tt"); render(); window.scrollTo(0, 0); } }
+function goTT() { V.lz = "tt"; LS.set("lz", "tt"); if (wide()) $("#ttCard").scrollIntoView({ block: "start", behavior: smoothB() }); else { setView("tt"); render(); window.scrollTo(0, 0); } }
 function openSemSettings() { renderSheet(); setPage("sem"); $("#sheet").hidden = false; }
 $("#dash").addEventListener("click", e => {
   if (e.target.closest("[data-semedit]")) return openSemSettings();
