@@ -4515,7 +4515,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.11";
+const APP_VERSION = "1.9.4-beta.12";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4753,7 +4753,7 @@ function grTot(cg) {
   const its = (cg.items || []).filter(i => i.raw != null && i.max > 0);
   if (!its.length) return null;
   const ws = its.every(i => i.w != null && i.w > 0), sw = ws ? its.reduce((a, i) => a + i.w, 0) : its.length;
-  const v = its.reduce((a, i) => a + (ws ? i.w : 1) * Math.min(110, i.raw / i.max * 100), 0) / sw;
+  const v = its.reduce((a, i) => a + (ws ? i.w : 1) * Math.min(110, grPct(i) || 0), 0) / sw;
   return Number.isFinite(v) ? { raw: v, max: 100, p: v } : null;
 }
 function gradeOfTask(x) { if (!grOn() || !x || !(x.cid > 0) || !x.cmid) return null; return grItems(x.cid).find(i => i.cmid === x.cmid && i.raw != null) || null; }
@@ -4772,7 +4772,7 @@ async function gradeScan(d, force, only) {
         if (g.itemtype === "course" || g.itemtype === "category" || g.gradeishidden) continue;
         const w = g.weightraw != null ? Number(g.weightraw) * 100 : parseFloat(g.weightformatted);
         items.push({ id: Number(g.id) || 0, cmid: Number(g.cmid) || 0, mod: g.itemmodule || "", n: stripHtml(g.itemname || "").trim() || t("grItem"), raw: g.graderaw == null ? null : Number(g.graderaw),
-          max: Number(g.grademax) || 0, fmt: String(g.gradeformatted || "").trim(), w: Number.isFinite(w) ? Math.round(w * 100) / 100 : null, at: Number(g.gradedategraded) || 0, fb: stripHtml(g.feedback || "").trim().slice(0, 500), avg: grAvg(g.averageformatted) });
+          max: Number(g.grademax) || 0, ...(Number(g.grademin) > 0 ? { min: Number(g.grademin) } : {}), fmt: String(g.gradeformatted || "").trim(), w: Number.isFinite(w) ? Math.round(w * 100) / 100 : null, at: Number(g.gradedategraded) || 0, fb: stripHtml(g.feedback || "").trim().slice(0, 500), avg: grAvg(g.averageformatted) });
       }
       out.c[cid] = { at: Date.now(), items, total: tot && tot.graderaw != null && !tot.gradeishidden ? { raw: Number(tot.graderaw), max: Number(tot.grademax) || 100, fmt: String(tot.gradeformatted || "").trim(), avg: grAvg(tot.averageformatted) } : null };
       const prev = old.c[cid];
@@ -4811,7 +4811,9 @@ function renderGradesCard() {
   }).join("");
   el.innerHTML = (rows || '<p class="hint">' + esc(t("crsNone")) + "</p>") + '<p class="hint grfoot">' + esc(t("grAt", ago(Math.floor(g.at / 1000)))) + " · " + esc(t("grTotHint")) + "</p>";
 }
-const grPct = it => it.raw != null && it.max ? it.raw / it.max * 100 : null;
+/* a grade's place between the lowest and the highest it can be. Usually 0–100, but a scale starts at 1: "pass/fail" is 1–2, so "fail" (1 of 2) is 0%, not 50%,
+   and a letter scale F…A (1–5) gives B 75%, as Moodle itself shows */
+const grPct = it => { const lo = it.min > 0 ? it.min : 0; return it.raw != null && it.max > lo ? (it.raw - lo) / (it.max - lo) * 100 : null; };
 const grCls = p => p == null ? "" : p >= 85 ? " g-hi" : p >= 60 ? " g-mid" : " g-lo";
 const grKind = it => grIsAtt(it) ? t("grAtt") : it.mod === "vpl" ? t("grVpl") : it.mod === "quiz" ? t("grQuiz") : it.mod === "assign" ? t("grAssign") : it.mod ? it.mod : t("grManual");
 const grIcon = it => grIsAtt(it) ? "users" : it.mod === "vpl" ? "file-code" : it.mod === "quiz" ? "circle-check" : it.mod === "assign" ? "file-up" : "award";
@@ -5844,7 +5846,7 @@ function remItems(fresh, cf) {
       if (!ttWeekOn(x, first)) first.setDate(first.getDate() + 7);
       if (first.getTime() / 1000 >= until) continue;
       const end = new Date((until - 1) * 1000);
-      out.classes.push({ uid: "class-" + x.id, cid: ttCid(x), local: { s: stamp(first, hm(x.s)), e: stamp(first, hm(x.e)) }, rrule: "FREQ=WEEKLY;" + (x.wk2 ? "INTERVAL=2;" : "") + "UNTIL=" + stamp(end, 1439),
+      out.classes.push({ uid: "class-" + x.id, cid: ttCid(x), local: { s: stamp(first, hm(x.s)), e: stamp(first, hm(x.e)) }, rrule: "FREQ=WEEKLY;" + (x.wk2 ? "INTERVAL=2;" : "") + "UNTIL=" + new Date(end.getFullYear(), end.getMonth(), end.getDate(), 23, 59).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""),   // in UTC ("…Z"): the start has a time zone, so the standard wants the end of the repeats in UTC (strict calendars, e.g. Outlook, drop the class otherwise)
         title: (colorDot(ttColor(x)) ? colorDot(ttColor(x)) + " " : "") + (isZoom(x) ? "📹 " : "") + ttName(x) + " · " + ttKind(x), place: x.place, desc: [x.who, x.att ? t("attShort") : ""].filter(Boolean).join("\n"), alarms: ["-PT" + c.clsMin + "M"] });
     }
     out.sig = sig;
