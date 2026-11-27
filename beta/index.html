@@ -1232,6 +1232,12 @@ body[data-density=compact] .task .ck{inset-block-start:6px;width:24px;height:24p
 /* ---------- settings sheet ---------- */
 .sheet{position:fixed;inset:0;background:#0007;z-index:30;display:flex;align-items:flex-end;justify-content:center}
 .sheet .box:focus{outline:none}
+#ptr{position:fixed;top:calc(env(safe-area-inset-top) + 56px);left:50%;z-index:25;width:40px;height:40px;border-radius:50%;background:var(--card);color:var(--muted);box-shadow:0 2px 10px #0003;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50px);opacity:0;pointer-events:none;transition:opacity .15s}
+#ptr.show{opacity:1}#ptr.go{color:var(--accent)}#ptr .i{width:20px;height:20px}
+#ptr:not(.show){transition:opacity .15s,transform .2s}
+#ptr.spin .i{animation:s .8s linear infinite}
+@media (prefers-reduced-motion:reduce){#ptr.spin .i{animation:none}}
+body.calm #ptr.spin .i{animation:none}
 button,a,label,summary,select,[role=button],[data-tk],[data-key]{touch-action:manipulation}   /* two quick taps on a button = two taps, not a zoom (iPhone) */
 .sheet .box{background:var(--card);width:100%;max-width:720px;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:16px 16px max(20px,env(safe-area-inset-bottom))}
 @media (min-width:760px){ .sheet{align-items:center} .sheet .box{border-radius:18px;max-width:560px} }
@@ -6745,6 +6751,13 @@ document.addEventListener("mouseover", e => {
     if (cut) { const txt = el.innerText.trim(); if (txt) el.title = txt.slice(0, 300); return; }
   }
 }, { passive: true });
+/* computer: "/" or Ctrl/⌘+K = search (the overview's search box), as on most sites (proposal) */
+document.addEventListener("keydown", e => {
+  const a = document.activeElement, typing = a && (/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) || a.isContentEditable);
+  if (!(e.key === "/" && !typing && !e.ctrlKey && !e.metaKey && !e.altKey || (e.key === "k" || e.key === "K") && (e.ctrlKey || e.metaKey)) || !M.token || $$(".sheet:not([hidden])").length || !$("#tour").hidden) return;
+  e.preventDefault(); if (V.view !== "dash") { setView("dash"); render(); window.scrollTo(0, 0); }
+  const q = $("#dQ"); if (q && q.offsetParent) { q.focus(); q.select(); }
+});
 /* Enter, like in any form: in a search box it opens the first result (or just closes the phone keyboard); in a one-line field of a form it saves */
 const ENTER_SAVE = { fTitle: "#fSave", fPlace: "#fSave", fWho: "#fSave", xqName: "#xqSave", xqNote: "#xqSave" };
 document.addEventListener("keydown", e => {
@@ -6756,6 +6769,25 @@ document.addEventListener("keydown", e => {
   const btn = ENTER_SAVE[a.id] ? $(ENTER_SAVE[a.id]) : a.id === "socWaIn" ? a.closest(".sheet") && a.closest(".sheet").querySelector("[data-socwasave]") : null;
   if (btn && !btn.disabled && btn.offsetParent) { e.preventDefault(); btn.click(); }
 });
+/* phones: pull down at the top of a page and let go = refresh, as in most apps (proposal). The page itself doesn't move (David: no rubber band) – only a small round button comes down */
+(() => {
+  const el = document.createElement("div"); el.id = "ptr"; el.setAttribute("aria-hidden", "true"); el.innerHTML = ic("refresh-cw"); document.body.appendChild(el);
+  let y0 = 0, x0 = 0, on = false, d = 0; const LINE = 70;
+  const can = e => matchMedia("(pointer: coarse)").matches && M.token && !$$(".sheet:not([hidden])").length && $("#tour").hidden && !document.body.classList.contains("dashed") && !DX.id && window.scrollY <= 0 && !(e.target.closest && e.target.closest("#tabbar, input, textarea, select, .chips, [draggable=true]"));
+  addEventListener("touchstart", e => { on = e.touches.length === 1 && can(e); if (on) { y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; d = 0; } }, { passive: true });
+  addEventListener("touchmove", e => {
+    if (!on) return; const dy = e.touches[0].clientY - y0, dx = e.touches[0].clientX - x0;
+    if (window.scrollY > 0 || Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) { on = false; el.className = ""; el.style.transform = ""; return; }
+    d = Math.max(0, Math.min(120, dy * 0.6)); el.className = d > 6 ? "show" + (d >= LINE ? " go" : "") : "";
+    el.style.transform = "translate(-50%," + (d - 50) + "px) rotate(" + Math.round(d * 3) + "deg)";
+  }, { passive: true });
+  addEventListener("touchend", () => {
+    if (!on) return; on = false;
+    if (d >= LINE) { el.className = "show go spin"; el.style.transform = "translate(-50%,24px)"; useHit("pullRefresh"); refresh(true);
+      const w = setInterval(() => { if (!V.loading) { clearInterval(w); el.className = ""; el.style.transform = ""; } }, 200); }
+    else { el.className = ""; el.style.transform = ""; }
+  }, { passive: true });
+})();
 /* computer: the mouse wheel over an open window (its dimmed part, or a part that has nothing more to scroll) no longer scrolls the page behind it */
 addEventListener("wheel", e => {
   const sh = e.target.closest && e.target.closest(".sheet"); if (!sh || sh.hidden || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
@@ -8134,6 +8166,9 @@ window.addEventListener("resize", () => { const b = $("#dash"); if (b) for (cons
 $("#tabbar").addEventListener("click", e => { if (e.target.closest("#bNavSet")) return; const b = e.target.closest("[data-v]"); if (b) { setView(b.dataset.v); if (b.dataset.v === "dash") V.focus = null; render(); window.scrollTo(0, 0); } });
 /* back after a while away (1 hour by default): start again from the overview, like opening the app fresh, and quietly look for a new version */
 let awayAt = 0;
+/* went to Moodle from a task's page (usually to submit): coming back finds that same page, with its status fresh (proposal) */
+const MOODLE_TRIP = { key: "", at: 0 };
+document.addEventListener("click", e => { const a = e.target.closest && e.target.closest("#tkSheet a[href^='http']"); if (a && TK.key) { MOODLE_TRIP.key = TK.key; MOODLE_TRIP.at = Date.now(); } }, true);
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { awayAt = Date.now(); return; }
   const mins = AWAY_OPTS.includes(P.away) ? P.away : 5;
@@ -8142,7 +8177,8 @@ document.addEventListener("visibilitychange", () => {
   // a window with something typed in it (a message, feedback, a note) stays as it is – and then the app doesn't reload into a new version either
   const typed = sh => [...sh.querySelectorAll("textarea, input[type=text], input[type=search], input[type=url], input:not([type])")].some(i => i.value.trim() && i.value !== i.defaultValue) || !!sh.querySelector("input:focus,textarea:focus");
   let kept = 0;
-  $$(".sheet:not([hidden])").forEach(sh => { if (typed(sh)) kept++; else sh.hidden = true; });
+  const fromMoodle = MOODLE_TRIP.key && Date.now() - MOODLE_TRIP.at < 3 * 3600e3 && !$("#tkSheet").hidden && TK.key === MOODLE_TRIP.key; MOODLE_TRIP.key = "";
+  $$(".sheet:not([hidden])").forEach(sh => { if (typed(sh) || fromMoodle && sh.id === "tkSheet") kept++; else sh.hidden = true; });
   if (!$("#tour").hidden) closeTour();
   if (DX.id) dExpClose();
   V.focus = null; V.hl = null; if (!kept) { setView("dash"); render(); window.scrollTo(0, 0); updQuiet(); } else updWaiting();
