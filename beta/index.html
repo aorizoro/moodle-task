@@ -1232,7 +1232,7 @@ body[data-density=compact] .task .ck{inset-block-start:6px;width:24px;height:24p
 /* ---------- settings sheet ---------- */
 .sheet{position:fixed;inset:0;background:#0007;z-index:30;display:flex;align-items:flex-end;justify-content:center}
 .sheet .box:focus{outline:none}
-#ptr{position:fixed;top:calc(env(safe-area-inset-top) + 56px);left:50%;z-index:25;width:40px;height:40px;border-radius:50%;background:var(--card);color:var(--muted);box-shadow:0 2px 10px #0003;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50px);opacity:0;pointer-events:none;transition:opacity .15s}
+#ptr{position:fixed;top:60px;left:50%;z-index:9;width:40px;height:40px;border-radius:50%;background:var(--card);color:var(--muted);box-shadow:0 2px 10px #0003;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50px);opacity:0;pointer-events:none;transition:opacity .15s}
 #ptr.show{opacity:1}#ptr.go{color:var(--accent)}#ptr .i{width:20px;height:20px}
 #ptr:not(.show){transition:opacity .15s,transform .2s}
 #ptr.spin .i{animation:s .8s linear infinite}
@@ -6774,16 +6774,16 @@ document.addEventListener("keydown", e => {
   const el = document.createElement("div"); el.id = "ptr"; el.setAttribute("aria-hidden", "true"); el.innerHTML = ic("refresh-cw"); document.body.appendChild(el);
   let y0 = 0, x0 = 0, on = false, d = 0; const LINE = 70;
   const can = e => matchMedia("(pointer: coarse)").matches && M.token && !$$(".sheet:not([hidden])").length && $("#tour").hidden && !document.body.classList.contains("dashed") && !DX.id && window.scrollY <= 0 && !(e.target.closest && e.target.closest("#tabbar, input, textarea, select, .chips, [draggable=true]"));
-  addEventListener("touchstart", e => { on = e.touches.length === 1 && can(e); if (on) { y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; d = 0; } }, { passive: true });
+  addEventListener("touchstart", e => { on = e.touches.length === 1 && can(e); if (on) { y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; d = 0; const hd = $(".top"); el.style.top = Math.round(hd ? hd.getBoundingClientRect().bottom : 60) + "px"; } }, { passive: true });
   addEventListener("touchmove", e => {
     if (!on) return; const dy = e.touches[0].clientY - y0, dx = e.touches[0].clientX - x0;
     if (window.scrollY > 0 || Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 10) { on = false; el.className = ""; el.style.transform = ""; return; }
     d = Math.max(0, Math.min(120, dy * 0.6)); el.className = d > 6 ? "show" + (d >= LINE ? " go" : "") : "";
-    el.style.transform = "translate(-50%," + (d - 50) + "px) rotate(" + Math.round(d * 3) + "deg)";
+    el.style.transform = "translate(-50%," + Math.round(d * 0.5 - 30) + "px) rotate(" + Math.round(d * 3) + "deg)";
   }, { passive: true });
   addEventListener("touchend", () => {
     if (!on) return; on = false;
-    if (d >= LINE) { el.className = "show go spin"; el.style.transform = "translate(-50%,24px)"; useHit("pullRefresh"); refresh(true);
+    if (d >= LINE) { el.className = "show go spin"; el.style.transform = "translate(-50%,12px)"; useHit("pullRefresh"); refresh(true);
       const w = setInterval(() => { if (!V.loading) { clearInterval(w); el.className = ""; el.style.transform = ""; } }, 200); }
     else { el.className = ""; el.style.transform = ""; }
   }, { passive: true });
