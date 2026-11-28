@@ -1382,6 +1382,12 @@ body.app[data-lz=acad] #ttCard{display:none}
 .task .act a,.task .act button{display:inline-flex;align-items:center;gap:5px}
 .task .act .i{width:16px;height:16px}
 .fl .i{width:16px;height:16px}
+/* download next to a file: a small square in the chip's own colours, joined to it; a wider ring for the finger (DESIGN 10) */
+.flw{display:inline-flex;align-items:stretch;max-width:100%;min-width:0}.flw .fl{min-width:0;border-start-end-radius:0;border-end-end-radius:0}.flw .fdl{border-start-start-radius:0;border-end-start-radius:0;border-inline-start:0}   /* one pill, so it's clear which file it downloads */
+.fdl{position:relative;flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:34px;padding:0 8px;border-radius:10px;background:var(--row);border:1px solid var(--line);color:var(--muted);text-decoration:none}
+.fdl::after{content:"";position:absolute;inset:-4px -2px}.fdl:hover{color:var(--accent);border-color:var(--accent)}.fdl .i{width:16px;height:16px}
+.frl .frw{display:flex;gap:6px;align-items:stretch;margin:0 0 6px}.frl .frw .fri{margin:0;flex:1;min-width:0}.frl .frw .fdl{border-radius:12px;min-width:44px}
+.dqw{display:flex;align-items:center;gap:4px}.dqw .dqr{flex:1;min-width:0}.dqw .fdl{min-height:40px;min-width:40px}
 .fk-pdf{color:#e5484d}.fk-doc{color:#3e63dd}.fk-ppt{color:#f76b15}.fk-xls{color:#30a46c}.fk-img{color:#8e4ec6}.fk-zip{color:#978365}.fk-code{color:#0090ff}.fk-lnk,.fk-gen{color:var(--muted)}
 .lzseg [data-ic],.lzseg button{justify-content:center}
 
@@ -2391,7 +2397,7 @@ const I18N = {
     loading: "טוען…", refreshing: "מרענן…", updated: x => "עודכן " + x, lastData: " (מוצגים הנתונים האחרונים)", loadingTasks: "טוען משימות…",
     noMatch: "אין משימות בסינון הזה", noTasks: "לא נמצאו משימות", sumOpen: n => "<b>" + n + "</b> לא הוגשו", sumLate: n => n + " באיחור", next: "הקרובה:",
     diag: n => "אבחון: " + n + " פונקציות לא עבדו",
-    badLink: "לא הצלחתי לפענח את הקישור. הדבק רק את הטוקן עצמו.", offline: "אין חיבור לאינטרנט", slowMoodle: "המודל לא עונה כרגע. ננסה שוב עוד מעט.", unreachable: "לא הצלחתי להגיע לאתר: אין אינטרנט, או שהאתר חוסם גישה מדפדפן.",
+    badLink: "לא הצלחתי לפענח את הקישור. הדבק רק את הטוקן עצמו.", offline: "אין חיבור לאינטרנט", slowMoodle: "המודל לא עונה כרגע. ננסה שוב עוד מעט.", dlFile: n => "הורדה: " + n, unreachable: "לא הצלחתי להגיע לאתר: אין אינטרנט, או שהאתר חוסם גישה מדפדפן.",
     badResp: n => "האתר החזיר תשובה לא צפויה (" + n + ")", invalidToken: "הטוקן לא תקף. קבל טוקן חדש (כפתור 1 במסך החיבור) ונסה שוב.", error: "שגיאה", other: "אחר",
     missingToken: "חסר טוקן. העתק את הקישור מעמוד Moodle ונסה שוב.",
     notToken: "זה לא נראה כמו טוקן. צריך להעתיק את כתובת הקישור (לחיצה ארוכה ← העתק כתובת קישור), לא את הטקסט שלו.",
@@ -2645,7 +2651,7 @@ const I18N = {
     loading: "Loading…", refreshing: "Refreshing…", updated: x => "Updated " + x, lastData: " (showing last data)", loadingTasks: "Loading tasks…",
     noMatch: "No tasks match this filter", noTasks: "No tasks found", sumOpen: n => "<b>" + n + "</b> not submitted", sumLate: n => n + " overdue", next: "Next:",
     diag: n => "Diagnostics: " + n + " functions failed",
-    badLink: "Couldn’t decode the link. Paste just the token.", offline: "No internet connection", slowMoodle: "Moodle isn’t answering right now. We’ll try again soon.", unreachable: "Couldn’t reach the site: no internet, or the site blocks browser access.",
+    badLink: "Couldn’t decode the link. Paste just the token.", offline: "No internet connection", slowMoodle: "Moodle isn’t answering right now. We’ll try again soon.", dlFile: n => "Download: " + n, unreachable: "Couldn’t reach the site: no internet, or the site blocks browser access.",
     badResp: n => "Unexpected response from the site (" + n + ")", invalidToken: "The token is no longer valid. Get a new one (button 1 on the connect screen) and try again.", error: "Error", other: "Other",
     missingToken: "No token. Copy the link from the Moodle page and try again.",
     notToken: "That doesn’t look like a token. Copy the link address (long-press → Copy link address), not its text.",
@@ -2899,7 +2905,7 @@ const I18N = {
     loading: "Chargement…", refreshing: "Actualisation…", updated: x => "Mis à jour " + x, lastData: " (dernières données affichées)", loadingTasks: "Chargement des devoirs…",
     noMatch: "Aucun devoir pour ce filtre", noTasks: "Aucun devoir trouvé", sumOpen: n => "<b>" + n + "</b> non rendus", sumLate: n => n + " en retard", next: "Prochain :",
     diag: n => "Diagnostic : " + n + " fonctions ont échoué",
-    badLink: "Impossible de décoder le lien. Collez seulement le jeton.", offline: "Pas de connexion Internet", slowMoodle: "Moodle ne répond pas pour le moment. Nouvel essai bientôt.", unreachable: "Site injoignable : pas d’Internet, ou le site bloque l’accès depuis un navigateur.",
+    badLink: "Impossible de décoder le lien. Collez seulement le jeton.", offline: "Pas de connexion Internet", slowMoodle: "Moodle ne répond pas pour le moment. Nouvel essai bientôt.", dlFile: n => "Télécharger : " + n, unreachable: "Site injoignable : pas d’Internet, ou le site bloque l’accès depuis un navigateur.",
     badResp: n => "Réponse inattendue du site (" + n + ")", invalidToken: "Le jeton n’est plus valide. Obtenez-en un nouveau (bouton 1 de l’écran de connexion) et réessayez.", error: "Erreur", other: "Autre",
     missingToken: "Aucun jeton. Copiez le lien depuis la page Moodle et réessayez.",
     notToken: "Ce n’est pas un jeton. Copiez l’adresse du lien (appui long → Copier l’adresse du lien), pas son texte.",
@@ -3066,15 +3072,18 @@ async function pool(items, n, f) {
   return out;
 }
 /* Moodle files open with the token, like in the official app. The token is added ONLY to files of the same Moodle site. */
-function fileHref(u) {
+function fileHref(u, dl) {
   let url; try { url = new URL(u); } catch (e) { return "#"; }
   if (!/^https?:$/.test(url.protocol)) return "#";
   let site; try { site = new URL(M.url); } catch (e) { return url.toString(); }
   if (url.origin !== site.origin || !/\/pluginfile\.php\//.test(url.pathname)) return url.toString();
   if (!/\/webservice\/pluginfile\.php\//.test(url.pathname)) url.pathname = url.pathname.replace("/pluginfile.php/", "/webservice/pluginfile.php/");
-  url.searchParams.delete("forcedownload"); url.searchParams.set("token", M.token);
+  url.searchParams.delete("forcedownload"); if (dl) url.searchParams.set("forcedownload", "1"); url.searchParams.set("token", M.token);
   return url.toString();
 }
+/* a download button next to a file (Meir): the file saved to the phone/computer instead of opened. Only for real files of the student's Moodle site */
+const isMoodleFile = u => { try { return new URL(u).origin === new URL(M.url).origin && /\/pluginfile\.php\//.test(new URL(u).pathname); } catch (e) { return false; } };
+const dlBtn = (u, n) => '<a class="fdl" href="' + esc(fileHref(u, 1)) + '" download="' + esc(n || "") + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(t("dlFile", n || "")) + '" title="' + esc(t("dlFile", n || "")) + '" data-dl="1">' + ic("download") + "</a>";
 
 /* a different student signed in on this device (after "Log out", or with a new connection link): nothing of the one before stays –
    not their timetable, notes, hidden tasks, grades, course pages, drafts or community account. The same student signing in again keeps everything. */
@@ -3505,7 +3514,8 @@ const fsize = b => !b ? "" : b < 1024 ? b + " B" : b < 1048576 ? Math.round(b / 
 const ficon = n => /\.pdf$/i.test(n) ? "📕" : /\.(docx?|odt)$/i.test(n) ? "📘" : /\.(pptx?|ppsx|odp)$/i.test(n) ? "📙" : /\.(xlsx?|csv)$/i.test(n) ? "📗" : /\.(png|jpe?g|gif)$/i.test(n) ? "🖼" : /\.(zip|rar|7z)$/i.test(n) ? "🗜" : /\.(c|cpp|h|py|java)$/i.test(n) ? "💻" : "📄";
 const fkind = n => /\.pdf$/i.test(n) ? ["file-text", "pdf"] : /\.(docx?|odt)$/i.test(n) ? ["file-text", "doc"] : /\.(pptx?|ppsx|odp)$/i.test(n) ? ["presentation", "ppt"] : /\.(xlsx?|csv)$/i.test(n) ? ["sheet", "xls"] : /\.(png|jpe?g|gif)$/i.test(n) ? ["image", "img"] : /\.(zip|rar|7z)$/i.test(n) ? ["file-archive", "zip"] : /\.(c|cpp|h|py|java)$/i.test(n) ? ["file-code", "code"] : ["file-text", "gen"];
 const fileIc = f => { const k = f.link ? ["link", "lnk"] : fkind(/\.\w{2,5}$/.test(f.n) ? f.n : String(f.u || "").split("?")[0]); return ic(k[0], "fk-" + k[1]); };
-const fileLink = f => '<a class="fl" href="' + esc(fileHref(f.u)) + '" target="_blank" rel="noopener noreferrer">' + fileIc(f) + " <span><bdi>" + esc(f.n) + "</bdi></span>" + (f.s ? "<small>" + fsize(f.s) + "</small>" : "") + "</a>";
+const fileLink = f => { const a = '<a class="fl" href="' + esc(fileHref(f.u)) + '" target="_blank" rel="noopener noreferrer">' + fileIc(f) + " <span><bdi>" + esc(f.n) + "</bdi></span>" + (f.s ? "<small>" + fsize(f.s) + "</small>" : "") + "</a>";
+  return f.link || !isMoodleFile(f.u) ? a : '<span class="flw">' + a + dlBtn(f.u, f.n) + "</span>"; };
 function gcalHref(x) {
   const f = ts => new Date(ts * 1000).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "");
   return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(shortName(x.course) + ": " + x.name) +
@@ -4517,7 +4527,7 @@ async function syncNow(manual) {
 /* ---------- feedback + anonymous usage count ----------
    Sent to the app owner's Google Form (answers land in his Google Sheet). Nothing from Moodle goes there: no name, token, courses or grades.
    The usage count is one row per device per day with a random device id, the app version, language and device type. Users can turn it off. */
-const APP_VERSION = "1.9.4-beta.13";
+const APP_VERSION = "1.9.4-beta.14";
 /* ---------- the community: social.js, loaded only when it is on (or to show the invitation) ---------- */
 const socOn = () => P.soc_on === true;
 const S = (fn, ...a) => { try { return window.SOC && socOn() && SOC[fn] ? SOC[fn](...a) || "" : ""; } catch (e) { console.error(e); return ""; } };
@@ -4947,7 +4957,7 @@ function freshItemHTML(x) {
   const inner = '<span class="fric">' + ic(FR_IC[x.k] || "file-text") + '</span><span class="nt"><b><bdi>' + esc(x.n) + "</bdi></b><small>" + sub + "</small></span>";
   return x.key ? '<button class="' + cls + '" data-frgo="' + esc(x.key) + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
     : x.k === "grade" ? '<button class="' + cls + '" data-frcrs="' + x.cid + '" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</button>"
-    : '<a class="' + cls + '" href="' + esc(fileHref(x.u)) + '" target="_blank" rel="noopener noreferrer" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</a>";
+    : (x => x.k === "file" && isMoodleFile(x.u) ? '<div class="frw">' + x.a + dlBtn(x.u, x.n) + "</div>" : x.a)({ k: x.k, u: x.u, n: x.n, a: '<a class="' + cls + '" href="' + esc(fileHref(x.u)) + '" target="_blank" rel="noopener noreferrer" data-frid="' + esc(x.id) + '" style="--c:' + colorOf(x.cid) + '">' + inner + "</a>" });
 }
 function newsItemHTML(n, d) {
   const c = d.courses.find(y => y.id === n.cid), own = (n.files || []).concat((n.links || []).map(l => ({ n: l.n, u: l.u, link: /\/pluginfile\.php\//.test(l.u) ? 0 : 1 })));
@@ -6281,7 +6291,8 @@ function dqSearch(q) {
     if (C.length) sec.push('<div class="dqh">' + esc(t("dqCourses")) + "</div>" + C.map(c => row('data-dqc="' + c.id + '"', "book-open", courseName(c.id), "", colorOf(c.id))).join(""));
     const F = [];
     for (const [cid, cc] of Object.entries(CRS.c || {})) for (const sc of (cc && cc.secs) || []) for (const it of sc.items || []) if (F.length < 6 && it.n && /^https?:\/\//.test(it.u || "") && has(it.n)) F.push({ cid: Number(cid), it });
-    if (F.length) sec.push('<div class="dqh">' + esc(t("dqFiles")) + "</div>" + F.map(f => '<a class="dqr" href="' + esc(f.it.u) + '" target="_blank" rel="noopener noreferrer" style="--c:' + colorOf(f.cid) + '">' + ic(f.it.k === "link" ? "link" : "file-text") + "<span><b><bdi>" + esc(f.it.n) + "</bdi></b><small><bdi>" + esc(shortName(courseName(f.cid))) + "</bdi></small></span></a>").join(""));
+    if (F.length) sec.push('<div class="dqh">' + esc(t("dqFiles")) + "</div>" + F.map(f => { const a = '<a class="dqr" href="' + esc(fileHref(f.it.u)) + '" target="_blank" rel="noopener noreferrer" style="--c:' + colorOf(f.cid) + '">' + ic(f.it.k === "link" ? "link" : "file-text") + "<span><b><bdi>" + esc(f.it.n) + "</bdi></b><small><bdi>" + esc(shortName(courseName(f.cid))) + "</bdi></small></span></a>";
+      return f.it.k === "file" && isMoodleFile(f.it.u) ? '<div class="dqw">' + a + dlBtn(f.it.u, f.it.n) + "</div>" : a; }).join(""));
   }
   const S2 = fMatch(q, 4, true);
   if (S2.length) sec.push('<div class="dqh">' + esc(t("dqSet")) + "</div>" + S2.map(f => row('data-dqs="' + f.id + '"', "settings", t("ft_" + f.id), t("fd_" + f.id))).join(""));
@@ -6724,6 +6735,7 @@ document.addEventListener("click", e => {
   $$(".sheet:not([hidden])").forEach(sh => sh.hidden = true); if (DX.id) dExpClose();
   V.focus = null; V.hl = null; setView("dash"); render(); window.scrollTo({ top: 0, behavior: smoothB() }); useHit("logoHome");
 });
+document.addEventListener("click", e => { if (e.target.closest && e.target.closest("[data-dl]")) useHit("fileDl"); }, true);     // how many use the download button
 /* computer: text cut with "…" shows all of it when the mouse rests on it (a course or task name that didn't fit) */
 document.addEventListener("mouseover", e => {
   if (!matchMedia("(hover: hover)").matches) return;

@@ -671,8 +671,10 @@ async function uploadFile(ch, f) {
 }
 function attHTML(a) {
   const k = ["sum", "sol"].includes(a.k) ? a.k : "other";
-  return '<a class="satt" href="' + esc(fUrl(a)) + '" target="_blank" rel="noopener noreferrer"><span class="saic">' + ic(fIcon(a.t)) + '</span><span class="sapn"><bdi>' + esc(a.n) + "</bdi><small>" +
-    '<b class="sakt ' + k + '">' + esc(t("fKind_" + k)) + "</b> · " + esc(fSize(a.s)) + "</small></span>" + ic("external-link", "sago") + "</a>";
+  return '<div class="sattw"><a class="satt" href="' + esc(fUrl(a)) + '" target="_blank" rel="noopener noreferrer"><span class="saic">' + ic(fIcon(a.t)) + '</span><span class="sapn"><bdi>' + esc(a.n) + "</bdi><small>" +
+    '<b class="sakt ' + k + '">' + esc(t("fKind_" + k)) + "</b> · " + esc(fSize(a.s)) + "</small></span>" + ic("external-link", "sago") + "</a>" +
+    // download (Meir): the server sends it as a file to save (?dl), not to open
+    '<a class="fdl" href="' + esc(fUrl(a)) + '?dl=1" download="' + esc(a.n || "") + '" target="_blank" rel="noopener noreferrer" aria-label="' + esc(t("dlFile", a.n || "")) + '" title="' + esc(t("dlFile", a.n || "")) + '" data-dl="1">' + ic("download") + "</a></div>";
 }
 /* every summary and solution of a course, from all its chats, newest first */
 async function openFiles(cid) {
@@ -1223,6 +1225,7 @@ html[dir=rtl] .schin .primary .i{transform:scaleX(-1)}
 .sspin{width:18px;height:18px;border-radius:50%;border:2.5px solid color-mix(in srgb,var(--accent) 25%,transparent);border-top-color:var(--accent);animation:s .8s linear infinite;flex:none}
 .satt{display:flex;align-items:center;gap:10px;margin:6px 0 2px;padding:9px 11px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);text-decoration:none;max-width:340px}
 .sm.me .satt{background:color-mix(in srgb,var(--card) 70%,transparent)}
+.sattw{display:flex;align-items:stretch;gap:4px;max-width:388px;margin:6px 0 2px}.sattw .satt{flex:1;min-width:0;margin:0;max-width:none}.sattw .fdl{border-radius:12px;min-width:44px;background:var(--card)}.sfr .sattw{max-width:none;margin:0 0 4px}
 .satt:hover{border-color:var(--accent)}.saic{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;flex:none;background:color-mix(in srgb,var(--accent) 14%,var(--card));color:var(--accent-t)}.saic .i{width:20px;height:20px}
 .satt .sago{width:15px;height:15px;color:var(--muted);flex:none}
 .sakt{font-weight:700;color:var(--accent-t)}.sakt.sol{color:var(--ok,#16a34a)}.sakt.other{color:var(--muted)}
